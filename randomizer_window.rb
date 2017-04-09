@@ -76,6 +76,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.remove_events.setChecked(@settings[:remove_events]) unless @settings[:remove_events].nil?
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
     @ui.skip_magic_seals.setChecked(@settings[:skip_magic_seals]) unless @settings[:skip_magic_seals].nil?
+    @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
     @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
