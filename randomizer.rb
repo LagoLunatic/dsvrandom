@@ -591,6 +591,7 @@ class Randomizer
         # Randomize into a skill or relic
         pickup.type = 4 # pickup
         pickup.subtype = 8 # skill
+        pickup.var_a = get_unique_id()
         pickup.var_b = rng.rand(SKILL_GLOBAL_ID_RANGE)
       end
     end
