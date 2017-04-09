@@ -1,0 +1,3 @@
+ui_*.rb
+/logs
+crashlog.txt
