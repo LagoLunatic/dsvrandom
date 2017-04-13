@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>402</height>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -96,9 +96,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="randomize_souls_relics_and_glyphs">
+          <widget class="QCheckBox" name="randomize_skills">
            <property name="text">
-            <string>Souls/Relics/Glyphs</string>
+            <string>Skills</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -120,78 +120,95 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="randomize_bosses">
-           <property name="text">
-            <string>Bosses</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_9">
-         <item>
           <widget class="QCheckBox" name="randomize_enemy_drops">
            <property name="text">
             <string>Enemy Drops</string>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QCheckBox" name="randomize_boss_souls">
-           <property name="text">
-            <string>Boss Souls</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QCheckBox" name="randomize_area_connections">
-           <property name="text">
-            <string>Area Connections</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="randomize_room_connections">
-           <property name="text">
-            <string>Room Connections</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <item>
-          <widget class="QCheckBox" name="randomize_starting_room">
-           <property name="text">
-            <string>Starting Room</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="randomize_enemy_ai">
-           <property name="text">
-            <string>Enemy AI</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
-         <item>
-          <widget class="QCheckBox" name="randomize_players">
-           <property name="text">
-            <string>Players</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>Experimental (not guaranteed completable)</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QCheckBox" name="randomize_bosses">
+              <property name="text">
+               <string>Bosses</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_boss_souls">
+              <property name="text">
+               <string>Boss Souls</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QCheckBox" name="randomize_area_connections">
+              <property name="text">
+               <string>Area Connections</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_room_connections">
+              <property name="text">
+               <string>Room Connections</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QCheckBox" name="randomize_starting_room">
+              <property name="text">
+               <string>Starting Room</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_ai">
+              <property name="text">
+               <string>Enemy AI</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QCheckBox" name="randomize_players">
+              <property name="text">
+               <string>Players</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+         <zorder>randomize_players</zorder>
+         <zorder>randomize_players</zorder>
+         <zorder></zorder>
+         <zorder></zorder>
+         <zorder></zorder>
+         <zorder></zorder>
+         <zorder></zorder>
+         <zorder></zorder>
+        </widget>
        </item>
       </layout>
      </widget>

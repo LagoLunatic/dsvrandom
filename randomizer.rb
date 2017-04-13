@@ -191,6 +191,8 @@ class Randomizer
       end
     when "Fleaman"
       enemy.var_a = rng.rand(1..10)
+    when "Bone Pillar", "Fish Head"
+      enemy.var_a = rng.rand(1..12)
     end
   end
   
@@ -202,6 +204,7 @@ class Randomizer
       enemy.var_b = 0
       enemy.y_pos = 0x20
     when "Spittle Bone", "Vice Beetle"
+      # TODO: move out of floor
       enemy.var_a = rng.rand(0..3) # wall direction
       enemy.var_b = rng.rand(0x600..0x1200) # speed
     end
@@ -209,10 +212,20 @@ class Randomizer
   
   def ooe_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
+    when "Zombie", "Ghoul"
+      # TODO
+    when "Skeleton"
+      enemy.var_a = rng.rand(0..1) # Can jump away.
+    when "Bone Archer"
+      enemy.var_a = rng.rand(0..8) # Arrow speed.
     when "Bat", "Fleaman"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Ghost"
-      enemy.var_a = rng.rand(1..10) # Max ghosts on screen at once.
+      enemy.var_a = rng.rand(1..5) # Max ghosts on screen at once.
+    when "Skull Spider"
+      # TODO: move out of floor
+    when "Gelso"
+      # TODO
     when "Saint Elmo"
       enemy.var_a = rng.rand(1..3)
       enemy.var_b = 0x78
@@ -456,7 +469,7 @@ class Randomizer
       entity.subtype = 0
     elsif entity.subtype == 0x01 && entity.var_a == 0x00
       # Soul candle
-      if options[:randomize_souls_relics_and_glyphs]
+      if options[:randomize_skills]
         randomize_pickup_dos_por(entity)
       end
     elsif entity.subtype == 0x01 && entity.var_a == 0x10
@@ -533,8 +546,8 @@ class Randomizer
     case GAME
     when "dos"
       return if !options[:randomize_items] && pickup.is_pickup? && pickup.subtype < 0x05
-      return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && pickup.subtype >= 0x05 # free soul
-      return if !options[:randomize_souls_relics_and_glyphs] && pickup.type == 0x02 && pickup.subtype == 0x01 # soul candle or money chest
+      return if !options[:randomize_skills] && pickup.is_pickup? && pickup.subtype >= 0x05 # free soul
+      return if !options[:randomize_skills] && pickup.type == 0x02 && pickup.subtype == 0x01 # soul candle or money chest
       
       if pickup.is_pickup? && pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
         # magic seal
@@ -547,8 +560,8 @@ class Randomizer
       end
     when "por"
       return if !options[:randomize_items] && pickup.is_pickup? && pickup.subtype < 0x08
-      return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && pickup.subtype >= 0x08 # relic
-      return if !options[:randomize_souls_relics_and_glyphs] && pickup.type == 0x02 && pickup.subtype == 0x01 # money chest
+      return if !options[:randomize_skills] && pickup.is_pickup? && pickup.subtype >= 0x08 # relic
+      return if !options[:randomize_skills] && pickup.type == 0x02 && pickup.subtype == 0x01 # money chest
       
       if pickup.is_pickup? && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
         # change cube or call cube
@@ -558,7 +571,7 @@ class Randomizer
     end
     
     rand = rng.rand(1..100)
-    if options[:randomize_items] && ((1..90).include?(rand) || !options[:randomize_souls_relics_and_glyphs])
+    if options[:randomize_items] && ((1..90).include?(rand) || !options[:randomize_skills])
       if (1..88).include?(rand)
         # Randomize into an item
         pickup.type = 4 # pickup
@@ -579,7 +592,7 @@ class Randomizer
           pickup.var_a = rng.rand(0x0E..0x0F) # money chest
         end
       end
-    elsif options[:randomize_souls_relics_and_glyphs] && ((91..100).include?(rand) || !options[:randomize_items])
+    elsif options[:randomize_skills] && ((91..100).include?(rand) || !options[:randomize_items])
       case GAME
       when "dos"
         # Randomize into a soul lamp
@@ -599,8 +612,8 @@ class Randomizer
   
   def randomize_pickup_ooe(pickup)
     return if !options[:randomize_items] && pickup.is_special_object? && (0x15..0x17).include?(pickup.subtype) # chest
-    return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_special_object? && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
-    return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && (2..4).include?(pickup.subtype) # free glyph
+    return if !options[:randomize_skills] && pickup.is_special_object? && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
+    return if !options[:randomize_skills] && pickup.is_pickup? && (2..4).include?(pickup.subtype) # free glyph
     
     case rng.rand(1..100)
     when 1..40

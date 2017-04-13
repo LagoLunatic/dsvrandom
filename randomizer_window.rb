@@ -24,7 +24,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_items, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_souls_relics_and_glyphs, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_skills, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemies, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_bosses, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_drops, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -62,7 +62,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
     @ui.randomize_items.setChecked(@settings[:randomize_items]) unless @settings[:randomize_items].nil?
-    @ui.randomize_souls_relics_and_glyphs.setChecked(@settings[:randomize_souls_relics_and_glyphs]) unless @settings[:randomize_souls_relics_and_glyphs].nil?
+    @ui.randomize_skills.setChecked(@settings[:randomize_skills]) unless @settings[:randomize_skills].nil?
     @ui.randomize_enemies.setChecked(@settings[:randomize_enemies]) unless @settings[:randomize_enemies].nil?
     @ui.randomize_bosses.setChecked(@settings[:randomize_bosses]) unless @settings[:randomize_bosses].nil?
     @ui.randomize_enemy_drops.setChecked(@settings[:randomize_enemy_drops]) unless @settings[:randomize_enemy_drops].nil?
@@ -104,7 +104,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:seed] = @ui.seed.text
     
     @settings[:randomize_items] = @ui.randomize_items.checked
-    @settings[:randomize_souls_relics_and_glyphs] = @ui.randomize_souls_relics_and_glyphs.checked
+    @settings[:randomize_skills] = @ui.randomize_skills.checked
     @settings[:randomize_enemies] = @ui.randomize_enemies.checked
     @settings[:randomize_bosses] = @ui.randomize_bosses.checked
     @settings[:randomize_enemy_drops] = @ui.randomize_enemy_drops.checked
@@ -139,7 +139,7 @@ class RandomizerWindow < Qt::Dialog
     
     randomizer = Randomizer.new(seed, game,
       :randomize_items => @ui.randomize_items.checked(),
-      :randomize_souls_relics_and_glyphs => @ui.randomize_souls_relics_and_glyphs.checked(),
+      :randomize_skills => @ui.randomize_skills.checked(),
       :randomize_enemies => @ui.randomize_enemies.checked(),
       :randomize_bosses => @ui.randomize_bosses.checked(),
       :randomize_enemy_drops => @ui.randomize_enemy_drops.checked(),
