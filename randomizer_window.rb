@@ -169,7 +169,7 @@ class RandomizerWindow < Qt::Dialog
     end
     
     if @ui.open_world_map.checked()
-      game.apply_armips_patch("ooe_open_world_map")
+      game.apply_armips_patch("ooe_nonlinear")
     end
     
     game.fix_unnamed_skills()
