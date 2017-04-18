@@ -23,8 +23,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.output_folder_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_output_folder()"))
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
-    connect(@ui.randomize_items, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_skills, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_pickups, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemies, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_bosses, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_drops, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -60,8 +59,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.output_folder.setText(@settings[:output_folder]) if @settings[:output_folder]
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
-    @ui.randomize_items.setChecked(@settings[:randomize_items]) unless @settings[:randomize_items].nil?
-    @ui.randomize_skills.setChecked(@settings[:randomize_skills]) unless @settings[:randomize_skills].nil?
+    @ui.randomize_pickups.setChecked(@settings[:randomize_pickups]) unless @settings[:randomize_pickups].nil?
     @ui.randomize_enemies.setChecked(@settings[:randomize_enemies]) unless @settings[:randomize_enemies].nil?
     @ui.randomize_bosses.setChecked(@settings[:randomize_bosses]) unless @settings[:randomize_bosses].nil?
     @ui.randomize_enemy_drops.setChecked(@settings[:randomize_enemy_drops]) unless @settings[:randomize_enemy_drops].nil?
@@ -101,8 +99,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:output_folder] = @ui.output_folder.text
     @settings[:seed] = @ui.seed.text
     
-    @settings[:randomize_items] = @ui.randomize_items.checked
-    @settings[:randomize_skills] = @ui.randomize_skills.checked
+    @settings[:randomize_pickups] = @ui.randomize_pickups.checked
     @settings[:randomize_enemies] = @ui.randomize_enemies.checked
     @settings[:randomize_bosses] = @ui.randomize_bosses.checked
     @settings[:randomize_enemy_drops] = @ui.randomize_enemy_drops.checked
@@ -135,8 +132,7 @@ class RandomizerWindow < Qt::Dialog
     game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
     
     randomizer = Randomizer.new(seed, game,
-      :randomize_items => @ui.randomize_items.checked(),
-      :randomize_skills => @ui.randomize_skills.checked(),
+      :randomize_pickups => @ui.randomize_pickups.checked(),
       :randomize_enemies => @ui.randomize_enemies.checked(),
       :randomize_bosses => @ui.randomize_bosses.checked(),
       :randomize_enemy_drops => @ui.randomize_enemy_drops.checked(),

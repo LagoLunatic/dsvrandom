@@ -86,7 +86,7 @@ Defs:
   bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
   
   pinnacle: uppertowerguesthouse | bosszephyr & bat mode | clocktower & hwarp & bat mode
-  bossaguni: pinnacle & big height & seal 4 | pinnacle & big height & hwarp | pinnacle & height & vwarpseal & seal 4 | pinnacle & height & vwarpseal & hwarp
+  bossaguni: pinnacle & big height & seal 4 & paranoia | pinnacle & big height & hwarp & paranoia | pinnacle & height & vwarpseal & seal 4 & paranoia | pinnacle & height & vwarpseal & hwarp & paranoia
   
   mine: garden & seal 5 & mina talisman & condemntower | condemntower & hwarpseal
   bossdeath: mine & height & seal 5 | mine & height & hwarp
