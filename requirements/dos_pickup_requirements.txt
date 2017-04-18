@@ -11,6 +11,7 @@ Defs:
   rahab: 0x145
   paranoia: 0xD0
   balore: 0x142
+  zephyr: 0xCF
   cutall: 0x46
   cinquedia: 0x47
   alucard sword: 0x5E
@@ -24,10 +25,14 @@ Defs:
   seal 3: 0x3F
   seal 4: 0x40
   seal 5: 0x41
+  tower key: 0x39
+  mina talisman: 0xC6
   axearmor: 0xD4
   killer clown: 0xE3
   ukoback: 0xEC
   skeleton: 0xD2
+  skeleton ape: 0x134
+  bone ark: 0x119
   
   height: malphas | hippogryph | bat mode | puppet master | vwarpsucc
   medium height: malphas | hippogryph | bat mode | vwarpsucc
@@ -49,7 +54,7 @@ Defs:
   undervillage: lowerwizardry & height | wizardry & cutallsuper
   villagewatergate: bossarmor & distance
   
-  garden: height | wizardry & balore | lowergarden & rahab
+  garden: medium height | wizardry & balore | lowergarden & rahab
   bossdario: garden & height & seal 3 | garden & height & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
   upperrightgarden: uppergarden & cutallsuper | garden & vwarp | clocktower
@@ -74,13 +79,21 @@ Defs:
   hell: wizardry & cutallsuper | garden & rahab | hellintro & rahab & bossrahab
   bossrahab: hellintro & seal 3 | hellintro & hwarp
   
-  ruins: hell & distance & timestop | hell & cutallsuper
+  ruins: hell & distance & zephyr | hell & cutallsuper
   
-  clocktower: condemntower & height & towerkey | upperrightgarden & height | pinnacle & big height
+  clocktower: condemntower & height & tower key | upperrightgarden & height | pinnacle & big height
   bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
   
-  pinnacle: uppertowerguesthouse | bosszephyr & batmode | clocktower & hwarp & batmode
-  bossaguni: pinnacle & bigheight & seal 4 | pinnacle & bigheight & hwarp | pinnacle & height & vwarpseal & seal 4 | pinnacle & height & vwarpseal & hwarp
+  pinnacle: uppertowerguesthouse | bosszephyr & bat mode | clocktower & hwarp & bat mode
+  bossaguni: pinnacle & big height & seal 4 | pinnacle & big height & hwarp | pinnacle & height & vwarpseal & seal 4 | pinnacle & height & vwarpseal & hwarp
+  
+  mine: garden & seal 5 & mina talisman & condemntower | condemntower & hwarpseal
+  bossdeath: mine & height & seal 5 | mine & height & hwarp
+  
+  abyss: bossdeath
+  bossabaddon: abyss & big height | abyss & medium height & hwarp
+  
+  beat game: bossabaddon
 
 Rooms:
 #Dracula's Castle:
@@ -122,7 +135,7 @@ Rooms:
     room: bossarmor
     05 (Cape): 
     06 (Tear Of Blood): paranoia | hwarp
-  00-00-15: 
+  00-00-15: # drawbridge
     0A (Gold Stud): villagewatergate & big height | rahab & big height
     0B (Crimson Cloak): height
   00-00-16:
@@ -239,6 +252,9 @@ Rooms:
   00-03-1A:
     room: garden
     00 (Three 7s): 
+  00-03-24:
+    room: garden
+    08 (Doppelganger): 
 #The Dark Chapel:
   00-04-00:
     room: chapel
@@ -276,7 +292,7 @@ Rooms:
     02 (High Potion): big height
 #Condemned Tower & Mine of Judgment:
   00-05-02:
-    room: bossgergoth & bigheight | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
+    room: bossgergoth & big height | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
     00 (Tower Key): 
   00-05-03:
     room: condemntower & height
@@ -345,7 +361,7 @@ Rooms:
     room: bossaguni
     00 (Magic Seal 5): 
   00-09-02:
-    room: pinnacle & bigheight | pinnacle & vwarp
+    room: pinnacle & big height | pinnacle & vwarp
     00 (Satan's Ring): 
     01 (Fragarach): 
   00-09-04:
@@ -360,4 +376,10 @@ Rooms:
   00-09-11:
     room: pinnacle & height
     03 (Lance): 
-Beat game: TODO
+#The Abyss:
+  00-0B-06:
+    room: abyss
+    01 (Hippogryph): 
+  00-0B-0B:
+    room: abyss & medium height
+    01 (Magus Ring): height
