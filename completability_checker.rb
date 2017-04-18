@@ -2,17 +2,14 @@
 require 'yaml'
 
 class CompletabilityChecker
-  attr_reader :game, :rng
+  attr_reader :game, :rng, :current_items, :defs
   
   def initialize(game)
     @game = game
     @rng = Random.new
     load_room_reqs()
     @current_items = []
-    @current_items << 0x3D # seal 1
-    
-    p get_accessible_pickups()
-    p currently_useful_pickups().map{|global_id, num_locations| @defs.invert[global_id]}
+    @debug = false
   end
   
   def load_room_reqs
@@ -39,7 +36,10 @@ class CompletabilityChecker
   end
   
   def check_req(req)
-    @recursively_checked_reqs = []
+    if req == "beat game"
+      @debug = true
+    end
+    @cached_checked_reqs = {}
     check_req_recursive(req)
   end
   
@@ -48,21 +48,39 @@ class CompletabilityChecker
     
     if req.is_a?(Integer)
       item_global_id = req
-      return @current_items.include?(item_global_id)
+      has_item = @current_items.include?(item_global_id)
+      @cached_checked_reqs[req] = has_item
+      return has_item
     end
     
     req = req.strip
-    return true if req.empty?
+    if req.empty?
+      @cached_checked_reqs[req] = true
+      return true
+    end
     
-    #puts "Checking req: #{req}"
-    #gets
+    puts "Checking req: #{req}" if @debug
     
     # Don't recurse infinitely checking the same two interdependent requirements.
-    return false if @recursively_checked_reqs.include?(req)
-    @recursively_checked_reqs << req
+    #puts "Req #{req} is false because it was already checked" if @recursively_checked_reqs.include?(req) && @debug
+    #return false if @recursively_checked_reqs.include?(req)
+    #@recursively_checked_reqs << req
+    
+    if @cached_checked_reqs[req] == :currently_checking
+      # Don't recurse infinitely checking the same two interdependent requirements.
+      return false
+    elsif @cached_checked_reqs[req] == true || @cached_checked_reqs[req] == false
+      return @cached_checked_reqs[req]
+    end
+    
+    @cached_checked_reqs[req] = :currently_checking
     
     if @defs.include?(req)
-      return check_req_recursive(@defs[req])
+      req_met = check_req_recursive(@defs[req])
+      puts "Req #{req} is true" if @debug && req_met
+      puts "Req #{req} is false" if @debug && !req_met
+      @cached_checked_reqs[req] = req_met
+      return req_met
     elsif req =~ /\|/ || req =~ /\&/
       or_reqs = req.split("|")
       or_reqs.each do |or_req|
@@ -72,38 +90,54 @@ class CompletabilityChecker
           check_req_recursive(and_req)
         end
         
+        puts "Req #{req} is true (or req: #{or_req})" if @debug && or_req_met
+        @cached_checked_reqs[req] = true if or_req_met
         return true if or_req_met
       end
       
+      @cached_checked_reqs[req] = false
+      puts "Req #{req} is false" if @debug
       return false
     else
       raise "Invalid requirement: #{req}"
     end
   end
   
-  def get_accessible_pickups
-    accessible_pickups = []
-    
-    @room_reqs.each do |room_str, room_req|
-      room_access_reqs = room_req[:room]
-      room_entities_reqs = room_req[:entities]
+  def all_locations
+    @all_locations ||= begin
+      all_locations = {}
       
-      #puts "### CHECKING ROOM REQ"
-      if check_req(room_access_reqs)
+      @room_reqs.each do |room_str, room_req|
+        room_access_reqs = room_req[:room]
+        room_entities_reqs = room_req[:entities]
+        
         room_entities_reqs.each do |entity_index, entity_reqs|
-          #puts "## CHECKING ENTITY REQ"
-          if check_req(entity_reqs)
-            accessible_pickups << {room: room_str, entity_index: entity_index}
-          end
+          entity_str = "#{room_str}_%02X" % entity_index
+          all_locations[entity_str] = {room_reqs: room_access_reqs, entity_reqs: entity_reqs}
         end
+      end
+      
+      all_locations
+    end
+  end
+  
+  def get_accessible_locations
+    accessible_locations = []
+    
+    all_locations.each do |entity_str, reqs|
+      room_reqs = reqs[:room_reqs]
+      entity_reqs = reqs[:entity_reqs]
+      
+      if check_req(room_reqs) && check_req(entity_reqs)
+        accessible_locations << entity_str
       end
     end
     
-    return accessible_pickups
+    return accessible_locations
   end
   
-  def progression_pickups
-    @progression_pickups ||= begin
+  def all_progression_pickups
+    @all_progression_pickups ||= begin
       pickups = []
       
       @defs.each do |name, req|
@@ -114,31 +148,30 @@ class CompletabilityChecker
     end
   end
   
-  def currently_useful_pickups
+  def pickups_by_current_num_locations_they_access
     orig_current_items = @current_items
     
-    possibly_useful_pickups = progression_pickups - @current_items
+    possibly_useful_pickups = all_progression_pickups - @current_items
     
-    currently_accessible_pickups = get_accessible_pickups()
+    currently_accessible_locations = get_accessible_locations()
     
-    currently_useful_pickups = {}
+    pickups_by_locations = {}
     
     possibly_useful_pickups.each do |pickup_global_id|
       #pickup_name = @defs.invert[pickup_global_id]
       @current_items = orig_current_items + [pickup_global_id]
-      next_accessible_pickups = get_accessible_pickups() - currently_accessible_pickups
+      next_accessible_pickups = get_accessible_locations() - currently_accessible_locations
       
-      #puts "#{pickup_name} useful for:"
-      if next_accessible_pickups.any?
-        currently_useful_pickups[pickup_global_id] = next_accessible_pickups.length
-        #puts "  #{next_accessible_pickups.length} locations"
-      else
-        #puts "  nothing"
-      end
+      #puts "#{pickup_name} useful for: #{next_accessible_pickups.length} locations"
+      pickups_by_locations[pickup_global_id] = next_accessible_pickups.length
     end
     
-    return currently_useful_pickups
+    return pickups_by_locations
   ensure
     @current_items = orig_current_items
+  end
+  
+  def add_item(new_item_global_id)
+    @current_items << new_item_global_id
   end
 end
