@@ -276,6 +276,13 @@ class Randomizer
       enemy.var_a = rng.rand(1..10)
     when "Bone Pillar", "Fish Head"
       enemy.var_a = rng.rand(1..12)
+    when "Mollusca", "Giant Slug"
+      # Mollusca and Giant Slug have a very high chance of bugging out when placed near cliffs.
+      # They can cause the screen to flash rapidly and take up most of the screen.
+      # They can also cause the game to freeze for a couple seconds every time you enter a room with them in it.
+      # So for now let's just delete these enemies so this can't happen.
+      # TODO: Try to detect if they're placed near cliffs and move them a bit.
+      enemy.type = 0
     end
   end
   
