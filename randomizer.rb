@@ -1,4 +1,6 @@
 
+require_relative 'completability_checker'
+
 class Randomizer
   attr_reader :options,
               :allow_randomization_between_items_skills_passives,

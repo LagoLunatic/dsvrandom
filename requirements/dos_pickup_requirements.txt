@@ -1,0 +1,332 @@
+
+Defs:
+  height: malphas | hippogryph | bat mode | puppet master | vwarpsucc
+  medium height: malphas | hippogryph | bat mode | vwarpsucc
+  big height: hippogryph | bat mode
+  distance: flying armor | black panther
+  hwarpseal: cutall & seal
+  hwarpsucc: cutall & succubus
+  hwarp: hwarpseal | hwarpsucc
+  vwarpseal: axe & seal
+  vwarpsucc: axe & succubus
+  vwarp: vwarpseal | vwarpsucc
+  bat mode: bat company | bat form
+  small: bat mode | puppet master
+  seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
+  
+  bossarmor: seal 1 | hwarp
+  undervillage: lowerwizardry & height | wizardry & cutall
+  villagewatergate: bossarmor & distance
+  
+  garden: height | wizardry & balore | lowergarden & rahab
+  bossdario: garden & height & seal 3 | garden & height & hwarp
+  uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
+  upperrightgarden: uppergarden & cutall | garden & vwarp | clocktower
+  lowergarden: garden & rahab | hell
+  
+  puppetguesthouse: towerguesthouse & height
+  bosspuppet: puppetguesthouse & medium height & seal 3 | puppetguesthouse & medium height & hwarp
+  towerguesthouse: garden & small | uppergarden | pinnacle
+  uppertowerguesthouse: pinnacle | towerguesthouse & vwarp
+  bossparanoia: uppertowerguesthouse & axearmor & clown & ukoback
+  
+  wizardry: villagewatergate | garden | hell & big height
+  lowerwizardry: hell & height & puppet master & skeleton ape & rahab | hell & height & bone ark & rahab | wizardry & cutall
+  
+  chapel: garden | condemntower | hell & rahab
+  bossdmitrii: chapel & seal 2 | chapel & hwarp
+  
+  condemntower: chapel & cutall | chapel & small | clocktower & hwarp
+  bossgergoth: condemntower & height
+  
+  hellintro: chapel & small | chapel & hwarp
+  hell: wizardry & cutall | garden & rahab | hellintro & rahab & bossrahab
+  bossrahab: hellintro & seal 3 | hellintro & hwarp
+  
+  ruins: hell & distance & timestop | hell & cutall
+  
+  clocktower: condemntower & height & towerkey | upperrightgarden & height | pinnacle & big height
+  bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
+  
+  pinnacle: uppertowerguesthouse | bosszephyr & batmode | clocktower & hwarp & batmode
+  bossaguni: pinnacle & bigheight & seal 4 | pinnacle & bigheight & hwarp | pinnacle & height & vwarpseal & seal 4 | pinnacle & height & vwarpseal & hwarp
+
+Rooms:
+#Dracula's Castle:
+#The Lost Village:
+  00-00-00:
+    room: big height
+    02 (Pumpkin Pie): 
+  00-00-02:
+    room: bossarmor
+    05 (Mace): 
+    06 (Money): 
+  00-00-06:
+    room: undervillage & height
+    01 (Caviar): 
+  00-00-07: 
+    04 (High Potion): height
+  00-00-08:
+    room: bossarmor
+    02 (Claymore): 
+  00-00-09:
+    room: bossarmor
+    07 (Money): 
+  00-00-0A:
+    room: bossarmor
+  00-00-0C:
+    room: bossarmor
+    00 (Potion): 
+  00-00-0D:
+    room: undervillage
+    00 (Neck Warmer): height
+  00-00-0E:
+    04 (Potion): 
+    05 (Short Sword): 
+  00-00-11:
+    room: bossarmor
+    02 (Money): 
+    03 (Corn Soup): 
+  00-00-13:
+    room: bossarmor
+    05 (Cape): 
+    06 (Tear Of Blood): paranoia | hwarp
+  00-00-15: 
+    0A (Gold Stud): villagewatergate & big height | rahab
+    0B (Crimson Cloak): height
+  00-00-16:
+    room: height | garden
+    00 (Heart Pendant): big height
+  00-00-19:
+    room: bossarmor
+    03 (Spear): 
+#Demon Guest House:
+  00-01-00:
+    room: puppetguesthouse & height
+    00 (War Fatigues): balore
+    01 (UMA News 2-4): balore
+  00-01-05:
+    room: bossparanoia
+    00 (Olrox's Suit): 
+  00-01-07:
+    room: puppetguesthouse
+    00 (Magic Seal 3): 
+  00-01-0A:
+    room: towerguesthouse
+    01 (Cestus): 
+  00-01-0E:
+    room: towerguesthouse
+    01 (Cutall): 
+  00-01-11:
+    room: towerguesthouse & height
+    01 (Turquoise Stud): 
+  00-01-12:
+    room: towerguesthouse & height
+    01 (Justaucorps): 
+  00-01-15:
+    room: towerguesthouse & height
+    01 (Great Sword): 
+  00-01-1A:
+    room: towerguesthouse & height
+    02 (Ring Mail): 
+    03 (Dracula's Tunic): paranoia
+  00-01-20:
+    room: bossparanoia
+    06 (Mana Prism): paranoia
+  00-01-23:
+    room: puppetguesthouse
+    00 (UMA News 2-2): 
+  00-01-26:
+    room: puppetguesthouse
+    00 (High Potion): 
+  00-01-2F:
+    room: garden & height
+    00 (High Mind Up): 
+  00-01-34:
+    room: towerguesthouse
+    00 (Money): 
+  00-01-35:
+    room: towerguesthouse
+    00 (UMA News 1-2): 
+  00-01-38:
+    room: towerguesthouse
+    00 (Money): 
+  00-01-39:
+    room: towerguesthouse & big height
+    00 (Rune Ring): 
+#Wizardry Lab:
+  00-02-00:
+    room: wizardry
+    00 (UMA News 4): cutall
+    01 (Scarf): 
+  00-02-07:
+    room: wizardry
+    01 (Mind Up): 
+  00-02-0B:
+    room: wizardry
+    00 (Blunt Sword): 
+  00-02-10:
+    room: wizardry & cutall | hell & big height
+    00 (Aquarius): 
+  00-02-12:
+    room: wizardry & balore
+    02 (Combat Knife): 
+    03 (Rosary): paranoia
+  00-02-14:
+    room: wizardry
+    00 (Foie Gras): balore | small | vwarp
+  00-02-16:
+    room: lowerwizardry & rahab
+    00 (Gold Ring): 
+  00-02-1C:
+    room: lowerwizardry & rahab
+    00 (Bloody Stud): 
+    01 (Super Potion): 
+  00-02-1E:
+    room: lowerwizardry & rahab
+    00 (Serenity Robe): 
+#Garden of Madness:
+  00-03-00:
+    room: garden
+    00 (Fleuret): 
+    01 (Breastplate): 
+  00-03-01:
+    room: garden & height
+    00 (Elfin Robe): 
+  00-03-03:
+    room: garden
+    01 (Magic Seal 2): 
+  00-03-04:
+    room: garden & height
+    00 (Ninja Suit): 
+  00-03-16:
+    room: upperrightgarden | garden & vwarp
+    00 (Handgun): 
+  00-03-18:
+    room: lowergarden
+    00 (Small Sword): 
+  00-03-1A:
+    room: garden
+    00 (Three 7s): 
+#The Dark Chapel:
+  00-04-00:
+    room: chapel
+    00 (Halberd): skeleton
+  00-04-01:
+    room: chapel
+    00 (Power Belt): height
+  00-04-03:
+    room: chapel
+    02 (Long Sword): height
+  00-04-04:
+    room: chapel
+    00 (Money): 
+  00-04-05:
+    room: chapel
+    00 (Traveler Cape): 
+  00-04-11:
+    room: chapel
+    02 (Red Scarf): 
+    03 (Megingiord): paranoia
+  00-04-12:
+    room: chapel
+    01 (High Mind Up): height | black panther
+    02 (Anti-Venom): 
+  00-04-13:
+    room: bossdmitrii
+    00 (Hoop Earring): medium height
+  00-04-14:
+    room: chapel
+    00 (Potion): 
+  00-04-15:
+    room: condemntower
+    00 (UMA News 3-2): height | chapel & small
+    01 (Kotetsu): big height
+    02 (High Potion): big height
+#Condemned Tower & Mine of Judgment:
+  00-05-02:
+    room: bossgergoth & bigheight | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
+    00 (Tower Key): 
+  00-05-03:
+    room: condemntower & height
+    00 (UMA News 2-3): 
+  00-05-04:
+    room: condemntower & height
+    00 (Estoc): 
+  00-05-06:
+    room: condemntower
+    02 (Tasty Meat): big height | hwarpseal
+  00-05-0B:
+    room: condemntower
+    01 (Silver Stud): height
+    02 (Mind Up): 
+#Subterranean Hell:
+  00-06-02:
+    room: hell & medium height
+    00 (Eversing): 
+  00-06-04:
+    room: hell
+    00 (Mushroom): height
+    01 (Amanita): height
+    02 (Mushroom): height
+  00-06-09:
+    room: hell
+    00 (Mushroom): 
+  00-06-0B:
+    room: hell
+    00 (Money): 
+  00-06-0D:
+    room: hell
+    00 (UMA News 1-3): 
+  00-06-17:
+    room: hell & rahab
+    00 (Chain Mail): 
+    01 (Money): 
+    02 (High Mind Up): 
+    03 (Rusty Food Tin): 
+#Silenced Ruins:
+  00-07-05:
+    room: ruins & medium height
+    03 (Mana Prism): 
+    04 (Super Potion): paranoia
+  00-07-0C:
+    room: ruins
+    05 (Rare Ring): balore | hwarpsucc
+#Cursed Clock Tower:
+  00-08-00:
+    room: clocktower
+    00 (Army Jacket): 
+  00-08-19:
+    room: clocktower & height
+    00 (Magic Seal 4): 
+  00-08-1A:
+    room: clocktower & height
+    02 (Scale Mail): 
+    03 (Platinum Stud): paranoia
+  00-08-1C:
+    room: clocktower & height
+    00 (UMA News 3-3): 
+  00-08-1F:
+    room: clocktower
+    00 (Shaman Ring): 
+#The Pinnacle:
+  00-09-00:
+    room: bossaguni
+    00 (Magic Seal 5): 
+  00-09-02:
+    room: pinnacle & bigheight | pinnacle & vwarp
+    00 (Satan's Ring): 
+    01 (Fragarach): 
+  00-09-04:
+    room: pinnacle & big height | pinnacle & height & hwarp
+    02 (Durandal): 
+  00-09-0A:
+    room: pinnacle & height
+    02 (Truffle): 
+  00-09-0E:
+    room: pinnacle & height
+    00 (Mana Prism): 
+  00-09-11:
+    room: pinnacle & height
+    03 (Lance): 
+Beat game: TODO
