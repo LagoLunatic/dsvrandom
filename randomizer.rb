@@ -538,7 +538,7 @@ class Randomizer
         enemy["Item Chance"] = rng.rand(0x01..0x40)
         
         enemy["Soul"] = get_random_soul()
-        enemy["Soul Chance"] = rng.rand(0x01..0x40)
+        enemy["Soul Chance"] = rng.rand(0x01..0x30)
       when "por"
         enemy["Item 1 Chance"] = rng.rand(0x01..0x32)
         enemy["Item 2 Chance"] = rng.rand(0x01..0x32)
