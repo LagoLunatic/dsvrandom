@@ -10,6 +10,7 @@ Defs:
   succubus: 0xEE
   rahab: 0x145
   paranoia: 0xD0
+  balore: 0x142
   cutall: 0x46
   cinquedia: 0x47
   alucard sword: 0x5E
@@ -122,7 +123,7 @@ Rooms:
     05 (Cape): 
     06 (Tear Of Blood): paranoia | hwarp
   00-00-15: 
-    0A (Gold Stud): villagewatergate & big height | rahab
+    0A (Gold Stud): villagewatergate & big height | rahab & big height
     0B (Crimson Cloak): height
   00-00-16:
     room: height | garden

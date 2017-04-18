@@ -12,6 +12,7 @@ class CompletabilityChecker
     @current_items << 0x3D # seal 1
     
     p get_accessible_pickups()
+    p currently_useful_pickups().map{|global_id, num_locations| @defs.invert[global_id]}
   end
   
   def load_room_reqs
@@ -101,7 +102,43 @@ class CompletabilityChecker
     return accessible_pickups
   end
   
-  def get_random_accessible_pickup
-    # pick one random pickup out of the available pickups you can access. then put a progression pickup there.
+  def progression_pickups
+    @progression_pickups ||= begin
+      pickups = []
+      
+      @defs.each do |name, req|
+        pickups << req if req.is_a?(Integer)
+      end
+      
+      pickups
+    end
+  end
+  
+  def currently_useful_pickups
+    orig_current_items = @current_items
+    
+    possibly_useful_pickups = progression_pickups - @current_items
+    
+    currently_accessible_pickups = get_accessible_pickups()
+    
+    currently_useful_pickups = {}
+    
+    possibly_useful_pickups.each do |pickup_global_id|
+      #pickup_name = @defs.invert[pickup_global_id]
+      @current_items = orig_current_items + [pickup_global_id]
+      next_accessible_pickups = get_accessible_pickups() - currently_accessible_pickups
+      
+      #puts "#{pickup_name} useful for:"
+      if next_accessible_pickups.any?
+        currently_useful_pickups[pickup_global_id] = next_accessible_pickups.length
+        #puts "  #{next_accessible_pickups.length} locations"
+      else
+        #puts "  nothing"
+      end
+    end
+    
+    return currently_useful_pickups
+  ensure
+    @current_items = orig_current_items
   end
 end
