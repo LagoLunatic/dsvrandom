@@ -1,49 +1,79 @@
 
 Defs:
+  malphas: 0x143
+  hippogryph: 0x146
+  bat company: 0x104
+  bat form: 0xFC
+  puppet master: 0xCE
+  flying armor: 0x103
+  black panther: 0x105
+  succubus: 0xEE
+  rahab: 0x145
+  paranoia: 0xD0
+  cutall: 0x46
+  cinquedia: 0x47
+  alucard sword: 0x5E
+  axe: 0x74
+  battle axe: 0x75
+  bhuj: 0x76
+  great axe: 0x77
+  golden axe: 0x78
+  seal 1: 0x3D
+  seal 2: 0x3E
+  seal 3: 0x3F
+  seal 4: 0x40
+  seal 5: 0x41
+  axearmor: 0xD4
+  killer clown: 0xE3
+  ukoback: 0xEC
+  skeleton: 0xD2
+  
   height: malphas | hippogryph | bat mode | puppet master | vwarpsucc
   medium height: malphas | hippogryph | bat mode | vwarpsucc
   big height: hippogryph | bat mode
-  distance: flying armor | black panther
-  hwarpseal: cutall & seal
-  hwarpsucc: cutall & succubus
+  distance: flying armor | black panther | hippogryph | bat mode
+  cutallsuper: cutall | cinquedia | alucard sword
+  axesuper: axe | battle axe | bhuj | great axe | golden axe
+  hwarpseal: cutallsuper & seal
+  hwarpsucc: cutallsuper & succubus
   hwarp: hwarpseal | hwarpsucc
-  vwarpseal: axe & seal
-  vwarpsucc: axe & succubus
+  vwarpseal: axesuper & seal
+  vwarpsucc: axesuper & succubus
   vwarp: vwarpseal | vwarpsucc
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
   
   bossarmor: seal 1 | hwarp
-  undervillage: lowerwizardry & height | wizardry & cutall
+  undervillage: lowerwizardry & height | wizardry & cutallsuper
   villagewatergate: bossarmor & distance
   
   garden: height | wizardry & balore | lowergarden & rahab
   bossdario: garden & height & seal 3 | garden & height & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
-  upperrightgarden: uppergarden & cutall | garden & vwarp | clocktower
+  upperrightgarden: uppergarden & cutallsuper | garden & vwarp | clocktower
   lowergarden: garden & rahab | hell
   
   puppetguesthouse: towerguesthouse & height
   bosspuppet: puppetguesthouse & medium height & seal 3 | puppetguesthouse & medium height & hwarp
   towerguesthouse: garden & small | uppergarden | pinnacle
   uppertowerguesthouse: pinnacle | towerguesthouse & vwarp
-  bossparanoia: uppertowerguesthouse & axearmor & clown & ukoback
+  bossparanoia: uppertowerguesthouse & axearmor & killer clown & ukoback
   
   wizardry: villagewatergate | garden | hell & big height
-  lowerwizardry: hell & height & puppet master & skeleton ape & rahab | hell & height & bone ark & rahab | wizardry & cutall
+  lowerwizardry: hell & height & puppet master & skeleton ape & rahab | hell & height & bone ark & rahab | wizardry & cutallsuper
   
   chapel: garden | condemntower | hell & rahab
   bossdmitrii: chapel & seal 2 | chapel & hwarp
   
-  condemntower: chapel & cutall | chapel & small | clocktower & hwarp
+  condemntower: chapel & cutallsuper | chapel & small | clocktower & hwarp
   bossgergoth: condemntower & height
   
   hellintro: chapel & small | chapel & hwarp
-  hell: wizardry & cutall | garden & rahab | hellintro & rahab & bossrahab
+  hell: wizardry & cutallsuper | garden & rahab | hellintro & rahab & bossrahab
   bossrahab: hellintro & seal 3 | hellintro & hwarp
   
-  ruins: hell & distance & timestop | hell & cutall
+  ruins: hell & distance & timestop | hell & cutallsuper
   
   clocktower: condemntower & height & towerkey | upperrightgarden & height | pinnacle & big height
   bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
@@ -157,7 +187,7 @@ Rooms:
 #Wizardry Lab:
   00-02-00:
     room: wizardry
-    00 (UMA News 4): cutall
+    00 (UMA News 4): cutallsuper | undervillage
     01 (Scarf): 
   00-02-07:
     room: wizardry
@@ -166,7 +196,7 @@ Rooms:
     room: wizardry
     00 (Blunt Sword): 
   00-02-10:
-    room: wizardry & cutall | hell & big height
+    room: wizardry & cutallsuper | hell & big height
     00 (Aquarius): 
   00-02-12:
     room: wizardry & balore

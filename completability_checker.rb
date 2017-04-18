@@ -2,30 +2,6 @@
 require 'yaml'
 
 class CompletabilityChecker
-  ITEM_NAMES = [
-    "malphas",
-    "hippogryph",
-    "bat company",
-    "bat form",
-    "puppet master",
-    "flying armor",
-    "black panther",
-    "succubus",
-    "cutall",
-    "axe",
-    "seal 1",
-    "seal 2",
-    "seal 3",
-    "seal 4",
-    "seal 5",
-    "axearmor",
-    "clown",
-    "ukoback",
-    "skeleton",
-    "rahab",
-    "paranoia",
-  ]
-  
   attr_reader :game, :rng
   
   def initialize(game)
@@ -33,7 +9,7 @@ class CompletabilityChecker
     @rng = Random.new
     load_room_reqs()
     @current_items = []
-    @current_items << "seal 1"
+    @current_items << 0x3D # seal 1
     
     p get_accessible_pickups()
   end
@@ -68,19 +44,23 @@ class CompletabilityChecker
   
   def check_req_recursive(req)
     return true if req.nil?
+    
+    if req.is_a?(Integer)
+      item_global_id = req
+      return @current_items.include?(item_global_id)
+    end
+    
     req = req.strip
     return true if req.empty?
     
-    puts "Checking req: #{req}"
+    #puts "Checking req: #{req}"
     #gets
     
     # Don't recurse infinitely checking the same two interdependent requirements.
     return false if @recursively_checked_reqs.include?(req)
     @recursively_checked_reqs << req
     
-    if ITEM_NAMES.include?(req)
-      return @current_items.include?(req)
-    elsif @defs.include?(req)
+    if @defs.include?(req)
       return check_req_recursive(@defs[req])
     elsif req =~ /\|/ || req =~ /\&/
       or_reqs = req.split("|")
@@ -107,10 +87,10 @@ class CompletabilityChecker
       room_access_reqs = room_req[:room]
       room_entities_reqs = room_req[:entities]
       
-      puts "### CHECKING ROOM REQ"
+      #puts "### CHECKING ROOM REQ"
       if check_req(room_access_reqs)
         room_entities_reqs.each do |entity_index, entity_reqs|
-          puts "## CHECKING ENTITY REQ"
+          #puts "## CHECKING ENTITY REQ"
           if check_req(entity_reqs)
             accessible_pickups << {room: room_str, entity_index: entity_index}
           end
