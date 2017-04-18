@@ -149,7 +149,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_starting_room => @ui.randomize_starting_room.checked(),
       :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
       :randomize_players => @ui.randomize_players.checked(),
-      :remove_events => @ui.remove_events.checked()
+      :remove_events => false#@ui.remove_events.checked()
     )
     randomizer.randomize()
     
@@ -172,9 +172,10 @@ class RandomizerWindow < Qt::Dialog
       game.apply_armips_patch("ooe_nonlinear")
     end
     
-    game.fix_unnamed_skills()
+    if @ui.name_unnamed_skills.checked()
+      game.fix_unnamed_skills()
+    end
     
-    #game.apply_armips_patch("dos_boss_doors_skip_seal")
     #game.apply_armips_patch("ooe_enter_any_wall")
     #game.apply_armips_patch("dos_use_what_you_see_souls")
     
