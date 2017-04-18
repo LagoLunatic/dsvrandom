@@ -3,16 +3,16 @@ require_relative 'completability_checker'
 
 class Randomizer
   attr_reader :options,
-              :allow_randomization_between_items_skills_passives,
               :rng,
               :log,
-              :game
+              :game,
+              :checker
   
   def initialize(seed, game, options={})
     @game = game
+    @checker = CompletabilityChecker.new(game)
     
     @options = options
-    @allow_randomization_between_items_skills_passives = true
     
     @next_available_item_id = 1
     @used_skills = []
@@ -50,16 +50,8 @@ class Randomizer
       end
     end
     
-    if options[:remove_events] && GAME == "dos"
-      @boss_entities.each do |boss_entity|
-        if boss_entity.subtype == 0x68 # Dmitrii
-          boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
-          boss_entity.write_to_rom()
-        end
-      end
-    end
-    if options[:remove_events] && GAME == "ooe"
-      game.set_starting_room(2, 0, 0) # Start the game in the tutorial room.
+    if options[:randomize_pickups]
+      randomize_pickups_completably()
     end
     
     if options[:randomize_bosses]
@@ -96,35 +88,124 @@ class Randomizer
     end
   end
   
+  def randomize_pickups_completably
+    # TODO: allow randomizing boss souls with this
+    
+    case GAME
+    when "dos"
+      checker.add_item(0x3D) # seal 1
+    end
+    
+    previous_accessible_locations = []
+    locations_randomized_to_have_useful_pickups = []
+    # First place progression pickups needed to beat the game.
+    while true
+      pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
+      useful_pickups = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
+      if useful_pickups.any?
+        min_num_locations = useful_pickups.values.min
+        least_useful_pickups = useful_pickups.select{|pickup, num_locations| num_locations == min_num_locations}
+        #p useful_pickups
+        #pickup_global_id = useful_pickups.keys.sample(random: rng)
+        item_names = least_useful_pickups.keys.map do |global_id|
+          checker.defs.invert[global_id]
+        end
+        puts "Least useful pickups (usefulness #{min_num_locations}): #{item_names}"
+        pickup_global_id = least_useful_pickups.keys.sample(random: rng)
+      elsif pickups_by_locations.any?
+        #p pickups_by_locations
+        pickup_global_id = pickups_by_locations.keys.sample(random: rng)
+      else
+        # All locations accessible.
+        break
+      end
+      #puts "PICKUP: %02X" % pickup_global_id
+      
+      possible_locations = checker.get_accessible_locations()
+      #p possible_locations
+      #p previous_accessible_locations
+      new_possible_locations = possible_locations - previous_accessible_locations.flatten
+      if new_possible_locations.empty?
+        puts "NEW POSSIBLE LOCATIONS EMPTY"
+        new_possible_locations = previous_accessible_locations.last
+      else
+        previous_accessible_locations << new_possible_locations
+      end
+      
+      location = new_possible_locations.sample(random: rng)
+      locations_randomized_to_have_useful_pickups << location
+      #p new_possible_locations
+      #p "LOCATION: #{location}"
+      
+      puts "Placing pickup %04X (#{checker.defs.invert[pickup_global_id]}) at #{location}" % pickup_global_id
+      change_pickup_location_to_pickup_global_id(location, pickup_global_id)
+      
+      checker.add_item(pickup_global_id)
+    end
+    
+    p checker.all_locations.size
+    p locations_randomized_to_have_useful_pickups.size
+    
+    remaining_locations = checker.all_locations.keys - locations_randomized_to_have_useful_pickups
+    p remaining_locations.size
+    non_progression_pickups = all_non_progression_pickups.shuffle
+    remaining_locations.each do |location|
+      pickup_global_id = non_progression_pickups.pop()
+      change_pickup_location_to_pickup_global_id(location, pickup_global_id)
+    end
+    p "Unused non-progression pickups: #{non_progression_pickups.size}"
+    
+    if !checker.check_req("beat game")
+      item_names = checker.current_items.map do |global_id|
+        checker.defs.invert[global_id]
+      end
+      raise "game not beatable. items:\n#{item_names.join(", ")}"
+    end
+    
+    puts "DONE"
+  end
+  
+  def all_non_progression_pickups
+    @all_non_progression_pickups ||= PICKUP_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups
+  end
+  
+  def change_pickup_location_to_pickup_global_id(location, pickup_global_id)
+    location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+    
+    room = game.areas[area_index].sectors[sector_index].rooms[room_index]
+    entity = room.entities[entity_index]
+    
+    item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
+    
+    if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
+      case GAME
+      when "dos"
+        # Soul candle
+        entity.type = 2
+        entity.subtype = 1
+        entity.var_a = 0
+        entity.var_b = item_index
+      when "por"
+      when "ooe"
+      else
+      end
+    else
+      # Item
+      entity.type = 4
+      entity.subtype = item_type
+      entity.var_b = item_index
+    end
+    
+    entity.write_to_rom()
+  end
+  
   def randomize_entity(entity)
     case entity.type
     when 0x01 # Enemy
       randomize_enemy(entity)
-    when 0x02
-      randomize_special_objects(entity)
     when 0x04
-      case GAME
-      when "dos", "por"
-        randomize_pickup_dos_por(entity)
-      when "ooe"
-        randomize_pickup_ooe(entity)
-      end
-    when 0x07
-      case GAME
-      when "dos"
-        # Font loader, do nothing
-      when "por"
-        # Item hidden in wall
-        entity.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
-        entity.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[entity.subtype])
-        
-        entity.var_a = get_unique_id()
-      when "ooe"
-        # Item hidden in wall
-        entity.var_b = rng.rand(0x0070..0x0162)
-        
-        entity.var_a = get_unique_id()
-      end
+      # Pickup. These are randomized separately to ensure the game is completable.
     end
     
     entity.write_to_rom()
@@ -417,240 +498,9 @@ class Randomizer
     end
   end
   
-  def randomize_special_objects(entity)
-    case GAME
-    when "dos"
-      dos_randomize_special_objects(entity)
-    when "por"
-      por_randomize_special_objects(entity)
-    when "ooe"
-      ooe_randomize_special_objects(entity)
-    end
-  end
-  
-  def dos_randomize_special_objects(entity)
-    if entity.subtype >= 0x5E && options[:remove_events]
-      case entity.subtype 
-      when 0x5D..0x5E # prologue and castle entrance event
-        # Do nothing
-      when 0x5F # event with yoko and julius going over the bridge
-        # Replace it with magic seal 1
-        entity.type = 4
-        entity.subtype = 2
-        entity.var_a = 0x0200 # unique id
-        entity.var_b = 0x3D # magic seal 1
-        entity.x_pos = 0x0080
-        entity.y_pos = 0x0140
-      when 0x62 # event that adds potions to the shop
-        # do nothing
-      when 0x65 # mina's talisman event
-        # Replace it with mina's talisman
-        entity.type = 4
-        entity.subtype = 4
-        entity.var_a = 0x0201 # unique id
-        entity.var_b = 0x35 # mina's talisman
-        entity.x_pos = 0x0080
-        entity.y_pos = 0x00A0
-      when 0x69 # event in throne room with dario and aguni
-        # do nothing. if we remove this event the game will crash when entering the mirror.
-      when 0x6A..0x6B # event in center of castle + event where julius breaks the seal to the mine of judgement
-        # do nothing
-      when 0x6C..0x6E # menace events
-        # do nothing
-      when 0x6F..0x74 # various important events
-        # do nothing
-      else
-        # Remove it
-        entity.type = 0
-        entity.subtype = 0
-      end
-    elsif entity.subtype == 0x06 && options[:remove_events]
-      # Area name
-      # Remove it
-      entity.type = 0
-      entity.subtype = 0
-    elsif entity.subtype == 0x01 && entity.var_a == 0x00
-      # Soul candle
-      if options[:randomize_skills]
-        randomize_pickup_dos_por(entity)
-      end
-    elsif entity.subtype == 0x01 && entity.var_a == 0x10
-      # Money chest
-      if options[:randomize_items]
-        randomize_pickup_dos_por(entity)
-      end
-    end
-  end
-  
-  def por_randomize_special_objects(entity)
-    if entity.subtype >= 0x95 && options[:remove_events]
-      case entity.subtype 
-      when nil
-      else
-        # Remove it
-        entity.type = 0
-        entity.subtype = 0
-      end
-    elsif entity.subtype == 0x79 && options[:remove_events]
-      # Area name
-      # Remove it
-      entity.type = 0
-      entity.subtype = 0
-    elsif entity.subtype == 0x01 && (entity.var_a == 0x0E || entity.var_a == 0x0F)
-      # Money chest
-      if options[:randomize_items]
-        randomize_pickup_dos_por(entity)
-      end
-    end
-  end
-  
-  def ooe_randomize_special_objects(entity)
-    if entity.subtype >= 0x5E && options[:remove_events]
-      case entity.subtype 
-      when 0x63 # tutorial event that would normally give you your first glyph
-        # Replace it with a free glyph.
-        entity.type = 4
-        entity.subtype = 2
-        entity.var_a = get_unique_id()
-        entity.var_b = 0x02 # confodere
-        entity.x_pos = 0x00B0
-        entity.y_pos = 0x0070
-      when 0x89 # Villager in Torpor
-        # Do nothing
-      when 0x8A # Magnes glyph + tutorial
-        # Replace it with a free glyph.
-        entity.type = 4
-        entity.subtype = 2
-        entity.var_a = get_unique_id()
-        entity.var_b = 0x39 # magnes
-        entity.x_pos = 0x0080
-        entity.y_pos = 0x02B0
-      else
-        # Remove it
-        entity.type = 0
-        entity.subtype = 0
-      end
-    elsif entity.subtype == 0x55 && options[:remove_events]
-      # Area name
-      # Remove it
-      entity.type = 0
-      entity.subtype = 0
-    elsif entity.subtype == 0x02 && entity.var_a == 0x00
-      # Glyph statue
-      randomize_pickup_ooe(entity)
-    elsif (0x15..0x17).include?(entity.subtype)
-      # Chest
-      randomize_pickup_ooe(entity)
-    end
-  end
-  
-  def randomize_pickup_dos_por(pickup)
-    case GAME
-    when "dos"
-      return if !options[:randomize_items] && pickup.is_pickup? && pickup.subtype < 0x05
-      return if !options[:randomize_skills] && pickup.is_pickup? && pickup.subtype >= 0x05 # free soul
-      return if !options[:randomize_skills] && pickup.type == 0x02 && pickup.subtype == 0x01 # soul candle or money chest
-      
-      if pickup.is_pickup? && pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
-        # magic seal
-        pickup.var_a = get_unique_id()
-        return
-      elsif pickup.is_pickup? && pickup.subtype == 0x02 && pickup.var_b == 0x39
-        # tower key
-        pickup.var_a = get_unique_id()
-        return
-      end
-    when "por"
-      return if !options[:randomize_items] && pickup.is_pickup? && pickup.subtype < 0x08
-      return if !options[:randomize_skills] && pickup.is_pickup? && pickup.subtype >= 0x08 # relic
-      return if !options[:randomize_skills] && pickup.type == 0x02 && pickup.subtype == 0x01 # money chest
-      
-      if pickup.is_pickup? && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
-        # change cube or call cube
-        pickup.var_a = get_unique_id()
-        return
-      end
-    end
-    
-    rand = rng.rand(1..100)
-    if options[:randomize_items] && ((1..90).include?(rand) || !options[:randomize_skills])
-      if (1..88).include?(rand)
-        # Randomize into an item
-        pickup.type = 4 # pickup
-        pickup.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
-        pickup.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[pickup.subtype])
-        
-        pickup.var_a = get_unique_id()
-      else
-        # Randomize into a money chest
-        case GAME
-        when "dos"
-          pickup.type = 2 # special object
-          pickup.subtype = 1 # destructible object
-          pickup.var_a = 0x10 # money chest
-        when "por"
-          pickup.type = 2 # special object
-          pickup.subtype = 1 # destructible object
-          pickup.var_a = rng.rand(0x0E..0x0F) # money chest
-        end
-      end
-    elsif options[:randomize_skills] && ((91..100).include?(rand) || !options[:randomize_items])
-      case GAME
-      when "dos"
-        # Randomize into a soul lamp
-        pickup.type = 2 # special object
-        pickup.subtype = 1 # candle
-        pickup.var_a = 0 # glowing soul lamp
-        pickup.var_b = rng.rand(SOUL_GLOBAL_ID_RANGE)
-      when "por"
-        # Randomize into a skill or relic
-        pickup.type = 4 # pickup
-        pickup.subtype = 8 # skill
-        pickup.var_a = get_unique_id()
-        pickup.var_b = rng.rand(SKILL_GLOBAL_ID_RANGE)
-      end
-    end
-  end
-  
-  def randomize_pickup_ooe(pickup)
-    return if !options[:randomize_items] && pickup.is_special_object? && (0x15..0x17).include?(pickup.subtype) # chest
-    return if !options[:randomize_skills] && pickup.is_special_object? && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
-    return if !options[:randomize_skills] && pickup.is_pickup? && (2..4).include?(pickup.subtype) # free glyph
-    
-    case rng.rand(1..100)
-    when 1..40
-      # Wooden chest
-      pickup.type = 0x02
-      pickup.subtype = 0x15
-      pickup.var_a = rng.rand(0x00..0x0F)
-      pickup.var_b = 0
-    when 41..80
-      # Red chest
-      pickup.type = 0x02
-      pickup.subtype = 0x16
-      pickup.var_a = rng.rand(0x0070..0x0162)
-      pickup.var_b = get_unique_id()
-      
-      if rng.rand(1..100) < 15
-        # Blue chest
-        pickup.subtype = 0x17
-      end
-    when 81..90
-      # Glyph statue
-      pickup.type = 0x02
-      pickup.subtype = 0x02
-      pickup.var_a = 0x00
-      pickup.var_b = get_random_glyph()
-    when 91..100
-      # Free glyph
-      pickup.type = 0x04
-      pickup.subtype = 0x02
-      pickup.var_a = get_unique_id()
-      pickup.var_b = get_random_glyph()
-    end
-  end
-  
   def randomize_enemy_drops
+    # TODO: only allow enemy drops to drop non-progression items
+    
     if GAME == "ooe"
       BOSS_IDS.each do |enemy_id|
         enemy = EnemyDNA.new(enemy_id, game.fs)
@@ -990,4 +840,6 @@ class Randomizer
       player.write_to_rom()
     end
   end
+  
+  def inspect; to_s; end
 end
