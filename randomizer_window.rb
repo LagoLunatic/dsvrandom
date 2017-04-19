@@ -38,12 +38,15 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.skip_magic_seals, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.fix_luck, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
     connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
     
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
+    
+    @ui.skip_magic_seals.hide()
     
     self.show()
   end
@@ -75,6 +78,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
     @ui.skip_magic_seals.setChecked(@settings[:skip_magic_seals]) unless @settings[:skip_magic_seals].nil?
     @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
+    @ui.fix_luck.setChecked(@settings[:fix_luck]) unless @settings[:fix_luck].nil?
     @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
@@ -116,6 +120,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
     @settings[:skip_magic_seals] = @ui.skip_magic_seals.checked
     @settings[:no_touch_screen] = @ui.no_touch_screen.checked
+    @settings[:fix_luck] = @ui.fix_luck.checked
     @settings[:open_world_map] = @ui.open_world_map.checked
   end
   
@@ -162,6 +167,10 @@ class RandomizerWindow < Qt::Dialog
       game.apply_armips_patch("dos_skip_drawing_seals")
       game.apply_armips_patch("dos_melee_balore_blocks")
       game.apply_armips_patch("dos_skip_name_signing")
+    end
+    
+    if @ui.fix_luck.checked()
+      game.apply_armips_patch("dos_fix_luck")
     end
     
     if @ui.open_world_map.checked()
@@ -218,6 +227,6 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def open_about
-    @about_dialog = Qt::MessageBox::about(self, "DSVania Randomizer", "DSVania Randomizer Version #{DSVRANDOM_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/DSVEdit\n\nReport issues here:\nhttps://github.com/LagoLunatic/DSVEdit/issues")
+    @about_dialog = Qt::MessageBox::about(self, "DSVania Randomizer", "DSVania Randomizer Version #{DSVRANDOM_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/dsvrandom\n\nReport issues here:\nhttps://github.com/LagoLunatic/dsvrandom/issues")
   end
 end

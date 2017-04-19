@@ -86,6 +86,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
              <widget class="QCheckBox" name="randomize_pickups">
+              <property name="toolTip">
+               <string>Randomize items and skills you find lying on the ground.</string>
+              </property>
               <property name="text">
                <string>Items/Skills</string>
               </property>
@@ -96,8 +99,11 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_enemies">
+              <property name="toolTip">
+               <string>Randomize which non-boss enemies appear where.</string>
+              </property>
               <property name="text">
-               <string>Enemies</string>
+               <string>Enemy Locations</string>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -110,6 +116,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_drops">
+              <property name="toolTip">
+               <string>Randomize the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
+              </property>
               <property name="text">
                <string>Enemy Drops</string>
               </property>
@@ -120,6 +129,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_boss_souls">
+              <property name="toolTip">
+               <string>Randomize the souls dropped by bosses (DoS only).</string>
+              </property>
               <property name="text">
                <string>Boss Souls</string>
               </property>
@@ -141,6 +153,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QCheckBox" name="enable_glitch_reqs">
+            <property name="toolTip">
+             <string>If checked, certain glitches may be necessary to beat the game.</string>
+            </property>
             <property name="text">
              <string>Allow requiring glitches to win</string>
             </property>
@@ -152,13 +167,16 @@
        <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
-          <string>Experimental randomization options (not guaranteed completable)</string>
+          <string>Experimental randomization options (not guaranteed completable and very buggy)</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
              <widget class="QCheckBox" name="randomize_players">
+              <property name="toolTip">
+               <string>Randomize player graphics and movement stats.</string>
+              </property>
               <property name="text">
                <string>Players</string>
               </property>
@@ -166,8 +184,11 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_bosses">
+              <property name="toolTip">
+               <string>Randomize which bosses appear where.</string>
+              </property>
               <property name="text">
-               <string>Bosses</string>
+               <string>Boss Locations</string>
               </property>
              </widget>
             </item>
@@ -177,6 +198,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <widget class="QCheckBox" name="randomize_area_connections">
+              <property name="toolTip">
+               <string>Randomize which areas connect to each other.</string>
+              </property>
               <property name="text">
                <string>Area Connections</string>
               </property>
@@ -184,6 +208,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_room_connections">
+              <property name="toolTip">
+               <string>Randomize which rooms within an area connect to each other.</string>
+              </property>
               <property name="text">
                <string>Room Connections</string>
               </property>
@@ -195,6 +222,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
              <widget class="QCheckBox" name="randomize_starting_room">
+              <property name="toolTip">
+               <string>Randomize which room you start in.</string>
+              </property>
               <property name="text">
                <string>Starting Room</string>
               </property>
@@ -202,6 +232,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_enemy_ai">
+              <property name="toolTip">
+               <string>Shuffle the AI of non-boss enemies.</string>
+              </property>
               <property name="text">
                <string>Enemy AI</string>
               </property>
@@ -230,6 +263,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
            <widget class="QCheckBox" name="name_unnamed_skills">
+            <property name="toolTip">
+             <string>Gives Julius/Yoko/Alucard/Arma Felix/Arma Chiroptera's skills names so they can be distinguished from one another.</string>
+            </property>
             <property name="text">
              <string>Name unnamed skills</string>
             </property>
@@ -249,6 +285,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QCheckBox" name="fix_first_ability_soul">
+            <property name="toolTip">
+             <string>Fixes a bug where the first ability soul you get would enable multiple ability souls.</string>
+            </property>
             <property name="text">
              <string>Fix first ability soul bug</string>
             </property>
@@ -259,8 +298,24 @@
           </item>
           <item>
            <widget class="QCheckBox" name="no_touch_screen">
+            <property name="toolTip">
+             <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
+            </property>
             <property name="text">
              <string>No required touch screen</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="fix_luck">
+            <property name="toolTip">
+             <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
+            </property>
+            <property name="text">
+             <string>Fix luck</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -296,6 +351,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
            <widget class="QCheckBox" name="open_world_map">
+            <property name="toolTip">
+             <string>Make all areas except Dracula's Castle accesible from the start.</string>
+            </property>
             <property name="text">
              <string>Open world map</string>
             </property>
