@@ -58,7 +58,8 @@ Defs:
   villagewatergate: bossarmor & distance
   
   garden: medium height | wizardry & balore | lowergarden & rahab
-  bossdario: garden & height & seal 3 | garden & height & hwarp
+  midgarden: garden & height | garden & vwarpseal
+  bossdario: midgarden & seal 3 | midgarden & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
   upperrightgarden: uppergarden & cutallsuper | garden & vwarp | clocktower
   lowergarden: garden & rahab | hell
@@ -71,9 +72,11 @@ Defs:
   
   wizardry: villagewatergate | garden | hell & big height
   lowerwizardry: hell & height & puppet master & skeleton ape & rahab | hell & height & bone ark & rahab | wizardry & cutallsuper
+  bossbalore: wizardry
   
   chapel: garden | condemntower | hell & rahab
   bossdmitrii: chapel & seal 2 | chapel & hwarp
+  bossmalphas: bossdmitrii & seal 2
   
   condemntower: chapel & cutallsuper | chapel & small | clocktower & hwarp
   bossgergoth: condemntower & height
@@ -82,7 +85,8 @@ Defs:
   hell: wizardry & cutallsuper | garden & rahab | hellintro & rahab & bossrahab
   bossrahab: hellintro & seal 3 | hellintro & hwarp
   
-  ruins: hell & distance & zephyr | hell & cutallsuper
+  ruins: hell & distance & zephyr | hell & height & zephyr | hell & cutallsuper
+  bossbatcompany: ruins & seal 4 | ruins & hwarp
   
   clocktower: condemntower & height & tower key | upperrightgarden & height | pinnacle & big height
   bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
@@ -121,6 +125,9 @@ Rooms:
     07 (Money): 
   00-00-0A:
     room: bossarmor
+  00-00-0B:
+    room: bossarmor
+    02 (Flying Armor) (Enemy): 
   00-00-0C:
     room: bossarmor
     00 (Potion): 
@@ -155,6 +162,9 @@ Rooms:
   00-01-05:
     room: bossparanoia
     00 (Olrox's Suit): 
+  00-01-06:
+    room: bosspuppet
+    01 (Puppet Master) (Enemy): 
   00-01-07:
     room: puppetguesthouse
     00 (Magic Seal 3): 
@@ -177,6 +187,9 @@ Rooms:
     room: towerguesthouse & height
     02 (Ring Mail): 
     03 (Dracula's Tunic): paranoia
+  00-01-1C:
+    room: bossparanoia
+    00 (Paranoia) (Enemy): 
   00-01-20:
     room: bossparanoia
     06 (Mana Prism): paranoia
@@ -206,6 +219,9 @@ Rooms:
     room: wizardry
     00 (UMA News 4): cutallsuper | undervillage
     01 (Scarf): 
+  00-02-06:
+    room: bossbalore
+    00 (Balore) (Enemy): 
   00-02-07:
     room: wizardry
     01 (Mind Up): 
@@ -238,14 +254,17 @@ Rooms:
     00 (Fleuret): 
     01 (Breastplate): 
   00-03-01:
-    room: garden & height
+    room: midgarden
     00 (Elfin Robe): 
   00-03-03:
     room: garden
     01 (Magic Seal 2): 
   00-03-04:
-    room: garden & height
+    room: midgarden & big height
     00 (Ninja Suit): 
+  00-03-0B:
+    room: bossdario
+    05 (Dario) (Enemy): 
   00-03-16:
     room: upperrightgarden | garden & vwarp
     00 (Handgun): 
@@ -274,6 +293,12 @@ Rooms:
   00-04-05:
     room: chapel
     00 (Traveler Cape): 
+  00-04-0F: 
+    room: bossmalphas
+    01 (Malphas) (Enemy): 
+  00-04-10: 
+    room: bossdmitrii
+    05 (Dmitrii) (Enemy): 
   00-04-11:
     room: chapel
     02 (Red Scarf): 
@@ -291,7 +316,7 @@ Rooms:
   00-04-15:
     room: condemntower
     00 (UMA News 3-2): height | chapel & small
-    01 (Kotetsu): big height
+    01 (Kotetsu): big height | malphas & puppet master
     02 (High Potion): big height
 #Condemned Tower & Mine of Judgment:
   00-05-02:
@@ -306,10 +331,16 @@ Rooms:
   00-05-06:
     room: condemntower
     02 (Tasty Meat): big height | hwarpseal
+  00-05-07:
+    room: bossgergoth
+    00 (Gergoth) (Enemy): 
   00-05-0B:
     room: condemntower
     01 (Silver Stud): height
     02 (Mind Up): 
+  00-05-1B:
+    room: bossdeath
+    02 (Death) (Enemy): 
 #Subterranean Hell:
   00-06-02:
     room: hell & medium height
@@ -328,6 +359,9 @@ Rooms:
   00-06-0D:
     room: hell
     00 (UMA News 1-3): 
+  00-06-16:
+    room: bossrahab
+    03 (Rahab) (Enemy): 
   00-06-17:
     room: hell & rahab
     00 (Chain Mail): 
@@ -342,10 +376,16 @@ Rooms:
   00-07-0C:
     room: ruins
     05 (Rare Ring): balore | hwarpsucc
+  00-07-0E:
+    room: bossbatcompany
+    00 (Bat Company) (Enemy): 
 #Cursed Clock Tower:
   00-08-00:
     room: clocktower
     00 (Army Jacket): 
+  00-08-14:
+    room: bosszephyr
+    00 (Zephyr) (Enemy): 
   00-08-19:
     room: clocktower & height
     00 (Magic Seal 4): 
@@ -363,6 +403,9 @@ Rooms:
   00-09-00:
     room: bossaguni
     00 (Magic Seal 5): 
+  00-09-01:
+    room: bossaguni
+    06 (Dario) (Enemy): # actually for aguni but he's not in the room. will have to hardcode this.
   00-09-02:
     room: pinnacle & big height | pinnacle & vwarp
     00 (Satan's Ring): 
@@ -386,3 +429,6 @@ Rooms:
   00-0B-0B:
     room: abyss & medium height
     01 (Magus Ring): height
+  00-0B-13:
+    room: bossabaddon
+    00 (Abaddon) (Enemy): 

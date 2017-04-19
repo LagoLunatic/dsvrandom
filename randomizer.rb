@@ -11,6 +11,7 @@ class Randomizer
   def initialize(seed, game, options={})
     @game = game
     @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs])
+    #checker.generate_empty_item_requirements_file()
     
     @options = options
     
@@ -70,10 +71,6 @@ class Randomizer
       randomize_enemy_drops()
     end
     
-    if options[:randomize_boss_souls]
-      randomize_boss_souls()
-    end
-    
     if options[:randomize_starting_room]
       game.fix_top_screen_on_new_game()
       randomize_starting_room()
@@ -105,25 +102,37 @@ class Randomizer
       if useful_pickups.any?
         min_num_locations = useful_pickups.values.min
         least_useful_pickups = useful_pickups.select{|pickup, num_locations| num_locations == min_num_locations}
-        #p useful_pickups
-        #pickup_global_id = useful_pickups.keys.sample(random: rng)
+        # TODO: Pick from not just the lowest ranked of usefulness, but the lowest 2. This will make things more random.
         item_names = least_useful_pickups.keys.map do |global_id|
           checker.defs.invert[global_id]
         end
         puts "Least useful pickups (usefulness #{min_num_locations}): #{item_names}"
         pickup_global_id = least_useful_pickups.keys.sample(random: rng)
       elsif pickups_by_locations.any?
-        #p pickups_by_locations
         pickup_global_id = pickups_by_locations.keys.sample(random: rng)
       else
         # All locations accessible.
         break
       end
-      #puts "PICKUP: %02X" % pickup_global_id
       
       possible_locations = checker.get_accessible_locations()
-      #p possible_locations
-      #p previous_accessible_locations
+      possible_locations -= locations_randomized_to_have_useful_pickups
+      
+      if !options[:randomize_boss_souls]
+        # If randomize boss souls option is off, don't allow putting random things in these locations.
+        accessible_unused_boss_locations = possible_locations & checker.enemy_locations
+        accessible_unused_boss_locations.each do |location|
+          possible_locations.delete(location)
+          locations_randomized_to_have_useful_pickups << location
+          
+          # Also, give the player what this boss drops so the checker takes this into account.
+          pickup_global_id = get_entity_soul_drop_by_entity_location(location)
+          checker.add_item(pickup_global_id)
+        end
+        
+        next if accessible_unused_boss_locations.length > 0
+      end
+      
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       if new_possible_locations.empty?
         puts "NEW POSSIBLE LOCATIONS EMPTY"
@@ -132,26 +141,39 @@ class Randomizer
         previous_accessible_locations << new_possible_locations
       end
       
+      if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+        # If the pickup is an item instead of a soul, don't let bosses drop it.
+        new_possible_locations -= checker.enemy_locations
+      end
+      
       location = new_possible_locations.sample(random: rng)
       locations_randomized_to_have_useful_pickups << location
-      #p new_possible_locations
-      #p "LOCATION: #{location}"
       
-      puts "Placing pickup %04X (#{checker.defs.invert[pickup_global_id]}) at #{location}" % pickup_global_id
-      change_pickup_location_to_pickup_global_id(location, pickup_global_id)
+      is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
+      puts "Placing pickup %04X (#{checker.defs.invert[pickup_global_id]}) at #{location} #{is_enemy_str}" % pickup_global_id
+      change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
     end
     
-    p checker.all_locations.size
-    p locations_randomized_to_have_useful_pickups.size
-    
     remaining_locations = checker.all_locations.keys - locations_randomized_to_have_useful_pickups
-    p remaining_locations.size
-    non_progression_pickups = all_non_progression_pickups.shuffle
+    non_progression_pickups = all_non_progression_pickups.shuffle(random: rng)
     remaining_locations.each do |location|
-      pickup_global_id = non_progression_pickups.pop()
-      change_pickup_location_to_pickup_global_id(location, pickup_global_id)
+      if checker.enemy_locations.include?(location)
+        # Boss
+        non_progression_souls = non_progression_pickups.select do |pickup_global_id|
+          SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
+        end
+        pickup_global_id = non_progression_souls.pop()
+        non_progression_pickups.delete(pickup_global_id)
+      else
+        # Pickup
+        # TODO: make this much more likely to be an item than a soul. also give it a small change to be a money bag/chest.
+        # or maybe just make it randomize enemy drops first and not allow souls here to duplicate souls that enemies drop?
+        pickup_global_id = non_progression_pickups.pop()
+      end
+      
+      change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
     p "Unused non-progression pickups: #{non_progression_pickups.size}"
     
@@ -169,7 +191,7 @@ class Randomizer
     @all_non_progression_pickups ||= PICKUP_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups
   end
   
-  def change_pickup_location_to_pickup_global_id(location, pickup_global_id)
+  def change_entity_location_to_pickup_global_id(location, pickup_global_id)
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     
@@ -178,26 +200,67 @@ class Randomizer
     
     item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
     
-    if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
-      case GAME
-      when "dos"
-        # Soul candle
-        entity.type = 2
-        entity.subtype = 1
-        entity.var_a = 0
-        entity.var_b = item_index
-      when "por"
-      when "ooe"
-      else
+    if entity.type == 1
+      # boss
+      if !PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
+        raise "Can't make boss drop required item"
       end
+      
+      if GAME == "dos" && entity.room.sector_index == 9 && entity.room.room_index == 1
+        # Aguni. He's not placed in the room so we hardcode him.
+        enemy_dna = game.enemy_dnas[0x70]
+      else
+        enemy_dna = game.enemy_dnas[entity.subtype]
+      end
+      
+      enemy_dna["Soul"] = item_index
+      enemy_dna.write_to_rom()
     else
-      # Item
-      entity.type = 4
-      entity.subtype = item_type
-      entity.var_b = item_index
+      if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
+        case GAME
+        when "dos"
+          # Soul candle
+          entity.type = 2
+          entity.subtype = 1
+          entity.var_a = 0
+          entity.var_b = item_index
+        when "por"
+        when "ooe"
+        else
+        end
+      else
+        # Item
+        entity.type = 4
+        entity.subtype = item_type
+        entity.var_b = item_index
+      end
+      
+      entity.write_to_rom()
+    end
+  end
+  
+  def get_entity_soul_drop_by_entity_location(location)
+    location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+    
+    room = game.areas[area_index].sectors[sector_index].rooms[room_index]
+    entity = room.entities[entity_index]
+    
+    if entity.type != 1
+      raise "Not an enemy: #{location}"
     end
     
-    entity.write_to_rom()
+    if GAME == "dos" && entity.room.sector_index == 9 && entity.room.room_index == 1
+      # Aguni. He's not placed in the room so we hardcode him.
+      enemy_dna = game.enemy_dnas[0x70]
+    else
+      enemy_dna = game.enemy_dnas[entity.subtype]
+    end
+    
+    soul_local_id = enemy_dna["Soul"]
+    soul_global_id = soul_local_id + SKILL_GLOBAL_ID_RANGE.begin
+    
+    return soul_global_id
   end
   
   def randomize_entity(entity)
@@ -592,45 +655,6 @@ class Randomizer
     return id
   end
   
-  def randomize_boss_souls
-    return unless GAME == "dos"
-    
-    important_soul_ids = [
-      0x00, # puppet master
-      0x01, # zephyr
-      0x02, # paranoia
-      0x20, # succubus
-      0x2E, # alucard's bat form
-      0x35, # flying armor
-      0x36, # bat company
-      0x37, # black panther
-      0x74, # balore
-      0x75, # malphas
-      0x77, # rahab
-      0x78, # hippogryph
-    ]
-    
-    unused_important_soul_ids = important_soul_ids.dup
-    
-    bosses = []
-    RANDOMIZABLE_BOSS_IDS.each do |enemy_id|
-      boss = EnemyDNA.new(enemy_id, game.fs)
-      bosses << boss
-    end
-    
-    bosses.each do |boss|
-      if unused_important_soul_ids.length > 0
-        random_soul_id = unused_important_soul_ids.sample(random: rng)
-        unused_important_soul_ids.delete(random_soul_id)
-      else # Exhausted the important souls. Give the boss a random soul instead.
-        random_soul_id = rng.rand(SOUL_GLOBAL_ID_RANGE)
-      end
-      
-      boss["Soul"] = random_soul_id
-      boss.write_to_rom()
-    end
-  end
-  
   def randomize_starting_room
     area = game.areas.sample(random: rng)
     sector = area.sectors.sample(random: rng)
@@ -646,7 +670,7 @@ class Randomizer
     end
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
-    transition_rooms.shuffle.each_with_index do |transition_room, i|
+    transition_rooms.shuffle(random: rng).each_with_index do |transition_room, i|
       next unless remaining_transition_rooms.include?(transition_room) # Already randomized this room
       
       remaining_transition_rooms.delete(transition_room)

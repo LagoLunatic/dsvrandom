@@ -2,7 +2,11 @@
 require 'yaml'
 
 class CompletabilityChecker
-  attr_reader :game, :rng, :current_items, :defs
+  attr_reader :game,
+              :rng,
+              :current_items,
+              :defs,
+              :enemy_locations
   
   def initialize(game, enable_glitches)
     @game = game
@@ -15,7 +19,7 @@ class CompletabilityChecker
   end
   
   def load_room_reqs
-    yaml = YAML::load_file("./dsvrandom/requirements/dos_pickup_requirements.txt")
+    yaml = YAML::load_file("./dsvrandom/requirements/#{GAME}_pickup_requirements.txt")
     @room_reqs = {}
     
     @defs = yaml["Defs"]
@@ -25,6 +29,8 @@ class CompletabilityChecker
     end
     
     rooms = yaml["Rooms"]
+    
+    @enemy_locations = []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
@@ -37,6 +43,11 @@ class CompletabilityChecker
         else
           entity_index = applies_to.to_i(16)
           @room_reqs[room_str][:entities][entity_index] = reqs
+          
+          if applies_to.end_with?(" (Enemy)")
+            entity_str = "#{room_str}_%02X" % entity_index
+            @enemy_locations << entity_str
+          end
         end
       end
     end

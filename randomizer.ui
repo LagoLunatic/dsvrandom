@@ -95,17 +95,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="randomize_players">
-              <property name="text">
-               <string>Players</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
              <widget class="QCheckBox" name="randomize_enemies">
               <property name="text">
                <string>Enemies</string>
@@ -115,10 +104,27 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_drops">
               <property name="text">
                <string>Enemy Drops</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_boss_souls">
+              <property name="text">
+               <string>Boss Souls</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -152,16 +158,16 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
-             <widget class="QCheckBox" name="randomize_bosses">
+             <widget class="QCheckBox" name="randomize_players">
               <property name="text">
-               <string>Bosses</string>
+               <string>Players</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="randomize_boss_souls">
+             <widget class="QCheckBox" name="randomize_bosses">
               <property name="text">
-               <string>Boss Souls</string>
+               <string>Bosses</string>
               </property>
              </widget>
             </item>
