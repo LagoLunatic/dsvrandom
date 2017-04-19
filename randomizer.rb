@@ -267,11 +267,10 @@ class Randomizer
     case entity.type
     when 0x01 # Enemy
       randomize_enemy(entity)
+      entity.write_to_rom()
     when 0x04
       # Pickup. These are randomized separately to ensure the game is completable.
     end
-    
-    entity.write_to_rom()
   end
   
   def randomize_enemy(enemy)
@@ -656,10 +655,20 @@ class Randomizer
   end
   
   def randomize_starting_room
-    area = game.areas.sample(random: rng)
-    sector = area.sectors.sample(random: rng)
-    room = sector.rooms.sample(random: rng)
-    game.set_starting_room(area.area_index, sector.sector_index, room.room_index)
+    rooms = []
+    game.each_room do |room|
+      next if room.layers.length == 0
+      next if room.doors.length == 0
+      
+      next if room.area.name.include?("Boss Rush")
+      
+      next if room.sector.name.include?("Boss Rush")
+      
+      rooms << room
+    end
+    
+    room = rooms.sample(random: rng)
+    game.set_starting_room(room.area_index, room.sector_index, room.room_index)
   end
   
   def randomize_transition_doors
@@ -721,6 +730,11 @@ class Randomizer
   end
   
   def randomize_non_transition_doors
+    # TODO: make sure every room in an area is accessible. this is to prevent infinite loops of a small number of rooms that connect to each other with no way to progress.
+    # loop through each room. search for remaining rooms that have a matching door. but the room we find must also have remaining doors in it besides the one we swap with so it's not a dead end, or a loop. if there are no rooms that meet those conditions, then we go with the more lax condition of just having a matching door, allowing dead ends.
+    
+    # TODO: don't randomize unused doors that are blocked off behind walls like ones in the lost village.
+    
     transition_rooms = game.get_transition_rooms()
     
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
@@ -848,37 +862,37 @@ class Randomizer
     end
     
     # Shuffle some player attributes such as graphics
-    #remaining_players = players.dup
-    #players.each do |player|
-    #  next unless remaining_players.include?(player) # Already randomized this player
-    #  
-    #  remaining_players.delete(player)
-    #  
-    #  break if remaining_players.empty?
-    #  
-    #  other_player = remaining_players.sample(random: rng)
-    #  remaining_players.delete(other_player)
-    #  
-    #  [
-    #    "GFX list pointer",
-    #    "Sprite pointer",
-    #    "Palette pointer",
-    #    "State anims ptr",
-    #    "GFX file index",
-    #    "Sprite file index",
-    #    "Filename pointer",
-    #    "Sprite Y offset",
-    #    "Hitbox pointer",
-    #    "Face icon frame",
-    #    "Unknown 21",
-    #    "Unknown 22",
-    #  ].each do |attr_name|
-    #    player[attr_name], other_player[attr_name] = other_player[attr_name], player[attr_name]
-    #  end
-    #  
-    #  # Horizontal flip bit
-    #  player["??? bitfield"][0], other_player["??? bitfield"][0] = other_player["??? bitfield"][0], player["??? bitfield"][0]
-    #end
+    remaining_players = players.dup
+    players.each do |player|
+      next unless remaining_players.include?(player) # Already randomized this player
+      
+      remaining_players.delete(player)
+      
+      break if remaining_players.empty?
+      
+      other_player = remaining_players.sample(random: rng)
+      remaining_players.delete(other_player)
+      
+      [
+        "GFX list pointer",
+        "Sprite pointer",
+        "Palette pointer",
+        "State anims ptr",
+        "GFX file index",
+        "Sprite file index",
+        "Filename pointer",
+        "Sprite Y offset",
+        "Hitbox pointer",
+        "Face icon frame",
+        "Unknown 21",
+        "Unknown 22",
+      ].each do |attr_name|
+        player[attr_name], other_player[attr_name] = other_player[attr_name], player[attr_name]
+      end
+      
+      # Horizontal flip bit
+      player["??? bitfield"][0], other_player["??? bitfield"][0] = other_player["??? bitfield"][0], player["??? bitfield"][0]
+    end
     
     players.each do |player|
       player["Actions"][1] = true # Can use weapons
