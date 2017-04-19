@@ -273,7 +273,7 @@ class Randomizer
         enemy.var_a = 0x100
       end
     when "Fleaman"
-      enemy.var_a = rng.rand(1..10)
+      enemy.var_a = rng.rand(1..5)
     when "Bone Pillar", "Fish Head"
       enemy.var_a = rng.rand(1..12)
     when "Mollusca", "Giant Slug"
@@ -283,6 +283,8 @@ class Randomizer
       # So for now let's just delete these enemies so this can't happen.
       # TODO: Try to detect if they're placed near cliffs and move them a bit.
       enemy.type = 0
+    when "Stolas"
+      # TODO
     end
   end
   
@@ -542,7 +544,7 @@ class Randomizer
       
       case GAME
       when "dos"
-        enemy["Item Chance"] = rng.rand(0x01..0x40)
+        enemy["Item Chance"] = rng.rand(0x04..0x50)
         
         enemy["Soul"] = get_random_soul()
         enemy["Soul Chance"] = rng.rand(0x01..0x30)
@@ -577,11 +579,11 @@ class Randomizer
   end
   
   def get_random_soul
-    get_random_id(SOUL_GLOBAL_ID_RANGE, @used_skills) || 0xFF
+    get_random_id(SKILL_LOCAL_ID_RANGE, @used_skills) || 0xFF
   end
   
   def get_random_glyph
-    get_random_id(GLYPH_GLOBAL_ID_RANGE, @used_skills) || 0
+    get_random_id(SKILL_LOCAL_ID_RANGE, @used_skills) || 0
   end
   
   def get_unique_id
@@ -785,7 +787,7 @@ class Randomizer
     players = game.players
     
     players.each do |player|
-      player["Walking speed"]       =  rng.rand(0x1400..0x3000)
+      player["Walking speed"]       =  rng.rand(0x1400..0x2000)
       player["Jump force"]          = -rng.rand(0x5A00..0x6000)
       player["Double jump force"]   = -rng.rand(0x4A00..0x6000)
       player["Slide force"]         =  rng.rand(0x1800..0x5000)
