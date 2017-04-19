@@ -44,10 +44,10 @@ Defs:
   skeleton ape: 0x134
   bone ark: 0x119
   
-  height: malphas | hippogryph | bat mode | puppet master | vwarpsucc
-  medium height: malphas | hippogryph | bat mode | vwarpsucc
+  height: puppet master | medium height
+  medium height: malphas | vwarpsucc | big height
   big height: hippogryph | bat mode
-  distance: flying armor | black panther | hippogryph | bat mode
+  distance: flying armor | black panther | big height
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5

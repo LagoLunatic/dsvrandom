@@ -185,4 +185,75 @@ class CompletabilityChecker
   def add_item(new_item_global_id)
     @current_items << new_item_global_id
   end
+  
+  def generate_empty_item_requirements_file
+    File.open("./dsvrandom/#{GAME}_pickup_requirements.txt", "w+") do |f|
+      prev_area_name = nil
+      prev_sector_name = nil
+      game.each_room do |room|
+        pickups = room.entities.select{|e| e.is_pickup? || e.is_item_chest? || e.is_money_chest?}
+        next if pickups.empty?
+        
+        area_name = AREA_INDEX_TO_AREA_NAME[room.area_index]
+        if area_name != prev_area_name
+          f.puts "#%s:" % area_name
+          prev_area_name = area_name
+        end
+        
+        if SECTOR_INDEX_TO_SECTOR_NAME[room.area_index]
+          sector_name = SECTOR_INDEX_TO_SECTOR_NAME[room.area_index][room.sector_index]
+          if sector_name != prev_sector_name
+            f.puts "#%s:" % sector_name
+            prev_sector_name = sector_name
+          end
+        end
+        
+        f.puts "  %02X-%02X-%02X:" % [room.area_index, room.sector_index, room.room_index]
+        f.puts "    room: "
+        pickups.each do |e|
+          i = room.entities.index(e)
+          
+          name = get_item_name_for_generated_reqs_file(e)
+          hidden_string = ""
+          hidden_string = " (Hidden)" if e.is_hidden_pickup?
+          f.puts "    %02X (%s)#{hidden_string}: " % [i, name]
+        end
+      end
+    end
+  end
+  
+  def get_item_name_for_generated_reqs_file(pickup)
+    if pickup.is_heart?
+      return "Heart"
+    end
+    if pickup.is_money_bag?
+      return "Money"
+    end
+    if pickup.is_item?
+      if GAME == "ooe"
+        item_id = pickup.var_b - 1
+        item = game.items[item_id]
+        return item.name
+      else
+        item_type_index = pickup.subtype
+        item_index = pickup.var_b
+        item = game.get_item_by_type_and_index(item_type_index, item_index)
+        return item.name
+      end
+    end
+    if pickup.is_skill?
+      item_type_index = PICKUP_SUBTYPES_FOR_SKILLS.begin
+      item_index = pickup.var_b
+      item = game.get_item_by_type_and_index(item_type_index, item_index)
+      return item.name
+    end
+    if pickup.is_item_chest?
+      item_id = pickup.var_a - 1
+      item = game.items[item_id]
+      return item.name
+    end
+    if pickup.is_money_chest?
+      return "Money Chest"
+    end
+  end
 end

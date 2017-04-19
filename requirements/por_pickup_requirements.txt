@@ -1,0 +1,690 @@
+
+Glitch defs:
+  jumpglitch: callswitch
+  quadjumpglitch: jumpglitch & double jump
+Defs:
+  change cube: TODO
+  call cube: TODO
+  lizard tail: TODO
+  acrobat cube: TODO
+  double jump: TODO
+  frog: TODO
+  owl: TODO
+  superjump: TODO
+  push cube
+  
+  callswitch: change cube & call cube
+  slide: lizard tail | frog | owl
+  shoulderjump: acrobat cube & call cube
+  
+  height: shoulderjump | medium height
+  medium height: double jump | jumpglitch | big height
+  medium height 2: double jump & shoulderjump | big height
+  quad jump height: quadjumpglitch | big height
+  big height: owl | superjump
+  
+  cityofhaze: midentrance & slide
+  
+  bossbehemoth: height
+  midentrance: callswitch | height
+  upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | # TODO entering from the right
+  
+  buriedchamber: bossbehemoth
+  
+  lowergreatstairway: buriedchamber # you can get here quicker without going through buried chamber with the suspend glitch, but that doesn't require any fewer items.
+  bosskeremet: lowergreatstairway
+  greatstairway: lowergreatstairway & medium height | # TODO entering from upperentrance
+  uppergreatstairway: greatstairway & medium height
+  
+  masterkeep: TODO
+  
+  bosssisters: TODO #masterkeep & medium height
+  
+  bosswerewolf: TODO
+  bossmummy: TODO
+  bossmedusa: TODO
+  bosscreature: TODO
+  
+  lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
+  
+  beat game: lostgallery
+
+#Dracula's Castle:
+#Entrance:
+  00-00-01:
+    room: 
+    01 (Change Cube): 
+    02 (Call Cube): 
+    03 (ALL Boost): quadjumpglitch | big height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
+  00-00-08:
+    room: height
+    01 (Spear): 
+  00-00-0D:
+    room: bossbehemoth
+    00 (Combat Knife): 
+  00-01-02:
+    room: midentrance
+    00 (Book of Spirits): 
+  00-01-03:
+    room: midentrance
+    00 (Head Guard): 
+  00-01-04:
+    room: 
+    00 (Short Sword): 
+    01 (Tome of Arms 1): 
+    07 (Beef Jerky) (Hidden): 
+  00-01-07:
+    room: 
+    2A (Beef Jerky): 
+  00-01-0A:
+    room: upperentrance
+    00 (Laurel Brooch): 
+  00-01-0C:
+    room: 
+    00 (Wait Cube): 
+    01 (Raging Fire): midentrance
+  00-01-0F:
+    room: 
+    00 (Whip Skill 1): height
+    01 (Knife): 
+  00-01-10:
+    room: upperentrance
+    00 (MP Max up): 
+  00-01-12:
+    room: upperentrance & push cube & strength cube & medium height | quad jump height
+    00 (Nebula): 
+  00-01-17:
+    room: upperentrance
+    00 (Knee Strike): 
+#Buried Chamber:
+  00-02-00:
+    room: buriedchamber
+    00 (Offensive Form): 
+  00-02-02:
+    room: buriedchamber
+    00 (Anti-Venom): 
+  00-02-08:
+    room: buriedchamber
+    00 (Cestus): 
+  00-02-0A:
+    room: buriedchamber & slide # to destroy the breakable floor here you either need a down-attacking weapon or slide.
+    00 (HP Max up): 
+  00-02-11:
+    room: buriedchamber & slide # to destroy the breakable floor here you either need a down-attacking weapon or slide.
+    00 (MP Max up): 
+  00-02-14:
+    room: buriedchamber
+    01 (Boiled Starfish) (Hidden): 
+  00-02-17:
+    room: buriedchamber
+    00 (Ice Fang): 
+  00-02-18:
+    room: buriedchamber
+    00 (Potion): 
+  00-02-1A:
+    room: buriedchamber
+    00 (Bandana): 
+  00-02-1B:
+    room: buriedchamber
+    00 (Copper Plate): 
+#Great Stairway:
+  00-03-07:
+    room: lowergreatstairway
+    00 (Don Quixote): 
+  00-04-04:
+    room: greatstairway
+    00 (MIND Boost): 
+  00-04-07:
+    room: greatstairway
+    00 (Goggles): 
+  00-04-08:
+    room: greatstairway
+    00 (Axe Bomber): 
+  00-04-0B:
+    room: lowergreatstairway
+    00 (Stone of Flight): 
+    01 (Partisan): greatstairway
+  00-04-0D:
+    room: greatstairway
+    07 (Nun's Habit): 
+    08 (Iron Leggings): 
+    09 (Bathrobe) (Hidden): 
+  00-05-02:
+    room: greatstairway
+    0F (HP Max up): 
+    10 (Jade Corset): medium height
+    11 (Uncurse Potion): medium height
+    12 (Monocle): medium height
+  00-05-04:
+    room: greatstairway
+    0F (STR Boost): height
+    10 (Tonic): medium height
+    11 (Potion): medium height
+    12 (Poncho): medium height
+    13 (Tome of Arms 2): 
+  00-06-03:
+    room: upperentrance & medium height | greatstairway & medium height
+    00 (Nun's Robes): 
+    01 (MP Max up): 
+  00-06-05:
+    room: upperentrance | greatstairway
+    00 (Whip Knuckles): big height | quadjumpglitch
+    01 (Iron Plate): medium height
+  00-06-09:
+    room: upperentrance & medium height | greatstairway & medium height
+    00 (Sequined Dress): 
+  00-06-0C:
+    room: upperentrance & medium height | greatstairway & medium height # TODO clock tower
+    01 (Money): frog | owl
+    02 (Money): frog | owl
+#Tower of Death:
+  00-07-00:
+    room: 
+    00 (INT Boost): 
+  00-07-01:
+    room: 
+    00 (Combat Beret): 
+    01 (Open Veil): 
+    02 (Aura Blast): 
+  00-07-05:
+    room: 
+    00 (Blue Cape): 
+  00-07-08:
+    room: 
+    00 (Rose Stem Whip): 
+  00-07-0B:
+    room: 
+    05 (MP Max up) (Hidden): 
+  00-07-0C:
+    room: 
+    00 (HP Max up): 
+    01 (Thunderbolt): 
+  00-07-0D:
+    room: 
+    00 (HP Max up): 
+  00-07-10:
+    room: 
+    00 (Tempest): 
+  00-07-16:
+    room: 
+    00 (Tasty Meat) (Hidden): 
+  00-08-00:
+    room: 
+    00 (Taunt): 
+  00-08-02:
+    room: 
+    00 (Halberd): 
+  00-08-06:
+    room: 
+    00 (Viking Helmet): 
+  00-08-0D:
+    room: 
+    00 (Slick Boots): 
+#The Throne Room:
+  00-09-00:
+    room: 
+    00 (Speed Up): 
+    01 (Robe Decollete): 
+  00-09-03:
+    room: 
+    00 (HP Max up): 
+    01 (MP Max up): 
+    02 (Money): 
+    03 (Foie Gras) (Hidden): 
+#Master's Keep:
+  00-0A-08:
+    room: 
+    00 (MP Max up): 
+  00-0A-0B:
+    room: 
+    03 (Piercing Beam): 
+  00-0A-13:
+    room: 
+    03 (HP Max up): 
+#City of Haze:
+  01-00-02:
+    room: 
+    00 (Clover Tiara): 
+  01-00-03:
+    room: 
+    01 (Kirtle): 
+  01-00-04:
+    room: 
+    07 (Leather Cuirass): 
+  01-00-07:
+    room: 
+    00 (White Corsage): 
+  01-00-09:
+    room: 
+    00 (Leather Corset): 
+  01-00-0C:
+    room: 
+    00 (Claymore): 
+  01-00-0E:
+    room: 
+    00 (Cream Pie): 
+    01 (Green Tea Cake): 
+  01-00-0F:
+    room: 
+    00 (Paper Airplane): 
+  01-00-10:
+    room: 
+    00 (Rush): 
+  01-00-11:
+    room: 
+    00 (Sandals): 
+  01-00-14:
+    room: 
+    00 (Potion): 
+    01 (Leather Whip): 
+  01-00-18:
+    room: 
+    00 (Enamel Pinheels): 
+  01-00-19:
+    room: 
+    00 (Holy Lightning): 
+  01-01-03:
+    room: 
+    00 (Money): 
+  01-01-06:
+    room: 
+    00 (Skill Cube): 
+  01-01-08:
+    room: 
+    00 (Gale Force): 
+    01 (Mace): 
+  01-01-09:
+    room: 
+    02 (Push Cube): 
+  01-01-0B:
+    room: 
+    00 (CON Boost): 
+  01-01-0C:
+    room: 
+    00 (Healing Mail): 
+    01 (Sachertorte): 
+  01-02-01:
+    room: 
+    00 (Velvet Ribbon): 
+    01 (Long Sword): 
+  01-02-04:
+    room: 
+    00 (Moonwalkers): 
+  01-02-05:
+    room: 
+    00 (Axe): 
+  01-02-07:
+    room: 
+    00 (Milican's Sword): 
+    01 (Thick Glasses): 
+  01-02-08:
+    room: 
+    00 (Cape): 
+  01-02-09:
+    room: 
+    00 (Tuxedo Coat): 
+  01-02-0A:
+    room: 
+    02 (Acrobat Cube): 
+  01-02-11:
+    room: 
+    00 (Nun's Shoes): 
+  01-02-12:
+    room: 
+    00 (Money): 
+  01-02-14:
+    room: 
+    00 (Houppelande): 
+#13th Street:
+  02-00-02:
+    room: 
+    00 (Kugelhopf): 
+    01 (Shogun Helmet): 
+  02-01-01:
+    room: 
+    00 (Assassin's Cape): 
+  02-01-02:
+    room: 
+    00 (Gateau Marron): 
+  02-01-04:
+    room: 
+    00 (Gateau Fraise): 
+    01 (Wheat Roll): 
+    02 (Langues de Chat): 
+  02-01-06:
+    room: 
+    00 (HP Max up): 
+  02-01-0A:
+    room: 
+    00 (Super Potion): 
+  02-01-13:
+    room: 
+    00 (Samurai Leggngs): 
+  02-02-01:
+    room: 
+    00 (Money): 
+    01 (Mille-feuille): 
+  02-02-03:
+    room: 
+    02 (HP Max up): 
+  02-02-08:
+    room: 
+    00 (Wedding Dress): 
+  02-02-09:
+    room: 
+    00 (Shaman Ring): 
+  02-02-0F:
+    room: 
+    00 (MP Max up): 
+  02-02-12:
+    room: 
+    00 (Steel Greaves): 
+  02-02-13:
+    room: 
+    00 (Winged Boots): 
+#Sandy Grave:
+  03-00-05:
+    room: 
+    00 (Steel Whip): 
+    01 (Kaiser Knuckles): 
+  03-00-07:
+    room: 
+    00 (Steel Ball): 
+    01 (High Potion): 
+  03-00-09:
+    room: 
+    00 (Strength Glove): 
+  03-00-11:
+    room: 
+    00 (Uncurse Potion): 
+  03-00-12:
+    room: 
+    00 (High Tonic): 
+  03-00-13:
+    room: 
+    00 (Charm Necklace): 
+    01 (Charm Necklace): 
+    02 (Glamorous Pumps): 
+  03-00-14:
+    room: 
+    00 (Bwaka Knife): 
+  03-00-16:
+    room: 
+    00 (Bahg Nahk): 
+  03-00-18:
+    room: 
+    00 (HP Max up): 
+  03-01-03:
+    room: 
+    00 (Crystal Necklet): 
+    01 (Pumpkin Pie): 
+    02 (Royal Sandals): 
+  03-01-11:
+    room: 
+    00 (Money): 
+    01 (Clear Skies): 
+  03-01-16:
+    room: 
+    00 (Money): 
+    01 (Diamond Brooch): 
+  03-01-18:
+    room: 
+    00 (1,000 Blades): 
+    01 (Money): 
+  03-01-1B:
+    room: 
+    00 (High Potion): 
+  03-01-1C:
+    room: 
+    00 (Sanctuary): 
+    01 (Lorica): 
+  03-01-1D:
+    room: 
+    00 (MP Max up): 
+#Forgotten City:
+  04-00-02:
+    room: 
+    00 (Eye for an Eye): 
+  04-00-05:
+    room: 
+    00 (Griffon Wing): 
+  04-00-09:
+    room: 
+    00 (Attica Helmet): 
+  04-00-11:
+    room: 
+    00 (Super Tonic): 
+  04-00-12:
+    room: 
+    00 (Curry): 
+  04-00-13:
+    room: 
+    00 (Super Potion): 
+  04-00-14:
+    room: 
+    00 (Money): 
+  04-01-03:
+    room: 
+    00 (HP Max up): 
+    01 (MP Max up): 
+  04-01-05:
+    room: 
+    00 (Holy Mail): 
+  04-01-10:
+    room: 
+    00 (Princess Tiara): 
+  04-01-11:
+    room: 
+    00 (MP Max up): 
+  04-01-15:
+    room: 
+    00 (Book of Death): 
+    01 (Meteor): 
+  04-01-18:
+    room: 
+    00 (Venus Brooch): 
+    01 (Money): 
+  04-01-22:
+    room: 
+    00 (Platinum Corset): 
+#Nation of Fools:
+  05-00-01:
+    room: 
+    00 (MP Max up): 
+  05-00-08:
+    room: 
+    00 (Volcano): 
+  05-00-0B:
+    room: 
+    00 (Touch & Pop): 
+  05-00-0F:
+    room: 
+    00 (Money): 
+  05-00-10:
+    room: 
+    00 (Tonic): 
+  05-00-13:
+    room: 
+    00 (MP Max up): 
+  05-00-14:
+    room: 
+    00 (HP Max up): 
+  05-00-1A:
+    room: 
+    00 (Money): 
+  05-00-27:
+    room: 
+    00 (Moon Brooch): 
+  05-00-2B:
+    room: 
+    00 (HP Max up): 
+  05-01-00:
+    room: 
+    02 (Holy Veil): 
+  05-01-02:
+    room: 
+    00 (High Tonic): 
+    01 (Caviar) (Hidden): 
+    02 (Spiked Boots): 
+  05-01-06:
+    room: 
+    00 (High Potion): 
+  05-01-07:
+    room: 
+    06 (Silk Hat): 
+    07 (Dancer's Blouse): 
+  05-01-0D:
+    room: 
+    06 (Grenade): 
+  05-01-0E:
+    room: 
+    06 (Battle Jacket): 
+  05-01-13:
+    room: 
+    00 (Corn Soup): 
+  05-01-14:
+    room: 
+    05 (Rotten Durian): 
+  05-02-04:
+    room: 
+    00 (Critical Art): 
+  05-02-0A:
+    room: 
+    00 (Spaghetti): 
+  05-02-0B:
+    room: 
+    00 (Pasta Carbonara): 
+  05-02-0C:
+    room: 
+    01 (Cog): 
+#Burnt Paradise:
+  06-00-01:
+    room: 
+    00 (Jet Black Whip): 
+  06-00-08:
+    room: 
+    04 (Truffle) (Hidden): 
+  06-00-0E:
+    room: 
+    00 (MP Max up): 
+  06-00-14:
+    room: 
+    03 (HP Max up): 
+  06-00-27:
+    room: 
+    02 (HP Max up): 
+  06-00-2B:
+    room: 
+    00 (MP Max up): 
+  06-01-00:
+    room: 
+    00 (Super Tonic): 
+  06-01-01:
+    room: 
+    00 (Ice Cream): 
+  06-01-02:
+    room: 
+    07 (Engagement Ring): 
+  06-01-06:
+    room: 
+    06 (Cure Poison): 
+  06-01-07:
+    room: 
+    09 (Bakatwa): 
+    0A (Gold Leggings): 
+  06-01-08:
+    room: 
+    08 (Artemis Shoes): 
+  06-01-0D:
+    room: 
+    02 (Great Axe): 
+    03 (Spoiled Milk): 
+  06-01-0E:
+    room: 
+    00 (Tinned Spinach): 
+  06-01-13:
+    room: 
+    09 (Tome of Arms 3): 
+  06-01-14:
+    room: 
+    00 (Financier): 
+#Forest of Doom:
+  07-00-0B:
+    room: 
+    00 (Rusty Food Tin) (Hidden): 
+  07-00-0F:
+    room: 
+    00 (Toad Morph): 
+  07-01-03:
+    room: 
+    00 (Tristan&Isolde): 
+  07-01-04:
+    room: 
+    00 (MP Max up): 
+  07-01-07:
+    room: 
+    00 (Moldy Bread): 
+  07-01-0C:
+    room: 
+    00 (Cream Puff) (Hidden): 
+  07-01-14:
+    room: 
+    00 (HP Max up): 
+  07-02-00:
+    room: 
+    00 (Silver Leggings): 
+  07-02-0B:
+    room: 
+    00 (Silver Plate): 
+  07-02-0F:
+    room: 
+    00 (Dark Gate): 
+  07-02-11:
+    room: 
+    00 (Stonewall): 
+    01 (Amethyst Corset): 
+#Dark Academy:
+  08-00-01:
+    room: 
+    01 (New York Steak) (Hidden): 
+  08-00-02:
+    room: 
+    00 (Money): 
+    01 (Noodle Bun): 
+  08-02-03:
+    room: 
+    00 (MP Max up): 
+  08-02-09:
+    room: 
+    00 (Powdered Milk) (Hidden): 
+  08-02-0F:
+    room: 
+    00 (Mercury Boots): 
+  08-02-11:
+    room: 
+    00 (Divine Storm): 
+  08-02-14:
+    room: 
+    00 (HP Max up): 
+  08-02-15:
+    room: 
+    00 (Noodle Bun): 
+  08-02-19:
+    room: 
+    00 (Flame Whip): 
+  08-03-03:
+    room: 
+    00 (Gold Plate): 
+  08-03-04:
+    room: 
+    00 (Owl Morph): 
+#Nest of Evil:
+  09-00-1A:
+    room: 
+    00 (Tome of Arms p1): 
+  09-00-36:
+    room: 
+    00 (Tome of Arms p2): 
+  09-00-3E:
+    room: 
+    00 (Greatest Five): 
