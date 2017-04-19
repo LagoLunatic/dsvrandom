@@ -33,6 +33,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_starting_room, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_ai, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_players, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.enable_glitch_reqs, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.skip_magic_seals, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -69,6 +70,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.randomize_starting_room.setChecked(@settings[:randomize_starting_room]) unless @settings[:randomize_starting_room].nil?
     @ui.randomize_enemy_ai.setChecked(@settings[:randomize_enemy_ai]) unless @settings[:randomize_enemy_ai].nil?
     @ui.randomize_players.setChecked(@settings[:randomize_players]) unless @settings[:randomize_players].nil?
+    @ui.enable_glitch_reqs.setChecked(@settings[:enable_glitch_reqs]) unless @settings[:enable_glitch_reqs].nil?
     
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
     @ui.skip_magic_seals.setChecked(@settings[:skip_magic_seals]) unless @settings[:skip_magic_seals].nil?
@@ -109,6 +111,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:randomize_starting_room] = @ui.randomize_starting_room.checked
     @settings[:randomize_enemy_ai] = @ui.randomize_enemy_ai.checked
     @settings[:randomize_players] = @ui.randomize_players.checked
+    @settings[:enable_glitch_reqs] = @ui.enable_glitch_reqs.checked
     
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
     @settings[:skip_magic_seals] = @ui.skip_magic_seals.checked
@@ -141,7 +144,8 @@ class RandomizerWindow < Qt::Dialog
       :randomize_room_connections => @ui.randomize_room_connections.checked(),
       :randomize_starting_room => @ui.randomize_starting_room.checked(),
       :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
-      :randomize_players => @ui.randomize_players.checked()
+      :randomize_players => @ui.randomize_players.checked(),
+      :enable_glitch_reqs => @ui.enable_glitch_reqs.checked()
     )
     randomizer.randomize()
     

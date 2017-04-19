@@ -4,8 +4,10 @@ require 'yaml'
 class CompletabilityChecker
   attr_reader :game, :rng, :current_items, :defs
   
-  def initialize(game)
+  def initialize(game, enable_glitches)
     @game = game
+    @enable_glitches = enable_glitches
+    
     @rng = Random.new
     load_room_reqs()
     @current_items = []
@@ -17,6 +19,11 @@ class CompletabilityChecker
     @room_reqs = {}
     
     @defs = yaml["Defs"]
+    @glitch_defs = yaml["Glitch defs"]
+    if @enable_glitches
+      @defs.merge!(@glitch_defs)
+    end
+    
     rooms = yaml["Rooms"]
     
     rooms.each do |room_str, yaml_reqs|
@@ -36,9 +43,9 @@ class CompletabilityChecker
   end
   
   def check_req(req)
-    if req == "beat game"
-      @debug = true
-    end
+    #if req == "beat game"
+    #  @debug = true
+    #end
     @cached_checked_reqs = {}
     check_req_recursive(req)
   end
@@ -99,6 +106,10 @@ class CompletabilityChecker
       puts "Req #{req} is false" if @debug
       return false
     else
+      if !@enable_glitches && @glitch_defs.include?(req)
+        # When glitches are disabled, always consider a glitch requirement false.
+        return false
+      end
       raise "Invalid requirement: #{req}"
     end
   end

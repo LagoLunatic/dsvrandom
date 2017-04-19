@@ -10,7 +10,7 @@ class Randomizer
   
   def initialize(seed, game, options={})
     @game = game
-    @checker = CompletabilityChecker.new(game)
+    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs])
     
     @options = options
     

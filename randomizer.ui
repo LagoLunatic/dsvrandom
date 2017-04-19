@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>442</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -77,58 +77,76 @@
         </layout>
        </item>
        <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Choose what to randomize:</string>
+        <widget class="QGroupBox" name="groupBox_7">
+         <property name="title">
+          <string>Randomization options</string>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QCheckBox" name="randomize_pickups">
+              <property name="text">
+               <string>Items/Skills</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_players">
+              <property name="text">
+               <string>Players</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QCheckBox" name="randomize_enemies">
+              <property name="text">
+               <string>Enemies</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_drops">
+              <property name="text">
+               <string>Enemy Drops</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QCheckBox" name="randomize_pickups">
-           <property name="text">
-            <string>Items/Skills</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="randomize_players">
-           <property name="text">
-            <string>Players</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QCheckBox" name="randomize_enemies">
-           <property name="text">
-            <string>Enemies</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="randomize_enemy_drops">
-           <property name="text">
-            <string>Enemy Drops</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QGroupBox" name="groupBox_6">
+         <property name="title">
+          <string>Difficulty options</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="enable_glitch_reqs">
+            <property name="text">
+             <string>Allow requiring glitches to win</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
-          <string>Experimental (not guaranteed completable)</string>
+          <string>Experimental randomization options (not guaranteed completable)</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>

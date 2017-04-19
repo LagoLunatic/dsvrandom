@@ -1,4 +1,22 @@
 
+Glitch defs:
+  cutall: 0x46
+  cinquedia: 0x47
+  alucard sword: 0x5E
+  axe: 0x74
+  battle axe: 0x75
+  bhuj: 0x76
+  great axe: 0x77
+  golden axe: 0x78
+  
+  cutallsuper: cutall | cinquedia | alucard sword
+  axesuper: axe | battle axe | bhuj | great axe | golden axe
+  hwarpseal: cutallsuper & seal
+  hwarpsucc: cutallsuper & succubus
+  hwarp: hwarpseal | hwarpsucc
+  vwarpseal: axesuper & seal
+  vwarpsucc: axesuper & succubus
+  vwarp: vwarpseal | vwarpsucc
 Defs:
   malphas: 0x143
   hippogryph: 0x146
@@ -12,14 +30,6 @@ Defs:
   paranoia: 0xD0
   balore: 0x142
   zephyr: 0xCF
-  cutall: 0x46
-  cinquedia: 0x47
-  alucard sword: 0x5E
-  axe: 0x74
-  battle axe: 0x75
-  bhuj: 0x76
-  great axe: 0x77
-  golden axe: 0x78
   seal 1: 0x3D
   seal 2: 0x3E
   seal 3: 0x3F
@@ -38,14 +48,6 @@ Defs:
   medium height: malphas | hippogryph | bat mode | vwarpsucc
   big height: hippogryph | bat mode
   distance: flying armor | black panther | hippogryph | bat mode
-  cutallsuper: cutall | cinquedia | alucard sword
-  axesuper: axe | battle axe | bhuj | great axe | golden axe
-  hwarpseal: cutallsuper & seal
-  hwarpsucc: cutallsuper & succubus
-  hwarp: hwarpseal | hwarpsucc
-  vwarpseal: axesuper & seal
-  vwarpsucc: axesuper & succubus
-  vwarp: vwarpseal | vwarpsucc
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
