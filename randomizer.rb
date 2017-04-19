@@ -134,16 +134,25 @@ class Randomizer
       end
       
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
-      if new_possible_locations.empty?
-        puts "NEW POSSIBLE LOCATIONS EMPTY"
-        new_possible_locations = previous_accessible_locations.last
-      else
-        previous_accessible_locations << new_possible_locations
-      end
       
       if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
         # If the pickup is an item instead of a soul, don't let bosses drop it.
         new_possible_locations -= checker.enemy_locations
+      end
+      
+      if new_possible_locations.empty?
+        previous_accessible_locations.reverse_each do |previous_accessible_region|
+          new_possible_locations = previous_accessible_region
+          new_possible_locations -= locations_randomized_to_have_useful_pickups
+          
+          break if new_possible_locations.any?
+        end
+        
+        if new_possible_locations.empty?
+          raise "Failed to find any spots to place pickup."
+        end
+      else
+        previous_accessible_locations << new_possible_locations
       end
       
       location = new_possible_locations.sample(random: rng)

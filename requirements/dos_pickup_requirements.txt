@@ -106,7 +106,7 @@ Rooms:
 #Dracula's Castle:
 #The Lost Village:
   00-00-00:
-    room: big height
+    room: big height | malphas & puppet master
     02 (Pumpkin Pie): 
   00-00-02:
     room: bossarmor
@@ -156,7 +156,7 @@ Rooms:
     03 (Spear): 
 #Demon Guest House:
   00-01-00:
-    room: puppetguesthouse & height
+    room: puppetguesthouse & big height
     00 (War Fatigues): balore
     01 (UMA News 2-4): balore
   00-01-05:
