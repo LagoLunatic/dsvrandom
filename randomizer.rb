@@ -327,6 +327,13 @@ class Randomizer
   
   def dos_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
+    when "Zombie", "Ghoul"
+      # 50% chance to be a single zombie, 50% chance to be a spawner.
+      if rng.rand <= 0.5
+        enemy.var_a = 0
+      else
+        enemy.var_a = rng.rand(2..16)
+      end
     when "Bat"
       # 50% chance to be a single bat, 50% chance to be a spawner.
       if rng.rand <= 0.5
@@ -334,10 +341,10 @@ class Randomizer
       else
         enemy.var_a = 0x100
       end
-    when "Fleaman"
-      enemy.var_a = rng.rand(1..5)
-    when "Bone Pillar", "Fish Head"
-      enemy.var_a = rng.rand(1..12)
+    when "Skull Archer"
+      enemy.var_a = rng.rand(0..8) # Arrow speed.
+    when "Slime", "Tanjelly"
+      enemy.var_a = rng.rand(0..3) # Floor/ceiling/left wall/right wall
     when "Mollusca", "Giant Slug"
       # Mollusca and Giant Slug have a very high chance of bugging out when placed near cliffs.
       # They can cause the screen to flash rapidly and take up most of the screen.
@@ -345,8 +352,28 @@ class Randomizer
       # So for now let's just delete these enemies so this can't happen.
       # TODO: Try to detect if they're placed near cliffs and move them a bit.
       enemy.type = 0
+    when "Ghost Dancer"
+      enemy.var_a = rng.rand(0..2) # Palette
+    when "Killer Doll"
+      enemy.var_b = rng.rand(0..1) # Direction
+    when "Fleaman"
+      enemy.var_a = rng.rand(1..5)
+    when "Bone Pillar", "Fish Head"
+      enemy.var_a = rng.rand(1..10)
+    when "Malachi"
+      enemy.var_a = 0
+    when "Medusa Head"
+      enemy.var_a = rng.rand(1..7) # Max at once
+      enemy.var_b = rng.rand(0..1) # Type of Medusa Head
+    when "Mud Demon"
+      enemy.var_b = rng.rand(0..0x50) # Max rand spawn distance
     when "Stolas"
-      # TODO
+      enemy_id_a = @allowed_enemies_for_room.sample(random: rng)
+      enemy_id_b = @allowed_enemies_for_room.sample(random: rng)
+      chance_a = rng.rand(0x10..0xF0)
+      chance_b = rng.rand(0x10..0xF0)
+      enemy.var_a = (chance_a << 8) | enemy_id_a
+      enemy.var_b = (chance_b << 8) | enemy_id_b
     end
   end
   
