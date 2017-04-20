@@ -88,8 +88,6 @@ class Randomizer
   end
   
   def randomize_pickups_completably
-    # TODO: allow randomizing boss souls with this
-    
     case GAME
     when "dos"
       checker.add_item(0x3D) # seal 1
@@ -197,16 +195,13 @@ class Randomizer
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
-    p "unplaced non-progression pickups: #{@unplaced_non_progression_pickups.size}"
     
     if !checker.check_req("beat game")
       item_names = checker.current_items.map do |global_id|
         checker.defs.invert[global_id]
       end
-      raise "game not beatable. items:\n#{item_names.join(", ")}"
+      raise "Bug: Game not beatable on this seed!\n\nItems:\n#{item_names.join(", ")}"
     end
-    
-    puts "DONE"
   end
   
   def all_non_progression_pickups
@@ -273,7 +268,7 @@ class Randomizer
     item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
     
     if entity.type == 1
-      # boss
+      # Boss
       if !PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
         raise "Can't make boss drop required item"
       end

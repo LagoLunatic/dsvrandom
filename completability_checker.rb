@@ -79,11 +79,6 @@ class CompletabilityChecker
     
     puts "Checking req: #{req}" if @debug
     
-    # Don't recurse infinitely checking the same two interdependent requirements.
-    #puts "Req #{req} is false because it was already checked" if @recursively_checked_reqs.include?(req) && @debug
-    #return false if @recursively_checked_reqs.include?(req)
-    #@recursively_checked_reqs << req
-    
     if @cached_checked_reqs[req] == :currently_checking
       # Don't recurse infinitely checking the same two interdependent requirements.
       return false
@@ -180,11 +175,9 @@ class CompletabilityChecker
     pickups_by_locations = {}
     
     possibly_useful_pickups.each do |pickup_global_id|
-      #pickup_name = @defs.invert[pickup_global_id]
       @current_items = orig_current_items + [pickup_global_id]
       next_accessible_pickups = get_accessible_locations() - currently_accessible_locations
       
-      #puts "#{pickup_name} useful for: #{next_accessible_pickups.length} locations"
       pickups_by_locations[pickup_global_id] = next_accessible_pickups.length
     end
     
