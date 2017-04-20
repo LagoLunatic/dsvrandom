@@ -1079,5 +1079,33 @@ class Randomizer
     end
   end
   
+  def randomize_enemy_stats
+    game.enemy_dnas.each do |enemy_dna|
+      case GAME
+      when "dos"
+        randomize_enemy_stats_dos(enemy_dna)
+      end
+      
+      enemy_dna.write_to_rom()
+    end
+  end
+  
+  def randomize_enemy_stats_dos(enemy_dna)
+    enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.8..4.0)).round
+    enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.8..4.0)).round
+    enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.8..4.0)).round
+    enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.8..4.0)).round
+    enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.8..4.0)).round
+    
+    [
+      "Weaknesses",
+      "Resistances",
+    ].each do |bitfield_attr_name|
+      enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
+        enemy_dna[bitfield_attr_name][i] = [true, false].sample(random: rng)
+      end
+    end
+  end
+  
   def inspect; to_s; end
 end
