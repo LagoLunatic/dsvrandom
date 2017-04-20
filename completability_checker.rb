@@ -22,8 +22,22 @@ class CompletabilityChecker
     yaml = YAML::load_file("./dsvrandom/requirements/#{GAME}_pickup_requirements.txt")
     @room_reqs = {}
     
-    @defs = yaml["Defs"]
-    @glitch_defs = yaml["Glitch defs"]
+    defs = yaml["Defs"]
+    @defs = {}
+    defs.each do |name, reqs|
+      name = name.strip.tr(" ", "_").to_sym
+      reqs = parse_reqs(reqs)
+      @defs[name] = reqs
+    end
+    
+    glitch_defs = yaml["Glitch defs"]
+    @glitch_defs = {}
+    glitch_defs.each do |name, reqs|
+      name = name.strip.tr(" ", "_").to_sym
+      reqs = parse_reqs(reqs)
+      @glitch_defs[name] = reqs
+    end
+    
     if @enable_glitches
       @defs.merge!(@glitch_defs)
     end
@@ -38,11 +52,13 @@ class CompletabilityChecker
       @room_reqs[room_str][:entities] = {}
       
       yaml_reqs.each do |applies_to, reqs|
+        parsed_reqs = parse_reqs(reqs)
+        
         if applies_to == "room"
-          @room_reqs[room_str][:room] = reqs
+          @room_reqs[room_str][:room] = parsed_reqs
         else
           entity_index = applies_to.to_i(16)
-          @room_reqs[room_str][:entities][entity_index] = reqs
+          @room_reqs[room_str][:entities][entity_index] = parsed_reqs
           
           if applies_to.end_with?(" (Enemy)")
             entity_str = "#{room_str}_%02X" % entity_index
@@ -53,64 +69,55 @@ class CompletabilityChecker
     end
   end
   
-  def check_req(req)
-    #if req == "beat game"
-    #  @debug = true
-    #end
+  def parse_reqs(reqs)
+    if reqs.is_a?(Integer) || reqs.nil?
+      return reqs
+    end
+    
+    or_reqs = reqs.split("|")
+    or_reqs.map! do |or_req|
+      and_reqs = or_req.split("&")
+      and_reqs.map! do |and_req|
+        and_req = and_req.strip.tr(" ", "_").to_sym
+        and_req = nil if and_req.empty?
+        and_req
+      end
+    end
+  end
+  
+  def game_beatable?
+    check_reqs([[:beat_game]])
+  end
+  
+  def check_reqs(reqs)
     @cached_checked_reqs = {}
-    check_req_recursive(req)
+    check_multiple_reqs_recursive(reqs)
   end
   
   def check_req_recursive(req)
-    return true if req.nil?
-    
-    if req.is_a?(Integer)
-      item_global_id = req
-      has_item = @current_items.include?(item_global_id)
-      @cached_checked_reqs[req] = has_item
-      return has_item
-    end
-    
-    req = req.strip
-    if req.empty?
-      @cached_checked_reqs[req] = true
-      return true
-    end
-    
     puts "Checking req: #{req}" if @debug
     
-    if @cached_checked_reqs[req] == :currently_checking
-      # Don't recurse infinitely checking the same two interdependent requirements.
-      return false
-    elsif @cached_checked_reqs[req] == true || @cached_checked_reqs[req] == false
-      return @cached_checked_reqs[req]
-    end
-    
-    @cached_checked_reqs[req] = :currently_checking
-    
-    if @defs.include?(req)
-      req_met = check_req_recursive(@defs[req])
+    if @defs[req]
+      if @defs[req].is_a?(Integer)
+        item_global_id = @defs[req]
+        has_item = @current_items.include?(item_global_id)
+        @cached_checked_reqs[@defs[req]] = has_item
+        return has_item
+      end
+      
+      if @cached_checked_reqs[req] == :currently_checking
+        # Don't recurse infinitely checking the same two interdependent requirements.
+        return false
+      elsif @cached_checked_reqs[req] == true || @cached_checked_reqs[req] == false
+        return @cached_checked_reqs[req]
+      end
+      @cached_checked_reqs[req] = :currently_checking
+      
+      req_met = check_multiple_reqs_recursive(@defs[req])
       puts "Req #{req} is true" if @debug && req_met
       puts "Req #{req} is false" if @debug && !req_met
       @cached_checked_reqs[req] = req_met
       return req_met
-    elsif req =~ /\|/ || req =~ /\&/
-      or_reqs = req.split("|")
-      or_reqs.each do |or_req|
-        and_reqs = or_req.split("&")
-        
-        or_req_met = and_reqs.all? do |and_req|
-          check_req_recursive(and_req)
-        end
-        
-        puts "Req #{req} is true (or req: #{or_req})" if @debug && or_req_met
-        @cached_checked_reqs[req] = true if or_req_met
-        return true if or_req_met
-      end
-      
-      @cached_checked_reqs[req] = false
-      puts "Req #{req} is false" if @debug
-      return false
     else
       if !@enable_glitches && @glitch_defs.include?(req)
         # When glitches are disabled, always consider a glitch requirement false.
@@ -118,6 +125,22 @@ class CompletabilityChecker
       end
       raise "Invalid requirement: #{req}"
     end
+  end
+  
+  def check_multiple_reqs_recursive(or_reqs)
+    return true if or_reqs.nil?
+    
+    or_reqs.each do |and_reqs|
+      or_req_met = and_reqs.all? do |and_req|
+        check_req_recursive(and_req)
+      end
+      
+      puts "Req #{req} is true (OR req: #{and_reqs})" if @debug && or_req_met
+      return true if or_req_met
+    end
+    
+    puts "Req #{req} is false" if @debug
+    return false
   end
   
   def all_locations
@@ -145,7 +168,7 @@ class CompletabilityChecker
       room_reqs = reqs[:room_reqs]
       entity_reqs = reqs[:entity_reqs]
       
-      if check_req(room_reqs) && check_req(entity_reqs)
+      if check_reqs(room_reqs) && check_reqs(entity_reqs)
         accessible_locations << entity_str
       end
     end

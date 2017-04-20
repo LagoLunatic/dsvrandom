@@ -206,11 +206,11 @@ class Randomizer
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
     
-    if !checker.check_req("beat game")
+    if !checker.game_beatable?
       item_names = checker.current_items.map do |global_id|
         checker.defs.invert[global_id]
       end
-      raise "Bug: Game not beatable on this seed!\n\nItems:\n#{item_names.join(", ")}"
+      raise "Bug: Game is not beatable on this seed!\nThis shouldn't happen.\n\nItems:\n#{item_names.join(", ")}"
     end
   end
   
