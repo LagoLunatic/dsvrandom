@@ -100,20 +100,31 @@ class Randomizer
     # First place progression pickups needed to beat the game.
     while true
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
-      useful_pickups = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
-      if useful_pickups.any?
-        min_num_locations = useful_pickups.values.min
-        least_useful_pickups = useful_pickups.select{|pickup, num_locations| num_locations == min_num_locations}
-        # TODO: Pick from not just the lowest ranked of usefulness, but the lowest 2. This will make things more random.
-        item_names = least_useful_pickups.keys.map do |global_id|
+      pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
+      if pickups_by_usefulness.any?
+        useful_pickups = pickups_by_usefulness.keys
+        useful_pickup_tiers = useful_pickups.group_by{|pickup| pickups_by_usefulness[pickup]}
+        least_useful_pickups = []
+        # Take pickups from the least useful tiers until we have at least 5 possible pickups.
+        # If we only take from the single lowest tier, it might only have one pickup in it, which is bad for variety.
+        while least_useful_pickups.length < 5
+          min_usefulness = useful_pickup_tiers.keys.min
+          least_useful_pickups += useful_pickup_tiers.delete(min_usefulness)
+          break if useful_pickup_tiers.empty?
+        end
+        
+        item_names = least_useful_pickups.map do |global_id|
           checker.defs.invert[global_id]
         end
-        puts "Least useful pickups (usefulness #{min_num_locations}): #{item_names}"
-        pickup_global_id = least_useful_pickups.keys.sample(random: rng)
+        puts "5 least useful pickups: #{item_names}"
+        
+        pickup_global_id = least_useful_pickups.sample(random: rng)
       elsif pickups_by_locations.any?
+        # No item will open up any new areas. This means the player can access all locations.
+        # So we just randomly place one progression pickup.
         pickup_global_id = pickups_by_locations.keys.sample(random: rng)
       else
-        # All locations accessible.
+        # All progression pickups placed.
         break
       end
       
