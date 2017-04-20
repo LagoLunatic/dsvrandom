@@ -1107,5 +1107,20 @@ class Randomizer
     end
   end
   
+  def randomize_weapon_synths
+    return unless GAME == "dos"
+    
+    WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
+      chain = WeaponSynthChain.new(index, game.fs)
+      chain.synths.each do |synth|
+        synth.required_item_id = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        synth.required_soul_id = rng.rand(SKILL_LOCAL_ID_RANGE)
+        synth.created_item_id = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        
+        synth.write_to_rom()
+      end
+    end
+  end
+  
   def inspect; to_s; end
 end
