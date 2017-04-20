@@ -51,6 +51,12 @@ class Randomizer
       end
     end
     
+    @unplaced_non_progression_pickups = all_non_progression_pickups.dup
+    
+    if options[:randomize_enemy_drops]
+      randomize_enemy_drops()
+    end
+    
     if options[:randomize_pickups]
       randomize_pickups_completably()
     end
@@ -65,10 +71,6 @@ class Randomizer
     
     if options[:randomize_room_connections]
       randomize_non_transition_doors()
-    end
-    
-    if options[:randomize_enemy_drops]
-      randomize_enemy_drops()
     end
     
     if options[:randomize_starting_room]
@@ -166,25 +168,25 @@ class Randomizer
     end
     
     remaining_locations = checker.all_locations.keys - locations_randomized_to_have_useful_pickups
-    non_progression_pickups = all_non_progression_pickups.shuffle(random: rng)
-    remaining_locations.each do |location|
+    remaining_locations.each_with_index do |location, i|
       if checker.enemy_locations.include?(location)
         # Boss
-        non_progression_souls = non_progression_pickups.select do |pickup_global_id|
-          SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
-        end
-        pickup_global_id = non_progression_souls.pop()
-        non_progression_pickups.delete(pickup_global_id)
+        pickup_global_id = get_unplaced_non_progression_skill()
       else
         # Pickup
-        # TODO: make this much more likely to be an item than a soul. also give it a small change to be a money bag/chest.
-        # or maybe just make it randomize enemy drops first and not allow souls here to duplicate souls that enemies drop?
-        pickup_global_id = non_progression_pickups.pop()
+        # 80% chance to be an item.
+        # 20% chance to either be an item or a soul.
+        # TODO: small chance to be a money bag/chest.
+        if rng.rand <= 0.8
+          pickup_global_id = get_unplaced_non_progression_item()
+        else
+          pickup_global_id = get_unplaced_non_progression_pickup()
+        end
       end
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
-    p "Unused non-progression pickups: #{non_progression_pickups.size}"
+    p "unplaced non-progression pickups: #{@unplaced_non_progression_pickups.size}"
     
     if !checker.check_req("beat game")
       item_names = checker.current_items.map do |global_id|
@@ -198,6 +200,56 @@ class Randomizer
   
   def all_non_progression_pickups
     @all_non_progression_pickups ||= PICKUP_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups
+  end
+  
+  def get_unplaced_non_progression_pickup
+    pickup_global_id = @unplaced_non_progression_pickups.sample(random: rng)
+    
+    if pickup_global_id.nil?
+      # Ran out of unplaced ones, so place a duplicate instead.
+      @unplaced_non_progression_pickups = all_non_progression_pickups()
+      return get_unplaced_non_progression_pickup()
+    end
+    
+    @unplaced_non_progression_pickups.delete(pickup_global_id)
+    
+    return pickup_global_id
+  end
+  
+  def get_unplaced_non_progression_item
+    unplaced_non_progression_souls = @unplaced_non_progression_pickups.select do |pickup_global_id|
+      ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+    end
+    
+    item_global_id = unplaced_non_progression_souls.sample(random: rng)
+    
+    if item_global_id.nil?
+      # Ran out of unplaced ones, so place a duplicate instead.
+      @unplaced_non_progression_pickups = all_non_progression_pickups()
+      return get_unplaced_non_progression_item()
+    end
+    
+    @unplaced_non_progression_pickups.delete(item_global_id)
+    
+    return item_global_id
+  end
+  
+  def get_unplaced_non_progression_skill
+    unplaced_non_progression_souls = @unplaced_non_progression_pickups.select do |pickup_global_id|
+      SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
+    end
+    
+    soul_global_id = unplaced_non_progression_souls.sample(random: rng)
+    
+    if soul_global_id.nil?
+      # Ran out of unplaced ones, so place a duplicate instead.
+      @unplaced_non_progression_pickups = all_non_progression_pickups()
+      return get_unplaced_non_progression_skill()
+    end
+    
+    @unplaced_non_progression_pickups.delete(soul_global_id)
+    
+    return soul_global_id
   end
   
   def change_entity_location_to_pickup_global_id(location, pickup_global_id)
@@ -606,8 +658,6 @@ class Randomizer
   end
   
   def randomize_enemy_drops
-    # TODO: only allow enemy drops to drop non-progression items
-    
     if GAME == "ooe"
       BOSS_IDS.each do |enemy_id|
         enemy = EnemyDNA.new(enemy_id, game.fs)
@@ -616,7 +666,7 @@ class Randomizer
           # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
           # These must be done before common enemies because otherwise there won't be any unique glyphs left to give them.
           
-          enemy["Glyph"] = get_random_glyph()
+          enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
           enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
           
           enemy.write_to_rom()
@@ -628,10 +678,18 @@ class Randomizer
       enemy = EnemyDNA.new(enemy_id, game.fs)
       
       if rng.rand <= 0.5 # 50% chance to have an item drop
-        enemy["Item 1"] = get_random_item()
+        if GAME == "por"
+          enemy["Item 1"] = get_unplaced_non_progression_pickup() + 1
+        else
+          enemy["Item 1"] = get_unplaced_non_progression_item() + 1
+        end
         
         if rng.rand <= 0.5 # Further 50% chance (25% total) to have a second item drop
-          enemy["Item 2"] = get_random_item()
+          if GAME == "por"
+            enemy["Item 2"] = get_unplaced_non_progression_pickup() + 1
+          else
+            enemy["Item 2"] = get_unplaced_non_progression_item() + 1
+          end
         else
           enemy["Item 2"] = 0
         end
@@ -644,7 +702,7 @@ class Randomizer
       when "dos"
         enemy["Item Chance"] = rng.rand(0x04..0x50)
         
-        enemy["Soul"] = get_random_soul()
+        enemy["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
         enemy["Soul Chance"] = rng.rand(0x01..0x30)
       when "por"
         enemy["Item 1 Chance"] = rng.rand(0x01..0x32)
@@ -654,7 +712,7 @@ class Randomizer
         enemy["Item 2 Chance"] = rng.rand(0x01..0x0F)
         
         if rng.rand <= 0.20 # 20% chance to have a glyph drop
-          enemy["Glyph"] = get_random_glyph()
+          enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
           enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
         else
           enemy["Glyph"] = 0
