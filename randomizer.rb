@@ -210,7 +210,7 @@ class Randomizer
       item_names = checker.current_items.map do |global_id|
         checker.defs.invert[global_id]
       end
-      raise "Bug: Game is not beatable on this seed!\nThis shouldn't happen.\n\nItems:\n#{item_names.join(", ")}"
+      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\n\nItems:\n#{item_names.join(", ")}"
     end
   end
   
