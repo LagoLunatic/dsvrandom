@@ -87,7 +87,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_pickups">
               <property name="toolTip">
-               <string>Randomize items and skills you find lying on the ground.</string>
+               <string>Randomizes items and skills you find lying on the ground.</string>
               </property>
               <property name="text">
                <string>Items/Skills</string>
@@ -100,7 +100,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_enemies">
               <property name="toolTip">
-               <string>Randomize which non-boss enemies appear where.</string>
+               <string>Randomizes which non-boss enemies appear where.</string>
               </property>
               <property name="text">
                <string>Enemy Locations</string>
@@ -117,7 +117,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_enemy_drops">
               <property name="toolTip">
-               <string>Randomize the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
+               <string>Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
               </property>
               <property name="text">
                <string>Enemy Drops</string>
@@ -130,7 +130,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_boss_souls">
               <property name="toolTip">
-               <string>Randomize the souls dropped by bosses (DoS only).</string>
+               <string>Randomizes the souls dropped by bosses (DoS only).</string>
               </property>
               <property name="text">
                <string>Boss Souls</string>
@@ -175,7 +175,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_players">
               <property name="toolTip">
-               <string>Randomize player graphics and movement stats.</string>
+               <string>Randomizes player graphics and movement stats.</string>
               </property>
               <property name="text">
                <string>Players</string>
@@ -185,7 +185,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_bosses">
               <property name="toolTip">
-               <string>Randomize which bosses appear where.</string>
+               <string>Randomizes which bosses appear where.</string>
               </property>
               <property name="text">
                <string>Boss Locations</string>
@@ -199,7 +199,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_area_connections">
               <property name="toolTip">
-               <string>Randomize which areas connect to each other.</string>
+               <string>Randomizes which areas connect to each other.</string>
               </property>
               <property name="text">
                <string>Area Connections</string>
@@ -209,7 +209,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_room_connections">
               <property name="toolTip">
-               <string>Randomize which rooms within an area connect to each other.</string>
+               <string>Randomizes which rooms within an area connect to each other.</string>
               </property>
               <property name="text">
                <string>Room Connections</string>
@@ -223,7 +223,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_starting_room">
               <property name="toolTip">
-               <string>Randomize which room you start in.</string>
+               <string>Randomizes which room you start in.</string>
               </property>
               <property name="text">
                <string>Starting Room</string>
@@ -233,7 +233,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_enemy_ai">
               <property name="toolTip">
-               <string>Shuffle the AI of non-boss enemies.</string>
+               <string>Shuffles the AI of non-boss enemies.</string>
               </property>
               <property name="text">
                <string>Enemy AI</string>
