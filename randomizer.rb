@@ -31,6 +31,16 @@ class Randomizer
     @log.close()
   end
   
+  def rand_range_weighted_low(range)
+    random_float = (1 - Math.sqrt(1 - rng.rand()))
+    return (random_float * (range.max + 1 - range.min) + range.min).floor
+  end
+  
+  def rand_range_weighted_very_low(range)
+    random_float = (1 - Math.sqrt(Math.sqrt(1 - rng.rand())))
+    return (random_float * (range.max + 1 - range.min) + range.min).floor
+  end
+  
   def randomize
     @boss_entities = []
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
@@ -1002,6 +1012,70 @@ class Randomizer
       end
       
       player.write_to_rom()
+    end
+  end
+  
+  def randomize_item_stats
+    game.items.each do |item|
+      case GAME
+      when "dos"
+        randomize_item_stats_dos(item)
+      end
+      
+      item.write_to_rom()
+    end
+  end
+  
+  def randomize_item_stats_dos(item)
+    item["Price"] = rand_range_weighted_very_low(1..25000)
+    
+    case item.item_type_name
+    when "Consumables"
+      item["Type"] = rng.rand(0..4)
+      case item["Type"]
+      when 0, 1, 3
+        item["Var A"] = rand_range_weighted_very_low(1..4000)
+      when 2
+        item["Var A"] = rng.rand(1..2)
+      end
+    when "Weapons"
+      item["Attack"]       = rand_range_weighted_very_low(0..0xA0)
+      item["Defense"]      = rand_range_weighted_very_low(0..10)
+      item["Strength"]     = rand_range_weighted_very_low(0..10)
+      item["Constitution"] = rand_range_weighted_very_low(0..10)
+      item["Intelligence"] = rand_range_weighted_very_low(0..10)
+      item["Luck"]         = rand_range_weighted_very_low(0..10)
+      
+      item["Swing Anim"] = rng.rand(0..0xC)
+      item["Super Anim"] = rng.rand(0..0xE)
+      item["Sprite Anim"] = rng.rand(0..3)
+      item["IFrames"] = rng.rand(4..0x28)
+      
+      [
+        "Effects",
+        "Swing Modifiers",
+      ].each do |bitfield_attr_name|
+        item[bitfield_attr_name].names.each_with_index do |bit_name, i|
+          next if bit_name == "Shaky weapon" # This makes the weapon appear too high up
+          
+          item[bitfield_attr_name][i] = [true, false].sample(random: rng)
+        end
+      end
+    when "Armor"
+      item["Attack"]       = rand_range_weighted_very_low(0..10)
+      item["Defense"]      = rand_range_weighted_very_low(0..0x40)
+      item["Strength"]     = rand_range_weighted_very_low(0..12)
+      item["Constitution"] = rand_range_weighted_very_low(0..12)
+      item["Intelligence"] = rand_range_weighted_very_low(0..12)
+      item["Luck"]         = rand_range_weighted_very_low(0..12)
+      
+      [
+        "Resistances",
+      ].each do |bitfield_attr_name|
+        item[bitfield_attr_name].names.each_with_index do |bit_name, i|
+          item[bitfield_attr_name][i] = [true, false].sample(random: rng)
+        end
+      end
     end
   end
   
