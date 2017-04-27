@@ -1122,9 +1122,9 @@ class Randomizer
     WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
       chain = WeaponSynthChain.new(index, game.fs)
       chain.synths.each do |synth|
-        synth.required_item_id = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        synth.required_item_id = rng.rand(ITEM_GLOBAL_ID_RANGE) + 1
         synth.required_soul_id = rng.rand(SKILL_LOCAL_ID_RANGE)
-        synth.created_item_id = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        synth.created_item_id = rng.rand(ITEM_GLOBAL_ID_RANGE) + 1
         
         synth.write_to_rom()
       end
