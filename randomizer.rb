@@ -614,6 +614,15 @@ class Randomizer
       boss_entity.y_pos = 0x80
       
       boss_entity.var_a = 2
+      
+      if boss_entity.room.room_index == 0xB && boss_entity.room.sector_index == 0
+        # If Paranoia is placed in Flying Armor's room the game will softlock when you kill him.
+        # This is because of the event with Yoko in Flying Armor's room, so remove the event.
+        
+        event = boss_entity.room.entities[6]
+        event.type = 0
+        event.write_to_rom()
+      end
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
