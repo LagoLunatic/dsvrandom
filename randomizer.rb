@@ -1100,11 +1100,11 @@ class Randomizer
   end
   
   def randomize_enemy_stats_dos(enemy_dna)
-    enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.8..4.0)).round
-    enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.8..4.0)).round
-    enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.8..4.0)).round
-    enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.8..4.0)).round
-    enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.8..4.0)).round
+    enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.5..3.0)).round
+    enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.5..3.0)).round
+    enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.5..3.0)).round
+    enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.5..3.0)).round
+    enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.5..3.0)).round
     
     [
       "Weaknesses",
