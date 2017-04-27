@@ -1085,6 +1085,23 @@ class Randomizer
     end
   end
   
+  def randomize_skill_stats
+    game.items[SKILL_GLOBAL_ID_RANGE].each do |skill|
+      case GAME
+      when "dos"
+        randomize_skill_stats_dos(skill)
+      end
+      
+      skill.write_to_rom()
+    end
+  end
+  
+  def randomize_skill_stats_dos(soul)
+     soul["Soul Scaling"] = rng.rand(0..4)
+     soul["Mana cost"] = rng.rand(1..60)
+     soul["DMG multiplier"] = rand_range_weighted_low(1..50)
+  end
+  
   def randomize_enemy_stats
     game.enemy_dnas.each do |enemy_dna|
       case GAME
