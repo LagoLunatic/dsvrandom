@@ -165,6 +165,7 @@ class Randomizer
         previous_accessible_locations.reverse_each do |previous_accessible_region|
           new_possible_locations = previous_accessible_region
           new_possible_locations -= locations_randomized_to_have_useful_pickups
+          new_possible_locations -= checker.enemy_locations if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
           
           break if new_possible_locations.any?
         end
@@ -684,9 +685,7 @@ class Randomizer
   
   def randomize_enemy_drops
     if GAME == "ooe"
-      BOSS_IDS.each do |enemy_id|
-        enemy = EnemyDNA.new(enemy_id, game.fs)
-        
+      game.enemy_dnas[BOSS_IDS].each do |enemy|
         if enemy["Glyph"] != 0
           # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
           # These must be done before common enemies because otherwise there won't be any unique glyphs left to give them.
@@ -699,9 +698,7 @@ class Randomizer
       end
     end
     
-    COMMON_ENEMY_IDS.each do |enemy_id|
-      enemy = EnemyDNA.new(enemy_id, game.fs)
-      
+    game.enemy_dnas.each do |enemy|
       if rng.rand <= 0.5 # 50% chance to have an item drop
         if GAME == "por"
           enemy["Item 1"] = get_unplaced_non_progression_pickup() + 1
@@ -1025,7 +1022,7 @@ class Randomizer
   end
   
   def randomize_item_stats
-    game.items.each do |item|
+    game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
       case GAME
       when "dos"
         randomize_item_stats_dos(item)
