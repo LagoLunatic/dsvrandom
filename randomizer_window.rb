@@ -33,6 +33,11 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_starting_room, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_ai, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_players, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_item_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_skill_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_enemy_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_weapon_synths, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    
     connect(@ui.enable_glitch_reqs, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -70,6 +75,11 @@ class RandomizerWindow < Qt::Dialog
     @ui.randomize_starting_room.setChecked(@settings[:randomize_starting_room]) unless @settings[:randomize_starting_room].nil?
     @ui.randomize_enemy_ai.setChecked(@settings[:randomize_enemy_ai]) unless @settings[:randomize_enemy_ai].nil?
     @ui.randomize_players.setChecked(@settings[:randomize_players]) unless @settings[:randomize_players].nil?
+    @ui.randomize_item_stats.setChecked(@settings[:randomize_item_stats]) unless @settings[:randomize_item_stats].nil?
+    @ui.randomize_skill_stats.setChecked(@settings[:randomize_skill_stats]) unless @settings[:randomize_skill_stats].nil?
+    @ui.randomize_enemy_stats.setChecked(@settings[:randomize_enemy_stats]) unless @settings[:randomize_enemy_stats].nil?
+    @ui.randomize_weapon_synths.setChecked(@settings[:randomize_weapon_synths]) unless @settings[:randomize_weapon_synths].nil?
+    
     @ui.enable_glitch_reqs.setChecked(@settings[:enable_glitch_reqs]) unless @settings[:enable_glitch_reqs].nil?
     
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
@@ -111,6 +121,11 @@ class RandomizerWindow < Qt::Dialog
     @settings[:randomize_starting_room] = @ui.randomize_starting_room.checked
     @settings[:randomize_enemy_ai] = @ui.randomize_enemy_ai.checked
     @settings[:randomize_players] = @ui.randomize_players.checked
+    @settings[:randomize_item_stats] = @ui.randomize_item_stats.checked
+    @settings[:randomize_skill_stats] = @ui.randomize_skill_stats.checked
+    @settings[:randomize_enemy_stats] = @ui.randomize_enemy_stats.checked
+    @settings[:randomize_weapon_synths] = @ui.randomize_weapon_synths.checked
+    
     @settings[:enable_glitch_reqs] = @ui.enable_glitch_reqs.checked
     
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
@@ -145,6 +160,10 @@ class RandomizerWindow < Qt::Dialog
       :randomize_starting_room => @ui.randomize_starting_room.checked(),
       :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
       :randomize_players => @ui.randomize_players.checked(),
+      :randomize_item_stats => @ui.randomize_item_stats.checked(),
+      :randomize_skill_stats => @ui.randomize_skill_stats.checked(),
+      :randomize_enemy_stats => @ui.randomize_enemy_stats.checked(),
+      :randomize_weapon_synths => @ui.randomize_weapon_synths.checked(),
       :enable_glitch_reqs => @ui.enable_glitch_reqs.checked()
     )
     randomizer.randomize()

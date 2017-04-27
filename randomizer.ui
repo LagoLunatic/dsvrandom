@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>500</height>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -167,7 +167,7 @@
        <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
-          <string>Experimental randomization options (not guaranteed completable and very buggy)</string>
+          <string>Experimental randomization options (buggy and not guaranteed completable)</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -242,10 +242,48 @@
             </item>
            </layout>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QCheckBox" name="randomize_item_stats">
+              <property name="text">
+               <string>Item Stats</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_stats">
+              <property name="text">
+               <string>Skill Stats</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_stats">
+              <property name="text">
+               <string>Enemy Stats</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_weapon_synths">
+              <property name="text">
+               <string>Weapon Synthesis</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
          <zorder></zorder>
          <zorder></zorder>
          <zorder></zorder>
+         <zorder>horizontalLayoutWidget</zorder>
+         <zorder>horizontalLayoutWidget_2</zorder>
         </widget>
        </item>
       </layout>

@@ -95,6 +95,22 @@ class Randomizer
     if options[:randomize_players]
       randomize_players()
     end
+    
+    if options[:randomize_item_stats]
+      randomize_item_stats()
+    end
+    
+    if options[:randomize_skill_stats]
+      randomize_skill_stats()
+    end
+    
+    if options[:randomize_enemy_stats]
+      randomize_enemy_stats()
+    end
+    
+    if options[:randomize_weapon_synths]
+      randomize_weapon_synths()
+    end
   end
   
   def randomize_pickups_completably
@@ -345,7 +361,6 @@ class Randomizer
     case entity.type
     when 0x01 # Enemy
       randomize_enemy(entity)
-      entity.write_to_rom()
     when 0x04
       # Pickup. These are randomized separately to ensure the game is completable.
     end
@@ -401,6 +416,8 @@ class Randomizer
     when "ooe"
       ooe_adjust_randomized_enemy(enemy, enemy_dna)
     end
+    
+    enemy.write_to_rom()
   end
   
   def dos_adjust_randomized_enemy(enemy, enemy_dna)
