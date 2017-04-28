@@ -57,7 +57,15 @@ Defs:
   greatstairway: lowergreatstairway & medium height | # TODO entering from upperentrance
   uppergreatstairway: greatstairway & medium height
   
-  masterkeep: TODO
+  towerofdeathstart: greatstairway & partnerpush & strength cube | towerofdeathelevator
+  bossstella: towerofdeathstart
+  towerofdeatheast: towerofdeathstart & small | bossdeath
+  towerofdeatheastupper: towerofdeatheast & medium height
+  towerofdeathwaterwheel: bossstella & cog & call cube & change cube | uppergreatstairway & small | towerofdeathelevator
+  towerofdeathelevator: bossdeath | towerofdeathwaterwheel
+  bossdeath: towerofdeatheastupper | towerofdeathelevator & big height
+  
+  masterkeep: bossdeath
   
   bosssisters: TODO #masterkeep & medium height
   
@@ -212,46 +220,46 @@ Defs:
     02 (Money): frog | owl
 #Tower of Death:
   00-07-00:
-    room: 
+    room: bossdeath
     00 (INT Boost): 
   00-07-01:
-    room: 
-    00 (Combat Beret): 
-    01 (Open Veil): 
-    02 (Aura Blast): 
+    room: towerofdeathelevator
+    00 (Combat Beret): bossdeath
+    01 (Open Veil): bossdeath & height # height to get out of the pit
+    02 (Aura Blast): big height
   00-07-05:
-    room: 
+    room: towerofdeatheastupper
     00 (Blue Cape): 
   00-07-08:
-    room: 
+    room: towerofdeatheastupper
     00 (Rose Stem Whip): 
   00-07-0B:
-    room: 
+    room: towerofdeatheastupper
     05 (MP Max up) (Hidden): 
   00-07-0C:
-    room: 
-    00 (HP Max up): 
-    01 (Thunderbolt): 
+    room: towerofdeatheast
+    00 (HP Max up): medium height
+    01 (Thunderbolt): medium height
   00-07-0D:
-    room: 
+    room: towerofdeathelevator & medium height
     00 (HP Max up): 
   00-07-10:
-    room: 
-    00 (Tempest): 
+    room: towerofdeathstart
+    00 (Tempest): # doesn't require anything to reach, but you can't get out without medium height 2. but you can just suspend to get out, so no req.
   00-07-16:
-    room: 
+    room: towerofdeathstart
     00 (Tasty Meat) (Hidden): 
   00-08-00:
-    room: 
+    room: towerofdeathwaterwheel
     00 (Taunt): 
   00-08-02:
-    room: 
+    room: towerofdeathwaterwheel
     00 (Halberd): 
   00-08-06:
-    room: 
+    room: towerofdeathwaterwheel
     00 (Viking Helmet): 
   00-08-0D:
-    room: 
+    room: bossstella & cog & medium height 2
     00 (Slick Boots): 
 #The Throne Room:
   00-09-00:
