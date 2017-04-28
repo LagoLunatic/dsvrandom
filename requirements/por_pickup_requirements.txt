@@ -45,10 +45,12 @@ Defs:
   big height: owl | superjump
   
   cityofhaze: midentrance & slide
+  bossdullahan: cityofhaze & TODO
   
   bossbehemoth: height
   midentrance: callswitch | height
   upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | # TODO entering from the right
+  bossbehemoth: TODO
   
   buriedchamber: bossbehemoth
   
@@ -56,6 +58,15 @@ Defs:
   bosskeremet: lowergreatstairway
   greatstairway: lowergreatstairway & medium height | # TODO entering from upperentrance
   uppergreatstairway: greatstairway & medium height
+  
+  sandygrave: TODO
+  bossastarte: sandygrave & TODO
+  
+  nationoffools: TODO
+  bosslegion: nationoffools & TODO
+  
+  forestofdoom: TODO
+  bossdagon: forestofdoom & TODO
   
   towerofdeathstart: greatstairway & partnerpush & strength cube | towerofdeathelevator
   bossstella: towerofdeathstart
@@ -66,7 +77,6 @@ Defs:
   bossdeath: towerofdeatheastupper | towerofdeathelevator & big height
   
   masterkeep: bossdeath
-  
   bosssisters: TODO #masterkeep & medium height
   
   studiopaintingroom: bosssisters & purify
@@ -86,6 +96,9 @@ Defs:
   middarkacademy: darkacademy & big height
   bosscreature: middarkacademy
   
+  nestofevil: TODO
+  bossdoppelganger: nestofevil & TODO
+  
   lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
   
   beat game: lostgallery
@@ -100,6 +113,9 @@ Defs:
   00-00-08:
     room: height
     01 (Spear): 
+  00-00-09:
+    room: bossbehemoth
+    02 (Behemoth) (Enemy): 
   00-00-0D:
     room: bossbehemoth
     00 (Combat Knife): 
@@ -181,6 +197,9 @@ Defs:
   00-04-08:
     room: greatstairway
     00 (Axe Bomber): 
+  00-04-0A:
+    room: bosskeremet
+    02 (Keremet) (Enemy): 
   00-04-0B:
     room: lowergreatstairway
     00 (Stone of Flight): 
@@ -227,6 +246,9 @@ Defs:
     00 (Combat Beret): bossdeath
     01 (Open Veil): bossdeath & height # height to get out of the pit
     02 (Aura Blast): big height
+  00-07-02:
+    room: bossdeath
+    03 (Death) (Enemy):
   00-07-05:
     room: towerofdeatheastupper
     00 (Blue Cape): 
@@ -282,6 +304,9 @@ Defs:
   00-0A-13:
     room: 
     03 (HP Max up): 
+  00-0B-01:
+    room: bosssisters
+    0E (Sisters) (Enemy): 
 #City of Haze:
   01-00-02:
     room: 
@@ -367,6 +392,9 @@ Defs:
   01-02-0A:
     room: 
     02 (Acrobat Cube): 
+  01-02-0B:
+    room: bossdullahan
+    02 (Dullahan) (Enemy): 
   01-02-11:
     room: 
     00 (Nun's Shoes): 
@@ -438,6 +466,9 @@ Defs:
   03-00-09:
     room: 
     00 (Strength Glove): 
+  03-00-0C:
+    room: bossastarte
+    02 (Astarte) (Enemy): 
   03-00-11:
     room: 
     00 (Uncurse Potion): 
@@ -602,12 +633,16 @@ Defs:
     room: 
     00 (Pasta Carbonara): 
   05-02-0C:
-    room: 
-    01 (Cog): 
+    room: TODO
+    01 (Cog): bosslegion
+    02 (Legion) (Enemy): bosslegion
 #Burnt Paradise:
   06-00-01:
     room: 
     00 (Jet Black Whip): 
+  06-00-05:
+    room: bossmedusa
+    03 (Medusa) (Enemy): 
   06-00-08:
     room: 
     04 (Truffle) (Hidden): 
@@ -659,6 +694,9 @@ Defs:
   07-00-0B:
     room: 
     00 (Rusty Food Tin) (Hidden): 
+  07-00-0E:
+    room: bossdagon
+    02 (Dagon) (Enemy): 
   07-00-0F:
     room: 
     00 (Toad Morph): 
@@ -735,6 +773,9 @@ Defs:
   09-00-36:
     room: 
     00 (Tome of Arms p2): 
+  09-00-3D:
+    room: bossdoppelganger
+    03 (Doppelganger) (Enemy): 
   09-00-3E:
-    room: 
+    room: bossdoppelganger
     00 (Greatest Five): 
