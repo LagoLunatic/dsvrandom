@@ -28,6 +28,7 @@ Defs:
   push cube: 0x1B1
   strength cube: 0x1B5
   sanctuary: 0x179
+  cog: 0x4E
   
   callswitch: change cube & call cube
   slide: lizard tail | frog | owl
@@ -37,7 +38,7 @@ Defs:
   frog: toad morph & canusespells
   owl: owl morph & canusespells
   small: frog | owl
-  purify: santuary & canusespells
+  purify: sanctuary & canusespells
   
   height: shoulderjump | medium height
   medium height: double jump | jumpglitch | quad jump height
@@ -50,15 +51,16 @@ Defs:
   endcityofhaze: bossdullahan
   bossdullahan: midcityofhaze
   
-  midentrance: callswitch | height
-  upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | # TODO entering from the right
-  bossbehemoth: height
+  entrance: call cube
+  midentrance: entrance & callswitch | entrance & height
+  upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | greatstairway & height
+  bossbehemoth: entrance & height
   
   buriedchamber: bossbehemoth
   
   lowergreatstairway: buriedchamber # you can get here quicker without going through buried chamber with the suspend glitch, but that doesn't require any fewer items.
   bosskeremet: lowergreatstairway
-  greatstairway: lowergreatstairway & medium height | # TODO entering from upperentrance
+  greatstairway: lowergreatstairway & medium height | upperentrance
   uppergreatstairway: greatstairway & medium height
   
   sandygrave: bosskeremet & medium height | greatstairway
@@ -102,8 +104,8 @@ Defs:
   middarkacademy: darkacademy & big height
   bosscreature: middarkacademy
   
-  nestofevil: TODO
-  bossdoppelganger: nestofevil & TODO
+  nestofevil: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
+  bossdoppelganger: nestofevil
   
   lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
   
@@ -111,15 +113,16 @@ Defs:
   
   beat game: throneroom
 
+Rooms:
 #Dracula's Castle:
 #Entrance:
   00-00-01:
     room: 
     01 (Change Cube): 
-    02 (Call Cube): 
-    03 (ALL Boost): quadjumpglitch | big height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
+    #02 (Call Cube): # Don't randomize call cube
+    03 (ALL Boost): quad jump height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
   00-00-08:
-    room: height
+    room: entrance & height
     01 (Spear): 
   00-00-09:
     room: bossbehemoth
@@ -134,22 +137,22 @@ Defs:
     room: midentrance
     00 (Head Guard): 
   00-01-04:
-    room: 
+    room: entrance
     00 (Short Sword): 
     01 (Tome of Arms 1): 
     07 (Beef Jerky) (Hidden): 
   00-01-07:
-    room: 
+    room: entrance
     2A (Beef Jerky): 
   00-01-0A:
     room: upperentrance
     00 (Laurel Brooch): 
   00-01-0C:
-    room: 
+    room: entrance
     00 (Wait Cube): 
     01 (Raging Fire): midentrance
   00-01-0F:
-    room: 
+    room: entrance
     00 (Whip Skill 1): height
     01 (Knife): 
   00-01-10:
@@ -236,7 +239,7 @@ Defs:
     01 (MP Max up): 
   00-06-05:
     room: upperentrance | greatstairway
-    00 (Whip Knuckles): big height | quadjumpglitch
+    00 (Whip Knuckles): quad jump height
     01 (Iron Plate): medium height
   00-06-09:
     room: upperentrance & medium height | greatstairway & medium height
@@ -733,9 +736,9 @@ Defs:
     room: forestofdoomcenter & quad jump height
     00 (Dark Gate): 
   07-02-11:
-    room: 
+    room: forestofdoomcenter
     00 (Stonewall): forestofdoomeast
-    01 (Amethyst Corset): forestofdoomcenter
+    01 (Amethyst Corset): 
 #Dark Academy:
   08-00-01:
     room: middarkacademy
@@ -775,11 +778,11 @@ Defs:
     room: darkacademy & height
     00 (Owl Morph): 
 #Nest of Evil:
-  09-00-1A: TODO
-    room: 
+  09-00-1A:
+    room: nestofevil
     00 (Tome of Arms p1): 
   09-00-36:
-    room: 
+    room: nestofevil
     00 (Tome of Arms p2): 
   09-00-3D:
     room: bossdoppelganger
