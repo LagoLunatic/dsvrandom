@@ -643,59 +643,59 @@ Defs:
     room: nationoffools
     01 (Cog): bosslegion
     02 (Legion) (Enemy): bosslegion
-#Burnt Paradise: TODO
+#Burnt Paradise: # you need big height to get into burnt paradise (because dark academy is a requirement)
   06-00-01:
-    room: 
+    room: bossmedusa
     00 (Jet Black Whip): 
   06-00-05:
     room: bossmedusa
     03 (Medusa) (Enemy): 
   06-00-08:
-    room: 
+    room: burntparadise
     04 (Truffle) (Hidden): 
   06-00-0E:
-    room: 
+    room: burntparadise
     00 (MP Max up): 
   06-00-14:
-    room: 
+    room: burntparadise
     03 (HP Max up): 
   06-00-27:
-    room: 
+    room: burntparadise
     02 (HP Max up): 
   06-00-2B:
-    room: 
+    room: burntparadise
     00 (MP Max up): 
   06-01-00:
-    room: 
+    room: burntparadise
     00 (Super Tonic): 
   06-01-01:
-    room: 
-    00 (Ice Cream): 
+    room: burntparadise
+    00 (Ice Cream): small
   06-01-02:
-    room: 
+    room: burntparadise
     07 (Engagement Ring): 
   06-01-06:
-    room: 
+    room: burntparadise
     06 (Cure Poison): 
   06-01-07:
-    room: 
+    room: burntparadise
     09 (Bakatwa): 
     0A (Gold Leggings): 
   06-01-08:
-    room: 
+    room: burntparadise
     08 (Artemis Shoes): 
   06-01-0D:
-    room: 
+    room: burntparadise
     02 (Great Axe): 
     03 (Spoiled Milk): 
   06-01-0E:
-    room: 
+    room: burntparadise
     00 (Tinned Spinach): 
   06-01-13:
-    room: 
+    room: burntparadise
     09 (Tome of Arms 3): 
   06-01-14:
-    room: 
+    room: burntparadise
     00 (Financier): 
 #Forest of Doom:
   07-00-0B:
