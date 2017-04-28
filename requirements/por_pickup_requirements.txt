@@ -1,7 +1,19 @@
 
 Glitch defs:
+  katar: 0x78
+  cinquedia: 0x79
+  axe: 0x98
+  battle axe: 0x9A
+  bhuj: 0x9C
+  great axe: 0x9D
+  voulge: 0x9E
+  bullova: 0x9F
+  golden axe: 0xA0
+  
   jumpglitch: callswitch
   quadjumpglitch: jumpglitch & double jump
+  
+  telesuper: katar | cinquedia | axe | battle axe | bhuj | great axe | voulge | bullova | golden axe
 Defs:
   change cube: 0x1AC
   call cube: 0x1AD
@@ -13,6 +25,7 @@ Defs:
   owl morph: 0x178
   superjump: 0x1B4
   push cube: 0x1B1
+  strength cube: 0x1B5
   sanctuary: 0x179
   
   callswitch: change cube & call cube
@@ -50,14 +63,15 @@ Defs:
   
   studiopaintingroom: bosssisters & purify
   
-  13thstreet: studiopaintingroom & TODO
-  bosswerewolf: TODO
+  13thstreet: studiopaintingroom & bossmummy
+  13thstreetaftertrain: 13thstreet & partnerpush & strength cube | 13thstreet & telesuper
+  bosswerewolf: 13thstreetaftertrain
   
   forgottencity: studiopaintingroom
   innerforgottencity: forgottencity & medium height
   bossmummy: innerforgottencity
   
-  burntparadise: studiopaintingroom & TODO
+  burntparadise: studiopaintingroom & bosscreature
   bossmedusa: TODO
   
   darkacademy: studiopaintingroom
@@ -356,51 +370,54 @@ Defs:
     00 (Houppelande): 
 #13th Street:
   02-00-02:
-    room: 
+    room: 13thstreetaftertrain & quad jump height
     00 (Kugelhopf): 
     01 (Shogun Helmet): 
   02-01-01:
-    room: 
+    room: 13thstreetaftertrain
     00 (Assassin's Cape): 
   02-01-02:
-    room: 
+    room: 13thstreetaftertrain
     00 (Gateau Marron): 
   02-01-04:
-    room: 
+    room: 13thstreetaftertrain & partnerpush | 13thstreetaftertrain & strength cube
     00 (Gateau Fraise): 
     01 (Wheat Roll): 
     02 (Langues de Chat): 
   02-01-06:
-    room: 
+    room: 13thstreetaftertrain & partnerpush | 13thstreetaftertrain & strength cube
     00 (HP Max up): 
   02-01-0A:
-    room: 
+    room: 13thstreetaftertrain
     00 (Super Potion): 
   02-01-13:
-    room: 
+    room: 13thstreetaftertrain
     00 (Samurai Leggngs): 
   02-02-01:
-    room: 
-    00 (Money): 
-    01 (Mille-feuille): 
+    room: 13thstreetaftertrain
+    00 (Money): medium height
+    01 (Mille-feuille): medium height
   02-02-03:
-    room: 
+    room: 13thstreetaftertrain
     02 (HP Max up): 
   02-02-08:
-    room: 
+    room: 13thstreetaftertrain & medium height & small
     00 (Wedding Dress): 
   02-02-09:
-    room: 
+    room: 13thstreetaftertrain
     00 (Shaman Ring): 
   02-02-0F:
-    room: 
+    room: 13thstreetaftertrain & height # height needed to escape
     00 (MP Max up): 
   02-02-12:
-    room: 
+    room: 13thstreetaftertrain & height # height needed to escape
     00 (Steel Greaves): 
   02-02-13:
-    room: 
+    room: 13thstreetaftertrain & height # height needed to escape
     00 (Winged Boots): 
+  02-02-14:
+    room: bosswerewolf
+    00 (Werewolf) (Enemy): 
 #Sandy Grave:
   03-00-05:
     room: 
