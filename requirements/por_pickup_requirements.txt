@@ -3,23 +3,31 @@ Glitch defs:
   jumpglitch: callswitch
   quadjumpglitch: jumpglitch & double jump
 Defs:
-  change cube: TODO
-  call cube: TODO
-  lizard tail: TODO
-  acrobat cube: TODO
-  double jump: TODO
-  frog: TODO
-  owl: TODO
-  superjump: TODO
-  push cube
+  change cube: 0x1AC
+  call cube: 0x1AD
+  skill cube: 0x1AE
+  lizard tail: 0x1B2
+  acrobat cube: 0x1B0
+  double jump: 0x1B3
+  toad morph: 0x177
+  owl morph: 0x178
+  superjump: 0x1B4
+  push cube: 0x1B1
+  sanctuary: 0x179
   
   callswitch: change cube & call cube
   slide: lizard tail | frog | owl
   shoulderjump: acrobat cube & call cube
+  partnerpush: push cube & call cube
+  canusespells: change cube | skill cube
+  frog: toad morph & canusespells
+  owl: owl morph & canusespells
+  small: frog | owl
+  purify: santuary & canusespells
   
   height: shoulderjump | medium height
-  medium height: double jump | jumpglitch | big height
-  medium height 2: double jump & shoulderjump | big height
+  medium height: double jump | jumpglitch | quad jump height
+  medium height 2: double jump & shoulderjump | quad jump height
   quad jump height: quadjumpglitch | big height
   big height: owl | superjump
   
@@ -40,10 +48,21 @@ Defs:
   
   bosssisters: TODO #masterkeep & medium height
   
+  studiopaintingroom: bosssisters & purify
+  
+  13thstreet: studiopaintingroom & TODO
   bosswerewolf: TODO
-  bossmummy: TODO
+  
+  forgottencity: studiopaintingroom
+  innerforgottencity: forgottencity & medium height
+  bossmummy: innerforgottencity
+  
+  burntparadise: studiopaintingroom & TODO
   bossmedusa: TODO
-  bosscreature: TODO
+  
+  darkacademy: studiopaintingroom
+  middarkacademy: darkacademy & big height
+  bosscreature: middarkacademy
   
   lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
   
@@ -91,7 +110,7 @@ Defs:
     room: upperentrance
     00 (MP Max up): 
   00-01-12:
-    room: upperentrance & push cube & strength cube & medium height | quad jump height
+    room: upperentrance & partnerpush & strength cube & medium height | quad jump height
     00 (Nebula): 
   00-01-17:
     room: upperentrance
@@ -443,49 +462,52 @@ Defs:
     00 (MP Max up): 
 #Forgotten City:
   04-00-02:
-    room: 
+    room: forgottencity
     00 (Eye for an Eye): 
   04-00-05:
-    room: 
-    00 (Griffon Wing): 
+    room: forgottencity
+    00 (Griffon Wing): quad jump height
   04-00-09:
-    room: 
-    00 (Attica Helmet): 
+    room: forgottencity
+    00 (Attica Helmet): # you can get out of here by going down to the lower warp point and warping out
   04-00-11:
-    room: 
-    00 (Super Tonic): 
+    room: forgottencity
+    00 (Super Tonic): height # needed to get out
   04-00-12:
-    room: 
-    00 (Curry): 
+    room: forgottencity
+    00 (Curry): height # needed to get out of the pit with the item in it
   04-00-13:
-    room: 
-    00 (Super Potion): 
+    room: forgottencity
+    00 (Super Potion): medium height
   04-00-14:
-    room: 
+    room: innerforgottencity
     00 (Money): 
   04-01-03:
-    room: 
-    00 (HP Max up): 
-    01 (MP Max up): 
+    room: innerforgottencity
+    00 (HP Max up): big height
+    01 (MP Max up): big height
   04-01-05:
-    room: 
+    room: bossmummy
     00 (Holy Mail): 
+  04-01-08:
+    room: bossmummy
+    00 (Mummy Man) (Enemy): 
   04-01-10:
-    room: 
+    room: forgottencity
     00 (Princess Tiara): 
   04-01-11:
-    room: 
+    room: innerforgottencity
     00 (MP Max up): 
   04-01-15:
-    room: 
-    00 (Book of Death): 
-    01 (Meteor): 
+    room: forgottencity
+    00 (Book of Death): quad jump height
+    01 (Meteor): small
   04-01-18:
-    room: 
+    room: innerforgottencity
     00 (Venus Brooch): 
     01 (Money): 
   04-01-22:
-    room: 
+    room: forgottencity
     00 (Platinum Corset): 
 #Nation of Fools:
   05-00-01:
@@ -645,38 +667,41 @@ Defs:
     01 (Amethyst Corset): 
 #Dark Academy:
   08-00-01:
-    room: 
+    room: middarkacademy
     01 (New York Steak) (Hidden): 
   08-00-02:
-    room: 
+    room: middarkacademy
     00 (Money): 
     01 (Noodle Bun): 
+  08-00-04:
+    room: bosscreature
+    00 (The Creature) (Enemy): 
   08-02-03:
-    room: 
+    room: middarkacademy
     00 (MP Max up): 
   08-02-09:
-    room: 
+    room: middarkacademy
     00 (Powdered Milk) (Hidden): 
   08-02-0F:
-    room: 
+    room: middarkacademy
     00 (Mercury Boots): 
   08-02-11:
-    room: 
+    room: middarkacademy
     00 (Divine Storm): 
   08-02-14:
-    room: 
+    room: middarkacademy
     00 (HP Max up): 
   08-02-15:
-    room: 
+    room: middarkacademy
     00 (Noodle Bun): 
   08-02-19:
-    room: 
-    00 (Flame Whip): 
+    room: darkacademy
+    00 (Flame Whip): middarkacademy
   08-03-03:
-    room: 
+    room: darkacademy & height
     00 (Gold Plate): 
   08-03-04:
-    room: 
+    room: darkacademy & height
     00 (Owl Morph): 
 #Nest of Evil:
   09-00-1A:
