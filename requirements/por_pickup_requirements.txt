@@ -64,7 +64,7 @@ Defs:
   sandygrave: bosskeremet & medium height | greatstairway
   bossastarte: sandygrave & TODO
   
-  nationoffools: TODO
+  nationoffools: uppergreatstairway
   bosslegion: nationoffools & TODO
   
   forestofdoom: towerofdeathwaterwheel
@@ -81,7 +81,8 @@ Defs:
   bossdeath: towerofdeatheastupper | towerofdeathelevator & big height
   
   masterkeep: bossdeath
-  bosssisters: TODO #masterkeep & medium height
+  midmasterkeep: masterkeep & medium height
+  bosssisters: midmasterkeep
   
   studiopaintingroom: bosssisters & purify
   
@@ -105,7 +106,9 @@ Defs:
   
   lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
   
-  beat game: lostgallery
+  throneroom: lostgallery
+  
+  beat game: throneroom
 
 #Dracula's Castle:
 #Entrance:
@@ -238,9 +241,9 @@ Defs:
     room: upperentrance & medium height | greatstairway & medium height
     00 (Sequined Dress): 
   00-06-0C:
-    room: upperentrance & medium height | greatstairway & medium height # TODO clock tower
-    01 (Money): frog | owl
-    02 (Money): frog | owl
+    room: upperentrance & medium height | greatstairway & medium height | towerofdeathwaterwheel
+    01 (Money): small
+    02 (Money): small
 #Tower of Death:
   00-07-00:
     room: bossdeath
@@ -289,25 +292,25 @@ Defs:
     00 (Slick Boots): 
 #The Throne Room:
   00-09-00:
-    room: 
+    room: throneroom & quad jump height
     00 (Speed Up): 
     01 (Robe Decollete): 
   00-09-03:
-    room: 
-    00 (HP Max up): 
-    01 (MP Max up): 
-    02 (Money): 
-    03 (Foie Gras) (Hidden): 
+    room: throneroom
+    00 (HP Max up): medium height
+    01 (MP Max up): quad jump height
+    02 (Money): quad jump height
+    03 (Foie Gras) (Hidden): quad jump height
 #Master's Keep:
   00-0A-08:
-    room: 
+    room: midmasterkeep
     00 (MP Max up): 
   00-0A-0B:
-    room: 
+    room: midmasterkeep
     03 (Piercing Beam): 
   00-0A-13:
-    room: 
-    03 (HP Max up): 
+    room: masterkeep
+    03 (HP Max up): slide | height # only needed to escape
   00-0B-01:
     room: bosssisters
     0E (Sisters) (Enemy): 
@@ -458,7 +461,7 @@ Defs:
   02-02-14:
     room: bosswerewolf
     00 (Werewolf) (Enemy): 
-#Sandy Grave:
+#Sandy Grave: TODO
   03-00-05:
     room: 
     00 (Steel Whip): 
@@ -569,7 +572,7 @@ Defs:
   04-01-22:
     room: forgottencity
     00 (Platinum Corset): 
-#Nation of Fools:
+#Nation of Fools: TODO
   05-00-01:
     room: 
     00 (MP Max up): 
@@ -640,7 +643,7 @@ Defs:
     room: TODO
     01 (Cog): bosslegion
     02 (Legion) (Enemy): bosslegion
-#Burnt Paradise:
+#Burnt Paradise: TODO
   06-00-01:
     room: 
     00 (Jet Black Whip): 
@@ -771,7 +774,7 @@ Defs:
     room: darkacademy & height
     00 (Owl Morph): 
 #Nest of Evil:
-  09-00-1A:
+  09-00-1A: TODO
     room: 
     00 (Tome of Arms p1): 
   09-00-36:
