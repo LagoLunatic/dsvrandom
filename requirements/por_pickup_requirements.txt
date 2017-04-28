@@ -46,12 +46,13 @@ Defs:
   big height: owl | superjump
   
   cityofhaze: midentrance & slide
-  bossdullahan: cityofhaze & TODO
+  midcityofhaze: cityofhaze & call cube & change cube
+  endcityofhaze: bossdullahan
+  bossdullahan: midcityofhaze
   
-  bossbehemoth: height
   midentrance: callswitch | height
   upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | # TODO entering from the right
-  bossbehemoth: TODO
+  bossbehemoth: height
   
   buriedchamber: bossbehemoth
   
@@ -60,7 +61,7 @@ Defs:
   greatstairway: lowergreatstairway & medium height | # TODO entering from upperentrance
   uppergreatstairway: greatstairway & medium height
   
-  sandygrave: TODO
+  sandygrave: bosskeremet & medium height | greatstairway
   bossastarte: sandygrave & TODO
   
   nationoffools: TODO
@@ -206,7 +207,7 @@ Defs:
   00-04-0B:
     room: lowergreatstairway
     00 (Stone of Flight): 
-    01 (Partisan): greatstairway
+    01 (Partisan): greatstairway | medium height
   00-04-0D:
     room: greatstairway
     07 (Nun's Habit): 
@@ -312,100 +313,100 @@ Defs:
     0E (Sisters) (Enemy): 
 #City of Haze:
   01-00-02:
-    room: 
+    room: cityofhaze
     00 (Clover Tiara): 
   01-00-03:
-    room: 
+    room: cityofhaze
     01 (Kirtle): 
   01-00-04:
-    room: 
+    room: cityofhaze
     07 (Leather Cuirass): 
   01-00-07:
-    room: 
+    room: cityofhaze
     00 (White Corsage): 
   01-00-09:
-    room: 
+    room: cityofhaze
     00 (Leather Corset): 
   01-00-0C:
-    room: 
+    room: cityofhaze
     00 (Claymore): 
   01-00-0E:
-    room: 
+    room: cityofhaze
     00 (Cream Pie): 
     01 (Green Tea Cake): 
   01-00-0F:
-    room: 
+    room: cityofhaze
     00 (Paper Airplane): 
   01-00-10:
-    room: 
+    room: cityofhaze
     00 (Rush): 
   01-00-11:
-    room: 
+    room: cityofhaze
     00 (Sandals): 
   01-00-14:
-    room: 
+    room: cityofhaze
     00 (Potion): 
     01 (Leather Whip): 
   01-00-18:
-    room: 
+    room: cityofhaze
     00 (Enamel Pinheels): 
   01-00-19:
-    room: 
+    room: cityofhaze
     00 (Holy Lightning): 
   01-01-03:
-    room: 
+    room: cityofhaze
     00 (Money): 
   01-01-06:
-    room: 
+    room: midcityofhaze
     00 (Skill Cube): 
   01-01-08:
-    room: 
+    room: midcityofhaze
     00 (Gale Force): 
     01 (Mace): 
   01-01-09:
-    room: 
+    room: endcityofhaze
     02 (Push Cube): 
   01-01-0B:
-    room: 
+    room: endcityofhaze
     00 (CON Boost): 
   01-01-0C:
-    room: 
+    room: midcityofhaze & quad jump height
     00 (Healing Mail): 
     01 (Sachertorte): 
   01-02-01:
-    room: 
-    00 (Velvet Ribbon): 
-    01 (Long Sword): 
+    room: endcityofhaze
+    00 (Velvet Ribbon): height
+    01 (Long Sword): height
   01-02-04:
-    room: 
+    room: endcityofhaze
     00 (Moonwalkers): 
   01-02-05:
-    room: 
+    room: endcityofhaze
     00 (Axe): 
   01-02-07:
-    room: 
-    00 (Milican's Sword): 
+    room: endcityofhaze
+    00 (Milican's Sword): small
     01 (Thick Glasses): 
   01-02-08:
-    room: 
-    00 (Cape): 
+    room: endcityofhaze
+    00 (Cape): height
   01-02-09:
-    room: 
+    room: endcityofhaze
     00 (Tuxedo Coat): 
   01-02-0A:
-    room: 
+    room: endcityofhaze
     02 (Acrobat Cube): 
   01-02-0B:
     room: bossdullahan
     02 (Dullahan) (Enemy): 
   01-02-11:
-    room: 
+    room: midcityofhaze
     00 (Nun's Shoes): 
   01-02-12:
-    room: 
+    room: midcityofhaze
     00 (Money): 
   01-02-14:
-    room: 
+    room: midcityofhaze
     00 (Houppelande): 
 #13th Street:
   02-00-02:
