@@ -9,11 +9,12 @@ Glitch defs:
   voulge: 0x9E
   bullova: 0x9F
   golden axe: 0xA0
+  critical art: 0x1B8
   
   jumpglitch: callswitch
   quadjumpglitch: jumpglitch & double jump
   
-  telesuper: katar | cinquedia | axe | battle axe | bhuj | great axe | voulge | bullova | golden axe
+  telesuper: katar & critical art | cinquedia & critical art | axe & critical art | battle axe & critical art | bhuj & critical art | great axe & critical art | voulge & critical art | bullova & critical art | golden axe & critical art
 Defs:
   change cube: 0x1AC
   call cube: 0x1AD
@@ -65,8 +66,10 @@ Defs:
   nationoffools: TODO
   bosslegion: nationoffools & TODO
   
-  forestofdoom: TODO
-  bossdagon: forestofdoom & TODO
+  forestofdoom: towerofdeathwaterwheel
+  forestofdoomcenter: forestofdoom & height
+  forestofdoomeast: forestofdoomcenter & medium height
+  bossdagon: forestofdoomeast
   
   towerofdeathstart: greatstairway & partnerpush & strength cube | towerofdeathelevator
   bossstella: towerofdeathstart
@@ -692,42 +695,42 @@ Defs:
     00 (Financier): 
 #Forest of Doom:
   07-00-0B:
-    room: 
+    room: forestofdoomeast
     00 (Rusty Food Tin) (Hidden): 
   07-00-0E:
     room: bossdagon
     02 (Dagon) (Enemy): 
   07-00-0F:
-    room: 
+    room: bossdagon
     00 (Toad Morph): 
   07-01-03:
-    room: 
+    room: forestofdoomcenter
     00 (Tristan&Isolde): 
   07-01-04:
-    room: 
+    room: forestofdoomcenter
     00 (MP Max up): 
   07-01-07:
-    room: 
+    room: forestofdoomcenter
     00 (Moldy Bread): 
   07-01-0C:
-    room: 
+    room: forestofdoomcenter
     00 (Cream Puff) (Hidden): 
   07-01-14:
-    room: 
+    room: forestofdoomcenter
     00 (HP Max up): 
   07-02-00:
-    room: 
+    room: forestofdoomcenter
     00 (Silver Leggings): 
   07-02-0B:
-    room: 
+    room: forestofdoomcenter
     00 (Silver Plate): 
   07-02-0F:
-    room: 
+    room: forestofdoomcenter & quad jump height
     00 (Dark Gate): 
   07-02-11:
     room: 
-    00 (Stonewall): 
-    01 (Amethyst Corset): 
+    00 (Stonewall): forestofdoomeast
+    01 (Amethyst Corset): forestofdoomcenter
 #Dark Academy:
   08-00-01:
     room: middarkacademy
