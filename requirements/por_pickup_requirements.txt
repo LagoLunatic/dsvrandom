@@ -65,7 +65,7 @@ Defs:
   bossastarte: sandygrave & TODO
   
   nationoffools: uppergreatstairway
-  bosslegion: nationoffools & TODO
+  bosslegion: nationoffools
   
   forestofdoom: towerofdeathwaterwheel
   forestofdoomcenter: forestofdoom & height
@@ -572,75 +572,75 @@ Defs:
   04-01-22:
     room: forgottencity
     00 (Platinum Corset): 
-#Nation of Fools: TODO
+#Nation of Fools: # you need medium height to even get into the nation of fools portrait
   05-00-01:
-    room: 
+    room: nationoffools
     00 (MP Max up): 
   05-00-08:
-    room: 
+    room: nationoffools
     00 (Volcano): 
   05-00-0B:
-    room: 
+    room: nationoffools
     00 (Touch & Pop): 
   05-00-0F:
-    room: 
+    room: nationoffools
     00 (Money): 
   05-00-10:
-    room: 
+    room: nationoffools
     00 (Tonic): 
   05-00-13:
-    room: 
+    room: nationoffools
     00 (MP Max up): 
   05-00-14:
-    room: 
+    room: nationoffools
     00 (HP Max up): 
   05-00-1A:
-    room: 
+    room: nationoffools
     00 (Money): 
   05-00-27:
-    room: 
+    room: nationoffools
     00 (Moon Brooch): 
   05-00-2B:
-    room: 
+    room: nationoffools
     00 (HP Max up): 
   05-01-00:
-    room: 
-    02 (Holy Veil): 
+    room: nationoffools
+    02 (Holy Veil): small
   05-01-02:
-    room: 
+    room: nationoffools
     00 (High Tonic): 
     01 (Caviar) (Hidden): 
     02 (Spiked Boots): 
   05-01-06:
-    room: 
+    room: nationoffools
     00 (High Potion): 
   05-01-07:
-    room: 
+    room: nationoffools
     06 (Silk Hat): 
     07 (Dancer's Blouse): 
   05-01-0D:
-    room: 
+    room: nationoffools
     06 (Grenade): 
   05-01-0E:
-    room: 
+    room: nationoffools
     06 (Battle Jacket): 
   05-01-13:
-    room: 
+    room: nationoffools
     00 (Corn Soup): 
   05-01-14:
-    room: 
+    room: nationoffools
     05 (Rotten Durian): 
   05-02-04:
-    room: 
+    room: nationoffools
     00 (Critical Art): 
   05-02-0A:
-    room: 
+    room: nationoffools
     00 (Spaghetti): 
   05-02-0B:
-    room: 
+    room: nationoffools
     00 (Pasta Carbonara): 
   05-02-0C:
-    room: TODO
+    room: nationoffools
     01 (Cog): bosslegion
     02 (Legion) (Enemy): bosslegion
 #Burnt Paradise: TODO
