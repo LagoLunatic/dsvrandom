@@ -62,7 +62,8 @@ Defs:
   uppergreatstairway: greatstairway & medium height
   
   sandygrave: bosskeremet & medium height | greatstairway
-  bossastarte: sandygrave & TODO
+  sandygravemidlevel: sandygrave & medium height
+  bossastarte: sandygravemidlevel
   
   nationoffools: uppergreatstairway
   bosslegion: nationoffools
@@ -95,7 +96,7 @@ Defs:
   bossmummy: innerforgottencity
   
   burntparadise: studiopaintingroom & bosscreature
-  bossmedusa: TODO
+  bossmedusa: burntparadise
   
   darkacademy: studiopaintingroom
   middarkacademy: darkacademy & big height
@@ -461,67 +462,67 @@ Defs:
   02-02-14:
     room: bosswerewolf
     00 (Werewolf) (Enemy): 
-#Sandy Grave: TODO
+#Sandy Grave:
   03-00-05:
-    room: 
+    room: sandygrave
     00 (Steel Whip): 
-    01 (Kaiser Knuckles): 
+    01 (Kaiser Knuckles): quad jump height
   03-00-07:
-    room: 
+    room: sandygravemidlevel
     00 (Steel Ball): 
     01 (High Potion): 
   03-00-09:
-    room: 
-    00 (Strength Glove): 
+    room: sandygravemidlevel
+    00 (Strength Glove): bossastarte
   03-00-0C:
     room: bossastarte
     02 (Astarte) (Enemy): 
   03-00-11:
-    room: 
+    room: sandygravemidlevel
     00 (Uncurse Potion): 
   03-00-12:
-    room: 
+    room: sandygravemidlevel
     00 (High Tonic): 
   03-00-13:
-    room: 
+    room: sandygravemidlevel
     00 (Charm Necklace): 
     01 (Charm Necklace): 
     02 (Glamorous Pumps): 
   03-00-14:
-    room: 
-    00 (Bwaka Knife): 
+    room: sandygrave
+    00 (Bwaka Knife): jumpglitch | medium height 2
   03-00-16:
-    room: 
+    room: sandygrave
     00 (Bahg Nahk): 
   03-00-18:
-    room: 
+    room: sandygrave
     00 (HP Max up): 
   03-01-03:
-    room: 
+    room: sandygravemidlevel
     00 (Crystal Necklet): 
     01 (Pumpkin Pie): 
     02 (Royal Sandals): 
   03-01-11:
-    room: 
-    00 (Money): 
-    01 (Clear Skies): 
+    room: sandygrave
+    00 (Money): height
+    01 (Clear Skies): height
   03-01-16:
-    room: 
+    room: sandygrave
     00 (Money): 
     01 (Diamond Brooch): 
   03-01-18:
-    room: 
-    00 (1,000 Blades): 
-    01 (Money): 
+    room: sandygrave
+    00 (1,000 Blades): medium height
+    01 (Money): medium height
   03-01-1B:
-    room: 
-    00 (High Potion): 
+    room: sandygrave
+    00 (High Potion): medium height
   03-01-1C:
-    room: 
-    00 (Sanctuary): 
-    01 (Lorica): 
+    room: sandygrave
+    00 (Sanctuary): small
+    01 (Lorica): quad jump height
   03-01-1D:
-    room: 
+    room: sandygrave
     00 (MP Max up): 
 #Forgotten City:
   04-00-02:
