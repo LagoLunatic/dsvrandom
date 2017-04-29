@@ -117,12 +117,21 @@ class Randomizer
     case GAME
     when "dos"
       checker.add_item(0x3D) # seal 1
+    when "por"
+      checker.add_item(0x1AD) # call cube
     end
     
     previous_accessible_locations = []
     locations_randomized_to_have_useful_pickups = []
     # First place progression pickups needed to beat the game.
     while true
+      case GAME
+      when "por"
+        if !checker.current_items.include?(0x1B2) && checker.check_reqs([[:midentrance]])
+          checker.add_item(0x1B2) # give lizard tail if the player has reached wind
+        end
+      end
+      
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
       if pickups_by_usefulness.any?
@@ -319,6 +328,10 @@ class Randomizer
           entity.var_a = 0
           entity.var_b = item_index
         when "por"
+          # Skill
+          entity.type = 4
+          entity.subtype = item_type
+          entity.var_b = item_index
         when "ooe"
         else
         end
