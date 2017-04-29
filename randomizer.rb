@@ -135,23 +135,22 @@ class Randomizer
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
       if pickups_by_usefulness.any?
+        max_usefulness = pickups_by_usefulness.values.max
+        
+        weights = pickups_by_usefulness.map do |pickup, usefulness|
+          # Weight less useful pickups as being more likely to be chosen.
+          weight = max_usefulness - usefulness + 1
+          weight
+        end
+        ps = weights.map{|w| w.to_f / weights.reduce(:+)}
         useful_pickups = pickups_by_usefulness.keys
-        useful_pickup_tiers = useful_pickups.group_by{|pickup| pickups_by_usefulness[pickup]}
-        least_useful_pickups = []
-        # Take pickups from the least useful tiers until we have at least 5 possible pickups.
-        # If we only take from the single lowest tier, it might only have one pickup in it, which is bad for variety.
-        while least_useful_pickups.length < 5
-          min_usefulness = useful_pickup_tiers.keys.min
-          least_useful_pickups += useful_pickup_tiers.delete(min_usefulness)
-          break if useful_pickup_tiers.empty?
-        end
+        weighted_useful_pickups = useful_pickups.zip(ps).to_h
+        pickup_global_id = weighted_useful_pickups.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
         
-        item_names = least_useful_pickups.map do |global_id|
-          checker.defs.invert[global_id]
+        weighted_useful_pickups_names = weighted_useful_pickups.map do |global_id, weight|
+          "%.2f %s" % [weight, checker.defs.invert[global_id]]
         end
-        puts "5 least useful pickups: #{item_names}"
-        
-        pickup_global_id = least_useful_pickups.sample(random: rng)
+        puts "Weighted useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
       elsif pickups_by_locations.any?
         # No item will open up any new areas. This means the player can access all locations.
         # So we just randomly place one progression pickup.
