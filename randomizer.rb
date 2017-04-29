@@ -328,7 +328,9 @@ class Randomizer
           entity.var_b = item_index
         when "por"
           # Skill
-          entity.type = 4
+          unless entity.is_hidden_pickup?
+            entity.type = 4
+          end
           entity.subtype = item_type
           entity.var_b = item_index
         when "ooe"
@@ -336,7 +338,9 @@ class Randomizer
         end
       else
         # Item
-        entity.type = 4
+        unless entity.is_hidden_pickup?
+          entity.type = 4
+        end
         entity.subtype = item_type
         entity.var_b = item_index
       end
