@@ -1000,6 +1000,7 @@ class Randomizer
         
         player[bitfield_attr_name].names.each_with_index do |bit_name, i|
           next if bit_name == "Horizontal flip"
+          next if bit_name == "Is currently AI partner"
           
           player[bitfield_attr_name][i] = [true, false].sample(random: rng)
         end
