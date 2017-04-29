@@ -1052,110 +1052,115 @@ class Randomizer
   
   def randomize_item_stats
     game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
-      case GAME
-      when "dos"
-        randomize_item_stats_dos(item)
+      item["Price"] = rand_range_weighted_very_low(1..25000)
+      
+      case item.item_type_name
+      when "Consumables"
+        item["Type"] = rng.rand(0..4)
+        case item["Type"]
+        when 0, 1, 3
+          item["Var A"] = rand_range_weighted_very_low(1..4000)
+        when 2
+          item["Var A"] = rng.rand(1..2)
+        end
+      when "Weapons"
+        item["Attack"]       = rand_range_weighted_very_low(0..0xA0)
+        item["Defense"]      = rand_range_weighted_very_low(0..10)
+        item["Strength"]     = rand_range_weighted_very_low(0..10)
+        item["Constitution"] = rand_range_weighted_very_low(0..10)
+        item["Intelligence"] = rand_range_weighted_very_low(0..10)
+        item["Mind"]         = rand_range_weighted_very_low(0..10) if GAME == "por" || GAME == "ooe"
+        item["Luck"]         = rand_range_weighted_very_low(0..10)
+        item["IFrames"] = rng.rand(4..0x28)
+        
+        case GAME
+        when "dos"
+          item["Swing Anim"] = rng.rand(0..0xC)
+          item["Super Anim"] = rng.rand(0..0xE)
+          item["Sprite Anim"] = rng.rand(0..3)
+        when "por"
+          item["Swing Anim"] = rng.rand(0..9)
+          item["Crit type/Palette"] = rng.rand(0..0x13)
+          item["Graphical Effect"] = rng.rand(0..7)
+          item["Equippable by"].value = rng.rand(1..3)
+        end
+        
+        [
+          "Effects",
+          "Swing Modifiers",
+        ].each do |bitfield_attr_name|
+          item[bitfield_attr_name].names.each_with_index do |bit_name, i|
+            next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
+            
+            item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+          end
+        end
+      when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
+        item["Attack"]       = rand_range_weighted_very_low(0..10)
+        item["Defense"]      = rand_range_weighted_very_low(0..0x40)
+        item["Strength"]     = rand_range_weighted_very_low(0..12)
+        item["Constitution"] = rand_range_weighted_very_low(0..12)
+        item["Intelligence"] = rand_range_weighted_very_low(0..12)
+        item["Mind"]         = rand_range_weighted_very_low(0..12) if GAME == "por" || GAME == "ooe"
+        item["Luck"]         = rand_range_weighted_very_low(0..12)
+        
+        item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
+        
+        [
+          "Resistances",
+        ].each do |bitfield_attr_name|
+          item[bitfield_attr_name].names.each_with_index do |bit_name, i|
+            item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+          end
+        end
       end
       
       item.write_to_rom()
     end
   end
   
-  def randomize_item_stats_dos(item)
-    item["Price"] = rand_range_weighted_very_low(1..25000)
-    
-    case item.item_type_name
-    when "Consumables"
-      item["Type"] = rng.rand(0..4)
-      case item["Type"]
-      when 0, 1, 3
-        item["Var A"] = rand_range_weighted_very_low(1..4000)
-      when 2
-        item["Var A"] = rng.rand(1..2)
-      end
-    when "Weapons"
-      item["Attack"]       = rand_range_weighted_very_low(0..0xA0)
-      item["Defense"]      = rand_range_weighted_very_low(0..10)
-      item["Strength"]     = rand_range_weighted_very_low(0..10)
-      item["Constitution"] = rand_range_weighted_very_low(0..10)
-      item["Intelligence"] = rand_range_weighted_very_low(0..10)
-      item["Luck"]         = rand_range_weighted_very_low(0..10)
-      
-      item["Swing Anim"] = rng.rand(0..0xC)
-      item["Super Anim"] = rng.rand(0..0xE)
-      item["Sprite Anim"] = rng.rand(0..3)
-      item["IFrames"] = rng.rand(4..0x28)
-      
-      [
-        "Effects",
-        "Swing Modifiers",
-      ].each do |bitfield_attr_name|
-        item[bitfield_attr_name].names.each_with_index do |bit_name, i|
-          next if bit_name == "Shaky weapon" # This makes the weapon appear too high up
-          
-          item[bitfield_attr_name][i] = [true, false].sample(random: rng)
-        end
-      end
-    when "Armor"
-      item["Attack"]       = rand_range_weighted_very_low(0..10)
-      item["Defense"]      = rand_range_weighted_very_low(0..0x40)
-      item["Strength"]     = rand_range_weighted_very_low(0..12)
-      item["Constitution"] = rand_range_weighted_very_low(0..12)
-      item["Intelligence"] = rand_range_weighted_very_low(0..12)
-      item["Luck"]         = rand_range_weighted_very_low(0..12)
-      
-      [
-        "Resistances",
-      ].each do |bitfield_attr_name|
-        item[bitfield_attr_name].names.each_with_index do |bit_name, i|
-          item[bitfield_attr_name][i] = [true, false].sample(random: rng)
-        end
-      end
-    end
-  end
-  
   def randomize_skill_stats
     game.items[SKILL_GLOBAL_ID_RANGE].each do |skill|
-      case GAME
-      when "dos"
-        randomize_skill_stats_dos(skill)
+      skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
+      skill["Mana cost"] = rng.rand(1..60)
+      skill["DMG multiplier"] = rand_range_weighted_low(1..50)
+      
+      [
+        "??? bitfield",
+        "Effects",
+        "Unwanted States",
+      ].each do |bitfield_attr_name|
+        skill[bitfield_attr_name].names.each_with_index do |bit_name, i|
+          skill[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+        end
       end
       
       skill.write_to_rom()
     end
   end
   
-  def randomize_skill_stats_dos(soul)
-     soul["Soul Scaling"] = rng.rand(0..4)
-     soul["Mana cost"] = rng.rand(1..60)
-     soul["DMG multiplier"] = rand_range_weighted_low(1..50)
-  end
-  
   def randomize_enemy_stats
     game.enemy_dnas.each do |enemy_dna|
-      case GAME
-      when "dos"
-        randomize_enemy_stats_dos(enemy_dna)
+      enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.5..3.0)).round
+      enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.5..3.0)).round if GAME == "dos"
+      enemy_dna["SP"]      = (enemy_dna["SP"]*rng.rand(0.5..3.0)).round if GAME == "por"
+      enemy_dna["AP"]      = (enemy_dna["SP"]*rng.rand(0.5..3.0)).round if GAME == "ooe"
+      enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.5..3.0)).round
+      enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.5..3.0)).round
+      enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.5..3.0)).round if GAME == "dos"
+      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(0.5..3.0)).round if GAME == "por" || GAME == "ooe"
+      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"]*rng.rand(0.5..3.0)).round if GAME == "por" || GAME == "ooe"
+      
+      [
+        "Weaknesses",
+        "Resistances",
+      ].each do |bitfield_attr_name|
+        enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
+          enemy_dna[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+        end
       end
       
       enemy_dna.write_to_rom()
-    end
-  end
-  
-  def randomize_enemy_stats_dos(enemy_dna)
-    enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.5..3.0)).round
-    enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.5..3.0)).round
-    enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.5..3.0)).round
-    enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.5..3.0)).round
-    enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.5..3.0)).round
-    
-    [
-      "Weaknesses",
-      "Resistances",
-    ].each do |bitfield_attr_name|
-      enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
-        enemy_dna[bitfield_attr_name][i] = [true, false].sample(random: rng)
-      end
     end
   end
   
