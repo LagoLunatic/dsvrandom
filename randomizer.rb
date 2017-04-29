@@ -731,7 +731,7 @@ class Randomizer
       end
     end
     
-    game.enemy_dnas.each do |enemy|
+    game.enemy_dnas[COMMON_ENEMY_IDS].each do |enemy|
       if rng.rand <= 0.5 # 50% chance to have an item drop
         if GAME == "por"
           enemy["Item 1"] = get_unplaced_non_progression_pickup() + 1
@@ -956,7 +956,7 @@ class Randomizer
   end
   
   def randomize_enemy_ai
-    common_enemy_dnas = game.enemy_dnas[0..COMMON_ENEMY_IDS.last]
+    common_enemy_dnas = game.enemy_dnas[COMMON_ENEMY_IDS]
     
     common_enemy_dnas.each do |this_dna|
       this_overlay = OVERLAY_FILE_FOR_ENEMY_AI[this_dna]
