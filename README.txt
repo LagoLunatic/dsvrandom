@@ -19,6 +19,10 @@ Area Connections: Randomizes which areas connect to each other.
 Room Connections: Randomizes which rooms within an area connect to each other.
 Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies.
+Item Stats: Randomizes item stats and how weapons behave.
+Skill Stats: Randomizes skill stats and how skills behave.
+Enemy Stats: Randomizes enemy stats.
+Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
 
 Every seed should be completable as long as you don't use the experimental options, though there may be bugs in the randomizer that make some seeds unwinnable.
 

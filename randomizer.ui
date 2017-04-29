@@ -246,6 +246,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_11">
             <item>
              <widget class="QCheckBox" name="randomize_item_stats">
+              <property name="toolTip">
+               <string>Randomizes item stats and how weapons behave.</string>
+              </property>
               <property name="text">
                <string>Item Stats</string>
               </property>
@@ -253,6 +256,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_skill_stats">
+              <property name="toolTip">
+               <string>Randomizes skill stats and how skills behave.</string>
+              </property>
               <property name="text">
                <string>Skill Stats</string>
               </property>
@@ -264,6 +270,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_stats">
+              <property name="toolTip">
+               <string>Randomizes enemy stats.</string>
+              </property>
               <property name="text">
                <string>Enemy Stats</string>
               </property>
@@ -271,6 +280,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_weapon_synths">
+              <property name="toolTip">
+               <string>Randomizes which items Yoko can synthesize (DoS only).</string>
+              </property>
               <property name="text">
                <string>Weapon Synthesis</string>
               </property>
@@ -282,8 +294,6 @@
          <zorder></zorder>
          <zorder></zorder>
          <zorder></zorder>
-         <zorder>horizontalLayoutWidget</zorder>
-         <zorder>horizontalLayoutWidget_2</zorder>
         </widget>
        </item>
       </layout>
