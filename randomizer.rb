@@ -824,31 +824,6 @@ class Randomizer
     end
   end
   
-  def get_random_id(global_id_range, used_list)
-    available_ids = global_id_range.to_a - used_list
-    id = available_ids.sample(random: rng)
-    used_list << id
-    return id
-  end
-  
-  def get_random_item
-    get_random_id(ITEM_GLOBAL_ID_RANGE, @used_items) || 0
-  end
-  
-  def get_random_soul
-    get_random_id(SKILL_LOCAL_ID_RANGE, @used_skills) || 0xFF
-  end
-  
-  def get_random_glyph
-    get_random_id(SKILL_LOCAL_ID_RANGE, @used_skills) || 0
-  end
-  
-  def get_unique_id
-    id = @next_available_item_id
-    @next_available_item_id += 1
-    return id
-  end
-  
   def randomize_starting_room
     rooms = []
     game.each_room do |room|
