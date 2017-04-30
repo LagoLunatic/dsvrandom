@@ -4,7 +4,8 @@ require_relative 'completability_checker'
 class Randomizer
   attr_reader :options,
               :rng,
-              :log,
+              :seed_log,
+              :spoiler_log,
               :game,
               :checker
   
@@ -20,15 +21,16 @@ class Randomizer
     @used_items = []
     
     FileUtils.mkdir_p("./logs")
-    @log = File.open("./logs/random.txt", "a")
+    @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
+    
     if seed
       @rng = Random.new(seed)
-      log.puts "Using seed: #{seed}"
+      seed_log.puts "Using existing seed: #{seed}"
     else
       @rng = Random.new
-      log.puts "New random seed: #{rng.seed}"
+      seed_log.puts "New random seed: #{rng.seed}"
     end
-    @log.close()
+    seed_log.close()
   end
   
   def rand_range_weighted_low(range)
@@ -42,6 +44,9 @@ class Randomizer
   end
   
   def randomize
+    @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
+    spoiler_log.puts "Seed: #{rng.seed}"
+    
     @boss_entities = []
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
       COMMON_ENEMY_IDS.include?(enemy_id)
@@ -111,9 +116,18 @@ class Randomizer
     if options[:randomize_weapon_synths]
       randomize_weapon_synths()
     end
+  rescue StandardError => e
+    spoiler_log.puts "ERROR!"
+    raise e
+  ensure
+    spoiler_log.puts
+    spoiler_log.puts
+    spoiler_log.close()
   end
   
   def randomize_pickups_completably
+    spoiler_log.puts "Randomizing pickups:"
+    
     case GAME
     when "dos"
       checker.add_item(0x3D) # seal 1
@@ -123,7 +137,9 @@ class Randomizer
     
     previous_accessible_locations = []
     locations_randomized_to_have_useful_pickups = []
+    on_leftovers = false
     # First place progression pickups needed to beat the game.
+    spoiler_log.puts "Placing main route progression pickups:"
     while true
       case GAME
       when "por"
@@ -150,10 +166,16 @@ class Randomizer
         weighted_useful_pickups_names = weighted_useful_pickups.map do |global_id, weight|
           "%.2f %s" % [weight, checker.defs.invert[global_id]]
         end
-        puts "Weighted useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
+        #puts "Weighted useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
       elsif pickups_by_locations.any?
         # No item will open up any new areas. This means the player can access all locations.
         # So we just randomly place one progression pickup.
+        
+        if !on_leftovers
+          spoiler_log.puts "Placing leftover progression pickups:"
+          on_leftovers = true
+        end
+        
         pickup_global_id = pickups_by_locations.keys.sample(random: rng)
       else
         # All progression pickups placed.
@@ -195,7 +217,7 @@ class Randomizer
         end
         
         if new_possible_locations.empty?
-          raise "Failed to find any spots to place pickup."
+          raise "Bug: Failed to find any spots to place pickup.\nSeed is #{rng.seed}."
         end
       else
         previous_accessible_locations << new_possible_locations
@@ -204,8 +226,17 @@ class Randomizer
       location = new_possible_locations.sample(random: rng)
       locations_randomized_to_have_useful_pickups << location
       
+      pickup_name = checker.defs.invert[pickup_global_id].to_s
+      pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
+      location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+      area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+      if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
+        area_name = SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
+      else
+        area_name = AREA_INDEX_TO_AREA_NAME[area_index]
+      end
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
-      puts "Placing pickup %04X (#{checker.defs.invert[pickup_global_id]}) at #{location} #{is_enemy_str}" % pickup_global_id
+      spoiler_log.puts "Placing #{pickup_str} at #{location}#{is_enemy_str} (#{area_name})"
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
@@ -235,7 +266,7 @@ class Randomizer
       item_names = checker.current_items.map do |global_id|
         checker.defs.invert[global_id]
       end
-      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\n\nItems:\n#{item_names.join(", ")}"
+      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{rng.seed}\n\nItems:\n#{item_names.join(", ")}"
     end
   end
   
