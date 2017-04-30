@@ -414,6 +414,11 @@ class Randomizer
   end
   
   def randomize_enemy(enemy)
+    if GAME == "dos" && enemy.room.sector_index == 4 && enemy.room.room_index == 0x10 && enemy.subtype == 0x3A
+      # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
+      return
+    end
+    
     available_enemy_ids_for_entity = nil
     
     if enemy.is_boss?
