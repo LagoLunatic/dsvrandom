@@ -59,7 +59,7 @@ Defs:
   undervillage: lowerwizardry & height | wizardry & cutallsuper
   villagewatergate: afterarmor & distance
   
-  garden: medium height | wizardry & balore | lowergarden & rahab  | wizardry & height
+  garden: medium height & backdashjump | wizardry & balore | lowergarden & rahab  | wizardry & height
   midgarden: garden & height | garden & vwarpseal
   bossdario: midgarden & seal 3 | midgarden & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
@@ -311,7 +311,7 @@ Rooms:
     02 (Anti-Venom): 
   00-04-13:
     room: bossdmitrii
-    00 (Hoop Earring): medium height
+    00 (Hoop Earring): medium height & backdashjump
   00-04-14:
     room: chapel
     00 (Potion): 
