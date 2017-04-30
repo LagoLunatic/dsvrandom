@@ -135,16 +135,25 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def randomize
-    if @settings[:seed].to_s =~ /^\d+$/
-      seed = @settings[:seed].to_i
-    elsif @settings[:seed].to_s =~ /^\s*$/
-      seed = rand(0..999_999_999)
-      @settings[:seed] = seed.to_s
-      @ui.seed.text = @settings[:seed]
-    else
-      Qt::MessageBox.warning(self, "Invalid seed", "Seed must be an integer.")
-      return
+    seed = @settings[:seed].strip.gsub(/\s/, "")
+    
+    if seed.empty?
+      # Generate a new seed
+      available_seed_chars = ["0".."9", "A".."Z", "a".."z"].map(&:to_a).flatten
+      seed = ""
+      9.times do
+        seed << available_seed_chars.sample
+      end
     end
+    
+    if seed =~ /[^a-zA-Z0-9\-_]/
+      raise "Invalid seed. Seed can only have letters, numbers, dashes, and underscores in it."
+    end
+    
+    @settings[:seed] = seed
+    @ui.seed.text = @settings[:seed]
+    
+    @sanitized_seed = seed
     
     game = Game.new
     game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
@@ -210,7 +219,7 @@ class RandomizerWindow < Qt::Dialog
     @progress_dialog.show
     
     FileUtils.mkdir_p(@ui.output_folder.text)
-    output_rom_path = File.join(@ui.output_folder.text, "#{GAME} Random #{@ui.seed.text.to_i}.nds")
+    output_rom_path = File.join(@ui.output_folder.text, "#{GAME} Random #{@sanitized_seed}.nds")
     
     @write_to_rom_thread = Thread.new do
       game.fs.write_to_rom(output_rom_path) do |files_written|

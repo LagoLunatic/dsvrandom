@@ -1,4 +1,5 @@
 
+require 'digest/md5'
 require_relative 'completability_checker'
 
 class Randomizer
@@ -21,16 +22,19 @@ class Randomizer
     @used_items = []
     
     FileUtils.mkdir_p("./logs")
-    @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
     
-    if seed
-      @rng = Random.new(seed)
-      seed_log.puts "Using existing seed: #{seed}, Game: #{LONG_GAME_NAME}"
-    else
-      @rng = Random.new
-      seed_log.puts "New random seed: #{rng.seed}, Game: #{LONG_GAME_NAME}"
+    
+    if seed.nil? || seed.empty?
+      raise "No seed given"
     end
+    
+    @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
+    seed_log.puts "Using seed: #{seed}, Game: #{LONG_GAME_NAME}"
     seed_log.close()
+    
+    @seed = seed
+    int_seed = Digest::MD5.hexdigest(seed).to_i(16)
+    @rng = Random.new(int_seed)
   end
   
   def rand_range_weighted_low(range)
@@ -45,7 +49,7 @@ class Randomizer
   
   def randomize
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
-    spoiler_log.puts "Seed: #{rng.seed}, Game: #{LONG_GAME_NAME}"
+    spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}"
     
     @boss_entities = []
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
@@ -217,7 +221,7 @@ class Randomizer
         end
         
         if new_possible_locations.empty?
-          raise "Bug: Failed to find any spots to place pickup.\nSeed is #{rng.seed}."
+          raise "Bug: Failed to find any spots to place pickup.\nSeed is #{@seed}."
         end
       else
         previous_accessible_locations << new_possible_locations
@@ -266,7 +270,7 @@ class Randomizer
       item_names = checker.current_items.map do |global_id|
         checker.defs.invert[global_id]
       end
-      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{rng.seed}\n\nItems:\n#{item_names.join(", ")}"
+      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
     end
   end
   
