@@ -25,10 +25,10 @@ class Randomizer
     
     if seed
       @rng = Random.new(seed)
-      seed_log.puts "Using existing seed: #{seed}"
+      seed_log.puts "Using existing seed: #{seed}, Game: #{LONG_GAME_NAME}"
     else
       @rng = Random.new
-      seed_log.puts "New random seed: #{rng.seed}"
+      seed_log.puts "New random seed: #{rng.seed}, Game: #{LONG_GAME_NAME}"
     end
     seed_log.close()
   end
@@ -45,7 +45,7 @@ class Randomizer
   
   def randomize
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
-    spoiler_log.puts "Seed: #{rng.seed}"
+    spoiler_log.puts "Seed: #{rng.seed}, Game: #{LONG_GAME_NAME}"
     
     @boss_entities = []
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
