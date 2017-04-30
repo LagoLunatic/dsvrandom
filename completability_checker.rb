@@ -73,6 +73,9 @@ class CompletabilityChecker
     if reqs.is_a?(Integer) || reqs.nil?
       return reqs
     end
+    if reqs == true
+      return reqs
+    end
     
     or_reqs = reqs.split("|")
     or_reqs.map! do |or_req|
@@ -103,6 +106,8 @@ class CompletabilityChecker
         has_item = @current_items.include?(item_global_id)
         @cached_checked_reqs[@defs[req]] = has_item
         return has_item
+      elsif @defs[req] == true
+        return true
       end
       
       if @cached_checked_reqs[req] == :currently_checking
@@ -135,11 +140,11 @@ class CompletabilityChecker
         check_req_recursive(and_req)
       end
       
-      puts "Req #{req} is true (OR req: #{and_reqs})" if @debug && or_req_met
+      puts "Req #{or_reqs} is true (AND req: #{and_reqs})" if @debug && or_req_met
       return true if or_req_met
     end
     
-    puts "Req #{req} is false" if @debug
+    puts "Req #{or_reqs} is false" if @debug
     return false
   end
   

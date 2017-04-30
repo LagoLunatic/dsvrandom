@@ -8,6 +8,7 @@ Glitch defs:
   bhuj: 0x76
   great axe: 0x77
   golden axe: 0x78
+  succubus: 0xEE
   
   cutallsuper: cutall | cinquedia | alucard sword
   axesuper: axe | battle axe | bhuj | great axe | golden axe
@@ -17,6 +18,7 @@ Glitch defs:
   vwarpseal: axesuper & seal
   vwarpsucc: axesuper & succubus
   vwarp: vwarpseal | vwarpsucc
+  backdashjump: true
 Defs:
   malphas: 0x143
   hippogryph: 0x146
@@ -25,7 +27,6 @@ Defs:
   puppet master: 0xCE
   flying armor: 0x103
   black panther: 0x105
-  succubus: 0xEE
   rahab: 0x145
   paranoia: 0xD0
   balore: 0x142
@@ -54,10 +55,11 @@ Defs:
   mina talisman: mina talisman item | towerguesthouse # either get the talisman from the randomizer or from the normal event
   
   bossarmor: seal 1 | hwarp
+  afterarmor: height | distance | backdashjump
   undervillage: lowerwizardry & height | wizardry & cutallsuper
-  villagewatergate: bossarmor & distance
+  villagewatergate: afterarmor & distance
   
-  garden: medium height | wizardry & balore | lowergarden & rahab
+  garden: medium height | wizardry & balore | lowergarden & rahab  | wizardry & height
   midgarden: garden & height | garden & vwarpseal
   bossdario: midgarden & seal 3 | midgarden & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
@@ -109,7 +111,7 @@ Rooms:
     room: big height | malphas & puppet master
     02 (Pumpkin Pie): 
   00-00-02:
-    room: bossarmor
+    room: afterarmor
     05 (Mace): 
     06 (Money): 
   00-00-06:
@@ -118,18 +120,18 @@ Rooms:
   00-00-07: 
     04 (High Potion): height
   00-00-08:
-    room: bossarmor
+    room: afterarmor
     02 (Claymore): 
   00-00-09:
-    room: bossarmor
+    room: afterarmor
     07 (Money): 
   00-00-0A:
-    room: bossarmor
+    room: afterarmor
   00-00-0B:
     room: bossarmor
     02 (Flying Armor) (Enemy): 
   00-00-0C:
-    room: bossarmor
+    room: afterarmor
     00 (Potion): 
   00-00-0D:
     room: undervillage
@@ -138,21 +140,21 @@ Rooms:
     04 (Potion): 
     05 (Short Sword): 
   00-00-11:
-    room: bossarmor
+    room: afterarmor
     02 (Money): 
     03 (Corn Soup): 
   00-00-13:
-    room: bossarmor
+    room: afterarmor
     05 (Cape): 
     06 (Tear Of Blood): paranoia | hwarp
   00-00-15: # drawbridge
     0A (Gold Stud): villagewatergate & big height | rahab & big height
     0B (Crimson Cloak): height
   00-00-16:
-    room: height | garden
+    room: medium height | garden
     00 (Heart Pendant): big height
   00-00-19:
-    room: bossarmor
+    room: afterarmor
     03 (Spear): 
 #Demon Guest House:
   00-01-00:
@@ -198,7 +200,7 @@ Rooms:
     00 (UMA News 2-2): 
   00-01-26:
     room: puppetguesthouse
-    00 (High Potion): 
+    00 (High Potion): medium height # can't get out of the pit without medum height
   00-01-2F:
     room: garden & height
     00 (High Mind Up): 
