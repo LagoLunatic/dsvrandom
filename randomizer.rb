@@ -12,7 +12,9 @@ class Randomizer
   
   def initialize(seed, game, options={})
     @game = game
-    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs])
+    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map])
+    
+    game.set_starting_room(0x12, 0, 5)
     
     @options = options
     
@@ -136,6 +138,10 @@ class Randomizer
       checker.add_item(0x3D) # seal 1
     when "por"
       checker.add_item(0x1AD) # call cube
+    when "ooe"
+      # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
+      # Flags 01-3B are unused in the base game but still work, so use those.
+      @unused_picked_up_flags = (1..0x3B).to_a
     end
     
     previous_accessible_locations = []
@@ -340,10 +346,17 @@ class Randomizer
     room = game.areas[area_index].sectors[sector_index].rooms[room_index]
     entity = room.entities[entity_index]
     
-    item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
+    if GAME == "ooe" && entity.is_special_object? && entity.subtype >= 0x61
+      # Event with a hardcoded glyph.
+      change_hardcoded_glyph_event(entity)
+      return
+    end
     
     if entity.type == 1
       # Boss
+      
+      item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
+      
       if !PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
         raise "Can't make boss drop required item"
       end
@@ -357,7 +370,9 @@ class Randomizer
       
       enemy_dna["Soul"] = item_index
       enemy_dna.write_to_rom()
-    else
+    elsif GAME == "dos" || GAME == "por"
+      item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
+      
       if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
         case GAME
         when "dos"
@@ -373,8 +388,6 @@ class Randomizer
           end
           entity.subtype = item_type
           entity.var_b = item_index
-        when "ooe"
-        else
         end
       else
         # Item
@@ -386,6 +399,78 @@ class Randomizer
       end
       
       entity.write_to_rom()
+    elsif GAME == "ooe"
+      if entity.is_item_chest?
+        picked_up_flag = entity.var_b
+      elsif entity.is_pickup?
+        picked_up_flag = entity.var_a
+      end
+      
+      if picked_up_flag.nil?
+        picked_up_flag = @unused_picked_up_flags.pop()
+        
+        if picked_up_flag.nil?
+          raise "No picked up flag for this item, this error shouldn't happen"
+        end
+      end
+      
+      if pickup_global_id >= 0x6F
+        # Item
+        if entity.is_hidden_pickup?
+          entity.type = 7
+          entity.subtype = 0xFF
+          entity.var_a = picked_up_flag
+          entity.var_b = pickup_global_id + 1
+        else
+          case rng.rand
+          when 0.00..0.70
+            # 70% chance for a red chest
+            entity.type = 2
+            entity.subtype = 0x16
+            entity.var_a = pickup_global_id + 1
+            entity.var_b = picked_up_flag
+          when 0.70..0.95
+            # 15% chance for an item on the ground
+            entity.type = 4
+            entity.subtype = 0xFF
+            entity.var_a = picked_up_flag
+            entity.var_b = pickup_global_id + 1
+          else
+            # 5% chance for a hidden blue chest
+            entity.type = 2
+            entity.subtype = 0x17
+            entity.var_a = pickup_global_id + 1
+            entity.var_b = picked_up_flag
+          end
+        end
+      else
+        # Glyph
+        
+        if entity.is_hidden_pickup?
+          entity.type = 7
+          entity.subtype = 2
+          entity.var_a = picked_up_flag
+          entity.var_b = pickup_global_id + 1
+        else
+          case rng.rand
+          when 0.00..0.50
+            # 50% chance for a glyph statue
+            entity.type = 2
+            entity.subtype = 2
+            entity.var_a = 0
+            entity.var_b = pickup_global_id + 1
+            
+            # We didn't use the picked up flag, so put it back
+            @unused_picked_up_flags << picked_up_flag
+          else
+            # 50% chance for a free glyph
+            entity.type = 4
+            entity.subtype = 2
+            entity.var_a = picked_up_flag
+            entity.var_b = pickup_global_id + 1
+          end
+        end
+      end
     end
   end
   
@@ -411,6 +496,13 @@ class Randomizer
     soul_global_id = soul_local_id + SKILL_GLOBAL_ID_RANGE.begin
     
     return soul_global_id
+  end
+  
+  def change_hardcoded_glyph_event(event_entity)
+    case event_entity.subtype
+    when 0x8A
+      
+    end
   end
   
   def randomize_enemy(enemy)

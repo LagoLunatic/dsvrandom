@@ -1,6 +1,6 @@
 
 Glitch defs:
-  
+  # none
 Defs:
   magnes: 0x38
   double jump: 0x70
@@ -509,8 +509,9 @@ Rooms:
     room: monastery
     00 (Sandals): 
   12-00-05:
-    room: monasterymid
-    00 (Cotton Hat): 
+    room: monastery
+    00 (Cotton Hat): monasterymid
+    05 (Magnes Event): 
   12-00-07:
     room: monasterymid
     00 (Fool Ring): medium height

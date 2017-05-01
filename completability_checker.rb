@@ -8,9 +8,10 @@ class CompletabilityChecker
               :defs,
               :enemy_locations
   
-  def initialize(game, enable_glitches)
+  def initialize(game, enable_glitches, ooe_nonlinear)
     @game = game
     @enable_glitches = enable_glitches
+    @ooe_nonlinear = ooe_nonlinear
     
     @rng = Random.new
     load_room_reqs()
@@ -32,10 +33,12 @@ class CompletabilityChecker
     
     glitch_defs = yaml["Glitch defs"]
     @glitch_defs = {}
-    glitch_defs.each do |name, reqs|
-      name = name.strip.tr(" ", "_").to_sym
-      reqs = parse_reqs(reqs)
-      @glitch_defs[name] = reqs
+    if glitch_defs
+      glitch_defs.each do |name, reqs|
+        name = name.strip.tr(" ", "_").to_sym
+        reqs = parse_reqs(reqs)
+        @glitch_defs[name] = reqs
+      end
     end
     
     if @enable_glitches
@@ -99,6 +102,10 @@ class CompletabilityChecker
   
   def check_req_recursive(req)
     puts "Checking req: #{req}" if @debug
+    
+    if req == :nonlinear && GAME == "ooe"
+      return @ooe_nonlinear
+    end
     
     if @defs[req]
       if @defs[req].is_a?(Integer)
