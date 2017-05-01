@@ -8,10 +8,18 @@ Defs:
   paries: 0x39
   volaticus: 0x3A
   rapidus fio: 0x3B
+  dextro custos: 0x2F
+  sinestro custos: 0x30
+  arma custos: 0x46
+  redire glyph: 0x1C
+  dominus hatred: 0x31
+  dominus anger: 0x32
+  dominus agony: 0x4E
   
   medium height: double jump | big height
-  big height: volaticus
-  distance: rapidus fio
+  big height: volaticus | redire
+  distance: rapidus fio | redire
+  redire: redire glyph & magnes
   
   ecclesia: true
   
@@ -72,14 +80,29 @@ Defs:
   
   bossbarlowe: ecclesia & bossalbus & villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
   
-  trainchamber: TODO | nonlinear
+  trainchamber: backexit | nonlinear
   
-  largecavern: TODO | nonlinear
+  largecavern: backexit | nonlinear
   
-  castle: bossbarlowe
-  # TODO areas within the castle
+  # to unlock the castle you must have medium height and serpect scale already.
+  entrance: bossbarlowe
+  entranceeast: entrance & paries # TODO nonlinear entrance
+  library: entrance | libraryeast & paries
+  libraryeast: library & paries | forsakencloister | finalapproachwest
+  labyrinth: entranceeast | barracks
+  backexit: labyrinth & paries
+  barracks: labyrinth | mechtower # TODO nonlinear entranceeast
+  mechtower: barracks | forsakencloistereast # TODO nonlinear
+  armsdepot: mechtower
+  forsakencloister: libraryeast | mechtower
+  forsakencloistereast: mechtower # TODO nonlinear forsakencloister
+  forsakencloisterupper: forsakencloister & dextro custos & sinestro custos & arma custos | finalapproach
+  finalapproach: forsakencloisterupper # TODO nonlinear libraryeast & big height
+  finalapproachwest: finalapproach & big height
+  throne room: finalapproach & big height
+  bossdracula: throne room & dominus hatred & dominus anger & dominus agony
   
-  beat game: TODO
+  beat game: bossdracula
   
 
 Rooms:
