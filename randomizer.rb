@@ -13,7 +13,6 @@ class Randomizer
   def initialize(seed, game, options={})
     @game = game
     @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs])
-    #checker.generate_empty_item_requirements_file()
     
     @options = options
     
@@ -21,13 +20,11 @@ class Randomizer
     @used_skills = []
     @used_items = []
     
-    FileUtils.mkdir_p("./logs")
-    
-    
     if seed.nil? || seed.empty?
       raise "No seed given"
     end
     
+    FileUtils.mkdir_p("./logs")
     @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
     seed_log.puts "Using seed: #{seed}, Game: #{LONG_GAME_NAME}"
     seed_log.close()
@@ -66,7 +63,9 @@ class Randomizer
       end
       
       room.entities.each do |entity|
-        randomize_entity(entity)
+        next unless entity.type == 1
+        
+        randomize_enemy(entity)
       end
     end
     
@@ -414,15 +413,6 @@ class Randomizer
     return soul_global_id
   end
   
-  def randomize_entity(entity)
-    case entity.type
-    when 0x01 # Enemy
-      randomize_enemy(entity)
-    when 0x04
-      # Pickup. These are randomized separately to ensure the game is completable.
-    end
-  end
-  
   def randomize_enemy(enemy)
     if GAME == "dos" && enemy.room.sector_index == 4 && enemy.room.room_index == 0x10 && enemy.subtype == 0x3A
       # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
@@ -470,13 +460,18 @@ class Randomizer
     end
     
     enemy_dna = game.enemy_dnas[enemy.subtype]
-    case GAME
+    
+    result = case GAME
     when "dos"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "por"
       por_adjust_randomized_enemy(enemy, enemy_dna)
     when "ooe"
       ooe_adjust_randomized_enemy(enemy, enemy_dna)
+    end
+    
+    if result == :redo
+      # TODO
     end
     
     enemy.write_to_rom()
@@ -506,9 +501,9 @@ class Randomizer
       # Mollusca and Giant Slug have a very high chance of bugging out when placed near cliffs.
       # They can cause the screen to flash rapidly and take up most of the screen.
       # They can also cause the game to freeze for a couple seconds every time you enter a room with them in it.
-      # So for now let's just delete these enemies so this can't happen.
+      # So for now let's just not place these enemies so this can't happen.
       # TODO: Try to detect if they're placed near cliffs and move them a bit.
-      enemy.type = 0
+      return :redo
     when "Ghost Dancer"
       enemy.var_a = rng.rand(0..2) # Palette
     when "Killer Doll"
@@ -545,6 +540,22 @@ class Randomizer
       # TODO: move out of floor
       enemy.var_a = rng.rand(0..3) # wall direction
       enemy.var_b = rng.rand(0x600..0x1200) # speed
+    when "Razor Bat"
+      # 70% chance to be a single Razor Bat, 30% chance to be a spawner.
+      if rng.rand <= 0.7
+        enemy.var_a = 0
+      else
+        enemy.var_a = rng.rand(0xA0..0x1A0)
+      end
+    when "Sand Worm", "Poison Worm"
+      if enemy.room.main_layer_height > 1
+        return :redo
+      end
+      if enemy.room.doors.find{|door| door.y_pos >= 1}
+        return :redo
+      end
+      
+      enemy.var_a = 0 # TODO
     end
   end
   
