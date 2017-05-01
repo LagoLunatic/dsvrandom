@@ -82,6 +82,7 @@ Defs:
   bossbarlowe: ecclesia & bossalbus & villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
   
   trainchamber: backexit | nonlinear
+  trainchamberend: magnes
   
   largecavern: backexit | nonlinear
   
@@ -263,63 +264,63 @@ Rooms:
     08 (MP Max up): 
 #Ecclesia:
   02-00-00:
-    room: 
+    room: ecclesia
     04 (Record 5): 
   02-00-04:
-    room: 
+    room: ecclesia
     05 (Record 1): 
-    07 (Glyph Sleeve): 
+    #07 (Glyph Sleeve): # this only appears on hard mode
 #Training Chamber:
   03-00-01:
-    room: 
-    01 (Redire): 
+    room: trainchamber
+    01 (Redire): trainchamberend
 #Ruvas Forest:
   04-00-01:
-    room: 
+    room: ruvas
     00 (Macir): 
 #Kalidus Channel:
   06-00-01:
-    room: 
-    00 (HEART Max Up): 
+    room: kalidus
+    00 (HEART Max Up): serpent scale
   06-00-02:
-    room: 
-    00 (Chamomile): 
+    room: kalidus
+    00 (Chamomile): serpent scale
   06-00-04:
-    room: 
+    room: kalidus
     01 (Magical Ticket): 
   06-00-07:
-    room: 
-    00 (MP Max up): 
+    room: kalidus
+    00 (MP Max up): serpent scale
     04 (Twinbee) (Hidden): 
   06-00-09:
-    room: 
-    00 (HP Max up): 
+    room: kalidus
+    00 (HP Max up): serpent scale
   06-00-0D:
-    room: 
+    room: kaliduslower
     01 (Fortis Fio): 
   06-00-10:
-    room: 
+    room: kaliduslower
     00 (Scutum): 
   06-00-15:
-    room: 
+    room: kaliduslower
     00 (Super Potion): 
     01 (MP Max up): 
     02 (HEART Max Up): 
   06-00-17:
-    room: 
+    room: kaliduslower
     00 (Sapphire): 
   06-00-18:
-    room: 
+    room: kaliduslower
     00 (HP Max up): 
   06-00-1A:
-    room: 
+    room: kaliduslower
     00 (HEART Max Up): 
     02 (Anti-Venom): 
   06-01-01:
-    room: 
+    room: kaliduslower
     00 (Iron Ore): 
   06-01-04:
-    room: 
+    room: kaliduslower
     01 (Magician Ring): 
     02 (Emerald): 
     03 (MP Max up): 
@@ -327,63 +328,63 @@ Rooms:
     05 (Money): 
     06 (Money): 
   06-01-07:
-    room: 
+    room: kaliduslower
     00 (Potion): 
 #Somnus Reef:
   07-00-04:
-    room: 
+    room: somnusmid
     02 (Money): 
   07-00-07:
-    room: 
+    room: somnusmid
     00 (Reinforced Suit): 
   07-00-09:
-    room: 
+    room: somnusmid
     01 (Vol Arcus): 
     02 (MP Max up): 
   07-00-0A:
-    room: 
+    room: somnusmid
     01 (Vic Viper) (Hidden): 
   07-00-0D:
-    room: 
+    room: somnusmid
     01 (Vol Ascia): 
   07-00-12:
-    room: 
+    room: somnusmid
     01 (HEART Max Up): 
   07-00-14:
-    room: 
+    room: somnusmid
     00 (HP Max up): 
 #Minera Prison Island:
   08-00-05:
-    room: 
+    room: minera
     01 (Money): 
   08-00-07:
-    room: 
+    room: minera
     00 (MP Max up): 
     02 (Cabriolet): 
   08-00-09:
-    room: 
+    room: minera
     00 (Priestess Ring): 
   08-01-01:
-    room: 
+    room: minera & medium height
     00 (Tower Ring): 
   08-01-02:
-    room: 
+    room: minera
     00 (Anti-Venom): 
   08-01-05:
-    room: 
+    room: minera
     00 (HP Max up): 
   08-01-08:
-    room: 
+    room: minera
     00 (Money): 
   08-02-00:
-    room: 
-    00 (HEART Max Up): 
-    02 (Konami Man) (Hidden): 
+    room: minera
+    00 (HEART Max Up): mineraend
+    02 (Konami Man) (Hidden): mineraend
   08-02-05:
-    room: 
+    room: mineraend
     00 (Falcis): 
   08-02-07:
-    room: 
+    room: mineraend
     02 (Glyph Sleeve): 
 #Lighthouse:
   09-00-07:
