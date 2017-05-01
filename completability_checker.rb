@@ -223,7 +223,7 @@ class CompletabilityChecker
       prev_area_name = nil
       prev_sector_name = nil
       game.each_room do |room|
-        pickups = room.entities.select{|e| e.is_pickup? || e.is_item_chest? || e.is_money_chest?}
+        pickups = room.entities.select{|e| e.is_pickup? || e.is_item_chest? || e.is_money_chest? || e.is_glyph_statue?}
         next if pickups.empty?
         
         area_name = AREA_INDEX_TO_AREA_NAME[room.area_index]
@@ -281,6 +281,11 @@ class CompletabilityChecker
     end
     if pickup.is_item_chest?
       item_id = pickup.var_a - 1
+      item = game.items[item_id]
+      return item.name
+    end
+    if pickup.is_glyph_statue?
+      item_id = pickup.var_b - 1
       item = game.items[item_id]
       return item.name
     end

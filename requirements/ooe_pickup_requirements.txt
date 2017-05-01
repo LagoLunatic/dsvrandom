@@ -1,0 +1,551 @@
+
+Glitch defs:
+  
+Defs:
+  magnes: 0x38
+  double jump: 0x70
+  serpent scale: 0x71
+  paries: 0x39
+  volaticus: 0x3A
+  rapidus fio: 0x3B
+  
+  medium height: double jump | big height
+  big height: volaticus
+  distance: rapidus fio
+  
+  ecclesia: true
+  
+  monastery: true
+  bossarthro: monastery & magnes | monastery & big height
+  
+  wygol: bossarthro | nonlinear
+  villagernikolai: wygol
+  
+  ruvas: wygol | nonlinear
+  
+  kalidus: ruvas | nonlinear
+  villagerjacob: kalidus
+  
+  minera: kalidus | nonlinear
+  villagerabram: minera
+  villageraeon: minera & medium height
+  mineraend: minera & magnes | minera & big height | minera & double jump # double jump is enough because you can kickbounce off the breakable wall to get an effective quadruple jump.
+  
+  lighthouse: mineraend | nonlinear
+  bossbrachyura: lighthouse & magnes | lighthouse & medium height
+  villagereugen: bossbrachyura
+  
+  kaliduslower: bossbrachyura & serpent scale
+  villagermonica: kaliduslower
+  
+  tymeo: kaliduslower | nonlinear
+  tymeomid: tymeo & magnes | tymeo & big height # to get past the spike room
+  villagerlaura: tymeomid
+  tymeoeast: tymeomid & medium height | tymeomid & distance
+  villagermarcel: tymeoeast
+  
+  mistyroad: tymeomid | nonlinear
+  
+  skelecave: mistyroad | nonlinear
+  villagergeorge: skelecave
+  
+  somnus: skelecave | nonlinear
+  somnusmid: somnus & serpent scale
+  villagerserge: somnusmid
+  villageranna: somnusmid
+  
+  giantdwelling: somnusmid | nonlinear
+  giantdwellingmid: giantdwelling & medium height
+  villagerdaniela: giantdwellingmid
+  
+  tristis: giantdwellingmid | nonlinear
+  tristisafterwaterfall: tristis & medium height & magnes
+  villageririna: tristisafterwaterfall
+  
+  oblivionridge: tristisafterwaterfall | nonlinear
+  
+  argilaswamp: oblivionridge | nonlinear
+  
+  mysterymanor: argilaswamp | nonlinear
+  mysterymanormid: mysterymanor & medium height
+  bossalbus: mysterymanormid
+  
+  bossbarlowe: ecclesia & bossalbus & villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
+  
+  trainchamber: TODO | nonlinear
+  
+  largecavern: TODO | nonlinear
+  
+  castle: bossbarlowe
+  # TODO areas within the castle
+  
+  beat game: TODO
+  
+
+Rooms:
+#Dracula's Castle:
+#Castle Entrance:
+  00-00-01:
+    room: 
+    00 (HEART Max Up): 
+  00-00-03:
+    room: 
+    01 (Tasty Meat) (Hidden): 
+  00-00-04:
+    room: 
+    01 (White Drops): 
+  00-00-09:
+    room: 
+    00 (HP Max up): 
+  00-01-05:
+    room: 
+    00 (Valkyrie Greaves): 
+#Underground Labyrinth:
+  00-02-06:
+    room: 
+    00 (Mercury Boots): 
+  00-02-08:
+    room: 
+    00 (MP Max up): 
+  00-02-11:
+    room: 
+    06 (White Drops) (Hidden): 
+  00-02-14:
+    room: 
+    05 (Star Ring): 
+  00-02-17:
+    room: 
+    00 (HEART Max Up): 
+  00-02-18:
+    room: 
+    00 (Super Potion): 
+  00-02-19:
+    room: 
+    06 (Felicem Fio): 
+  00-02-1B:
+    room: 
+    01 (Vis Fio): 
+#Library:
+  00-03-02:
+    room: 
+    00 (HP Max up): 
+  00-03-07:
+    room: 
+    00 (MP Max up): 
+  00-03-09:
+    room: 
+    05 (Melio Confodere): 
+  00-04-02:
+    room: 
+    00 (Refectio): 
+    01 (Hanged Man Ring): 
+  00-04-07:
+    room: 
+    03 (Cream Puff) (Hidden): 
+#Barracks:
+  00-05-00:
+    room: 
+    00 (HEART Max Up): 
+  00-05-04:
+    room: 
+    02 (Melio Hasta): 
+  00-05-07:
+    room: 
+    01 (Money): 
+    02 (Money): 
+  00-05-08:
+    room: 
+    02 (Green Drops): 
+    03 (Money): 
+  00-05-09:
+    room: 
+    02 (Green Drops) (Hidden): 
+  00-05-0A:
+    room: 
+    00 (MP Max up): 
+  00-05-0C:
+    room: 
+    01 (Red Drops): 
+  00-05-0D:
+    room: 
+    00 (Moon Ring): 
+  00-05-0E:
+    room: 
+    00 (Valkyrie Mail): 
+  00-05-0F:
+    room: 
+    00 (HP Max up): 
+#Mechanical Tower:
+  00-06-09:
+    room: 
+    00 (Valkyrie Mask): 
+  00-06-0E:
+    room: 
+    00 (Heart Cuirass): 
+    03 (HP Max up) (Hidden): 
+  00-06-1B:
+    room: 
+    00 (Death Ring): 
+  00-07-02:
+    room: 
+    00 (Vis Fio): 
+#Arms Depot:
+  00-08-00:
+    room: 
+    00 (HP Max up): 
+  00-08-05:
+    room: 
+    00 (Melio Falcis): 
+  00-08-07:
+    room: 
+    00 (Melio Culter): 
+  00-08-08:
+    room: 
+    00 (Melio Scutum): 
+  00-08-0C:
+    room: 
+    02 (Mint Sundae) (Hidden): 
+#Forsaken Cloister:
+  00-09-01:
+    room: 
+    02 (Eisbein) (Hidden): 
+#Final Approach:
+  00-0A-02:
+    room: 
+    00 (Sun Ring): 
+    01 (Blue Drops): 
+    02 (MP Max up): 
+    03 (HEART Max Up): 
+  00-0A-03:
+    room: 
+    00 (Rapidus Fio): 
+    02 (MP Max up): 
+  00-0A-08:
+    room: 
+    00 (HEART Max Up): 
+  00-0A-0B:
+    room: 
+    00 (Gold Ore): 
+    01 (Diamond): 
+    02 (Diamond): 
+    03 (Onyx): 
+    04 (World Ring): 
+  00-0A-0C:
+    room: 
+    02 (Judgement Ring) (Hidden): 
+  00-0B-02:
+    room: 
+    07 (Super Potion): 
+    08 (MP Max up): 
+#Ecclesia:
+  02-00-00:
+    room: 
+    04 (Record 5): 
+  02-00-04:
+    room: 
+    05 (Record 1): 
+    07 (Glyph Sleeve): 
+#Training Chamber:
+  03-00-01:
+    room: 
+    01 (Redire): 
+#Ruvas Forest:
+  04-00-01:
+    room: 
+    00 (Macir): 
+#Kalidus Channel:
+  06-00-01:
+    room: 
+    00 (HEART Max Up): 
+  06-00-02:
+    room: 
+    00 (Chamomile): 
+  06-00-04:
+    room: 
+    01 (Magical Ticket): 
+  06-00-07:
+    room: 
+    00 (MP Max up): 
+    04 (Twinbee) (Hidden): 
+  06-00-09:
+    room: 
+    00 (HP Max up): 
+  06-00-0D:
+    room: 
+    01 (Fortis Fio): 
+  06-00-10:
+    room: 
+    00 (Scutum): 
+  06-00-15:
+    room: 
+    00 (Super Potion): 
+    01 (MP Max up): 
+    02 (HEART Max Up): 
+  06-00-17:
+    room: 
+    00 (Sapphire): 
+  06-00-18:
+    room: 
+    00 (HP Max up): 
+  06-00-1A:
+    room: 
+    00 (HEART Max Up): 
+    02 (Anti-Venom): 
+  06-01-01:
+    room: 
+    00 (Iron Ore): 
+  06-01-04:
+    room: 
+    01 (Magician Ring): 
+    02 (Emerald): 
+    03 (MP Max up): 
+    04 (Money): 
+    05 (Money): 
+    06 (Money): 
+  06-01-07:
+    room: 
+    00 (Potion): 
+#Somnus Reef:
+  07-00-04:
+    room: 
+    02 (Money): 
+  07-00-07:
+    room: 
+    00 (Reinforced Suit): 
+  07-00-09:
+    room: 
+    01 (Vol Arcus): 
+    02 (MP Max up): 
+  07-00-0A:
+    room: 
+    01 (Vic Viper) (Hidden): 
+  07-00-0D:
+    room: 
+    01 (Vol Ascia): 
+  07-00-12:
+    room: 
+    01 (HEART Max Up): 
+  07-00-14:
+    room: 
+    00 (HP Max up): 
+#Minera Prison Island:
+  08-00-05:
+    room: 
+    01 (Money): 
+  08-00-07:
+    room: 
+    00 (MP Max up): 
+    02 (Cabriolet): 
+  08-00-09:
+    room: 
+    00 (Priestess Ring): 
+  08-01-01:
+    room: 
+    00 (Tower Ring): 
+  08-01-02:
+    room: 
+    00 (Anti-Venom): 
+  08-01-05:
+    room: 
+    00 (HP Max up): 
+  08-01-08:
+    room: 
+    00 (Money): 
+  08-02-00:
+    room: 
+    00 (HEART Max Up): 
+    02 (Konami Man) (Hidden): 
+  08-02-05:
+    room: 
+    00 (Falcis): 
+  08-02-07:
+    room: 
+    02 (Glyph Sleeve): 
+#Lighthouse:
+  09-00-07:
+    room: 
+    01 (Serpent Scale): 
+#Tymeo Mountains:
+  0A-00-00:
+    room: 
+    02 (Blue Drops): 
+  0A-00-09:
+    room: 
+    00 (Fides Fio): 
+    01 (MP Max up): 
+  0A-00-0C:
+    room: 
+    00 (Crimson Mask): 
+    01 (Moonwalkers): 
+    02 (Devil Ring): 
+  0A-00-10:
+    room: 
+    00 (HEART Max Up): 
+  0A-00-11:
+    room: 
+    00 (Emperor Ring): 
+  0A-01-01:
+    room: 
+    01 (Mushroom): 
+  0A-01-03:
+    room: 
+    00 (Empress Ring): 
+  0A-01-08:
+    room: 
+    00 (HP Max up): 
+    03 (Ruby) (Hidden): 
+#Tristis Pass:
+  0B-00-0D:
+    room: 
+    00 (Vol Hasta): 
+    01 (Chariot Ring): 
+  0B-00-0F:
+    room: 
+    00 (Inire Pecunia): 
+    01 (Body Suit): 
+    02 (MP Max up): 
+  0B-01-02:
+    room: 
+    00 (Lovers Ring): 
+    01 (HEART Max Up): 
+    03 (Amanita): 
+  0B-01-05:
+    room: 
+    00 (HP Max up): 
+  0B-01-07:
+    room: 
+    01 (Onyx) (Hidden): 
+#Giant's Dwelling:
+  0D-00-03:
+    room: 
+    01 (Temperance Ring) (Hidden): 
+  0D-00-04:
+    room: 
+    00 (Caprine): 
+  0D-00-06:
+    room: 
+    00 (Vol Secare): 
+  0D-00-0C:
+    room: 
+    00 (Black Drops): 
+#Mystery Manor:
+  0E-00-02:
+    room: 
+    01 (Schnitzel) (Hidden): 
+    02 (Money): 
+  0E-00-07:
+    room: 
+    00 (Money): 
+  0E-00-08:
+    room: 
+    00 (Gold Ore): 
+#Misty Forest Road:
+  0F-00-02:
+    room: 
+    01 (Rue): 
+  0F-00-04:
+    room: 
+    00 (Melio Arcus): 
+    01 (Hierophant Ring): 
+    03 (White Drops) (Hidden): 
+  0F-00-05:
+    room: 
+    00 (Vol Macir): 
+    02 (Sage): 
+#Oblivion Ridge:
+  10-00-00:
+    room: 
+    02 (Hermit Ring) (Hidden): 
+  10-01-01:
+    room: 
+    02 (Diamond) (Hidden): 
+    03 (Chamomile): 
+  10-01-03:
+    room: 
+    01 (Sapiens Fio): 
+#Skeleton Cave:
+  11-00-03:
+    room: 
+    00 (HP Max up): 
+  11-00-05:
+    room: 
+    01 (Black Drops) (Hidden): 
+    02 (MP Max up): 
+  11-00-08:
+    room: 
+    00 (Ordinary Rock): 
+  11-00-09:
+    room: 
+    00 (HEART Max Up): 
+#Monastery:
+  12-00-03:
+    room: 
+    00 (Sandals): 
+  12-00-05:
+    room: 
+    00 (Cotton Hat): 
+  12-00-07:
+    room: 
+    00 (Fool Ring): 
+    01 (HP Max up): 
+  12-00-09:
+    room: 
+    00 (Culter): 
+  12-00-0A:
+    room: 
+    00 (Book of Spirits): 
+  12-00-0B:
+    room: 
+    00 (HEART Max Up): 
+  12-00-0D:
+    room: 
+    01 (Tasty Meat) (Hidden): 
+    02 (Red Drops) (Hidden): 
+    04 (Money): 
+  12-00-10:
+    room: 
+    00 (MP Max up): 
+#Epilogue & Boss Rush Mode & Practice Mode:
+  13-01-00:
+    room: 
+    04 (Heart): 
+    05 (Heart): 
+    06 (Heart): 
+    07 (Heart): 
+    08 (Heart): 
+    09 (Heart): 
+    0A (Heart): 
+    0B (Heart): 
+    0C (Heart): 
+    0D (Heart): 
+    0E (Heart): 
+    0F (Heart): 
+  13-02-00:
+    room: 
+    06 (Heart): 
+    07 (Heart): 
+    08 (Heart): 
+    09 (Heart): 
+    0A (Heart): 
+    0B (Heart): 
+    0C (Heart): 
+    0D (Heart): 
+    0E (Heart): 
+    0F (Heart): 
+    10 (Heart): 
+    11 (Heart): 
+    12 (Heart): 
+    13 (Heart): 
+    14 (Heart): 
+  13-03-00:
+    room: 
+    05 (Heart): 
+    06 (Heart): 
+    07 (Heart): 
+    08 (Heart): 
+    09 (Heart): 
+    0A (Heart): 
+    0B (Heart): 
+    0C (Heart): 
+    0D (Heart): 
+    0E (Heart): 
