@@ -521,6 +521,23 @@ class Randomizer
       0x022C2FBC
     when 0x4C # Vol Fulgur
       0x022C2490
+    when 0x81 # Cerberus
+      # Get rid of the event, turn it into a normal free glyph
+      # We can't keep the event because it has special programming to always spawn them in order even if you get to the locations out of order.
+      picked_up_flag = @unused_picked_up_flags.pop()
+      if picked_up_flag.nil?
+        raise "No picked up flag for this item, this error shouldn't happen"
+      end
+      entity.type = 4
+      entity.subtype = 2
+      entity.var_a = picked_up_flag
+      entity.var_b = pickup_global_id + 1
+      entity.x_pos = 0x80
+      entity.y_pos = 0x60
+    when 0x82, 0x83 # Cerberus
+      # Delete it, we don't need 3 glyphs
+      event_entity.type = 0
+      event_entity.write_to_rom()
     else
       return
     end
