@@ -139,6 +139,7 @@ Rooms:
     06 (White Drops) (Hidden): 
   00-02-14:
     room: labyrinth
+    04 (Lapiste) (Event): paries
     05 (Star Ring): 
   00-02-17:
     room: labyrinth
@@ -382,6 +383,9 @@ Rooms:
     room: minera
     00 (HEART Max Up): mineraend
     02 (Konami Man) (Hidden): mineraend
+  08-02-03:
+    room: mineraend
+    00 (Vol Fulgur) (Event): 
   08-02-05:
     room: mineraend
     00 (Falcis): 
@@ -389,6 +393,9 @@ Rooms:
     room: mineraend
     02 (Glyph Sleeve): 
 #Lighthouse:
+  09-00-03:
+    room: bossbrachyura
+    00 (Luminatio) (Event): 
   09-00-07:
     room: bossbrachyura
     01 (Serpent Scale): 
@@ -421,6 +428,9 @@ Rooms:
     room: tymeoeast
     00 (HP Max up): 
     03 (Ruby) (Hidden): 
+  0A-01-08:
+    room: tymeoeast
+    00 (Pneuma) (Event): 
 #Tristis Pass:
   0B-00-0D:
     room: tristisafterwaterfall
@@ -456,6 +466,9 @@ Rooms:
     room: giantdwellingmid
     00 (Black Drops): 
 #Mystery Manor:
+  0E-00-00:
+    room: mysterymanormid
+    00 (Vol Umbra) (Event): 
   0E-00-02:
     room: mysterymanormid
     01 (Schnitzel) (Hidden): 

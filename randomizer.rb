@@ -355,7 +355,7 @@ class Randomizer
     room = game.areas[area_index].sectors[sector_index].rooms[room_index]
     entity = room.entities[entity_index]
     
-    if GAME == "ooe" && entity.is_special_object? && entity.subtype >= 0x61
+    if checker.event_locations.include?(location)
       # Event with a hardcoded glyph.
       change_hardcoded_glyph_event(entity, pickup_global_id)
       return
@@ -509,8 +509,18 @@ class Randomizer
   
   def change_hardcoded_glyph_event(event_entity, pickup_global_id)
     hardcoded_glyph_location = case event_entity.subtype
-    when 0x8A
+    when 0x8A # Magnes
       0x02237DE0
+    when 0x2F # Luminatio
+      0x022C4894
+    when 0x3B # Pneuma
+      0x022C28E8
+    when 0x44 # Lapiste
+      0x022C2CB0
+    when 0x54 # Vol Umbra
+      0x022C2FBC
+    when 0x4C # Vol Fulgur
+      0x022C2490
     else
       return
     end
