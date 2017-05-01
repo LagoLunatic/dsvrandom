@@ -94,7 +94,9 @@ Defs:
   labyrinth: entranceeast | barracks
   backexit: labyrinth & paries
   barracks: labyrinth | mechtower # TODO nonlinear entranceeast
-  mechtower: barracks | forsakencloistereast # TODO nonlinear
+  mechtower: barracks | mechtower
+  mechtowerupper: mechtower & magnes | mechtower & volaticus | forsakencloistereast # TODO nonlinear
+  bossdeath: mechtowerupper & magnes | mechtowerupper & volaticus
   armsdepot: mechtower
   forsakencloister: libraryeast | mechtower
   forsakencloistereast: mechtower # TODO nonlinear forsakencloister
@@ -111,157 +113,157 @@ Rooms:
 #Dracula's Castle:
 #Castle Entrance:
   00-00-01:
-    room: 
+    room: entrance
     00 (HEART Max Up): 
   00-00-03:
-    room: 
+    room: entrance
     01 (Tasty Meat) (Hidden): 
   00-00-04:
-    room: 
+    room: entrance
     01 (White Drops): 
   00-00-09:
-    room: 
+    room: entranceeast
     00 (HP Max up): 
   00-01-05:
-    room: 
+    room: entranceeast
     00 (Valkyrie Greaves): 
 #Underground Labyrinth:
   00-02-06:
-    room: 
+    room: labyrinth
     00 (Mercury Boots): 
   00-02-08:
-    room: 
+    room: labyrinth
     00 (MP Max up): 
   00-02-11:
-    room: 
+    room: labyrinth
     06 (White Drops) (Hidden): 
   00-02-14:
-    room: 
+    room: labyrinth
     05 (Star Ring): 
   00-02-17:
-    room: 
+    room: labyrinth
     00 (HEART Max Up): 
   00-02-18:
-    room: 
+    room: labyrinth
     00 (Super Potion): 
   00-02-19:
-    room: 
+    room: labyrinth & paries
     06 (Felicem Fio): 
   00-02-1B:
-    room: 
+    room: labyrinth & paries
     01 (Rapidus Fio): 
 #Library:
   00-03-02:
-    room: 
+    room: library
     00 (HP Max up): 
   00-03-07:
-    room: 
+    room: library
     00 (MP Max up): 
   00-03-09:
-    room: 
+    room: libraryeast
     05 (Melio Confodere): 
   00-04-02:
-    room: 
+    room: libraryeast
     00 (Refectio): 
     01 (Hanged Man Ring): 
   00-04-07:
-    room: 
+    room: libraryeast
     03 (Cream Puff) (Hidden): 
 #Barracks:
   00-05-00:
-    room: 
+    room: barracks
     00 (HEART Max Up): 
   00-05-04:
-    room: 
+    room: barracks
     02 (Melio Hasta): 
   00-05-07:
-    room: 
+    room: barracks
     01 (Money): 
     02 (Money): 
   00-05-08:
-    room: 
+    room: barracks
     02 (Green Drops): 
     03 (Money): 
   00-05-09:
-    room: 
+    room: barracks
     02 (Green Drops) (Hidden): 
   00-05-0A:
-    room: 
+    room: barracks
     00 (MP Max up): 
   00-05-0C:
-    room: 
+    room: barracks
     01 (Red Drops): 
   00-05-0D:
-    room: 
+    room: barracks
     00 (Moon Ring): 
   00-05-0E:
-    room: 
+    room: barracks
     00 (Valkyrie Mail): 
   00-05-0F:
-    room: 
+    room: barracks
     00 (HP Max up): 
 #Mechanical Tower:
   00-06-09:
-    room: 
+    room: mechtowerupper
     00 (Valkyrie Mask): 
   00-06-0E:
-    room: 
+    room: mechtowerupper
     00 (Heart Cuirass): 
     03 (HP Max up) (Hidden): 
   00-06-1B:
-    room: 
+    room: mechtowerupper
     00 (Death Ring): 
   00-07-02:
-    room: 
+    room: mechtower
     00 (Vis Fio): 
 #Arms Depot:
   00-08-00:
-    room: 
+    room: armsdepot
     00 (HP Max up): 
   00-08-05:
-    room: 
+    room: armsdepot
     00 (Melio Falcis): 
   00-08-07:
-    room: 
+    room: armsdepot
     00 (Melio Culter): 
   00-08-08:
-    room: 
+    room: armsdepot
     00 (Melio Scutum): 
   00-08-0C:
-    room: 
+    room: armsdepot
     02 (Mint Sundae) (Hidden): 
 #Forsaken Cloister:
   00-09-01:
-    room: 
+    room: forsakencloisterupper
     02 (Eisbein) (Hidden): 
 #Final Approach:
   00-0A-02:
-    room: 
+    room: finalapproach & big height
     00 (Sun Ring): 
     01 (Blue Drops): 
     02 (MP Max up): 
     03 (HEART Max Up): 
   00-0A-03:
-    room: 
+    room: finalapproach & big height # need big height to get out of the pit
     00 (Volaticus): 
     02 (MP Max up): 
   00-0A-08:
-    room: 
+    room: finalapproach
     00 (HEART Max Up): 
   00-0A-0B:
-    room: 
+    room: finalapproach & big height
     00 (Gold Ore): 
     01 (Diamond): 
     02 (Diamond): 
     03 (Onyx): 
     04 (World Ring): 
   00-0A-0C:
-    room: 
+    room: finalapproach
     02 (Judgement Ring) (Hidden): 
   00-0B-02:
-    room: 
-    07 (Super Potion): 
-    08 (MP Max up): 
+    room: finalapproach
+    07 (Super Potion): paries
+    08 (MP Max up): paries
 #Ecclesia:
   02-00-00:
     room: ecclesia
