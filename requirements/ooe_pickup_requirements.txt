@@ -511,7 +511,7 @@ Rooms:
   12-00-05:
     room: monastery
     00 (Cotton Hat): monasterymid
-    05 (Magnes Event): 
+    05 (Magnes) (Event): 
   12-00-07:
     room: monasterymid
     00 (Fool Ring): medium height

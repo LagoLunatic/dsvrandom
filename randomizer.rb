@@ -214,6 +214,9 @@ class Randomizer
       if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
         # If the pickup is an item instead of a soul, don't let bosses drop it.
         new_possible_locations -= checker.enemy_locations
+        
+        # In OoE, don't try to make cutscenes that spawn glyphs spawn an item.
+        new_possible_locations -= checker.event_locations
       end
       
       if new_possible_locations.empty?
@@ -221,6 +224,7 @@ class Randomizer
           new_possible_locations = previous_accessible_region
           new_possible_locations -= locations_randomized_to_have_useful_pickups
           new_possible_locations -= checker.enemy_locations if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+          new_possible_locations -= checker.event_locations if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
           
           break if new_possible_locations.any?
         end
@@ -245,6 +249,7 @@ class Randomizer
         area_name = AREA_INDEX_TO_AREA_NAME[area_index]
       end
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
+      is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
       spoiler_log.puts "Placing #{pickup_str} at #{location}#{is_enemy_str} (#{area_name})"
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
@@ -253,8 +258,8 @@ class Randomizer
     
     remaining_locations = checker.all_locations.keys - locations_randomized_to_have_useful_pickups
     remaining_locations.each_with_index do |location, i|
-      if checker.enemy_locations.include?(location)
-        # Boss
+      if checker.enemy_locations.include?(location) || checker.event_locations.include?(location)
+        # Boss or event
         pickup_global_id = get_unplaced_non_progression_skill()
       else
         # Pickup
@@ -340,6 +345,9 @@ class Randomizer
   end
   
   def change_entity_location_to_pickup_global_id(location, pickup_global_id)
+    if location == "12-00-05_05"
+      puts "%02X" % pickup_global_id
+    end
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     
@@ -348,7 +356,7 @@ class Randomizer
     
     if GAME == "ooe" && entity.is_special_object? && entity.subtype >= 0x61
       # Event with a hardcoded glyph.
-      change_hardcoded_glyph_event(entity)
+      change_hardcoded_glyph_event(entity, pickup_global_id)
       return
     end
     
@@ -498,11 +506,15 @@ class Randomizer
     return soul_global_id
   end
   
-  def change_hardcoded_glyph_event(event_entity)
-    case event_entity.subtype
+  def change_hardcoded_glyph_event(event_entity, pickup_global_id)
+    hardcoded_glyph_location = case event_entity.subtype
     when 0x8A
-      
+      0x02237DE0
+    else
+      return
     end
+    
+    game.fs.write(hardcoded_glyph_location, [pickup_global_id+1].pack("C"))
   end
   
   def randomize_enemy(enemy)

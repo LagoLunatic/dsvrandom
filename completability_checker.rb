@@ -6,7 +6,8 @@ class CompletabilityChecker
               :rng,
               :current_items,
               :defs,
-              :enemy_locations
+              :enemy_locations,
+              :event_locations
   
   def initialize(game, enable_glitches, ooe_nonlinear)
     @game = game
@@ -48,6 +49,7 @@ class CompletabilityChecker
     rooms = yaml["Rooms"]
     
     @enemy_locations = []
+    @event_locations = []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
@@ -66,6 +68,10 @@ class CompletabilityChecker
           if applies_to.end_with?(" (Enemy)")
             entity_str = "#{room_str}_%02X" % entity_index
             @enemy_locations << entity_str
+          end
+          if applies_to.end_with?(" (Event)")
+            entity_str = "#{room_str}_%02X" % entity_index
+            @event_locations << entity_str
           end
         end
       end
