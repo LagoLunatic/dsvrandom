@@ -24,7 +24,8 @@ Defs:
   ecclesia: true
   
   monastery: true
-  bossarthro: monastery & magnes | monastery & big height
+  monasterymid: monastery & magnes | monastery & big height
+  bossarthro: monasterymid
   
   wygol: bossarthro | nonlinear
   villagernikolai: wygol
@@ -147,7 +148,7 @@ Rooms:
     06 (Felicem Fio): 
   00-02-1B:
     room: 
-    01 (Vis Fio): 
+    01 (Rapidus Fio): 
 #Library:
   00-03-02:
     room: 
@@ -241,7 +242,7 @@ Rooms:
     03 (HEART Max Up): 
   00-0A-03:
     room: 
-    00 (Rapidus Fio): 
+    00 (Volaticus): 
     02 (MP Max up): 
   00-0A-08:
     room: 
@@ -386,189 +387,145 @@ Rooms:
     02 (Glyph Sleeve): 
 #Lighthouse:
   09-00-07:
-    room: 
+    room: bossbrachyura
     01 (Serpent Scale): 
 #Tymeo Mountains:
   0A-00-00:
-    room: 
+    room: tymeo
     02 (Blue Drops): 
   0A-00-09:
-    room: 
+    room: tymeomid
     00 (Fides Fio): 
     01 (MP Max up): 
   0A-00-0C:
-    room: 
-    00 (Crimson Mask): 
-    01 (Moonwalkers): 
-    02 (Devil Ring): 
+    room: tymeoeast
+    00 (Crimson Mask): paries
+    01 (Moonwalkers): paries
+    02 (Devil Ring): paries
   0A-00-10:
-    room: 
+    room: tymeoeast
     00 (HEART Max Up): 
   0A-00-11:
-    room: 
+    room: tymeoeast
     00 (Emperor Ring): 
   0A-01-01:
-    room: 
+    room: tymeo
     01 (Mushroom): 
   0A-01-03:
-    room: 
+    room: tymeo
     00 (Empress Ring): 
   0A-01-08:
-    room: 
+    room: tymeoeast
     00 (HP Max up): 
     03 (Ruby) (Hidden): 
 #Tristis Pass:
   0B-00-0D:
-    room: 
+    room: tristisafterwaterfall
     00 (Vol Hasta): 
     01 (Chariot Ring): 
   0B-00-0F:
-    room: 
+    room: tristisafterwaterfall
     00 (Inire Pecunia): 
     01 (Body Suit): 
     02 (MP Max up): 
   0B-01-02:
-    room: 
+    room: tristisafterwaterfall
     00 (Lovers Ring): 
     01 (HEART Max Up): 
     03 (Amanita): 
   0B-01-05:
-    room: 
+    room: tristisafterwaterfall
     00 (HP Max up): 
   0B-01-07:
-    room: 
+    room: tristisafterwaterfall
     01 (Onyx) (Hidden): 
 #Giant's Dwelling:
   0D-00-03:
-    room: 
+    room: giantdwelling
     01 (Temperance Ring) (Hidden): 
   0D-00-04:
-    room: 
-    00 (Caprine): 
+    room: giantdwelling
+    00 (Caprine): giantdwellingmid
   0D-00-06:
-    room: 
+    room: giantdwellingmid
     00 (Vol Secare): 
   0D-00-0C:
-    room: 
+    room: giantdwellingmid
     00 (Black Drops): 
 #Mystery Manor:
   0E-00-02:
-    room: 
+    room: mysterymanormid
     01 (Schnitzel) (Hidden): 
     02 (Money): 
   0E-00-07:
-    room: 
+    room: mysterymanormid
     00 (Money): 
   0E-00-08:
-    room: 
+    room: mysterymanormid
     00 (Gold Ore): 
 #Misty Forest Road:
   0F-00-02:
-    room: 
-    01 (Rue): 
+    room: mistyroad
+    01 (Rue): distance | big height
   0F-00-04:
-    room: 
+    room: mistyroad & paries
     00 (Melio Arcus): 
     01 (Hierophant Ring): 
     03 (White Drops) (Hidden): 
   0F-00-05:
-    room: 
+    room: mistyroad
     00 (Vol Macir): 
-    02 (Sage): 
+    02 (Sage): distance | big height
 #Oblivion Ridge:
   10-00-00:
-    room: 
+    room: oblivionridge
     02 (Hermit Ring) (Hidden): 
   10-01-01:
-    room: 
+    room: oblivionridge
     02 (Diamond) (Hidden): 
-    03 (Chamomile): 
+    03 (Chamomile): distance | big height
   10-01-03:
-    room: 
-    01 (Sapiens Fio): 
+    room: oblivionridge
+    01 (Sapiens Fio): distance | big height
 #Skeleton Cave:
   11-00-03:
-    room: 
-    00 (HP Max up): 
+    room: skelecave
+    00 (HP Max up): medium height
   11-00-05:
-    room: 
+    room: skelecave
     01 (Black Drops) (Hidden): 
     02 (MP Max up): 
   11-00-08:
-    room: 
+    room: skelecave
     00 (Ordinary Rock): 
   11-00-09:
-    room: 
-    00 (HEART Max Up): 
+    room: skelecave
+    00 (HEART Max Up): medium height
 #Monastery:
   12-00-03:
-    room: 
+    room: monastery
     00 (Sandals): 
   12-00-05:
-    room: 
+    room: monasterymid
     00 (Cotton Hat): 
   12-00-07:
-    room: 
-    00 (Fool Ring): 
+    room: monasterymid
+    00 (Fool Ring): medium height
     01 (HP Max up): 
   12-00-09:
-    room: 
+    room: monasterymid
     00 (Culter): 
   12-00-0A:
-    room: 
+    room: monasterymid
     00 (Book of Spirits): 
   12-00-0B:
-    room: 
+    room: monasterymid
     00 (HEART Max Up): 
   12-00-0D:
-    room: 
+    room: monasterymid
     01 (Tasty Meat) (Hidden): 
     02 (Red Drops) (Hidden): 
     04 (Money): 
   12-00-10:
-    room: 
+    room: monasterymid
     00 (MP Max up): 
-#Epilogue & Boss Rush Mode & Practice Mode:
-  13-01-00:
-    room: 
-    04 (Heart): 
-    05 (Heart): 
-    06 (Heart): 
-    07 (Heart): 
-    08 (Heart): 
-    09 (Heart): 
-    0A (Heart): 
-    0B (Heart): 
-    0C (Heart): 
-    0D (Heart): 
-    0E (Heart): 
-    0F (Heart): 
-  13-02-00:
-    room: 
-    06 (Heart): 
-    07 (Heart): 
-    08 (Heart): 
-    09 (Heart): 
-    0A (Heart): 
-    0B (Heart): 
-    0C (Heart): 
-    0D (Heart): 
-    0E (Heart): 
-    0F (Heart): 
-    10 (Heart): 
-    11 (Heart): 
-    12 (Heart): 
-    13 (Heart): 
-    14 (Heart): 
-  13-03-00:
-    room: 
-    05 (Heart): 
-    06 (Heart): 
-    07 (Heart): 
-    08 (Heart): 
-    09 (Heart): 
-    0A (Heart): 
-    0B (Heart): 
-    0C (Heart): 
-    0D (Heart): 
-    0E (Heart): 

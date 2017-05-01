@@ -273,6 +273,11 @@ class CompletabilityChecker
         return item.name
       end
     end
+    if pickup.is_glyph?
+      item_id = pickup.var_b - 1
+      item = game.items[item_id]
+      return item.name
+    end
     if pickup.is_skill?
       item_type_index = PICKUP_SUBTYPES_FOR_SKILLS.begin
       item_index = pickup.var_b
