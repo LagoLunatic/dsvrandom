@@ -298,7 +298,7 @@ class Randomizer
     pickup_global_id = @unplaced_non_progression_pickups.sample(random: rng)
     
     if pickup_global_id.nil?
-      # Ran out of unplaced ones, so place a duplicate instead.
+      # Ran out of unplaced pickups, so place a duplicate instead.
       @unplaced_non_progression_pickups = all_non_progression_pickups()
       return get_unplaced_non_progression_pickup()
     end
@@ -316,8 +316,10 @@ class Randomizer
     item_global_id = unplaced_non_progression_souls.sample(random: rng)
     
     if item_global_id.nil?
-      # Ran out of unplaced ones, so place a duplicate instead.
-      @unplaced_non_progression_pickups = all_non_progression_pickups()
+      # Ran out of unplaced items, so place a duplicate instead.
+      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
+        ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      end
       return get_unplaced_non_progression_item()
     end
     
@@ -327,27 +329,26 @@ class Randomizer
   end
   
   def get_unplaced_non_progression_skill
-    unplaced_non_progression_souls = @unplaced_non_progression_pickups.select do |pickup_global_id|
+    unplaced_non_progression_skills = @unplaced_non_progression_pickups.select do |pickup_global_id|
       SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
     end
     
-    soul_global_id = unplaced_non_progression_souls.sample(random: rng)
+    skill_global_id = unplaced_non_progression_skills.sample(random: rng)
     
-    if soul_global_id.nil?
-      # Ran out of unplaced ones, so place a duplicate instead.
-      @unplaced_non_progression_pickups = all_non_progression_pickups()
+    if skill_global_id.nil?
+      # Ran out of unplaced skills, so place a duplicate instead.
+      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
+        SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      end
       return get_unplaced_non_progression_skill()
     end
     
-    @unplaced_non_progression_pickups.delete(soul_global_id)
+    @unplaced_non_progression_pickups.delete(skill_global_id)
     
-    return soul_global_id
+    return skill_global_id
   end
   
   def change_entity_location_to_pickup_global_id(location, pickup_global_id)
-    if location == "12-00-05_05"
-      puts "%02X" % pickup_global_id
-    end
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     
