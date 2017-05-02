@@ -730,13 +730,19 @@ class Randomizer
       end
     when "Sand Worm", "Poison Worm"
       if enemy.room.main_layer_height > 1
+        # Don't allow in tall rooms
+        return :redo
+      end
+      if enemy.room.main_layer_widths <= 1
+        # Don't allow in non-wide rooms
         return :redo
       end
       if enemy.room.doors.find{|door| door.y_pos >= 1}
+        # Don't allow in rooms that have a door in the floor
         return :redo
       end
       
-      enemy.var_a = 0 # TODO
+      enemy.var_a = 1
     end
   end
   
