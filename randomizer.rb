@@ -137,6 +137,8 @@ class Randomizer
     when "por"
       checker.add_item(0x1AD) # call cube
     when "ooe"
+      checker.add_item(0x01) # confodere
+      
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
       # Flags 01-3B are unused in the base game but still work, so use those.
       @unused_picked_up_flags = (1..0x3B).to_a
