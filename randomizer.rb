@@ -274,6 +274,16 @@ class Randomizer
       if checker.enemy_locations.include?(location) || checker.event_locations.include?(location)
         # Boss or event
         pickup_global_id = get_unplaced_non_progression_skill()
+      elsif GAME == "ooe"
+        # Pickup
+        # 40% chance to be an item.
+        # 60% chance to either be an item or a skill.
+        # TODO: small chance to be a money bag/chest.
+        if rng.rand <= 0.4
+          pickup_global_id = get_unplaced_non_progression_item()
+        else
+          pickup_global_id = get_unplaced_non_progression_pickup()
+        end
       else
         # Pickup
         # 80% chance to be an item.
