@@ -387,7 +387,15 @@ class Randomizer
         enemy_dna = game.enemy_dnas[entity.subtype]
       end
       
-      enemy_dna["Soul"] = item_index
+      case GAME
+      when "dos"
+        enemy_dna["Soul"] = item_index
+      when "ooe"
+        enemy_dna["Glyph"] = item_index + 1
+      else
+        raise "Boss soul randomizer is bugged for #{LONG_GAME_NAME}."
+      end
+      
       enemy_dna.write_to_rom()
     elsif GAME == "dos" || GAME == "por"
       item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
@@ -977,7 +985,7 @@ class Randomizer
         # Wallman's glyph is not handled here, as that can be a progression glyph.
         
         enemy = game.enemy_dnas[enemy_id]
-        enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+        enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
         enemy.write_to_rom()
       end
     end
