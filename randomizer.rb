@@ -958,6 +958,10 @@ class Randomizer
         # Non-boss version of the giant skeleton.
         return :skip
       end
+    when "Wallman"
+      # Don't copy Wallman's 9999 HP, use a more reasonable value instead.
+      new_boss["HP"] = 4000
+      new_boss.write_to_rom()
     end
     
     if new_boss.name != "Giant Skeleton"
@@ -975,6 +979,10 @@ class Randomizer
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
       boss_entity.y_pos = 0xAF
+      
+      # Make sure Wallman always has 9999 HP.
+      new_boss["HP"] = 9999
+      new_boss.write_to_rom()
     end
   end
   
