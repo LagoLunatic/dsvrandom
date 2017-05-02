@@ -610,7 +610,7 @@ class Randomizer
     if @enemy_pool_for_room.length >= 6
       # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
       
-      enemy.subtype = @enemy_pool_for_room.sample(random: rng)
+      random_enemy_id = @enemy_pool_for_room.sample(random: rng)
     else
       # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
       # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
@@ -622,13 +622,9 @@ class Randomizer
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
       weighted_enemy_ids = available_enemy_ids_for_entity.zip(ps).to_h
       random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
-      
-      #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
-      enemy.subtype = random_enemy_id
-      @enemy_pool_for_room << random_enemy_id
     end
     
-    enemy_dna = game.enemy_dnas[enemy.subtype]
+    enemy_dna = game.enemy_dnas[random_enemy_id]
     
     result = case GAME
     when "dos"
@@ -640,10 +636,12 @@ class Randomizer
     end
     
     if result == :redo
-      # TODO
+      randomize_enemy(enemy)
+    else
+      enemy.subtype = random_enemy_id
+      enemy.write_to_rom()
+      @enemy_pool_for_room << random_enemy_id
     end
-    
-    enemy.write_to_rom()
   end
   
   def dos_adjust_randomized_enemy(enemy, enemy_dna)
