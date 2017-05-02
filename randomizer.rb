@@ -248,7 +248,7 @@ class Randomizer
       end
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
-      spoiler_log.puts "Placing #{pickup_str} at #{location}#{is_enemy_str} (#{area_name})"
+      spoiler_log.puts "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str} (#{area_name})"
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
