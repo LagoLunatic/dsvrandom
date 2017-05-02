@@ -10,7 +10,7 @@ DSVRandom has options to randomize:
 Items/Skills: Randomizes items and skills you find lying on the ground.
 Enemy Locations: Randomizes which non-boss enemies appear where.
 Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.
-Boss Souls: Randomizes the souls dropped by bosses (DoS only).
+Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).
 
 There are also some buggy, experimental options:
 Players: Randomizes player graphics and movement stats.
