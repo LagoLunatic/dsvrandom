@@ -621,8 +621,7 @@ class Randomizer
       weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
         id_difference = (possible_enemy_id - enemy.subtype).abs
         weight = available_enemy_ids_for_entity.length - id_difference
-        weight = weight**2
-        weight
+        weight**3
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
       weighted_enemy_ids = available_enemy_ids_for_entity.zip(ps).to_h
