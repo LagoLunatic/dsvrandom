@@ -508,7 +508,7 @@ class Randomizer
   end
   
   def change_hardcoded_glyph_event(event_entity, pickup_global_id)
-    event_entity.room.sector.load_necessary_overlays()
+    event_entity.room.sector.load_necessary_overlay()
     
     if event_entity.subtype == 0x69 # Dominus Hatred
       game.fs.write(0x02230A7C, [pickup_global_id+1].pack("C"))
@@ -523,13 +523,13 @@ class Randomizer
       if picked_up_flag.nil?
         raise "No picked up flag for this item, this error shouldn't happen"
       end
-      entity.type = 4
-      entity.subtype = 2
-      entity.var_a = picked_up_flag
-      entity.var_b = pickup_global_id + 1
-      entity.x_pos = 0x80
-      entity.y_pos = 0x60
-    elsif event_entity.subtype == 0x82 || event_entity.subtype 0x83 # Cerberus
+      event_entity.type = 4
+      event_entity.subtype = 2
+      event_entity.var_a = picked_up_flag
+      event_entity.var_b = pickup_global_id + 1
+      event_entity.x_pos = 0x80
+      event_entity.y_pos = 0x60
+    elsif event_entity.subtype == 0x82 || event_entity.subtype == 0x83 # Cerberus
       # Delete it, we don't need 3 glyphs
       event_entity.type = 0
       event_entity.write_to_rom()
