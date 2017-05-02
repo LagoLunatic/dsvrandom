@@ -612,10 +612,6 @@ class Randomizer
       
       enemy.subtype = @enemy_pool_for_room.sample(random: rng)
     else
-      available_enemy_ids_for_entity = available_enemy_ids_for_entity.select do |possible_enemy_id|
-        (possible_enemy_id.length - enemy.subtype).abs
-      end
-      
       # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
       # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
       weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
