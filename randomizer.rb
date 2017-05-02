@@ -203,7 +203,7 @@ class Randomizer
           locations_randomized_to_have_useful_pickups << location
           
           # Also, give the player what this boss drops so the checker takes this into account.
-          pickup_global_id = get_entity_soul_drop_by_entity_location(location)
+          pickup_global_id = get_entity_skill_drop_by_entity_location(location)
           checker.add_item(pickup_global_id)
         end
         
@@ -213,7 +213,7 @@ class Randomizer
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
       if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
-        # If the pickup is an item instead of a soul, don't let bosses drop it.
+        # If the pickup is an item instead of a skill, don't let bosses drop it.
         new_possible_locations -= checker.enemy_locations
         
         # In OoE, don't try to make cutscenes that spawn glyphs spawn an item.
@@ -268,7 +268,7 @@ class Randomizer
       else
         # Pickup
         # 80% chance to be an item.
-        # 20% chance to either be an item or a soul.
+        # 20% chance to either be an item or a skill.
         # TODO: small chance to be a money bag/chest.
         if rng.rand <= 0.8
           pickup_global_id = get_unplaced_non_progression_item()
@@ -313,11 +313,11 @@ class Randomizer
   end
   
   def get_unplaced_non_progression_item
-    unplaced_non_progression_souls = @unplaced_non_progression_pickups.select do |pickup_global_id|
+    unplaced_non_progression_items = @unplaced_non_progression_pickups.select do |pickup_global_id|
       ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
     end
     
-    item_global_id = unplaced_non_progression_souls.sample(random: rng)
+    item_global_id = unplaced_non_progression_items.sample(random: rng)
     
     if item_global_id.nil?
       # Ran out of unplaced items, so place a duplicate instead.
@@ -489,7 +489,7 @@ class Randomizer
     end
   end
   
-  def get_entity_soul_drop_by_entity_location(location)
+  def get_entity_skill_drop_by_entity_location(location)
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     
@@ -507,10 +507,17 @@ class Randomizer
       enemy_dna = game.enemy_dnas[entity.subtype]
     end
     
-    soul_local_id = enemy_dna["Soul"]
-    soul_global_id = soul_local_id + SKILL_GLOBAL_ID_RANGE.begin
+    case GAME
+    when "dos"
+      skill_local_id = enemy_dna["Soul"]
+    when "ooe"
+      skill_local_id = enemy_dna["Glyph"] - 1
+    else
+      raise "Boss soul randomizer is bugged for #{LONG_GAME_NAME}."
+    end
+    skill_global_id = skill_local_id + SKILL_GLOBAL_ID_RANGE.begin
     
-    return soul_global_id
+    return skill_global_id
   end
   
   def change_hardcoded_glyph_event(event_entity, pickup_global_id)
@@ -737,6 +744,13 @@ class Randomizer
       enemy.var_a = rng.rand(0..8) # Arrow speed.
     when "Bat"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Axe Knight"
+      # 80% chance to be normal, 20% chance to start out in pieces.
+      if rng.rand() <= 0.80
+        enemy.var_b = 0
+      else
+        enemy.var_b = 1
+      end
     when "Flea Man"
       # TODO var A?
       enemy.var_b = 0

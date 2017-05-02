@@ -165,8 +165,9 @@ Rooms:
     room: library
     00 (MP Max up): 
   00-03-09:
-    room: libraryeast
-    05 (Melio Confodere): 
+    room: library
+    02 (Wallman) (Enemy): 
+    05 (Melio Confodere): libraryeast
   00-04-02:
     room: libraryeast
     00 (Refectio): 

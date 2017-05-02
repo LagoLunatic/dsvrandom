@@ -178,21 +178,21 @@ class RandomizerWindow < Qt::Dialog
     )
     randomizer.randomize()
     
-    if @ui.fix_first_ability_soul.checked()
+    if GAME == "dos" && @ui.fix_first_ability_soul.checked()
       game.apply_armips_patch("dos_fix_first_ability_soul")
     end
     
-    if @ui.no_touch_screen.checked()
+    if GAME == "dos" && @ui.no_touch_screen.checked()
       game.apply_armips_patch("dos_skip_drawing_seals")
       game.apply_armips_patch("dos_melee_balore_blocks")
       game.apply_armips_patch("dos_skip_name_signing")
     end
     
-    if @ui.fix_luck.checked()
+    if GAME == "dos" && @ui.fix_luck.checked()
       game.apply_armips_patch("dos_fix_luck")
     end
     
-    if @ui.open_world_map.checked()
+    if GAME == "ooe" && @ui.open_world_map.checked()
       game.apply_armips_patch("ooe_nonlinear")
       
       # Fix some broken platforms in Tristis Pass so the player cannot become permastuck.
