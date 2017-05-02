@@ -508,6 +508,33 @@ class Randomizer
   end
   
   def change_hardcoded_glyph_event(event_entity, pickup_global_id)
+    event_entity.room.sector.load_necessary_overlays()
+    
+    if event_entity.subtype == 0x69 # Dominus Hatred
+      game.fs.write(0x02230A7C, [pickup_global_id+1].pack("C"))
+      game.fs.write(0x022C25D8, [pickup_global_id+1].pack("C"))
+    elsif event_entity.subtype == 0x6F # Dominus Anger
+      game.fs.write(0x02230A84, [pickup_global_id+1].pack("C"))
+      game.fs.write(0x022C25DC, [pickup_global_id+1].pack("C"))
+    elsif event_entity.subtype == 0x81 # Cerberus
+      # Get rid of the event, turn it into a normal free glyph
+      # We can't keep the event because it has special programming to always spawn them in order even if you get to the locations out of order.
+      picked_up_flag = @unused_picked_up_flags.pop()
+      if picked_up_flag.nil?
+        raise "No picked up flag for this item, this error shouldn't happen"
+      end
+      entity.type = 4
+      entity.subtype = 2
+      entity.var_a = picked_up_flag
+      entity.var_b = pickup_global_id + 1
+      entity.x_pos = 0x80
+      entity.y_pos = 0x60
+    elsif event_entity.subtype == 0x82 || event_entity.subtype 0x83 # Cerberus
+      # Delete it, we don't need 3 glyphs
+      event_entity.type = 0
+      event_entity.write_to_rom()
+    end
+    
     hardcoded_glyph_location = case event_entity.subtype
     when 0x8A # Magnes
       0x02237DE0
@@ -521,23 +548,10 @@ class Randomizer
       0x022C2FBC
     when 0x4C # Vol Fulgur
       0x022C2490
-    when 0x81 # Cerberus
-      # Get rid of the event, turn it into a normal free glyph
-      # We can't keep the event because it has special programming to always spawn them in order even if you get to the locations out of order.
-      picked_up_flag = @unused_picked_up_flags.pop()
-      if picked_up_flag.nil?
-        raise "No picked up flag for this item, this error shouldn't happen"
-      end
-      entity.type = 4
-      entity.subtype = 2
-      entity.var_a = picked_up_flag
-      entity.var_b = pickup_global_id + 1
-      entity.x_pos = 0x80
-      entity.y_pos = 0x60
-    when 0x82, 0x83 # Cerberus
-      # Delete it, we don't need 3 glyphs
-      event_entity.type = 0
-      event_entity.write_to_rom()
+    when 0x40 # Cubus
+      0x022C31DC
+    when 0x76 # Dominus Agony
+      0x022C25BC
     else
       return
     end

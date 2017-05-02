@@ -15,6 +15,7 @@ Defs:
   dominus hatred: 0x31
   dominus anger: 0x32
   dominus agony: 0x4E
+  globus: 0x2E
   
   medium height: double jump | big height
   big height: volaticus | redire
@@ -544,6 +545,9 @@ Rooms:
     room: monasterymid
     00 (Fool Ring): medium height
     01 (HP Max up): 
+  12-00-08:
+    room: monasterymid
+    00 (Cubus): globus # TODO there are other ways besides globus, like ignis glyph union
   12-00-09:
     room: monasterymid
     00 (Culter): 
