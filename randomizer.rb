@@ -284,6 +284,16 @@ class Randomizer
         else
           pickup_global_id = get_unplaced_non_progression_pickup()
         end
+      elsif GAME == "por"
+        # Pickup
+        # 60% chance to be an item.
+        # 40% chance to either be an item or a skill.
+        # TODO: small chance to be a money bag/chest.
+        if rng.rand <= 0.6
+          pickup_global_id = get_unplaced_non_progression_item()
+        else
+          pickup_global_id = get_unplaced_non_progression_pickup()
+        end
       else
         # Pickup
         # 80% chance to be an item.
