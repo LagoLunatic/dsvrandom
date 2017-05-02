@@ -173,7 +173,8 @@ class RandomizerWindow < Qt::Dialog
       :randomize_skill_stats => @ui.randomize_skill_stats.checked(),
       :randomize_enemy_stats => @ui.randomize_enemy_stats.checked(),
       :randomize_weapon_synths => @ui.randomize_weapon_synths.checked(),
-      :enable_glitch_reqs => @ui.enable_glitch_reqs.checked()
+      :enable_glitch_reqs => @ui.enable_glitch_reqs.checked(),
+      :open_world_map => @ui.open_world_map.checked(),
     )
     randomizer.randomize()
     
