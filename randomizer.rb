@@ -1257,6 +1257,11 @@ class Randomizer
           next if bit_name == "Horizontal flip"
           next if bit_name == "Is currently AI partner"
           
+          if ["Can slide", "Can use weapons", "Can up-pose", "Can absorb glyphs"].include?(bit_name)
+            player[bitfield_attr_name][i] = true
+            next
+          end
+          
           player[bitfield_attr_name][i] = [true, false].sample(random: rng)
         end
       end
@@ -1313,6 +1318,8 @@ class Randomizer
       case item.item_type_name
       when "Consumables"
         item["Type"] = rng.rand(0..4)
+        # TODO OoE
+        
         case item["Type"]
         when 0, 1, 3
           item["Var A"] = rand_range_weighted_very_low(1..4000)
@@ -1377,15 +1384,23 @@ class Randomizer
   
   def randomize_skill_stats
     game.items[SKILL_GLOBAL_ID_RANGE].each do |skill|
-      skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
       skill["Mana cost"] = rng.rand(1..60)
       skill["DMG multiplier"] = rand_range_weighted_low(1..50)
+      
+      skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
+      
+      skill["Max at once"] = rand_range_weighted_low(1..6) if GAME == "ooe"
+      skill["IFrames"] = rand_range_weighted_low(1..0x24) if GAME == "ooe"
+      skill["Delay"] = rand_range_weighted_low(0..14) if GAME == "ooe"
+      # TODO glyph union
       
       [
         "??? bitfield",
         "Effects",
         "Unwanted States",
       ].each do |bitfield_attr_name|
+        next if skill[bitfield_attr_name].nil?
+        
         skill[bitfield_attr_name].names.each_with_index do |bit_name, i|
           skill[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
         end
@@ -1400,7 +1415,7 @@ class Randomizer
       enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.5..3.0)).round
       enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.5..3.0)).round if GAME == "dos"
       enemy_dna["SP"]      = (enemy_dna["SP"]*rng.rand(0.5..3.0)).round if GAME == "por"
-      enemy_dna["AP"]      = (enemy_dna["SP"]*rng.rand(0.5..3.0)).round if GAME == "ooe"
+      enemy_dna["AP"]      = (enemy_dna["AP"]*rng.rand(0.5..3.0)).round if GAME == "ooe"
       enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.5..3.0)).round
       enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.5..3.0)).round
       enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.5..3.0)).round if GAME == "dos"
