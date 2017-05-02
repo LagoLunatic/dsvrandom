@@ -996,7 +996,7 @@ class Randomizer
         if enemy["Glyph"] != 0
           # Only give glyph drops to enemies that original had a glyph drop.
           # Other enemies cannot drop a glyph anyway.
-          enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+          enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
           if enemy["Glyph Chance"] != 100
             # Don't set glyph chance if it was originally 100%, because it won't matter for those enemies.
             # Otherwise set it to 1-20%.
