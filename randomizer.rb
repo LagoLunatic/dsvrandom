@@ -14,8 +14,6 @@ class Randomizer
     @game = game
     @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map])
     
-    game.set_starting_room(0x12, 0, 5)
-    
     @options = options
     
     @next_available_item_id = 1
