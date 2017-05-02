@@ -392,6 +392,9 @@ Rooms:
   08-01-05:
     room: minera
     00 (HP Max up): 
+  08-01-07:
+    room: minera
+    00 (Dominus Hatred) (Event): 
   08-01-08:
     room: minera
     00 (Money): 
@@ -478,6 +481,9 @@ Rooms:
   0D-00-06:
     room: giantdwellingmid
     00 (Vol Secare): 
+  0D-00-08:
+    room: giantdwellingmid
+    00 (Dominus Anger) (Event): 
   0D-00-0C:
     room: giantdwellingmid
     00 (Black Drops): 
@@ -495,6 +501,9 @@ Rooms:
   0E-00-08:
     room: mysterymanormid
     00 (Gold Ore): 
+  0E-00-09:
+    room: mysterymanormid
+    06 (Dominus Agony) (Event): 
 #Misty Forest Road:
   0F-00-02:
     room: mistyroad
