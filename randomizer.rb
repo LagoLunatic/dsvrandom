@@ -136,6 +136,12 @@ class Randomizer
       checker.add_item(0x3D) # seal 1
     when "por"
       checker.add_item(0x1AD) # call cube
+      
+      # Always replace change cube with skill cube
+      checker.add_item(0x1AE) # skill cube
+      change_cube_entity = game.areas[0].sectors[0].rooms[1].entities[1]
+      change_cube_entity.var_b = 0x5E
+      change_cube_entity.write_to_rom()
     when "ooe"
       checker.add_item(0x01) # confodere
       checker.add_item(0x1E) # torpor. the player will get enough of these as it is
