@@ -173,7 +173,7 @@ class Randomizer
         weighted_useful_pickups_names = weighted_useful_pickups.map do |global_id, weight|
           "%.2f %s" % [weight, checker.defs.invert[global_id]]
         end
-        #puts "Weighted useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
+        puts "Weighted useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
       elsif pickups_by_locations.any?
         # No item will open up any new areas. This means the player can access all locations.
         # So we just randomly place one progression pickup.
@@ -234,6 +234,7 @@ class Randomizer
         previous_accessible_locations << new_possible_locations
       end
       
+      p "new_possible_locations: #{new_possible_locations}"
       location = new_possible_locations.sample(random: rng)
       locations_randomized_to_have_useful_pickups << location
       
@@ -248,7 +249,9 @@ class Randomizer
       end
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
-      spoiler_log.puts "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str} (#{area_name})"
+      spoiler_str = "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str} (#{area_name})"
+      spoiler_log.puts spoiler_str
+      puts spoiler_str
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
@@ -714,8 +717,11 @@ class Randomizer
       enemy.var_a = rng.rand(0..1) # Can jump away.
     when "Bone Archer"
       enemy.var_a = rng.rand(0..8) # Arrow speed.
-    when "Bat", "Fleaman"
+    when "Bat"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Flea Man"
+      # TODO var A?
+      enemy.var_b = 0
     when "Ghost"
       enemy.var_a = rng.rand(1..5) # Max ghosts on screen at once.
     when "Skull Spider"
@@ -970,11 +976,15 @@ class Randomizer
         enemy["Item 1 Chance"] = rng.rand(0x01..0x0F)
         enemy["Item 2 Chance"] = rng.rand(0x01..0x0F)
         
-        if rng.rand <= 0.20 # 20% chance to have a glyph drop
+        if enemy["Glyph"] != 0
+          # Only give glyph drops to enemies that original had a glyph drop.
+          # Other enemies cannot drop a glyph anyway.
           enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
-          enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
-        else
-          enemy["Glyph"] = 0
+          if enemy["Glyph Chance"] != 100
+            # Don't set glyph chance if it was originally 100%, because it won't matter for those enemies.
+            # Otherwise set it to 1-20%.
+            enemy["Glyph Chance"] = rng.rand(1..20)
+          end
         end
       end
       
