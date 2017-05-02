@@ -138,6 +138,7 @@ class Randomizer
       checker.add_item(0x1AD) # call cube
     when "ooe"
       checker.add_item(0x01) # confodere
+      checker.add_item(0x1E) # torpor. the player will get enough of these as it is
       
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
       # Flags 01-3B are unused in the base game but still work, so use those.
@@ -515,7 +516,22 @@ class Randomizer
   def change_hardcoded_glyph_event(event_entity, pickup_global_id)
     event_entity.room.sector.load_necessary_overlay()
     
-    if event_entity.subtype == 0x69 # Dominus Hatred
+    if event_entity.subtype == 0x8A # Magnes
+      # Get rid of the event, turn it into a normal free glyph
+      # We can't keep the event because it automatically equips Magnes even if the glyph it gives is not Magnes.
+      # Changing what it equips would just make the event not work right, so we may as well remove it.
+      picked_up_flag = @unused_picked_up_flags.pop()
+      if picked_up_flag.nil?
+        raise "No picked up flag for this item, this error shouldn't happen"
+      end
+      event_entity.type = 4
+      event_entity.subtype = 2
+      event_entity.var_a = picked_up_flag
+      event_entity.var_b = pickup_global_id + 1
+      event_entity.x_pos = 0x80
+      event_entity.y_pos = 0x2B0
+      event_entity.write_to_rom()
+    elsif event_entity.subtype == 0x69 # Dominus Hatred
       game.fs.write(0x02230A7C, [pickup_global_id+1].pack("C"))
       game.fs.write(0x022C25D8, [pickup_global_id+1].pack("C"))
     elsif event_entity.subtype == 0x6F # Dominus Anger
@@ -542,8 +558,6 @@ class Randomizer
     end
     
     hardcoded_glyph_location = case event_entity.subtype
-    when 0x8A # Magnes
-      0x02237DE0
     when 0x2F # Luminatio
       0x022C4894
     when 0x3B # Pneuma
@@ -554,6 +568,10 @@ class Randomizer
       0x022C2FBC
     when 0x4C # Vol Fulgur
       0x022C2490
+    when 0x52 # Vol Ignis
+      0x0221F1A0
+    when 0x47 # Vol Grando
+      0x022C230C
     when 0x40 # Cubus
       0x022C31DC
     when 0x76 # Dominus Agony

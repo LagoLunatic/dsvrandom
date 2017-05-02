@@ -129,6 +129,9 @@ Rooms:
     room: entranceeast
     00 (Valkyrie Greaves): 
 #Underground Labyrinth:
+  00-02-02:
+    room: labyrinth
+    00 (Vol Ignis) (Event): 
   00-02-06:
     room: labyrinth
     00 (Mercury Boots): 
@@ -460,6 +463,9 @@ Rooms:
     00 (Inire Pecunia): 
     01 (Body Suit): 
     02 (MP Max up): 
+  0B-01-01:
+    room: tristisafterwaterfall
+    01 (Vol Grando) (Event): 
   0B-01-02:
     room: tristisafterwaterfall
     00 (Lovers Ring): 
