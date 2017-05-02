@@ -143,6 +143,9 @@ class Randomizer
       change_cube_entity.var_b = 0x5E
       change_cube_entity.write_to_rom()
     when "ooe"
+      checker.add_item(0x6F) # lizard tail
+      checker.add_item(0x72) # glyph union
+      
       checker.add_item(0x01) # confodere
       checker.add_item(0x1E) # torpor. the player will get enough of these as it is
       
