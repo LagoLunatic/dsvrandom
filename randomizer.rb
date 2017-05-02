@@ -478,6 +478,8 @@ class Randomizer
           end
         end
       end
+      
+      entity.write_to_rom()
     end
   end
   
@@ -527,6 +529,7 @@ class Randomizer
       event_entity.var_b = pickup_global_id + 1
       event_entity.x_pos = 0x80
       event_entity.y_pos = 0x60
+      event_entity.write_to_rom()
     elsif event_entity.subtype == 0x82 || event_entity.subtype == 0x83 # Cerberus
       # Delete it, we don't need 3 glyphs
       event_entity.type = 0
