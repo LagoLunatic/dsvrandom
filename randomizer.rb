@@ -945,20 +945,23 @@ class Randomizer
   
   def randomize_enemy_drops
     if GAME == "ooe"
-      game.enemy_dnas[BOSS_IDS].each do |enemy|
+      BOSS_IDS.each do |enemy_id|
+        enemy = game.enemy_dnas[enemy_id]
+        
         if enemy["Glyph"] != 0
-          # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
+          # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, Wallman, and Jiang Shi).
           # These must be done before common enemies because otherwise there won't be any unique glyphs left to give them.
           
           enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
-          enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
           
           enemy.write_to_rom()
         end
       end
     end
     
-    game.enemy_dnas[COMMON_ENEMY_IDS].each do |enemy|
+    COMMON_ENEMY_IDS.each do |enemy_id|
+      enemy = game.enemy_dnas[enemy_id]
+      
       if rng.rand <= 0.5 # 50% chance to have an item drop
         if GAME == "por"
           enemy["Item 1"] = get_unplaced_non_progression_pickup() + 1
@@ -1162,7 +1165,7 @@ class Randomizer
   end
   
   def randomize_enemy_ai
-    common_enemy_dnas = game.enemy_dnas[COMMON_ENEMY_IDS]
+    common_enemy_dnas = game.enemy_dnas.select{|enemy_id| COMMON_ENEMY_IDS.include?(enemy_id)}
     
     common_enemy_dnas.each do |this_dna|
       this_overlay = OVERLAY_FILE_FOR_ENEMY_AI[this_dna]
