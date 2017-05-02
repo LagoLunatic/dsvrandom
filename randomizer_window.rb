@@ -88,10 +88,14 @@ class RandomizerWindow < Qt::Dialog
     @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
-  def closeEvent(event)
+  def save_settings
     File.open(@settings_path, "w") do |f|
       f.write(@settings.to_yaml)
     end
+  end
+  
+  def closeEvent(event)
+    save_settings()
   end
   
   def browse_for_clean_rom
@@ -132,6 +136,8 @@ class RandomizerWindow < Qt::Dialog
     @settings[:no_touch_screen] = @ui.no_touch_screen.checked
     @settings[:fix_luck] = @ui.fix_luck.checked
     @settings[:open_world_map] = @ui.open_world_map.checked
+    
+    save_settings()
   end
   
   def randomize
