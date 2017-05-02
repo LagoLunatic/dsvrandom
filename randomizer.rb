@@ -614,9 +614,10 @@ class Randomizer
     else
       # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
       # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
+      max_enemy_id = ENEMY_IDS.max
       weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
         id_difference = (possible_enemy_id - enemy.subtype).abs
-        weight = available_enemy_ids_for_entity.length - id_difference
+        weight = max_enemy_id - id_difference
         weight**3
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
