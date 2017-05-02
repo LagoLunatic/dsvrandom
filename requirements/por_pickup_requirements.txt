@@ -126,7 +126,7 @@ Rooms:
     01 (Spear): 
   00-00-09:
     room: bossbehemoth
-    02 (Behemoth) (Enemy): 
+    #02 (Behemoth) (Enemy): 
   00-00-0D:
     room: bossbehemoth
     00 (Combat Knife): 
@@ -210,7 +210,7 @@ Rooms:
     00 (Axe Bomber): 
   00-04-0A:
     room: bosskeremet
-    02 (Keremet) (Enemy): 
+    #02 (Keremet) (Enemy): 
   00-04-0B:
     room: lowergreatstairway
     00 (Stone of Flight): 
@@ -259,7 +259,7 @@ Rooms:
     02 (Aura Blast): big height
   00-07-02:
     room: bossdeath
-    03 (Death) (Enemy):
+    #03 (Death) (Enemy):
   00-07-05:
     room: towerofdeatheastupper
     00 (Blue Cape): 
@@ -317,7 +317,7 @@ Rooms:
     03 (HP Max up): slide | height # only needed to escape
   00-0B-01:
     room: bosssisters
-    0E (Sisters) (Enemy): 
+    #0E (Sisters) (Enemy): 
 #City of Haze:
   01-00-02:
     room: cityofhaze
@@ -405,7 +405,7 @@ Rooms:
     02 (Acrobat Cube): 
   01-02-0B:
     room: bossdullahan
-    02 (Dullahan) (Enemy): 
+    #02 (Dullahan) (Enemy): 
   01-02-11:
     room: midcityofhaze
     00 (Nun's Shoes): 
@@ -464,7 +464,7 @@ Rooms:
     00 (Winged Boots): 
   02-02-14:
     room: bosswerewolf
-    00 (Werewolf) (Enemy): 
+    #00 (Werewolf) (Enemy): 
 #Sandy Grave:
   03-00-05:
     room: sandygrave
@@ -479,7 +479,7 @@ Rooms:
     00 (Strength Glove): bossastarte
   03-00-0C:
     room: bossastarte
-    02 (Astarte) (Enemy): 
+    #02 (Astarte) (Enemy): 
   03-00-11:
     room: sandygravemidlevel
     00 (Uncurse Potion): 
@@ -558,7 +558,7 @@ Rooms:
     00 (Holy Mail): 
   04-01-08:
     room: bossmummy
-    00 (Mummy Man) (Enemy): 
+    #00 (Mummy Man) (Enemy): 
   04-01-10:
     room: forgottencity
     00 (Princess Tiara): 
@@ -646,14 +646,14 @@ Rooms:
   05-02-0C:
     room: nationoffools
     01 (Cog): bosslegion
-    02 (Legion) (Enemy): bosslegion
+    #02 (Legion) (Enemy): bosslegion
 #Burnt Paradise: # you need big height to get into burnt paradise (because dark academy is a requirement)
   06-00-01:
     room: bossmedusa
     00 (Jet Black Whip): 
   06-00-05:
     room: bossmedusa
-    03 (Medusa) (Enemy): 
+    #03 (Medusa) (Enemy): 
   06-00-08:
     room: burntparadise
     04 (Truffle) (Hidden): 
@@ -707,7 +707,7 @@ Rooms:
     00 (Rusty Food Tin) (Hidden): 
   07-00-0E:
     room: bossdagon
-    02 (Dagon) (Enemy): 
+    #02 (Dagon) (Enemy): 
   07-00-0F:
     room: bossdagon
     00 (Toad Morph): 
@@ -749,7 +749,7 @@ Rooms:
     01 (Noodle Bun): 
   08-00-04:
     room: bosscreature
-    00 (The Creature) (Enemy): 
+    #00 (The Creature) (Enemy): 
   08-02-03:
     room: middarkacademy
     00 (MP Max up): 
@@ -786,7 +786,7 @@ Rooms:
     00 (Tome of Arms p2): 
   09-00-3D:
     room: bossdoppelganger
-    03 (Doppelganger) (Enemy): 
+    #03 (Doppelganger) (Enemy): 
   09-00-3E:
     room: bossdoppelganger
     00 (Greatest Five): 
