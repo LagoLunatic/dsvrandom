@@ -674,7 +674,6 @@ class Randomizer
     when 0x40 # Cubus
       0x022C31DC
     when 0x53 # Morbus
-      puts pickup_global_id
       0x022C2354
     when 0x76 # Dominus Agony
       0x022C25BC
