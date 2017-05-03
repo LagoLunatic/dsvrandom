@@ -147,9 +147,12 @@ class Randomizer
       
       # Always replace change cube with skill cube
       checker.add_item(0x1AE) # skill cube
-      change_cube_entity = game.areas[0].sectors[0].rooms[1].entities[1]
-      change_cube_entity.var_b = 0x5E
-      change_cube_entity.write_to_rom()
+      change_entity_location_to_pickup_global_id("00-00-01_01", 0x1AE)
+      
+      # In the corridor where Behemoth chases you, change the code of the platform to not permanently disappear.
+      # This is so the player can't get stuck if they miss an important item up there.
+      game.fs.load_overlay(79)
+      game.fs.write(0x022EC638, [0xEA000003].pack("V"))
     when "ooe"
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
@@ -279,6 +282,7 @@ class Randomizer
       spoiler_str = "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str} (#{area_name})"
       spoiler_log.puts spoiler_str
       #puts spoiler_str
+      
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
