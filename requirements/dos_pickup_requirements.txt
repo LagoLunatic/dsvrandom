@@ -37,7 +37,7 @@ Defs:
   seal 4: 0x40
   seal 5: 0x41
   tower key: 0x39
-  mina talisman item: 0xC6
+  mina talisman: 0xC6
   axearmor: 0xD4
   killer clown: 0xE3
   ukoback: 0xEC
@@ -52,7 +52,6 @@ Defs:
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
-  mina talisman: mina talisman item | towerguesthouse # either get the talisman from the randomizer or from the normal event
   
   bossarmor: seal 1 | hwarp
   afterarmor: height | distance | backdashjump
@@ -210,6 +209,9 @@ Rooms:
   00-01-35:
     room: towerguesthouse
     00 (UMA News 1-2): 
+  00-01-37:
+    room: towerguesthouse
+    00 (Mina's Talisman) (Event): 
   00-01-38:
     room: towerguesthouse
     00 (Money): 

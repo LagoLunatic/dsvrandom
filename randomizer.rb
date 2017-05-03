@@ -229,20 +229,14 @@ class Randomizer
       
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
-      if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
-        # If the pickup is an item instead of a skill, don't let bosses drop it.
-        new_possible_locations -= checker.enemy_locations
-        
-        # In OoE, don't try to make cutscenes that spawn glyphs spawn an item.
-        new_possible_locations -= checker.event_locations
-      end
+      new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       
       if new_possible_locations.empty?
         previous_accessible_locations.reverse_each do |previous_accessible_region|
           new_possible_locations = previous_accessible_region
           new_possible_locations -= locations_randomized_to_have_useful_pickups
-          new_possible_locations -= checker.enemy_locations if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
-          new_possible_locations -= checker.event_locations if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+          
+          new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
           
           break if new_possible_locations.any?
         end
@@ -279,8 +273,14 @@ class Randomizer
     
     remaining_locations = checker.all_locations.keys - locations_randomized_to_have_useful_pickups
     remaining_locations.each_with_index do |location, i|
-      if checker.enemy_locations.include?(location) || checker.event_locations.include?(location)
-        # Boss or event
+      if checker.enemy_locations.include?(location)
+        # Boss
+        pickup_global_id = get_unplaced_non_progression_skill()
+      elsif GAME == "dos" && checker.event_locations.include?(location)
+        # Event item
+        pickup_global_id = get_unplaced_non_progression_item()
+      elsif GAME == "ooe" && checker.event_locations.include?(location)
+        # Event glyph
         pickup_global_id = get_unplaced_non_progression_skill()
       elsif GAME == "ooe"
         # Pickup
@@ -333,6 +333,26 @@ class Randomizer
       
       all_non_progression_pickups
     end
+  end
+  
+  def filter_locations_valid_for_pickup(locations, pickup_global_id)
+    locations = locations.dup
+    
+    if ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      # If the pickup is an item instead of a skill, don't let bosses drop it.
+      locations -= checker.enemy_locations
+    end
+    
+    if GAME == "dos" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      # Don't let events give you souls in DoS.
+      locations -= checker.event_locations
+    end
+    if GAME == "ooe" && ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      # Don't let events give you items in OoE.
+      locations -= checker.event_locations
+    end
+    
+    locations
   end
   
   def get_unplaced_non_progression_pickup
@@ -397,8 +417,8 @@ class Randomizer
     entity = room.entities[entity_index]
     
     if checker.event_locations.include?(location)
-      # Event with a hardcoded glyph.
-      change_hardcoded_glyph_event(entity, pickup_global_id)
+      # Event with a hardcoded item/glyph.
+      change_hardcoded_event_pickup(entity, pickup_global_id)
       return
     end
     
@@ -565,7 +585,33 @@ class Randomizer
     return skill_global_id
   end
   
-  def change_hardcoded_glyph_event(event_entity, pickup_global_id)
+  def change_hardcoded_event_pickup(event_entity, pickup_global_id)
+    case GAME
+    when "dos"
+      dos_change_hardcoded_event_pickup(event_entity, pickup_global_id)
+    when "ooe"
+      ooe_change_hardcoded_event_pickup(event_entity, pickup_global_id)
+    end
+  end
+  
+  def dos_change_hardcoded_event_pickup(event_entity, pickup_global_id)
+    event_entity.room.sector.load_necessary_overlay()
+    
+    if event_entity.subtype == 0x65 # Mina's Talisman
+      item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
+      # Item given when watching the event
+      game.fs.write(0x021CB9F4, [item_type].pack("C"))
+      game.fs.write(0x021CB9F8, [item_index].pack("C"))
+      # Item name shown in the corner of the screen
+      game.fs.write(0x021CBA08, [item_type].pack("C"))
+      game.fs.write(0x021CBA0C, [item_index].pack("C"))
+      # Item given when skipping the event
+      game.fs.write(0x021CBC14, [item_type].pack("C"))
+      game.fs.write(0x021CBC18, [item_index].pack("C"))
+    end
+  end
+  
+  def ooe_change_hardcoded_event_pickup(event_entity, pickup_global_id)
     event_entity.room.sector.load_necessary_overlay()
     
     if event_entity.subtype == 0x8A # Magnes
