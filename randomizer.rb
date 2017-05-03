@@ -1236,6 +1236,7 @@ class Randomizer
     
     game.areas.each do |area|
       area.sectors.each do |sector|
+        puts "SECTOR #{sector.sector_index}"
         remaining_doors = {
           left: [],
           up: [],
@@ -1306,41 +1307,106 @@ class Randomizer
           end
         end
         
-        sector.rooms.each do |room|
-          next if transition_rooms.include?(room)
+        all_rooms = remaining_doors.values.flatten.map{|door| door.room}.uniq
+        if all_rooms.empty?
+          # No doors in this sector
+          next
+        end
+        unvisited_rooms = all_rooms.dup
+        accessible_remaining_doors = []
+        
+        current_room = unvisited_rooms.sample(random: rng)
+        
+        while true
+          puts "on room %08X" % current_room.room_metadata_ram_pointer
+          unvisited_rooms.delete(current_room)
           
-          room.doors.each do |inside_door|
-            next if transition_rooms.include?(inside_door.destination_door.room)
-            
-            next unless remaining_doors[inside_door.direction].include?(inside_door) # Already randomized this door
-            
-            remaining_doors[inside_door.direction].delete(inside_door)
-            
-            next if remaining_doors[inside_door.direction].length == 0
-            
-            old_outside_door = inside_door.destination_door
-            remaining_doors[old_outside_door.direction].delete(old_outside_door)
-            inside_door_to_swap_with = remaining_doors[inside_door.direction].sample(random: rng)
-            remaining_doors[inside_door_to_swap_with.direction].delete(inside_door_to_swap_with)
-            new_outside_door = inside_door_to_swap_with.destination_door
-            remaining_doors[new_outside_door.direction].delete(new_outside_door)
-            
-            queued_door_changes[inside_door]["destination_room_metadata_ram_pointer"] = inside_door_to_swap_with.destination_room_metadata_ram_pointer
-            queued_door_changes[inside_door]["dest_x"] = inside_door_to_swap_with.dest_x
-            queued_door_changes[inside_door]["dest_y"] = inside_door_to_swap_with.dest_y
-            
-            queued_door_changes[inside_door_to_swap_with]["destination_room_metadata_ram_pointer"] = inside_door.destination_room_metadata_ram_pointer
-            queued_door_changes[inside_door_to_swap_with]["dest_x"] = inside_door.dest_x
-            queued_door_changes[inside_door_to_swap_with]["dest_y"] = inside_door.dest_y
-            
-            queued_door_changes[old_outside_door]["destination_room_metadata_ram_pointer"] = new_outside_door.destination_room_metadata_ram_pointer
-            queued_door_changes[old_outside_door]["dest_x"] = new_outside_door.dest_x
-            queued_door_changes[old_outside_door]["dest_y"] = new_outside_door.dest_y
-            
-            queued_door_changes[new_outside_door]["destination_room_metadata_ram_pointer"] = old_outside_door.destination_room_metadata_ram_pointer
-            queued_door_changes[new_outside_door]["dest_x"] = old_outside_door.dest_x
-            queued_door_changes[new_outside_door]["dest_y"] = old_outside_door.dest_y
+          accessible_remaining_doors += remaining_doors.values.flatten.select{|door| door.room == current_room}
+          accessible_remaining_doors.uniq!
+          
+          inside_door = accessible_remaining_doors.sample(random: rng)
+          remaining_doors[inside_door.direction].delete(inside_door)
+          
+          inaccessible_remaining_matching_doors = remaining_doors[inside_door.direction] - accessible_remaining_doors
+          
+          inaccessible_remaining_matching_doors_with_other_exits = inaccessible_remaining_matching_doors.select do |door|
+            door.room.doors.length > 1 && unvisited_rooms.include?(door.room)
           end
+          
+          inaccessible_remaining_matching_doors_with_other_direction_exits = inaccessible_remaining_matching_doors_with_other_exits.select do |door|
+            if door.direction == :left || door.direction == :right
+              door.room.doors.any?{|x| x.direction == :up || x.direction == :down}
+            else
+              door.room.doors.any?{|x| x.direction == :left || x.direction == :right}
+            end
+          end
+          
+          if inaccessible_remaining_matching_doors_with_other_direction_exits.any?
+            # There are doors we can swap with that allow more progress, and also allow going in a new direction (up/down vs left/right).
+            possible_swap_doors = inaccessible_remaining_matching_doors_with_other_direction_exits
+          elsif inaccessible_remaining_matching_doors_with_other_exits.any?
+            # There are doors we can swap with that allow more progress.
+            possible_swap_doors = inaccessible_remaining_matching_doors_with_other_exits
+          elsif inaccessible_remaining_matching_doors.any?
+            # There are doors we can swap with that will allow you to reach one new room which is a dead end.
+            possible_swap_doors = inaccessible_remaining_matching_doors
+          elsif remaining_doors[inside_door.direction].any?
+            # This door direction doesn't have any more matching doors left to swap with that will result in progress.
+            # So just pick any matching door.
+            possible_swap_doors = remaining_doors[inside_door.direction]
+          else
+            # This door direction doesn't have any matching doors left.
+            # Don't do anything to this door.
+            
+            #puts "#{inside_door.direction} empty"
+            #
+            #accessible_rooms = accessible_remaining_doors.map{|door| door.room}.uniq
+            #accessible_rooms -= [current_room]
+            #
+            #current_room = accessible_rooms.sample(random: rng)
+            #p accessible_remaining_doors.size
+            #gets
+            
+            current_room = unvisited_rooms.sample(random: rng)
+            p "3 #{current_room}"
+            
+            if current_room.nil?
+              current_room = all_rooms.sample(random: rng)
+              p "2 #{current_room}"
+            end
+            
+            if remaining_doors.values.flatten.empty?
+              break
+            end
+            
+            next
+          end
+          
+          inside_door_to_swap_with = possible_swap_doors.sample(random: rng)
+          remaining_doors[inside_door_to_swap_with.direction].delete(inside_door_to_swap_with)
+          current_room = inside_door_to_swap_with.room
+          p "1 #{current_room}"
+          
+          old_outside_door = inside_door.destination_door
+          remaining_doors[old_outside_door.direction].delete(old_outside_door)
+          new_outside_door = inside_door_to_swap_with.destination_door
+          remaining_doors[new_outside_door.direction].delete(new_outside_door)
+          
+          queued_door_changes[inside_door]["destination_room_metadata_ram_pointer"] = inside_door_to_swap_with.destination_room_metadata_ram_pointer
+          queued_door_changes[inside_door]["dest_x"] = inside_door_to_swap_with.dest_x
+          queued_door_changes[inside_door]["dest_y"] = inside_door_to_swap_with.dest_y
+          
+          queued_door_changes[inside_door_to_swap_with]["destination_room_metadata_ram_pointer"] = inside_door.destination_room_metadata_ram_pointer
+          queued_door_changes[inside_door_to_swap_with]["dest_x"] = inside_door.dest_x
+          queued_door_changes[inside_door_to_swap_with]["dest_y"] = inside_door.dest_y
+          
+          queued_door_changes[old_outside_door]["destination_room_metadata_ram_pointer"] = new_outside_door.destination_room_metadata_ram_pointer
+          queued_door_changes[old_outside_door]["dest_x"] = new_outside_door.dest_x
+          queued_door_changes[old_outside_door]["dest_y"] = new_outside_door.dest_y
+          
+          queued_door_changes[new_outside_door]["destination_room_metadata_ram_pointer"] = old_outside_door.destination_room_metadata_ram_pointer
+          queued_door_changes[new_outside_door]["dest_x"] = old_outside_door.dest_x
+          queued_door_changes[new_outside_door]["dest_y"] = old_outside_door.dest_y
         end
       end
     end
