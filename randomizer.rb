@@ -56,16 +56,35 @@ class Randomizer
     
     game.each_room do |room|
       @enemy_pool_for_room = []
+      
       enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
       @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
         overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
         overlay.nil? || overlay == enemy_overlay_id_for_room
       end
       
-      room.entities.each do |entity|
-        next unless entity.type == 1
+      enemies_in_room = room.entities.select{|e| e.type == 1}
+      
+      # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
+      original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
+        enemy_dna = game.enemy_dnas[enemy.subtype]
+        difficulty + enemy_dna["Attack"]
+      end
+      new_room_difficulty = 0
+      
+      # Only allow tough enemies in the room up to 3x the original room's difficulty.
+      remaining_new_room_difficulty = original_room_difficulty*3
+      
+      enemies_in_room.shuffle(random: rng).each do |enemy|
+        @allowed_enemies_for_room.select! do |enemy_id|
+          enemy_dna = game.enemy_dnas[enemy_id]
+          # Always allow weak enemies (attack 32 or less) in the room.
+          enemy_dna["Attack"] <= remaining_new_room_difficulty || enemy_dna["Attack"] <= 32
+        end
         
-        randomize_enemy(entity)
+        randomize_enemy(enemy)
+        
+        remaining_new_room_difficulty -= enemy.subtype
       end
     end
     
