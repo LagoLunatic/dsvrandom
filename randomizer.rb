@@ -1504,8 +1504,8 @@ class Randomizer
         "Sprite Y offset",
         "Hitbox pointer",
         "Face icon frame",
-        "Unknown 21",
-        "Unknown 22",
+        "Palette unknown 1",
+        "Palette unknown 2",
       ].each do |attr_name|
         player[attr_name], other_player[attr_name] = other_player[attr_name], player[attr_name]
       end
