@@ -610,13 +610,6 @@ class Randomizer
   
   def por_change_hardcoded_event_pickup(event_entity, pickup_global_id)
     event_entity.room.sector.load_necessary_overlay()
-    
-    if event_entity.subtype == 0x9D # Stella's Locket
-      item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
-      
-      game.fs.write(0x022EC2B4, [item_type].pack("C"))
-      game.fs.write(0x022EC2B8, [item_index].pack("C"))
-    end
   end
   
   def ooe_change_hardcoded_event_pickup(event_entity, pickup_global_id)

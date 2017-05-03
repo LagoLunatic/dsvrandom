@@ -46,16 +46,17 @@ Defs:
   quad jump height: quadjumpglitch | big height
   big height: owl | superjump
   
-  cityofhaze: midentrance & slide
-  midcityofhaze: cityofhaze & call cube & change cube
-  endcityofhaze: bossdullahan
-  bossdullahan: midcityofhaze
-  
   entrance: call cube
   midentrance: entrance & callswitch | entrance & height
   upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | greatstairway & height
   bossbehemoth: entrance & height
   
+  wind: midentrance
+  
+  cityofhaze: midentrance & slide
+  midcityofhaze: cityofhaze & call cube & change cube
+  endcityofhaze: bossdullahan
+  bossdullahan: midcityofhaze  
   buriedchamber: bossbehemoth
   
   lowergreatstairway: buriedchamber # you can get here quicker without going through buried chamber with the suspend glitch, but that doesn't require any fewer items.
@@ -70,7 +71,7 @@ Defs:
   nationoffools: uppergreatstairway
   bosslegion: nationoffools
   
-  forestofdoom: towerofdeathwaterwheel
+  forestofdoom: towerofdeathwaterwheel & bossstella & wind
   forestofdoomcenter: forestofdoom & height
   forestofdoomeast: forestofdoomcenter & medium height
   bossdagon: forestofdoomeast
@@ -294,9 +295,6 @@ Rooms:
   00-08-0D:
     room: bossstella & cog & medium height 2
     00 (Slick Boots): 
-  00-08-0F:
-    room: bossstella
-    05 (Stella's Locket) (Event): 
 #The Throne Room:
   00-09-00:
     room: throneroom & quad jump height
