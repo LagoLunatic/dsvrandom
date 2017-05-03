@@ -95,7 +95,7 @@ Defs:
   labyrinth: entranceeast | barracks
   backexit: labyrinth & paries
   barracks: labyrinth | mechtower # TODO nonlinear entranceeast
-  mechtower: barracks | mechtower
+  mechtower: barracks | mechtowerupper
   mechtowerupper: mechtower & magnes | mechtower & volaticus | forsakencloistereast # TODO nonlinear
   bossdeath: mechtowerupper & magnes | mechtowerupper & volaticus
   armsdepot: mechtower
@@ -229,6 +229,9 @@ Rooms:
   00-06-1B:
     room: mechtowerupper
     00 (Death Ring): 
+  00-06-1C:
+    room: mechtower & magnes | mechtower & volaticus | mechtower & distance
+    01 (Morbus) (Event): 
   00-07-02:
     room: mechtower
     00 (Vis Fio): 
