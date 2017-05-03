@@ -294,6 +294,9 @@ Rooms:
   00-08-0D:
     room: bossstella & cog & medium height 2
     00 (Slick Boots): 
+  00-08-0F:
+    room: bossstella
+    05 (Stella's Locket) (Event): 
 #The Throne Room:
   00-09-00:
     room: throneroom & quad jump height

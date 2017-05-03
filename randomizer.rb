@@ -278,7 +278,7 @@ class Randomizer
       if checker.enemy_locations.include?(location)
         # Boss
         pickup_global_id = get_unplaced_non_progression_skill()
-      elsif GAME == "dos" && checker.event_locations.include?(location)
+      elsif ["dos", "por"].include?(GAME) && checker.event_locations.include?(location)
         # Event item
         pickup_global_id = get_unplaced_non_progression_item()
       elsif GAME == "ooe" && checker.event_locations.include?(location)
@@ -584,6 +584,8 @@ class Randomizer
     case GAME
     when "dos"
       dos_change_hardcoded_event_pickup(event_entity, pickup_global_id)
+    when "por"
+      por_change_hardcoded_event_pickup(event_entity, pickup_global_id)
     when "ooe"
       ooe_change_hardcoded_event_pickup(event_entity, pickup_global_id)
     end
@@ -603,6 +605,17 @@ class Randomizer
       # Item given when skipping the event
       game.fs.write(0x021CBC14, [item_type].pack("C"))
       game.fs.write(0x021CBC18, [item_index].pack("C"))
+    end
+  end
+  
+  def por_change_hardcoded_event_pickup(event_entity, pickup_global_id)
+    event_entity.room.sector.load_necessary_overlay()
+    
+    if event_entity.subtype == 0x9D # Stella's Locket
+      item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
+      
+      game.fs.write(0x022EC2B4, [item_type].pack("C"))
+      game.fs.write(0x022EC2B8, [item_index].pack("C"))
     end
   end
   
