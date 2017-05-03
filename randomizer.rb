@@ -1230,8 +1230,6 @@ class Randomizer
     # TODO: make sure every room in an area is accessible. this is to prevent infinite loops of a small number of rooms that connect to each other with no way to progress.
     # loop through each room. search for remaining rooms that have a matching door. but the room we find must also have remaining doors in it besides the one we swap with so it's not a dead end, or a loop. if there are no rooms that meet those conditions, then we go with the more lax condition of just having a matching door, allowing dead ends.
     
-    # TODO: don't randomize unused doors that are blocked off behind walls like ones in the lost village.
-    
     transition_rooms = game.get_transition_rooms()
     
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
@@ -1245,11 +1243,64 @@ class Randomizer
           down: []
         }
         
+        map = game.get_map(sector.area_index, sector.sector_index)
+        
         sector.rooms.each do |room|
           next if transition_rooms.include?(room)
           
           room.doors.each do |door|
             next if transition_rooms.include?(door.destination_door.room)
+            
+            map_tile_x_pos = room.room_xpos_on_map
+            map_tile_y_pos = room.room_ypos_on_map
+            
+            if door.x_pos == 0xFF
+              # Do nothing
+            elsif door.x_pos >= room.main_layer_width
+              map_tile_x_pos += room.main_layer_width - 1
+            else
+              map_tile_x_pos += door.x_pos
+            end
+            if door.y_pos == 0xFF
+              # Do nothing
+            elsif door.y_pos >= room.main_layer_height
+              map_tile_y_pos += room.main_layer_height - 1
+            else
+              map_tile_y_pos += door.y_pos
+            end
+            
+            map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos &&  tile.y_pos == map_tile_y_pos}
+            
+            if map_tile.nil?
+              # Door that's not on the map, just an unused door.
+              next
+            end
+            
+            # If the door is a secret door, or is shown on the map as a wall, skip it.
+            # The player won't be able to enter secret doors from the wrong side, they'd just get stopped by the breakable wall.
+            # As for ones shown as a normal wall, those are leftover doors not intended to be used, and are inaccessible (except with warp glitches).
+            case door.direction
+            when :left
+              if map_tile.left_secret || map_tile.left_wall
+                puts "AREA: %02X, X: %02X, Y: %02X, door: %08X, LEFT" % [sector.area_index, map_tile_x_pos, map_tile_y_pos, door.door_ram_pointer]
+              end
+              next if map_tile.left_secret || map_tile.left_wall
+            when :right
+              if map_tile.right_secret || map_tile.right_wall
+                puts "AREA: %02X, X: %02X, Y: %02X, door: %08X, RIGHT" % [sector.area_index, map_tile_x_pos, map_tile_y_pos, door.door_ram_pointer]
+              end
+              next if map_tile.right_secret || map_tile.right_wall
+            when :up
+              if map_tile.top_secret || map_tile.top_wall
+                puts "AREA: %02X, X: %02X, Y: %02X, door: %08X, UP" % [sector.area_index, map_tile_x_pos, map_tile_y_pos, door.door_ram_pointer]
+              end
+              next if map_tile.top_secret || map_tile.top_wall
+            when :down
+              if map_tile.bottom_secret || map_tile.bottom_wall
+                puts "AREA: %02X, X: %02X, Y: %02X, door: %08X, DOWN" % [sector.area_index, map_tile_x_pos, map_tile_y_pos, door.door_ram_pointer]
+              end
+              next if map_tile.bottom_secret || map_tile.bottom_wall
+            end
             
             remaining_doors[door.direction] << door
           end
