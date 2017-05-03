@@ -162,8 +162,21 @@ class Randomizer
       @unused_picked_up_flags = (0x12F..0x149).to_a
     end
     
+    place_progression_pickups()
+    
+    place_non_progression_pickups()
+    
+    if !checker.game_beatable?
+      item_names = checker.current_items.map do |global_id|
+        checker.defs.invert[global_id]
+      end
+      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
+    end
+  end
+  
+  def place_progression_pickups
     previous_accessible_locations = []
-    locations_randomized_to_have_useful_pickups = []
+    @locations_randomized_to_have_useful_pickups = []
     on_leftovers = false
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
@@ -193,7 +206,7 @@ class Randomizer
         weighted_useful_pickups_names = weighted_useful_pickups.map do |global_id, weight|
           "%.2f %s" % [weight, checker.defs.invert[global_id]]
         end
-        puts "Weighted useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
+        #puts "Weighted less useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
       elsif pickups_by_locations.any?
         # No item will open up any new areas. This means the player can access all locations.
         # So we just randomly place one progression pickup.
@@ -210,14 +223,14 @@ class Randomizer
       end
       
       possible_locations = checker.get_accessible_locations()
-      possible_locations -= locations_randomized_to_have_useful_pickups
+      possible_locations -= @locations_randomized_to_have_useful_pickups
       
       if !options[:randomize_boss_souls]
         # If randomize boss souls option is off, don't allow putting random things in these locations.
         accessible_unused_boss_locations = possible_locations & checker.enemy_locations
         accessible_unused_boss_locations.each do |location|
           possible_locations.delete(location)
-          locations_randomized_to_have_useful_pickups << location
+          @locations_randomized_to_have_useful_pickups << location
           
           # Also, give the player what this boss drops so the checker takes this into account.
           pickup_global_id = get_entity_skill_drop_by_entity_location(location)
@@ -234,7 +247,7 @@ class Randomizer
       if new_possible_locations.empty?
         previous_accessible_locations.reverse_each do |previous_accessible_region|
           new_possible_locations = previous_accessible_region
-          new_possible_locations -= locations_randomized_to_have_useful_pickups
+          new_possible_locations -= @locations_randomized_to_have_useful_pickups
           
           new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
           
@@ -248,9 +261,9 @@ class Randomizer
         previous_accessible_locations << new_possible_locations
       end
       
-      p "new_possible_locations: #{new_possible_locations}"
+      #p "new_possible_locations: #{new_possible_locations}"
       location = new_possible_locations.sample(random: rng)
-      locations_randomized_to_have_useful_pickups << location
+      @locations_randomized_to_have_useful_pickups << location
       
       pickup_name = checker.defs.invert[pickup_global_id].to_s
       pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
@@ -265,13 +278,15 @@ class Randomizer
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
       spoiler_str = "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str} (#{area_name})"
       spoiler_log.puts spoiler_str
-      puts spoiler_str
+      #puts spoiler_str
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
     end
-    
-    remaining_locations = checker.all_locations.keys - locations_randomized_to_have_useful_pickups
+  end
+  
+  def place_non_progression_pickups
+    remaining_locations = checker.all_locations.keys - @locations_randomized_to_have_useful_pickups
     remaining_locations.each_with_index do |location, i|
       if checker.enemy_locations.include?(location)
         # Boss
@@ -315,13 +330,6 @@ class Randomizer
       end
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
-    end
-    
-    if !checker.game_beatable?
-      item_names = checker.current_items.map do |global_id|
-        checker.defs.invert[global_id]
-      end
-      raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
     end
   end
   
