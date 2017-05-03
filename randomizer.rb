@@ -79,6 +79,14 @@ class Randomizer
       randomize_pickups_completably()
     end
     
+    if options[:randomize_boss_souls] && GAME == "dos"
+      # If the player beats Balore but doesn't own Balore's soul they will appear stuck. (Though they could always escape with suspend.)
+      # So get rid of the line of code Balore runs when he dies that recreates the Balore blocks in the room.
+      
+      game.fs.load_overlay(23)
+      game.fs.write(0x02300808, [0xE1A00000].pack("V"))
+    end
+    
     if options[:randomize_bosses]
       randomize_bosses()
     end
