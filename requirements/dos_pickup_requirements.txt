@@ -58,7 +58,7 @@ Defs:
   undervillage: lowerwizardry & height | wizardry & cutallsuper
   villagewatergate: afterarmor & distance
   
-  garden: medium height & backdashjump | wizardry & balore | lowergarden & rahab  | wizardry & height
+  garden: wizardry & balore | medium height & backdashjump | medium height & puppet master | big height | lowergarden & rahab  | wizardry & height
   midgarden: garden & height | garden & vwarpseal
   bossdario: midgarden & seal 3 | midgarden & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
