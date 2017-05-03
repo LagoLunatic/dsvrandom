@@ -29,6 +29,7 @@ Defs:
   strength cube: 0x1B5
   sanctuary: 0x179
   cog: 0x4E
+  puppet master: 0x151
   
   callswitch: change cube & call cube
   slide: lizard tail | frog | owl
@@ -37,9 +38,10 @@ Defs:
   canusespells: change cube | skill cube
   frog: toad morph & canusespells
   owl: owl morph & canusespells
-  small: frog | owl
+  small: frog | owl | puppet master
   purify: sanctuary & canusespells
   
+  small height: puppet master | height
   height: shoulderjump | medium height
   medium height: double jump | jumpglitch | quad jump height
   medium height 2: double jump & shoulderjump | quad jump height
@@ -47,7 +49,7 @@ Defs:
   big height: owl | superjump
   
   entrance: call cube
-  midentrance: entrance & callswitch | entrance & height
+  midentrance: entrance & callswitch | entrance & small height
   upperentrance: midentrance & medium height 2 | midentrance & jumpglitch | greatstairway & height
   bossbehemoth: entrance & height
   
@@ -229,7 +231,7 @@ Rooms:
     12 (Monocle): medium height
   00-05-04:
     room: greatstairway
-    0F (STR Boost): height
+    0F (STR Boost): small height
     10 (Tonic): medium height
     11 (Potion): medium height
     12 (Poncho): medium height
@@ -315,7 +317,7 @@ Rooms:
     03 (Piercing Beam): 
   00-0A-13:
     room: masterkeep
-    03 (HP Max up): slide | height # only needed to escape
+    03 (HP Max up): slide | small height # only needed to escape
   00-0B-01:
     room: bosssisters
     #0E (Sisters) (Enemy): 
@@ -383,8 +385,8 @@ Rooms:
     01 (Sachertorte): 
   01-02-01:
     room: endcityofhaze
-    00 (Velvet Ribbon): height
-    01 (Long Sword): height
+    00 (Velvet Ribbon): small height
+    01 (Long Sword): small height
   01-02-04:
     room: endcityofhaze
     00 (Moonwalkers): 
@@ -397,7 +399,7 @@ Rooms:
     01 (Thick Glasses): 
   01-02-08:
     room: endcityofhaze
-    00 (Cape): height
+    00 (Cape): small height
   01-02-09:
     room: endcityofhaze
     00 (Tuxedo Coat): 
@@ -508,8 +510,8 @@ Rooms:
     02 (Royal Sandals): 
   03-01-11:
     room: sandygrave
-    00 (Money): height
-    01 (Clear Skies): height
+    00 (Money): small height
+    01 (Clear Skies): small height
   03-01-16:
     room: sandygrave
     00 (Money): 
@@ -542,8 +544,8 @@ Rooms:
     room: forgottencity
     00 (Super Tonic): height # needed to get out
   04-00-12:
-    room: forgottencity
-    00 (Curry): height # needed to get out of the pit with the item in it
+    room: forgottencity & height # height needed to get out of the room
+    00 (Curry): small height # small height needed to get out of the pit with the item in it
   04-00-13:
     room: forgottencity
     00 (Super Potion): medium height
@@ -776,7 +778,7 @@ Rooms:
     room: darkacademy & height
     00 (Gold Plate): 
   08-03-04:
-    room: darkacademy & height
+    room: darkacademy & small height
     00 (Owl Morph): 
 #Nest of Evil:
   09-00-1A:
