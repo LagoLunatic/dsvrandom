@@ -772,7 +772,7 @@ class Randomizer
         # Don't allow in tall rooms
         return :redo
       end
-      if enemy.room.main_layer_widths <= 1
+      if enemy.room.main_layer_width <= 1
         # Don't allow in non-wide rooms
         return :redo
       end
