@@ -48,44 +48,8 @@ class Randomizer
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
     spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}"
     
-    @boss_entities = []
-    overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
-      COMMON_ENEMY_IDS.include?(enemy_id)
-    end
-    overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
-    
-    game.each_room do |room|
-      @enemy_pool_for_room = []
-      
-      enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
-      @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
-        overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
-        overlay.nil? || overlay == enemy_overlay_id_for_room
-      end
-      
-      enemies_in_room = room.entities.select{|e| e.type == 1}
-      
-      # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
-      original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
-        enemy_dna = game.enemy_dnas[enemy.subtype]
-        difficulty + enemy_dna["Attack"]
-      end
-      new_room_difficulty = 0
-      
-      # Only allow tough enemies in the room up to 3x the original room's difficulty.
-      remaining_new_room_difficulty = original_room_difficulty*3
-      
-      enemies_in_room.shuffle(random: rng).each do |enemy|
-        @allowed_enemies_for_room.select! do |enemy_id|
-          enemy_dna = game.enemy_dnas[enemy_id]
-          # Always allow weak enemies (attack 32 or less) in the room.
-          enemy_dna["Attack"] <= remaining_new_room_difficulty || enemy_dna["Attack"] <= 32
-        end
-        
-        randomize_enemy(enemy)
-        
-        remaining_new_room_difficulty -= enemy.subtype
-      end
+    if options[:randomize_enemies]
+      randomize_enemies()
     end
     
     @unplaced_non_progression_pickups = all_non_progression_pickups.dup
@@ -712,27 +676,50 @@ class Randomizer
     game.fs.write(hardcoded_glyph_location, [pickup_global_id+1].pack("C"))
   end
   
+  def randomize_enemies
+    overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
+      COMMON_ENEMY_IDS.include?(enemy_id)
+    end
+    overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
+    
+    game.each_room do |room|
+      @enemy_pool_for_room = []
+      
+      enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
+      @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
+        overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+        overlay.nil? || overlay == enemy_overlay_id_for_room
+      end
+      
+      enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
+      
+      # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
+      original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
+        enemy_dna = game.enemy_dnas[enemy.subtype]
+        difficulty + enemy_dna["Attack"]
+      end
+      new_room_difficulty = 0
+      
+      # Only allow tough enemies in the room up to 3x the original room's difficulty.
+      remaining_new_room_difficulty = original_room_difficulty*3
+      
+      enemies_in_room.shuffle(random: rng).each do |enemy|
+        @allowed_enemies_for_room.select! do |enemy_id|
+          enemy_dna = game.enemy_dnas[enemy_id]
+          # Always allow weak enemies (attack 32 or less) in the room.
+          enemy_dna["Attack"] <= remaining_new_room_difficulty || enemy_dna["Attack"] <= 32
+        end
+        
+        randomize_enemy(enemy)
+        
+        remaining_new_room_difficulty -= enemy.subtype
+      end
+    end
+  end
+  
   def randomize_enemy(enemy)
     if GAME == "dos" && enemy.room.sector_index == 4 && enemy.room.room_index == 0x10 && enemy.subtype == 0x3A
       # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
-      return
-    end
-    
-    available_enemy_ids_for_entity = nil
-    
-    if enemy.is_boss?
-      if RANDOMIZABLE_BOSS_IDS.include?(enemy.subtype)
-        # Will be randomized by a separate function.
-        @boss_entities << enemy
-      end
-      
-      return
-    elsif enemy.is_common_enemy?
-      return unless options[:randomize_enemies]
-      
-      available_enemy_ids_for_entity = @allowed_enemies_for_room.dup
-    else
-      puts "Enemy #{enemy.subtype} isn't in either the enemy list or boss list. Todo: fix this"
       return
     end
     
@@ -744,13 +731,13 @@ class Randomizer
       # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
       # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
       max_enemy_id = ENEMY_IDS.max
-      weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
+      weights = @allowed_enemies_for_room.map do |possible_enemy_id|
         id_difference = (possible_enemy_id - enemy.subtype).abs
         weight = max_enemy_id - id_difference
         weight**3
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
-      weighted_enemy_ids = available_enemy_ids_for_entity.zip(ps).to_h
+      weighted_enemy_ids = @allowed_enemies_for_room.zip(ps).to_h
       random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
     end
     
@@ -913,7 +900,12 @@ class Randomizer
       queued_dna_changes[new_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
     end
     
-    @boss_entities.each do |boss_entity|
+    boss_entities = []
+    game.each_room do |room|
+      boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
+    end
+    
+    boss_entities.each do |boss_entity|
       old_boss_id = boss_entity.subtype
       boss_index = RANDOMIZABLE_BOSS_IDS.index(old_boss_id)
       new_boss_id = shuffled_boss_ids[boss_index]
