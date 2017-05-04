@@ -948,7 +948,15 @@ class Randomizer
   def ooe_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
     when "Zombie", "Ghoul"
-      # TODO
+      if rng.rand <= 0.30 # 30% chance to be a single Zombie
+        enemy.var_a = 0
+        enemy.var_b = 0
+      else # 70% chance to be a spawner
+        enemy.var_a = rng.rand(3..8) # Max at once
+        
+        room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
+        enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn the Zombies
+      end
     when "Skeleton"
       enemy.var_a = rng.rand(0..1) # Can jump away.
     when "Bone Archer"
@@ -968,9 +976,19 @@ class Randomizer
     when "Ghost"
       enemy.var_a = rng.rand(1..5) # Max ghosts on screen at once.
     when "Skull Spider"
-      # TODO: move out of floor
+      # Move out of the floor
+      enemy.y_pos -= 0x08
     when "Gelso"
-      # TODO
+      if rng.rand <= 0.40 # 40% chance to be a single Gelso
+        enemy.var_a = 0
+        enemy.var_b = 0
+      else # 60% chance to be a spawner
+        enemy.var_a = rng.rand(1..6) # Max at once
+        enemy.var_b = rng.rand(60..360) # Frames in between spawning them
+      end
+    when "Merman"
+      # Move out of the floor
+      enemy.y_pos -= 0x10
     when "Saint Elmo"
       enemy.var_a = rng.rand(1..3)
       enemy.var_b = 0x78
