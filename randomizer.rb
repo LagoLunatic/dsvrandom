@@ -581,6 +581,17 @@ class Randomizer
         return
       end
       
+      if (0x6F..0x74).include?(pickup_global_id)
+        # Relic. Must go in a chest, if you leave it lying on the ground it won't autoequip.
+        entity.type = 2
+        entity.subtype = 0x16
+        entity.var_a = pickup_global_id + 1
+        entity.var_b = picked_up_flag
+        
+        entity.write_to_rom()
+        return
+      end
+      
       if pickup_global_id >= 0x6F
         # Item
         if entity.is_hidden_pickup?
