@@ -148,11 +148,10 @@ class Randomizer
       # Glyph given by Barlowe. We randomize this, but only to a starter physical weapon glyph, not to any glyph.
       possible_starter_weapons = [0x01, 0x04, 0x07, 0x0A, 0x0D, 0x10, 0x13, 0x16]
       pickup_global_id = possible_starter_weapons.sample(random: rng)
-      checker.add_item(pickup_global_id)
       game.fs.load_overlay(42)
-      puts "%02X" % pickup_global_id
       game.fs.write(0x022C3980, [0xE3A01000].pack("V"))
       game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
+      checker.add_item(pickup_global_id)
       
       checker.add_item(0x1E) # torpor. the player will get enough of these as it is
       
@@ -369,7 +368,7 @@ class Randomizer
     pickup_global_id = @unplaced_non_progression_pickups.sample(random: rng)
     
     if pickup_global_id.nil?
-      puts "RAN OUT OF PICKUPS"
+      #puts "RAN OUT OF PICKUPS"
       # Ran out of unplaced pickups, so place a duplicate instead.
       @unplaced_non_progression_pickups = all_non_progression_pickups().dup
       @unplaced_non_progression_pickups -= checker.current_items
@@ -389,7 +388,7 @@ class Randomizer
     item_global_id = unplaced_non_progression_items.sample(random: rng)
     
     if item_global_id.nil?
-      puts "RAN OUT OF ITEMS"
+      #puts "RAN OUT OF ITEMS"
       # Ran out of unplaced items, so place a duplicate instead.
       @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
         ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
@@ -411,7 +410,7 @@ class Randomizer
     skill_global_id = unplaced_non_progression_skills.sample(random: rng)
     
     if skill_global_id.nil?
-      puts "RAN OUT OF SKILLS"
+      #puts "RAN OUT OF SKILLS"
       # Ran out of unplaced skills, so place a duplicate instead.
       @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
         SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
