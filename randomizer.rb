@@ -520,6 +520,10 @@ class Randomizer
         end
       end
       
+      if entity.is_glyph?
+        entity.y_pos += 0x20
+      end
+      
       if pickup_global_id == :money
         entity.type = 4
         entity.subtype = 1
@@ -586,6 +590,10 @@ class Randomizer
             entity.var_b = pickup_global_id + 1
           end
         end
+      end
+      
+      if entity.is_glyph?
+        entity.y_pos -= 0x20
       end
       
       entity.write_to_rom()
