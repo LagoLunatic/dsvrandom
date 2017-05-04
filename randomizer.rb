@@ -145,6 +145,13 @@ class Randomizer
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
       
+      # Give the player the glyph sleeve in Ecclesia like in hard mode.
+      # To do this just get rid of the entity hider that hides it on normal mode.
+      entity_hider = game.areas[2].sectors[0].rooms[4].entities[6]
+      entity_hider.type = 0
+      entity_hider.write_to_rom()
+      checker.add_item(0x73) # glyph sleeve
+      
       # Glyph given by Barlowe. We randomize this, but only to a starter physical weapon glyph, not to any glyph.
       possible_starter_weapons = [0x01, 0x04, 0x07, 0x0A, 0x0D, 0x10, 0x13, 0x16]
       pickup_global_id = possible_starter_weapons.sample(random: rng)
