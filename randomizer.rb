@@ -247,17 +247,44 @@ class Randomizer
       new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       
       if new_possible_locations.empty?
-        previous_accessible_locations.reverse_each do |previous_accessible_region|
-          new_possible_locations = previous_accessible_region
-          new_possible_locations -= @locations_randomized_to_have_useful_pickups
+        # No new locations, so select an old location.
+        
+        valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
+          possible_locations = previous_accessible_region.dup
+          possible_locations -= @locations_randomized_to_have_useful_pickups
           
-          new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
+          possible_locations = filter_locations_valid_for_pickup(possible_locations, pickup_global_id)
           
-          break if new_possible_locations.any?
+          possible_locations = nil if possible_locations.empty?
+          
+          possible_locations
+        end.compact
+        
+        if valid_previous_accessible_regions.empty?
+          raise "Bug: Failed to find any spots to place pickup.\nSeed is #{@seed}."
         end
         
-        if new_possible_locations.empty?
-          raise "Bug: Failed to find any spots to place pickup.\nSeed is #{@seed}."
+        if on_leftovers
+          # Just placing a leftover progression pickup.
+          # Weighted to be more likely to select locations you got access to later rather than earlier.
+          
+          i = 1
+          weights = valid_previous_accessible_regions.map do |region|
+            # Weight later accessible regions as more likely than earlier accessible regions
+            weight = i
+            i += 1
+            weight
+          end
+          ps = weights.map{|w| w.to_f / weights.reduce(:+)}
+          weighted_accessible_regions = valid_previous_accessible_regions.zip(ps).to_h
+          previous_accessible_region = weighted_accessible_regions.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
+          
+          new_possible_locations = previous_accessible_region
+        else
+          # Placing a main route progression pickup, just not one that immediately opens up new areas.
+          # Always place in the most recent accessible region.
+          
+          new_possible_locations = valid_previous_accessible_regions.last
         end
       else
         previous_accessible_locations << new_possible_locations
