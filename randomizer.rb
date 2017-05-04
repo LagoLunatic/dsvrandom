@@ -829,15 +829,15 @@ class Randomizer
       end
       new_room_difficulty = 0
       
-      # Only allow tough enemies in the room up to 3x the original room's difficulty.
-      remaining_new_room_difficulty = original_room_difficulty*3
+      # Only allow tough enemies in the room up to 2x the original room's difficulty.
+      remaining_new_room_difficulty = original_room_difficulty*2
       
-      # Only allow enemies up to 2x tougher than the toughest enemy in the original room.
+      # Only allow enemies up to 1.5x tougher than the toughest enemy in the original room.
       max_enemy_attack = enemies_in_room.map do |enemy|
         enemy_dna = game.enemy_dnas[enemy.subtype]
         enemy_dna["Attack"]
       end.max
-      max_allowed_enemy_attack = max_enemy_attack*2
+      max_allowed_enemy_attack = max_enemy_attack*1.5
       
       enemies_in_room.shuffle(random: rng).each do |enemy|
         @allowed_enemies_for_room.select! do |enemy_id|
