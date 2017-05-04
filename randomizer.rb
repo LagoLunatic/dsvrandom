@@ -289,33 +289,37 @@ class Randomizer
         pickup_global_id = get_unplaced_non_progression_skill()
       elsif GAME == "ooe"
         # Pickup
-        # 40% chance to be an item.
-        # 60% chance to either be an item or a skill.
-        # TODO: small chance to be a money bag/chest.
-        if rng.rand <= 0.4
+        case rng.rand
+        when 0.00..0.02 # 2% chance to be money
+          pickup_global_id = :money
+        when 0.02..0.25 # 23% chance to be a max up
+          pickup_global_id = [0x7F, 0x80, 0x81].sample(random: rng)
+        when 0.25..0.50 # 25% chance to be a skill
+          pickup_global_id = get_unplaced_non_progression_skill()
+        when 0.50..1.00 # 50% chance to be an item
           pickup_global_id = get_unplaced_non_progression_item()
-        else
-          pickup_global_id = get_unplaced_non_progression_pickup()
         end
       elsif GAME == "por"
         # Pickup
-        # 60% chance to be an item.
-        # 40% chance to either be an item or a skill.
-        # TODO: small chance to be a money bag/chest.
-        if rng.rand <= 0.6
+        case rng.rand
+        when 0.00..0.02 # 2% chance to be money
+          pickup_global_id = :money
+        when 0.02..0.20 # 18% chance to be a max up
+          pickup_global_id = [0x08, 0x09].sample(random: rng)
+        when 0.20..0.45 # 25% chance to be a skill
+          pickup_global_id = get_unplaced_non_progression_skill()
+        when 0.45..1.00 # 55% chance to be an item
           pickup_global_id = get_unplaced_non_progression_item()
-        else
-          pickup_global_id = get_unplaced_non_progression_pickup()
         end
-      else
+      else # DoS
         # Pickup
-        # 80% chance to be an item.
-        # 20% chance to either be an item or a skill.
-        # TODO: small chance to be a money bag/chest.
-        if rng.rand <= 0.8
+        case rng.rand
+        when 0.00..0.02 # 2% chance to be money
+          pickup_global_id = :money
+        when 0.02..0.15 # 13% chance to be a skill
+          pickup_global_id = get_unplaced_non_progression_skill()
+        when 0.15..1.00 # 85% chance to be an item
           pickup_global_id = get_unplaced_non_progression_item()
-        else
-          pickup_global_id = get_unplaced_non_progression_pickup()
         end
       end
       
@@ -453,6 +457,26 @@ class Randomizer
       
       enemy_dna.write_to_rom()
     elsif GAME == "dos" || GAME == "por"
+      if pickup_global_id == :money
+        case rng.rand
+        when 0.00..0.20 # 20% chance to be a money chest
+          entity.type = 2
+          entity.subtype = 1
+          if GAME == "dos"
+            entity.var_a = 0x10
+          else
+            entity.var_a = rng.rand(0x0E..0x0F)
+          end
+        when 0.20..1.00 # 80% chance to be a money bag
+          entity.type = 4
+          entity.subtype = 1
+          entity.var_b = rng.rand(3..6)
+        end
+        
+        entity.write_to_rom()
+        return
+      end
+      
       item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
       
       if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
@@ -494,6 +518,16 @@ class Randomizer
         if picked_up_flag.nil?
           raise "No picked up flag for this item, this error shouldn't happen"
         end
+      end
+      
+      if pickup_global_id == :money
+        entity.type = 4
+        entity.subtype = 1
+        entity.var_a = picked_up_flag
+        entity.var_b = rng.rand(3..6)
+        
+        entity.write_to_rom()
+        return
       end
       
       if pickup_global_id >= 0x6F
