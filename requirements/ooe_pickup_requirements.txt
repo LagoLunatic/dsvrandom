@@ -566,7 +566,7 @@ Rooms:
     01 (HP Max up): 
   12-00-08:
     room: monasterymid
-    00 (Cubus) (Event): globus # TODO there are other ways besides globus, like ignis glyph union, melio ascia
+    00 (Cubus) (Event): globus | redire glyph # TODO there are other ways like ignis union, melio ascia, falcis union, lapiste union
   12-00-09:
     room: monasterymid
     00 (Culter): 
