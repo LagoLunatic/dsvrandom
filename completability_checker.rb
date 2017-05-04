@@ -81,9 +81,10 @@ class CompletabilityChecker
   def parse_reqs(reqs)
     if reqs.is_a?(Integer) || reqs.nil?
       return reqs
-    end
-    if reqs == true
-      return reqs
+    elsif reqs == true
+      return true
+    elsif reqs == false
+      return false
     end
     
     or_reqs = reqs.split("|")
@@ -102,6 +103,12 @@ class CompletabilityChecker
   end
   
   def check_reqs(reqs)
+    if reqs == true
+      return true
+    elsif reqs == false
+      return false
+    end
+    
     @cached_checked_reqs = {}
     check_multiple_reqs_recursive(reqs)
   end
@@ -121,6 +128,8 @@ class CompletabilityChecker
         return has_item
       elsif @defs[req] == true
         return true
+      elsif @defs[req] == false
+        return false
       end
       
       if @cached_checked_reqs[req] == :currently_checking

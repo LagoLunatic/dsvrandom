@@ -231,7 +231,7 @@ Rooms:
     00 (Death Ring): 
   00-06-1C:
     room: mechtower & magnes | mechtower & volaticus | mechtower & distance
-    01 (Morbus) (Event): 
+    01 (Morbus) (Event): false # don't place progression pickups here. you need fulgur or vol fulgur to get here, but I don't want fulgur/vol fulgur to be considered progression pickups.
   00-07-02:
     room: mechtower
     00 (Vis Fio): 
