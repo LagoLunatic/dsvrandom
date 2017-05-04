@@ -783,6 +783,12 @@ class Randomizer
       
       next if enemies_in_room.empty?
       
+      if enemies_in_room.length >= 8
+        # Don't let skeletally animated enemies in rooms that have tons of enemies.
+        
+        @allowed_enemies_for_room -= @skeletally_animated_enemy_ids
+      end
+      
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
       original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
         enemy_dna = game.enemy_dnas[enemy.subtype]
@@ -817,10 +823,11 @@ class Randomizer
         
         remaining_new_room_difficulty -= enemy.subtype
         
-        if @total_skeletally_animated_enemies_in_room >= 4
+        if @total_skeletally_animated_enemies_in_room >= 2
           # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
           
           @allowed_enemies_for_room -= @skeletally_animated_enemy_ids
+          @enemy_pool_for_room -= @skeletally_animated_enemy_ids
         end
       end
     end
@@ -832,7 +839,7 @@ class Randomizer
       return
     end
     
-    if @enemy_gfx_load_in_room >= 6
+    if @enemy_gfx_load_in_room >= 6 && @enemy_pool_for_room.any?
       # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
       
       random_enemy_id = @enemy_pool_for_room.sample(random: rng)
