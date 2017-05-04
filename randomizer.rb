@@ -748,8 +748,30 @@ class Randomizer
     end
     overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
     
+    @skeletally_animated_enemy_ids = COMMON_ENEMY_IDS.select do |enemy_id|
+      overlay_id = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+      if overlay_id
+        true
+      else
+        begin
+          enemy_dna = game.enemy_dnas[enemy_id]
+          sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
+          if sprite_info.skeleton_file
+            true
+          else
+            false
+          end
+        rescue StandardError => e
+          puts "Error getting sprite info for enemy id %02X" % enemy_id
+          true # Probably a 3D enemy, so count it anyway
+        end
+      end
+    end
+    
     game.each_room do |room|
       @enemy_pool_for_room = []
+      @enemy_gfx_load_in_room = 0
+      @total_skeletally_animated_enemies_in_room = 0
       
       enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
       @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
@@ -794,6 +816,12 @@ class Randomizer
         randomize_enemy(enemy)
         
         remaining_new_room_difficulty -= enemy.subtype
+        
+        if @total_skeletally_animated_enemies_in_room >= 4
+          # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
+          
+          @allowed_enemies_for_room -= @skeletally_animated_enemy_ids
+        end
       end
     end
   end
@@ -804,7 +832,7 @@ class Randomizer
       return
     end
     
-    if @enemy_pool_for_room.length >= 6
+    if @enemy_gfx_load_in_room >= 6
       # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
       
       random_enemy_id = @enemy_pool_for_room.sample(random: rng)
@@ -840,19 +868,10 @@ class Randomizer
       enemy.write_to_rom()
       @enemy_pool_for_room << random_enemy_id
       
-      begin
-        # Count skeletally animated enemies as 2 for the purposes of the enemy pool, so that less enemies total can get in the room.
-        enemy_overlay = OVERLAY_FILE_FOR_ENEMY_AI[random_enemy_id]
-        if enemy_overlay
-          @enemy_pool_for_room << random_enemy_id
-        else
-          sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
-          if sprite_info.skeleton_file
-            @enemy_pool_for_room << random_enemy_id
-          end
-        end
-      rescue StandardError => e
-        puts "Error getting sprite info for enemy id %02X" % random_enemy_id
+      if @skeletally_animated_enemy_ids.include?(random_enemy_id)
+        # Count skeletally animated enemies as 2 for the purposes of the enemy pool, so that less unique enemies total can get in the room.
+        @enemy_gfx_load_in_room += 2
+        @total_skeletally_animated_enemies_in_room += 1
       end
     end
   end
