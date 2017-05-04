@@ -701,6 +701,8 @@ class Randomizer
       
       enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
       
+      next if enemies_in_room.empty?
+      
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
       original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
         enemy_dna = game.enemy_dnas[enemy.subtype]
@@ -711,11 +713,23 @@ class Randomizer
       # Only allow tough enemies in the room up to 3x the original room's difficulty.
       remaining_new_room_difficulty = original_room_difficulty*3
       
+      max_enemy_attack = enemies_in_room.map do |enemy|
+        enemy_dna = game.enemy_dnas[enemy.subtype]
+        enemy_dna["Attack"]
+      end.max
+      max_allowed_enemy_attack = max_enemy_attack*3
+      
       enemies_in_room.shuffle(random: rng).each do |enemy|
         @allowed_enemies_for_room.select! do |enemy_id|
           enemy_dna = game.enemy_dnas[enemy_id]
-          # Always allow weak enemies (attack 32 or less) in the room.
-          enemy_dna["Attack"] <= remaining_new_room_difficulty || enemy_dna["Attack"] <= 32
+          if enemy_dna["Attack"] <= 32
+            # Always allow weak enemies (attack 32 or less) in the room.
+            true
+          elsif enemy_dna["Attack"] <= remaining_new_room_difficulty && enemy_dna["Attack"] <= max_allowed_enemy_attack
+            true
+          else
+            false
+          end
         end
         
         randomize_enemy(enemy)
