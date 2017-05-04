@@ -867,6 +867,7 @@ class Randomizer
       enemy.subtype = random_enemy_id
       enemy.write_to_rom()
       @enemy_pool_for_room << random_enemy_id
+      @enemy_gfx_load_in_room += 1
       
       if @skeletally_animated_enemy_ids.include?(random_enemy_id)
         # Count skeletally animated enemies as 2 for the purposes of the enemy pool, so that less unique enemies total can get in the room.
