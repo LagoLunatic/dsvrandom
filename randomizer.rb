@@ -52,14 +52,19 @@ class Randomizer
       randomize_enemies()
     end
     
+    if options[:randomize_pickups]
+      randomize_pickups_completably()
+    end
+    
     @unplaced_non_progression_pickups = all_non_progression_pickups.dup
+    @unplaced_non_progression_pickups -= checker.current_items
     
     if options[:randomize_enemy_drops]
       randomize_enemy_drops()
     end
     
     if options[:randomize_pickups]
-      randomize_pickups_completably()
+      place_non_progression_pickups()
     end
     
     if options[:randomize_boss_souls] && GAME == "dos"
@@ -149,8 +154,6 @@ class Randomizer
     end
     
     place_progression_pickups()
-    
-    place_non_progression_pickups()
     
     if !checker.game_beatable?
       item_names = checker.current_items.map do |global_id|
@@ -354,8 +357,10 @@ class Randomizer
     pickup_global_id = @unplaced_non_progression_pickups.sample(random: rng)
     
     if pickup_global_id.nil?
+      puts "RAN OUT OF PICKUPS"
       # Ran out of unplaced pickups, so place a duplicate instead.
-      @unplaced_non_progression_pickups = all_non_progression_pickups()
+      @unplaced_non_progression_pickups = all_non_progression_pickups().dup
+      @unplaced_non_progression_pickups -= checker.current_items
       return get_unplaced_non_progression_pickup()
     end
     
@@ -372,10 +377,12 @@ class Randomizer
     item_global_id = unplaced_non_progression_items.sample(random: rng)
     
     if item_global_id.nil?
+      puts "RAN OUT OF ITEMS"
       # Ran out of unplaced items, so place a duplicate instead.
       @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
         ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
       end
+      @unplaced_non_progression_pickups -= checker.current_items
       return get_unplaced_non_progression_item()
     end
     
@@ -392,10 +399,12 @@ class Randomizer
     skill_global_id = unplaced_non_progression_skills.sample(random: rng)
     
     if skill_global_id.nil?
+      puts "RAN OUT OF SKILLS"
       # Ran out of unplaced skills, so place a duplicate instead.
       @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
         SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       end
+      @unplaced_non_progression_pickups -= checker.current_items
       return get_unplaced_non_progression_skill()
     end
     
