@@ -839,6 +839,21 @@ class Randomizer
       enemy.subtype = random_enemy_id
       enemy.write_to_rom()
       @enemy_pool_for_room << random_enemy_id
+      
+      begin
+        # Count skeletally animated enemies as 2 for the purposes of the enemy pool, so that less enemies total can get in the room.
+        enemy_overlay = OVERLAY_FILE_FOR_ENEMY_AI[random_enemy_id]
+        if enemy_overlay
+          @enemy_pool_for_room << random_enemy_id
+        else
+          sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
+          if sprite_info.skeleton_file
+            @enemy_pool_for_room << random_enemy_id
+          end
+        end
+      rescue StandardError => e
+        puts "Error getting sprite info for enemy id %02X" % random_enemy_id
+      end
     end
   end
   
