@@ -562,11 +562,11 @@ Rooms:
     05 (Magnes) (Event): 
   12-00-07:
     room: monasterymid
-    00 (Fool Ring): medium height
+    00 (Fool Ring): medium height | distance
     01 (HP Max up): 
   12-00-08:
     room: monasterymid
-    00 (Cubus) (Event): globus # TODO there are other ways besides globus, like ignis glyph union
+    00 (Cubus) (Event): globus # TODO there are other ways besides globus, like ignis glyph union, melio ascia
   12-00-09:
     room: monasterymid
     00 (Culter): 
