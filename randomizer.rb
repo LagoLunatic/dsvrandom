@@ -203,14 +203,20 @@ class Randomizer
           "%.2f %s" % [weight, checker.defs.invert[global_id]]
         end
         #puts "Weighted less useful pickups: [" + weighted_useful_pickups_names.join(", ") + "]"
-      elsif pickups_by_locations.any?
-        # No item will open up any new areas. This means the player can access all locations.
+      elsif pickups_by_locations.any? && checker.game_beatable?
+        # The player can access all locations.
         # So we just randomly place one progression pickup.
         
         if !on_leftovers
           spoiler_log.puts "Placing leftover progression pickups:"
           on_leftovers = true
         end
+        
+        pickup_global_id = pickups_by_locations.keys.sample(random: rng)
+      elsif pickups_by_locations.any?
+        # No locations can access new areas, but the game isn't beatable yet.
+        # This means any new areas will need at least two new items to access.
+        # So just place random pickup for now.
         
         pickup_global_id = pickups_by_locations.keys.sample(random: rng)
       else
