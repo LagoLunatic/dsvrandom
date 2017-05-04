@@ -145,7 +145,15 @@ class Randomizer
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
       
-      checker.add_item(0x01) # confodere
+      # Glyph given by Barlowe. We randomize this, but only to a starter physical weapon glyph, not to any glyph.
+      possible_starter_weapons = [0x01, 0x04, 0x07, 0x0A, 0x0D, 0x10, 0x13, 0x16]
+      pickup_global_id = possible_starter_weapons.sample(random: rng)
+      checker.add_item(pickup_global_id)
+      game.fs.load_overlay(42)
+      puts "%02X" % pickup_global_id
+      game.fs.write(0x022C3980, [0xE3A01000].pack("V"))
+      game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
+      
       checker.add_item(0x1E) # torpor. the player will get enough of these as it is
       
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
