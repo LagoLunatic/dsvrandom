@@ -882,13 +882,13 @@ class Randomizer
         enemy_dna = game.enemy_dnas[enemy.subtype]
         enemy_dna["Attack"]
       end.max
-      max_allowed_enemy_attack = max_enemy_attack*1.5
+      max_allowed_enemy_attack = max_enemy_attack*1.3
       
       enemies_in_room.shuffle(random: rng).each do |enemy|
         @allowed_enemies_for_room.select! do |enemy_id|
           enemy_dna = game.enemy_dnas[enemy_id]
-          if enemy_dna["Attack"] <= 32
-            # Always allow weak enemies (attack 32 or less) in the room.
+          if enemy_dna["Attack"] <= 28
+            # Always allow weak enemies (attack 28 or less) in the room.
             true
           elsif enemy_dna["Attack"] <= remaining_new_room_difficulty && enemy_dna["Attack"] <= max_allowed_enemy_attack
             true
