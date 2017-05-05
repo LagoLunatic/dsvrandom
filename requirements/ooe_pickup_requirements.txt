@@ -454,9 +454,9 @@ Rooms:
     room: tymeoeast
     00 (HP Max up): 
     03 (Ruby) (Hidden): 
-  0A-01-08:
+  0A-01-09:
     room: tymeoeast
-    00 (Pneuma) (Event): 
+    00 (Pneuma) (Event): magnes
 #Tristis Pass:
   0B-00-0D:
     room: tristisafterwaterfall
