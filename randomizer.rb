@@ -152,10 +152,22 @@ class Randomizer
     when "ooe"
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
+      checker.add_item(0x1E) # torpor. the player will get enough of these as it is
+      
+      # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
+      # Flags 12F-149 are unused in the base game but still work, so use those.
+      @unused_picked_up_flags = (0x12F..0x149).to_a
       
       # Give the player the glyph sleeve in Ecclesia like in hard mode.
       # To do this just get rid of the entity hider that hides it on normal mode.
       entity_hider = game.areas[2].sectors[0].rooms[4].entities[6]
+      entity_hider.type = 0
+      entity_hider.write_to_rom()
+      # But we also need to give the chest a unique flag, because it shares the flag with the one from Minera in normal mode.
+      sleeve_chest = game.areas[2].sectors[0].rooms[4].entities[7]
+      sleeve_chest.var_b = @unused_picked_up_flags.pop()
+      # We also make sure the chest in Minera appears even on hard mode.
+      entity_hider = game.areas[8].sectors[2].rooms[7].entities[1]
       entity_hider.type = 0
       entity_hider.write_to_rom()
       checker.add_item(0x73) # glyph sleeve
@@ -167,12 +179,6 @@ class Randomizer
       game.fs.write(0x022C3980, [0xE3A01000].pack("V"))
       game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
       checker.add_item(pickup_global_id)
-      
-      checker.add_item(0x1E) # torpor. the player will get enough of these as it is
-      
-      # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
-      # Flags 12F-149 are unused in the base game but still work, so use those.
-      @unused_picked_up_flags = (0x12F..0x149).to_a
     end
     
     place_progression_pickups()
