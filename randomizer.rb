@@ -34,6 +34,12 @@ class Randomizer
     @seed = seed
     int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(int_seed)
+    
+    # TODO: Make the below variables customizable in an advanced settings tab.
+    @enemy_difficulty_preservation_weight_exponent = 3
+    @weak_enemy_attack_threshold = 28
+    @max_enemy_attack_room_multiplier = 1.3
+    @max_spawners_per_room = 2
   end
   
   def rand_range_weighted_low(range)
@@ -888,13 +894,13 @@ class Randomizer
         enemy_dna = game.enemy_dnas[enemy.subtype]
         enemy_dna["Attack"]
       end.max
-      max_allowed_enemy_attack = max_enemy_attack*1.3
+      max_allowed_enemy_attack = max_enemy_attack*@max_enemy_attack_room_multiplier
       
       enemies_in_room.shuffle(random: rng).each do |enemy|
         @allowed_enemies_for_room.select! do |enemy_id|
           enemy_dna = game.enemy_dnas[enemy_id]
-          if enemy_dna["Attack"] <= 28
-            # Always allow weak enemies (attack 28 or less) in the room.
+          if enemy_dna["Attack"] <= @weak_enemy_attack_threshold
+            # Always allow weak enemies in the room.
             true
           elsif enemy_dna["Attack"] <= remaining_new_room_difficulty && enemy_dna["Attack"] <= max_allowed_enemy_attack
             true
@@ -911,14 +917,15 @@ class Randomizer
         end
         #p [MAX_ASSETS_PER_ROOM, @assets_needed_for_room.size, asset_slots_left, @allowed_enemies_for_room.size]
         
+        if @num_spawners >= @max_spawners_per_room
+          @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+          @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
+        end
+        
         randomize_enemy(enemy)
         
         if SPAWNER_ENEMY_IDS.include?(enemy.subtype)
           @num_spawners += 1
-          if @num_spawners >= 2
-            @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
-            @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
-          end
         end
         
         remaining_new_room_difficulty -= enemy.subtype
@@ -957,7 +964,7 @@ class Randomizer
       weights = @allowed_enemies_for_room.map do |possible_enemy_id|
         id_difference = (possible_enemy_id - enemy.subtype).abs
         weight = max_enemy_id - id_difference
-        weight**3
+        weight**@enemy_difficulty_preservation_weight_exponent
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
       weighted_enemy_ids = @allowed_enemies_for_room.zip(ps).to_h
