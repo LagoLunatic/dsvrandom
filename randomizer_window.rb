@@ -141,7 +141,7 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def randomize
-    seed = @settings[:seed].strip.gsub(/\s/, "")
+    seed = @settings[:seed].to_s.strip.gsub(/\s/, "")
     
     if seed.empty?
       # Generate a new seed
