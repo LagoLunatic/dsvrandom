@@ -314,7 +314,8 @@ class Randomizer
       end
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
-      spoiler_str = "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str} (#{area_name})"
+      is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
+      spoiler_str = "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str} (#{area_name})"
       spoiler_log.puts spoiler_str
       #puts spoiler_str
       
@@ -401,6 +402,11 @@ class Randomizer
     if GAME == "ooe" && ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you items in OoE.
       locations -= checker.event_locations
+    end
+    if GAME == "ooe" && (0x6F..0x74).include?(pickup_global_id)
+      # Don't let relics be inside breakable walls in OoE.
+      # This is because they need to be inside a chest, and chests can't be hidden.
+      locations -= checker.hidden_locations
     end
     
     locations
