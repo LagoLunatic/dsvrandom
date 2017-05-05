@@ -83,7 +83,7 @@ Defs:
   bossbarlowe: ecclesia & bossalbus & villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
   
   trainchamber: backexit | nonlinear
-  trainchamberend: magnes
+  trainchamberend: trainchamber & magnes & double jump
   
   largecavern: backexit | nonlinear
   
