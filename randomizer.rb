@@ -56,10 +56,6 @@ class Randomizer
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
     spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}"
     
-    if options[:randomize_enemies]
-      randomize_enemies()
-    end
-    
     if options[:randomize_pickups]
       randomize_pickups_completably()
     end
@@ -81,6 +77,10 @@ class Randomizer
       
       game.fs.load_overlay(23)
       game.fs.write(0x02300808, [0xE1A00000].pack("V"))
+    end
+    
+    if options[:randomize_enemies]
+      randomize_enemies()
     end
     
     if options[:randomize_bosses]
