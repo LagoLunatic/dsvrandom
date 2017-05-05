@@ -10,6 +10,8 @@ class Randomizer
               :game,
               :checker
   
+  MAX_ASSETS_PER_ROOM = 13
+  
   def initialize(seed, game, options={})
     @game = game
     @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map])
@@ -799,30 +801,46 @@ class Randomizer
     end
     overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
     
-    @skeletally_animated_enemy_ids = COMMON_ENEMY_IDS.select do |enemy_id|
-      overlay_id = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
-      if overlay_id
-        true
-      else
-        begin
-          enemy_dna = game.enemy_dnas[enemy_id]
-          sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
-          if sprite_info.skeleton_file
-            true
-          else
-            false
-          end
-        rescue StandardError => e
-          puts "Error getting sprite info for enemy id %02X" % enemy_id
-          true # Probably a 3D enemy, so count it anyway
+    @assets_for_each_enemy = {}
+    @skeletally_animated_enemy_ids = []
+    ENEMY_IDS.each do |enemy_id|
+      begin
+        enemy_dna = game.enemy_dnas[enemy_id]
+        sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
+        @assets_for_each_enemy[enemy_id] = sprite_info.gfx_file_pointers
+        if sprite_info.skeleton_file
+          @assets_for_each_enemy[enemy_id] << sprite_info.skeleton_file
+          @skeletally_animated_enemy_ids << enemy_id
+        elsif OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+          @skeletally_animated_enemy_ids << enemy_id
         end
+      rescue StandardError => e
+        puts "Error getting sprite info for enemy id %02X" % enemy_id
+        @assets_for_each_enemy[enemy_id] = []
+        @skeletally_animated_enemy_ids << enemy_id # Probably a 3D enemy, so count it anyway
       end
     end
+    #@assets_for_each_special_object = {}
+    #SPECIAL_OBJECT_IDS.each do |special_object_id|
+    #  begin
+    #    special_object = game.special_objects[special_object_id]
+    #    sprite_info = special_object.extract_gfx_and_palette_and_sprite_from_create_code
+    #    if sprite_info.gfx_file_pointers == COMMON_SPRITE[:gfx_files]
+    #      # Don't count the common sprite.
+    #      @assets_for_each_special_object[special_object_id] = []
+    #    else
+    #      @assets_for_each_special_object[special_object_id] = sprite_info.gfx_file_pointers
+    #    end
+    #  rescue StandardError => e
+    #    puts "Error getting sprite info for object id %02X" % special_object_id
+    #    @assets_for_each_special_object[special_object_id] = []
+    #  end
+    #end
     
     game.each_room do |room|
       @enemy_pool_for_room = []
-      @enemy_gfx_load_in_room = 0
       @total_skeletally_animated_enemies_in_room = 0
+      @assets_needed_for_room = []
       
       enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
       @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
@@ -834,8 +852,16 @@ class Randomizer
       
       next if enemies_in_room.empty?
       
-      if enemies_in_room.length >= 8
-        # Don't let skeletally animated enemies in rooms that have tons of enemies.
+      #objects_in_room = room.entities.select{|e| e.is_special_object?}
+      #objects_in_room.each do |object|
+      #  assets = @assets_for_each_special_object[object.subtype]
+      #  puts "OBJ: %02X, ASSETS: #{assets}" % object.subtype
+      #  @assets_needed_for_room += assets
+      #  @assets_needed_for_room.uniq!
+      #end
+      
+      if enemies_in_room.length >= 6
+        # Don't let skeletally animated enemies in rooms that have lots of enemies.
         
         @allowed_enemies_for_room -= @skeletally_animated_enemy_ids
       end
@@ -870,9 +896,21 @@ class Randomizer
           end
         end
         
+        # Remove enemies that would go over the asset cap.
+        asset_slots_left = MAX_ASSETS_PER_ROOM - @assets_needed_for_room.size
+        @allowed_enemies_for_room.select! do |enemy_id|
+          needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size
+          needed_assets_for_enemy <= asset_slots_left
+        end
+        #p [MAX_ASSETS_PER_ROOM, @assets_needed_for_room.size, asset_slots_left, @allowed_enemies_for_room.size]
+        
         randomize_enemy(enemy)
         
         remaining_new_room_difficulty -= enemy.subtype
+        
+        assets = @assets_for_each_enemy[enemy.subtype]
+        @assets_needed_for_room += assets
+        @assets_needed_for_room.uniq!
         
         if @total_skeletally_animated_enemies_in_room >= 2
           # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
@@ -881,6 +919,8 @@ class Randomizer
           @enemy_pool_for_room -= @skeletally_animated_enemy_ids
         end
       end
+      
+      #puts "ASSETS: #{@assets_needed_for_room.size}, ROOM: %02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index] if @assets_needed_for_room.size > 10
     end
   end
   
@@ -890,8 +930,9 @@ class Randomizer
       return
     end
     
-    if @enemy_gfx_load_in_room >= 6 && @enemy_pool_for_room.any?
-      # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
+    if @assets_needed_for_room.size >= MAX_ASSETS_PER_ROOM && @enemy_pool_for_room.any?
+      # There's a limit to how many different GFX files can be loaded at once before things start getting very buggy.
+      # Once there's too many, just select from enemies already in the room.
       
       random_enemy_id = @enemy_pool_for_room.sample(random: rng)
     else
@@ -925,11 +966,10 @@ class Randomizer
       enemy.subtype = random_enemy_id
       enemy.write_to_rom()
       @enemy_pool_for_room << random_enemy_id
-      @enemy_gfx_load_in_room += 1
+      @enemy_pool_for_room.uniq!
       
       if @skeletally_animated_enemy_ids.include?(random_enemy_id)
         # Count skeletally animated enemies as 2 for the purposes of the enemy pool, so that less unique enemies total can get in the room.
-        @enemy_gfx_load_in_room += 2
         @total_skeletally_animated_enemies_in_room += 1
       end
     end
