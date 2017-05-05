@@ -526,7 +526,7 @@ Rooms:
   0F-00-05:
     room: mistyroad
     00 (Vol Macir): 
-    02 (Sage): distance | big height
+    02 (Sage): distance | big height | magnes
 #Oblivion Ridge:
   10-00-00:
     room: oblivionridge
