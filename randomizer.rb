@@ -39,7 +39,7 @@ class Randomizer
     @enemy_difficulty_preservation_weight_exponent = 3
     @weak_enemy_attack_threshold = 28
     @max_enemy_attack_room_multiplier = 1.3
-    @max_spawners_per_room = 2
+    @max_spawners_per_room = 1
   end
   
   def rand_range_weighted_low(range)
