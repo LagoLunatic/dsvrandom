@@ -566,7 +566,7 @@ Rooms:
     01 (HP Max up): 
   12-00-08:
     room: monasterymid
-    00 (Cubus) (Event): globus | redire glyph # TODO there are other ways like ignis union, melio ascia, falcis union, lapiste union
+    00 (Cubus) (Event): false # don't place progression pickups here
   12-00-09:
     room: monasterymid
     00 (Culter): 
