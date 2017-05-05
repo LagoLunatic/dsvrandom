@@ -567,7 +567,7 @@ class Randomizer
         end
       end
       
-      if entity.is_glyph?
+      if entity.is_glyph? && !entity.is_hidden_pickup?
         entity.y_pos += 0x20
       end
       
@@ -650,7 +650,7 @@ class Randomizer
         end
       end
       
-      if entity.is_glyph?
+      if entity.is_glyph? && !entity.is_hidden_pickup?
         entity.y_pos -= 0x20
       end
       
