@@ -839,6 +839,7 @@ class Randomizer
     
     game.each_room do |room|
       @enemy_pool_for_room = []
+      @num_spawners = 0
       @total_skeletally_animated_enemies_in_room = 0
       @assets_needed_for_room = []
       
@@ -905,6 +906,14 @@ class Randomizer
         #p [MAX_ASSETS_PER_ROOM, @assets_needed_for_room.size, asset_slots_left, @allowed_enemies_for_room.size]
         
         randomize_enemy(enemy)
+        
+        if SPAWNER_ENEMY_IDS.include?(enemy.subtype)
+          @num_spawners += 1
+          if @num_spawners >= 2
+            @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+            @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
+          end
+        end
         
         remaining_new_room_difficulty -= enemy.subtype
         
@@ -982,7 +991,7 @@ class Randomizer
       if rng.rand <= 0.5
         enemy.var_a = 0
       else
-        enemy.var_a = rng.rand(2..16)
+        enemy.var_a = rng.rand(2..9)
       end
     when "Bat"
       # 50% chance to be a single bat, 50% chance to be a spawner.
@@ -1009,7 +1018,7 @@ class Randomizer
     when "Fleaman"
       enemy.var_a = rng.rand(1..5)
     when "Bone Pillar", "Fish Head"
-      enemy.var_a = rng.rand(1..10)
+      enemy.var_a = rng.rand(1..8)
     when "Malachi"
       enemy.var_a = 0
     when "Medusa Head"
@@ -1024,12 +1033,15 @@ class Randomizer
       chance_b = rng.rand(0x10..0xF0)
       enemy.var_a = (chance_a << 8) | enemy_id_a
       enemy.var_b = (chance_b << 8) | enemy_id_b
+    else
+      enemy.var_a = 0
+      enemy.var_b = 0
     end
   end
   
   def por_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
-    when "Bat", "Fleaman"
+    when "Zombie", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Hanged Bones", "Skeleton Tree"
       enemy.var_b = 0
@@ -1043,7 +1055,7 @@ class Randomizer
       if rng.rand <= 0.7
         enemy.var_a = 0
       else
-        enemy.var_a = rng.rand(0xA0..0x1A0)
+        enemy.var_a = rng.rand(0xA0..0x1A0) # delay in frames between spawns
       end
     when "Sand Worm", "Poison Worm"
       if enemy.room.main_layer_height > 1
@@ -1060,11 +1072,26 @@ class Randomizer
       end
       
       enemy.var_a = 1
+    when "Mud Man", "Mummy"
+      # 10% chance to be a single one, 90% chance to be a spawner.
+      if rng.rand <= 0.10
+        enemy.var_a = 0
+      else
+        enemy.var_a = rng.rand(2..6) # Max at once
+        
+        room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
+        enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn them
+      end
+    else
+      enemy.var_a = 0
+      enemy.var_b = 0
     end
   end
   
   def ooe_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
+    when "Bat", "Medusa Head"
+      dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Zombie", "Ghoul"
       if rng.rand <= 0.30 # 30% chance to be a single Zombie
         enemy.var_a = 0
@@ -1079,8 +1106,6 @@ class Randomizer
       enemy.var_a = rng.rand(0..1) # Can jump away.
     when "Bone Archer"
       enemy.var_a = rng.rand(0..8) # Arrow speed.
-    when "Bat"
-      dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Axe Knight"
       # 80% chance to be normal, 20% chance to start out in pieces.
       if rng.rand() <= 0.80
@@ -1089,10 +1114,9 @@ class Randomizer
         enemy.var_b = 1
       end
     when "Flea Man"
-      # TODO var A?
       enemy.var_b = 0
     when "Ghost"
-      enemy.var_a = rng.rand(1..5) # Max ghosts on screen at once.
+      enemy.var_a = rng.rand(1..4) # Max ghosts on screen at once.
     when "Skull Spider"
       # Move out of the floor
       enemy.y_pos -= 0x08
@@ -1102,7 +1126,7 @@ class Randomizer
         enemy.var_b = 0
       else # 60% chance to be a spawner
         enemy.var_a = rng.rand(1..6) # Max at once
-        enemy.var_b = rng.rand(60..360) # Frames in between spawning them
+        enemy.var_b = rng.rand(180..480) # Frames in between spawning them
       end
     when "Merman"
       # Move out of the floor
@@ -1110,6 +1134,21 @@ class Randomizer
     when "Saint Elmo"
       enemy.var_a = rng.rand(1..3)
       enemy.var_b = 0x78
+    when "Winged Guard"
+      enemy.var_a = rng.rand(1..5) # Max at once
+    when "Altair"
+      if rng.rand <= 0.40 # 40% chance to carry fleamen
+        enemy.var_a = 0
+      else # 60% chance to attack by swooping down
+        enemy.var_a = 1
+      end
+      enemy.var_b = rng.rand(240..720) # Spawn rate is somewhere from every 2 seconds to one every 6 seconds.
+    when "Gorgon Head"
+      enemy.var_a = rng.rand(300..700) # Minimum delay between spawns
+      enemy.var_b = rng.rand(120..700) # Random range to add to delay between spawns
+    else
+      enemy.var_a = 0
+      enemy.var_b = 0
     end
   end
   
