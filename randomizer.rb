@@ -537,7 +537,7 @@ class Randomizer
         when 0.20..1.00 # 80% chance to be a money bag
           entity.type = 4
           entity.subtype = 1
-          entity.var_b = rng.rand(3..6)
+          entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         end
         
         entity.write_to_rom()
@@ -595,7 +595,7 @@ class Randomizer
         entity.type = 4
         entity.subtype = 1
         entity.var_a = picked_up_flag
-        entity.var_b = rng.rand(3..6)
+        entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         
         entity.write_to_rom()
         return
