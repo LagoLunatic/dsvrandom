@@ -1117,7 +1117,7 @@ class Randomizer
         enemy.var_a = 0
         enemy.var_b = 0
       else # 70% chance to be a spawner
-        enemy.var_a = rng.rand(3..8) # Max at once
+        enemy.var_a = rng.rand(3..6) # Max at once
         
         room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
         enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn the Zombies
