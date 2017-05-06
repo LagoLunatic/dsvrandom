@@ -1041,8 +1041,11 @@ class Randomizer
         if room_height - 0x40 < enemy.y_pos
           enemy.y_pos = room_height - 0x40
         end
-        # Also move it a little to the left or right a little, so it doesn't fall on the player's head.
-        enemy.x_pos = enemy.x_pos/0x100*0x100 + [0x50, 0xB0].sample(random: rng)
+        if (0x51..0xAF).include?(enemy.x_pos % 0x100)
+          # Over the center of a door.
+          # Also move it a little to the left or right a little, so it doesn't fall on the player's head.
+          enemy.x_pos = enemy.x_pos/0x100*0x100 + [0x50, 0xB0].sample(random: rng)
+        end
       end
     end
   end
