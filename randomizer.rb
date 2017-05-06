@@ -213,7 +213,7 @@ class Randomizer
         weights = pickups_by_usefulness.map do |pickup, usefulness|
           # Weight less useful pickups as being more likely to be chosen.
           weight = max_usefulness - usefulness + 1
-          weight
+          Math.sqrt(weight)
         end
         ps = weights.map{|w| w.to_f / weights.reduce(:+)}
         useful_pickups = pickups_by_usefulness.keys
