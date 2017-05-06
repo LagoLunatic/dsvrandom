@@ -1063,6 +1063,7 @@ class Randomizer
     when "Zombie", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Hanged Bones", "Skeleton Tree"
+      enemy.var_a = rng.rand(0..0x40) # Length
       enemy.var_b = 0
       enemy.y_pos = 0x20
     when "Spittle Bone", "Vice Beetle"
