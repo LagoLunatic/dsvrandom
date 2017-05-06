@@ -1100,6 +1100,39 @@ class Randomizer
         room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
         enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn them
       end
+    when "Skeleton Gunman"
+      room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
+      max_left_dist = enemy.x_pos - 0x10
+      max_right_dist = room_width - enemy.x_pos - 0x10
+      
+      room_has_left_doors = !!enemy.room.doors.find{|door| door.direction == :left}
+      room_has_right_doors = !!enemy.room.doors.find{|door| door.direction == :right}
+      if room_has_left_doors && !room_has_right_doors
+        dir = 0
+      elsif room_has_right_doors && !room_has_left_doors
+        dir = 1
+      else
+        dir = rng.rand(-1..1)
+      end
+      
+      case dir
+      when 0 # Faces left
+        enemy.var_a = 0
+        max_dist = max_right_dist
+      when 1 # Faces right
+        enemy.var_a = 0x0100
+        max_dist = max_left_dist
+      else # Faces the player when they enter the room
+        enemy.var_a = 0xFFFF
+        max_dist = [max_left_dist, max_right_dist].min
+      end
+      
+      if max_dist <= 0x20
+        dist = 0x20
+      else
+        dist = rng.rand(0x20..max_dist)
+      end
+      enemy.var_b = dist
     else
       enemy.var_a = 0
       enemy.var_b = 0
