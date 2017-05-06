@@ -10,7 +10,7 @@ class Randomizer
               :game,
               :checker
   
-  MAX_ASSETS_PER_ROOM = 13
+  MAX_ASSETS_PER_ROOM = 12
   
   def initialize(seed, game, options={})
     @game = game
