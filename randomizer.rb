@@ -921,7 +921,6 @@ class Randomizer
           needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size
           needed_assets_for_enemy <= asset_slots_left
         end
-        #p [MAX_ASSETS_PER_ROOM, @assets_needed_for_room.size, asset_slots_left, @allowed_enemies_for_room.size]
         
         if @num_spawners >= @max_spawners_per_room
           @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
@@ -997,7 +996,6 @@ class Randomizer
       @enemy_pool_for_room.uniq!
       
       if @skeletally_animated_enemy_ids.include?(random_enemy_id)
-        # Count skeletally animated enemies as 2 for the purposes of the enemy pool, so that less unique enemies total can get in the room.
         @total_skeletally_animated_enemies_in_room += 1
       end
     end
