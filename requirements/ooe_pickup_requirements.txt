@@ -178,8 +178,6 @@ Rooms:
   00-04-08:
     room: libraryeast
     00 (Cerberus) (Event): 
-    01 (Cerberus) (Event): 
-    02 (Cerberus) (Event): 
 #Barracks:
   00-05-00:
     room: barracks
@@ -224,8 +222,6 @@ Rooms:
   00-06-15:
     room: mechtowerupper
     01 (Cerberus) (Event): 
-    02 (Cerberus) (Event): 
-    03 (Cerberus) (Event): 
   00-06-1B:
     room: mechtowerupper
     00 (Death Ring): 
@@ -254,8 +250,6 @@ Rooms:
   00-08-0F:
     room: armsdepot
     00 (Cerberus) (Event): 
-    01 (Cerberus) (Event): 
-    02 (Cerberus) (Event): 
 #Forsaken Cloister:
   00-09-01:
     room: forsakencloisterupper

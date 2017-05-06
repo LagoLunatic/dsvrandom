@@ -779,10 +779,13 @@ class Randomizer
       event_entity.x_pos = 0x80
       event_entity.y_pos = 0x60
       event_entity.write_to_rom()
-    elsif event_entity.subtype == 0x82 || event_entity.subtype == 0x83 # Cerberus
-      # Delete it, we don't need 3 glyphs
-      event_entity.type = 0
-      event_entity.write_to_rom()
+      
+      other_cerberus_events = event_entity.room.entities.select{|e| e.is_special_object? && [0x82, 0x83].include?(e.subtype)}
+      other_cerberus_events.each do |event|
+        # Delete these others, we don't want the events.
+        event.type = 0
+        event.write_to_rom()
+      end
     end
     
     hardcoded_glyph_location = case event_entity.subtype
