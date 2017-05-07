@@ -249,6 +249,7 @@ module EnemyRandomizer
       # 50% chance to be a single bat, 50% chance to be a spawner.
       if rng.rand <= 0.5
         enemy.var_a = 0
+        enemy.var_b = 0 # Teleport to the closest ceiling.
       else
         enemy.var_a = 0x100
       end
@@ -368,6 +369,8 @@ module EnemyRandomizer
         dist = rng.rand(0x20..max_dist)
       end
       enemy.var_b = dist
+    when "Blue Crow", "Black Crow"
+      enemy.var_a = 1 # Teleport to the closest floor.
     else
       enemy.var_a = 0
       enemy.var_b = 0
@@ -432,6 +435,8 @@ module EnemyRandomizer
     when "Gorgon Head"
       enemy.var_a = rng.rand(300..700) # Minimum delay between spawns
       enemy.var_b = rng.rand(120..700) # Random range to add to delay between spawns
+    when "Black Crow"
+      por_adjust_randomized_enemy(enemy, enemy_dna)
     else
       enemy.var_a = 0
       enemy.var_b = 0
