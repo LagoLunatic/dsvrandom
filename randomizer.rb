@@ -20,32 +20,24 @@ class Randomizer
   include ExtraRandomizers
   
   attr_reader :options,
+              :seed,
               :rng,
               :seed_log,
               :spoiler_log,
               :game,
               :checker
   
-  def initialize(seed, game, options={})
+  def initialize(seed, game, options)
+    @seed = seed
     @game = game
-    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map])
-    
     @options = options
-    
-    @next_available_item_id = 1
-    @used_skills = []
-    @used_items = []
     
     if seed.nil? || seed.empty?
       raise "No seed given"
     end
     
-    FileUtils.mkdir_p("./logs")
-    @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
-    seed_log.puts "Using seed: #{seed}, Game: #{LONG_GAME_NAME}"
-    seed_log.close()
+    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map])
     
-    @seed = seed
     int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(int_seed)
     
@@ -67,6 +59,11 @@ class Randomizer
   end
   
   def randomize
+    FileUtils.mkdir_p("./logs")
+    @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
+    seed_log.puts "Using seed: #{seed}, Game: #{LONG_GAME_NAME}"
+    seed_log.close()
+    
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
     spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}"
     
