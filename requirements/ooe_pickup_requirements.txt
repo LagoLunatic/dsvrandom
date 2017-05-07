@@ -534,7 +534,7 @@ Rooms:
 #Skeleton Cave:
   11-00-03:
     room: skelecave
-    00 (HP Max up): medium height
+    00 (HP Max up): medium height | distance
   11-00-05:
     room: skelecave
     01 (Black Drops) (Hidden): 
