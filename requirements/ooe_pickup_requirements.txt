@@ -15,7 +15,6 @@ Defs:
   dominus hatred: 0x31
   dominus anger: 0x32
   dominus agony: 0x4E
-  globus: 0x2E
   
   medium height: double jump | big height
   big height: volaticus | redire
