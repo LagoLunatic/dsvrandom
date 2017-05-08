@@ -199,7 +199,7 @@ Rooms:
     00 (UMA News 2-2): 
   00-01-26:
     room: puppetguesthouse
-    00 (High Potion): medium height # can't get out of the pit without medum height
+    00 (High Potion): 
   00-01-2F:
     room: garden & height
     00 (High Mind Up): 

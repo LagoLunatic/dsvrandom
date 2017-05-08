@@ -134,6 +134,19 @@ class Randomizer
     if options[:randomize_weapon_synths]
       randomize_weapon_synths()
     end
+    
+    if GAME == "dos"
+      # Modify that one pit in the Demon Guest House so the player can't get stuck in it without double jump.
+      
+      layer = game.areas[0].sectors[1].rooms[0x26].layers.first
+      layer.tiles[0x17].index_on_tileset = 0x33
+      layer.tiles[0x18].index_on_tileset = 0x33
+      layer.tiles[0x18].horizontal_flip = true
+      layer.tiles[0x27].index_on_tileset = 0x43
+      layer.tiles[0x28].index_on_tileset = 0x43
+      layer.tiles[0x28].horizontal_flip = true
+      layer.write_to_rom()
+    end
   rescue StandardError => e
     spoiler_log.puts "ERROR!"
     raise e
