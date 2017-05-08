@@ -437,6 +437,11 @@ module EnemyRandomizer
       enemy.var_b = rng.rand(120..700) # Random range to add to delay between spawns
     when "Black Crow"
       por_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Nightmare"
+      if enemy.room.main_layer_width <= 1
+        # Don't let Nightmare appear in 1-screen wide rooms as he will just fade in and out constantly if he doesn't have a wide area.
+        return :redo
+      end
     else
       enemy.var_a = 0
       enemy.var_b = 0
