@@ -18,7 +18,6 @@ Glitch defs:
   vwarpseal: axesuper & seal
   vwarpsucc: axesuper & succubus
   vwarp: vwarpseal | vwarpsucc
-  backdashjump: true
 Defs:
   malphas: 0x143
   hippogryph: 0x146
@@ -52,6 +51,7 @@ Defs:
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
+  backdashjump: true
   
   bossarmor: seal 1 | hwarp
   afterarmor: height | distance | backdashjump
