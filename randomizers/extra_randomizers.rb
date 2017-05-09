@@ -59,9 +59,12 @@ module ExtraRandomizers
         
         case GAME
         when "dos"
-          item["Swing Anim"] = rng.rand(0..0xC)
+          unless item["Swing Anim"] == 0xA
+            # Only randomize swing anim if it wasn't originally a throwing weapon.
+            # Throwing weapon sprite anims are super short (like 1 frame) so they won't work if they're not still a throwing weapon.
+            item["Swing Anim"] = rng.rand(0..0xC)
+          end
           item["Super Anim"] = rng.rand(0..0xE)
-          item["Sprite Anim"] = rng.rand(0..3)
         when "por"
           item["Swing Anim"] = rng.rand(0..9)
           item["Crit type/Palette"] = rng.rand(0..0x13)
@@ -73,10 +76,26 @@ module ExtraRandomizers
           "Effects",
           "Swing Modifiers",
         ].each do |bitfield_attr_name|
+          player_can_move = nil
+          
           item[bitfield_attr_name].names.each_with_index do |bit_name, i|
             next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
             
             item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+            
+            if bit_name == "Player can move"
+              player_can_move = item[bitfield_attr_name][i]
+            end
+            
+            if bit_name == "No interrupt on ???" && player_can_move
+              # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
+              item[bitfield_attr_name][i] = true
+            end
+            
+            if item["Super Anim"] == 0xA && bit_name == "Player can move"
+              # This bit must be set for throwing weapons or they won't appear.
+              item[bitfield_attr_name][i] = true
+            end
           end
         end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
