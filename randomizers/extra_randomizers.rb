@@ -66,15 +66,23 @@ module ExtraRandomizers
           end
           item["Super Anim"] = rng.rand(0..0xE)
         when "por"
-          item["Swing Anim"] = rng.rand(0..9)
-          item["Crit type/Palette"] = rng.rand(0..0x13)
-          item["Graphical Effect"] = rng.rand(0..7)
-          
           if [0x61, 0x6C].include?(item.name) || item.name == "---"
             # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
           else
-            item["Equippable by"].value = rng.rand(1..3)
+            # 1/8 chance to be a weapon for Charlotte, otherwise for Jonathan.
+            item["Equippable by"].value = [1, 1, 1, 1, 1, 1, 1, 2].sample(random: rng)
           end
+          
+          if item["Equippable by"].value == 1
+            # Jonathan swing anims.
+            item["Swing Anim"] = rng.rand(0..8)
+          else
+            # Charlotte swing anim.
+            item["Swing Anim"] = 9
+          end
+          
+          item["Crit type/Palette"] = rng.rand(0..0x13)
+          item["Graphical Effect"] = rng.rand(0..7)
         end
         
         [
