@@ -112,7 +112,9 @@ module ExtraRandomizers
         item["Mind"]         = rand_range_weighted_very_low(0..12) if GAME == "por" || GAME == "ooe"
         item["Luck"]         = rand_range_weighted_very_low(0..12)
         
-        item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
+        unless item.name == "Casual Clothes"
+          item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
+        end
         
         [
           "Resistances",
