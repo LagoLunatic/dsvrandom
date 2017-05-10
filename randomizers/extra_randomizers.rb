@@ -149,7 +149,7 @@ module ExtraRandomizers
       skill["Delay"] = rand_range_weighted_low(0..14) if GAME == "ooe"
       # TODO glyph union
       
-      if GAME == "por"
+      if GAME == "por" && skill["Type"] == 0
         unless [
           "Stonewall",
           "Wrecking Ball",
