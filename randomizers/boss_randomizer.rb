@@ -16,7 +16,7 @@ module BossRandomizer
       
       possible_boss_ids_for_this_boss = remaining_boss_ids - failed_boss_ids_for_this_boss
       if possible_boss_ids_for_this_boss.empty?
-        # Nothing this could possibly randomize into a work correctly. Skip.
+        # Nothing this could possibly randomize into and work correctly. Skip.
         failed_boss_ids_for_this_boss = []
         next
       end
