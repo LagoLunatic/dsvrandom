@@ -82,11 +82,12 @@ Defs:
   condemntower: chapel & cutallsuper | chapel & small | clocktower & hwarp
   bossgergoth: condemntower & height
   
-  hellintro: chapel & small | chapel & hwarp
-  hell: wizardry & cutallsuper | garden & rahab | hellintro & rahab & bossrahab
+  hellintro: chapel & small | chapel & hwarp | hellcenter & rahab
+  hell: hellcenter | wizardry & cutallsuper | garden & rahab
+  hellcenter: hellintro & rahab & bossrahab | hell & rahab & height | hell & rahab & hwarpsucc
   bossrahab: hellintro & seal 3 | hellintro & hwarp
   
-  ruins: hell & distance & zephyr | hell & height & zephyr | hell & cutallsuper
+  ruins: hell & distance & zephyr | hell & height & zephyr | hellcenter & cutallsuper
   bossbatcompany: ruins & seal 4 | ruins & hwarp
   
   clocktower: condemntower & height & tower key | upperrightgarden & height | pinnacle & big height
@@ -277,7 +278,7 @@ Rooms:
     00 (Small Sword): 
   00-03-1A:
     room: garden
-    00 (Three 7s): 
+    00 (Three 7s): height
   00-03-24:
     room: garden
     08 (Doppelganger): 
@@ -362,7 +363,7 @@ Rooms:
     00 (Money): 
   00-06-0D:
     room: hell
-    00 (UMA News 1-3): 
+    00 (UMA News 1-3): height
   00-06-16:
     room: bossrahab
     03 (Rahab) (Enemy): 
