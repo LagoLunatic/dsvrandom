@@ -66,7 +66,7 @@ module ExtraRandomizers
           end
           item["Super Anim"] = rng.rand(0..0xE)
         when "por"
-          if [0x61, 0x6C].include?(item.name) || item.name == "---"
+          if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
             # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
           else
             # 1/8 chance to be a weapon for Charlotte, otherwise for Jonathan.
