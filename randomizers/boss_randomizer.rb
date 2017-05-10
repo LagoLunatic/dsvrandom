@@ -1,34 +1,27 @@
 
 module BossRandomizer
   def randomize_bosses
-    shuffled_boss_ids = RANDOMIZABLE_BOSS_IDS.shuffle(random: rng)
-    queued_dna_changes = Hash.new{|h, k| h[k] = {}}
-    
-    shuffled_boss_ids.each_with_index do |new_boss_id, i|
-      old_boss_id = RANDOMIZABLE_BOSS_IDS[i]
-      old_boss = game.enemy_dnas[old_boss_id]
-      
-      # Make the new boss have the stats of the old boss so it fits in at this point in the game.
-      queued_dna_changes[new_boss_id]["HP"]               = old_boss["HP"]
-      queued_dna_changes[new_boss_id]["MP"]               = old_boss["MP"]
-      queued_dna_changes[new_boss_id]["SP"]               = old_boss["SP"]
-      queued_dna_changes[new_boss_id]["EXP"]              = old_boss["EXP"]
-      queued_dna_changes[new_boss_id]["Attack"]           = old_boss["Attack"]
-      queued_dna_changes[new_boss_id]["Defense"]          = old_boss["Defense"]
-      queued_dna_changes[new_boss_id]["Physical Defense"] = old_boss["Physical Defense"]
-      queued_dna_changes[new_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
-    end
-    
     boss_entities = []
     game.each_room do |room|
       boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
     end
     
-    boss_entities.each do |boss_entity|
+    remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
+    failed_boss_ids_for_this_boss = []
+    queued_dna_changes = Hash.new{|h, k| h[k] = {}}
+    
+    boss_entities.shuffle(random: rng).each do |boss_entity|
       old_boss_id = boss_entity.subtype
-      boss_index = RANDOMIZABLE_BOSS_IDS.index(old_boss_id)
-      new_boss_id = shuffled_boss_ids[boss_index]
       old_boss = game.enemy_dnas[old_boss_id]
+      
+      possible_boss_ids_for_this_boss = remaining_boss_ids - failed_boss_ids_for_this_boss
+      if possible_boss_ids_for_this_boss.empty?
+        # Nothing this could possibly randomize into a work correctly. Skip.
+        failed_boss_ids_for_this_boss = []
+        next
+      end
+      
+      new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
       new_boss = game.enemy_dnas[new_boss_id]
       
       result = case GAME
@@ -40,10 +33,18 @@ module BossRandomizer
         ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
       end
       if result == :skip
+        failed_boss_ids_for_this_boss = []
         next
+      end
+      if result == :redo
+        failed_boss_ids_for_this_boss << new_boss_id
+        redo
+      else
+        failed_boss_ids_for_this_boss = []
       end
       
       boss_entity.subtype = new_boss_id
+      remaining_boss_ids.delete(new_boss_id)
       
       boss_entity.write_to_rom()
       
@@ -57,6 +58,38 @@ module BossRandomizer
             entity.write_to_rom()
           end
         end
+      end
+      
+      # Make the new boss have the stats of the old boss so it fits in at this point in the game.
+      queued_dna_changes[new_boss_id]["HP"]               = old_boss["HP"]
+      queued_dna_changes[new_boss_id]["MP"]               = old_boss["MP"]
+      queued_dna_changes[new_boss_id]["SP"]               = old_boss["SP"]
+      queued_dna_changes[new_boss_id]["EXP"]              = old_boss["EXP"]
+      queued_dna_changes[new_boss_id]["Attack"]           = old_boss["Attack"]
+      queued_dna_changes[new_boss_id]["Defense"]          = old_boss["Defense"]
+      queued_dna_changes[new_boss_id]["Physical Defense"] = old_boss["Physical Defense"]
+      queued_dna_changes[new_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
+      
+      if new_boss_id == 0x87 # Fake Trevor
+        [0x88, 0x89].each do |other_boss_id| # Fake Grant and Sypha
+          queued_dna_changes[other_boss_id]["HP"]               = old_boss["HP"]
+          queued_dna_changes[other_boss_id]["MP"]               = old_boss["MP"]
+          queued_dna_changes[other_boss_id]["SP"]               = old_boss["SP"]
+          queued_dna_changes[other_boss_id]["EXP"]              = old_boss["EXP"]
+          queued_dna_changes[other_boss_id]["Attack"]           = old_boss["Attack"]
+          queued_dna_changes[other_boss_id]["Defense"]          = old_boss["Defense"]
+          queued_dna_changes[other_boss_id]["Physical Defense"] = old_boss["Physical Defense"]
+          queued_dna_changes[other_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
+        end
+      end
+      
+      if old_boss.name == "Wallman"
+        # Don't copy Wallman's 9999 HP, use a more reasonable value instead.
+        queued_dna_changes[new_boss_id]["HP"] = 4000
+      end
+      if new_boss.name == "Wallman"
+        # Make sure Wallman always has 9999 HP.
+        queued_dna_changes[new_boss_id]["HP"] = 9999
       end
     end
     
@@ -94,11 +127,24 @@ module BossRandomizer
       boss_entity.x_pos = boss_entity.room.main_layer_width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 80
     when "Balore"
-      boss_entity.x_pos = 16
-      boss_entity.y_pos = 176
+      has_left_door = boss_entity.room.doors.find{|d| d.direction == :left}
+      has_right_door = boss_entity.room.doors.find{|d| d.direction == :right}
       
-      if old_boss.name == "Puppet Master"
-        boss_entity.x_pos += 144
+      if has_left_door && has_right_door
+        # Balore has to be set as facing left OR right by the randomizer, he won't automatically face the direction the player entered from.
+        return :redo
+      elsif has_right_door
+        boss_entity.var_a = 1
+        boss_entity.x_pos = 0x10
+        boss_entity.y_pos = 0xB0
+        
+        if old_boss.name == "Puppet Master"
+          boss_entity.x_pos += 0x90
+        end
+      else
+        boss_entity.var_a = 0
+        boss_entity.x_pos = 0xF0
+        boss_entity.y_pos = 0xB0
       end
     when "Malphas"
       boss_entity.var_b = 0
@@ -157,13 +203,11 @@ module BossRandomizer
       end
     end
     
-    if (0x81..0x84).include?(new_boss_id)
-      dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    end
-    
     case new_boss.name
     when "Stella"
       boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
+    when "Balore", "Gergoth", "Zephyr", "Aguni", "Abaddon"
+      dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     end
   end
   
@@ -177,10 +221,6 @@ module BossRandomizer
         # Non-boss version of the giant skeleton.
         return :skip
       end
-    when "Wallman"
-      # Don't copy Wallman's 9999 HP, use a more reasonable value instead.
-      new_boss["HP"] = 4000
-      new_boss.write_to_rom()
     end
     
     if new_boss.name != "Giant Skeleton"
@@ -198,10 +238,6 @@ module BossRandomizer
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
       boss_entity.y_pos = 0xAF
-      
-      # Make sure Wallman always has 9999 HP.
-      new_boss["HP"] = 9999
-      new_boss.write_to_rom()
     end
   end
 end
