@@ -149,16 +149,37 @@ module ExtraRandomizers
       skill["Delay"] = rand_range_weighted_low(0..14) if GAME == "ooe"
       # TODO glyph union
       
-      [
-        "??? bitfield",
-        "Effects",
-        "Unwanted States",
-      ].each do |bitfield_attr_name|
-        next if skill[bitfield_attr_name].nil?
-        
-        skill[bitfield_attr_name].names.each_with_index do |bit_name, i|
-          skill[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+      if GAME == "por"
+        unless [
+          "Stonewall",
+          "Wrecking Ball",
+          "Rampage",
+          "Toad Morph",
+          "Owl Morph",
+          "Speed Up",
+          "Berserker",
+          "STR Boost",
+          "CON Boost",
+          "INT Boost",
+          "MIND Boost",
+          "LUCK Boost",
+          "ALL Boost",
+        ].include?(skill.name)
+          # Randomize whether this skill is usable by Jonathan or Charlotte.
+          # Except for the above listed skills, since the wrong character can't actually use them.
+          skill["??? bitfield"][2] = [true, false].sample(random: rng)
         end
+      end
+      
+      skill["Effects"].names.each_with_index do |bit_name, i|
+        skill["Effects"][i] = [true, false, false, false].sample(random: rng)
+      end
+      
+      skill["Unwanted States"].names.each_with_index do |bit_name, i|
+        # 50% chance to make a state that was originally not allowed be allowed.
+        # But don't make a state that was originally allowed be not allowed.
+        next if skill["Unwanted States"][i] == false
+        skill["Unwanted States"][i] = [true, false].sample(random: rng)
       end
       
       skill.write_to_rom()
