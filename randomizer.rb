@@ -59,13 +59,17 @@ class Randomizer
   end
   
   def randomize
+    options_string = options.select{|k,v| v == true}.keys.join(", ")
+    
     FileUtils.mkdir_p("./logs")
     @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
-    seed_log.puts "Using seed: #{seed}, Game: #{LONG_GAME_NAME}"
+    seed_log.puts "Seed: #{seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
+    seed_log.puts "  Selected options: #{options_string}"
     seed_log.close()
     
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
-    spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}"
+    spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
+    spoiler_log.puts "Selected options: #{options_string}"
     
     if options[:randomize_pickups]
       randomize_pickups_completably()
