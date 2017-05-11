@@ -34,6 +34,11 @@ module ExtraRandomizers
   
   def randomize_item_stats
     game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
+      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes"
+        # Don't randomize unequip items.
+        next
+      end
+      
       if checker.all_progression_pickups.include?(item["Item ID"])
         # Don't randomize the price of progression items so they can't be sold on accident.
       elsif item.name == "CASTLE MAP 1" && GAME == "por"
