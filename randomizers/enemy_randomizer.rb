@@ -145,6 +145,10 @@ module EnemyRandomizer
       # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
       return
     end
+    if GAME == "ooe" && enemy.room.area_index == 0 && enemy.room.sector_index == 0xC
+      # Those two gargoyles outside of the castle. These aren't supposed to be enemies, just decorations, so don't randomize them.
+      return
+    end
     
     if @assets_needed_for_room.size >= MAX_ASSETS_PER_ROOM && @enemy_pool_for_room.any?
       # There's a limit to how many different GFX files can be loaded at once before things start getting very buggy.
@@ -372,6 +376,13 @@ module EnemyRandomizer
       enemy.var_b = dist
     when "Blue Crow", "Black Crow"
       enemy.var_a = 1 # Teleport to the closest floor.
+    when "Bone Pillar", "Fish Head"
+      dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Killer Bee", "Bee Hive"
+      if enemy.room.main_layer_width > 4
+        # Bee AI seems buggy and can teleport them around in very wide rooms.
+        return :redo
+      end
     else
       enemy.var_a = 0
       enemy.var_b = 0
@@ -443,6 +454,8 @@ module EnemyRandomizer
         # Don't let Nightmare appear in 1-screen wide rooms as he will just fade in and out constantly if he doesn't have a wide area.
         return :redo
       end
+    when "Bone Pillar", "Fish Head"
+      dos_adjust_randomized_enemy(enemy, enemy_dna)
     else
       enemy.var_a = 0
       enemy.var_b = 0
