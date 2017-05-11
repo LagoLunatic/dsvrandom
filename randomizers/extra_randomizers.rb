@@ -49,14 +49,44 @@ module ExtraRandomizers
       
       case item.item_type_name
       when "Consumables"
-        item["Type"] = rng.rand(0..4)
-        # TODO OoE
-        
-        case item["Type"]
-        when 0, 1, 3
-          item["Var A"] = rand_range_weighted_very_low(1..4000)
-        when 2
-          item["Var A"] = rng.rand(1..2)
+        case GAME
+        when "dos", "por"
+          possible_types = (0..0x8).to_a
+          possible_types -= [4, 5, 6] # Don't allow unusable items
+          possible_types += [0, 0, 0, 1, 7, 8] # Increase chances of some item types
+          if GAME == "dos"
+            # No HP/MP max ups in DoS
+            possible_types.delete(7)
+            possible_types.delete(8)
+          end
+          
+          item["Type"] = possible_types.sample(random: rng)
+          
+          case item["Type"]
+          when 0, 1, 3 # Restores HP/restores MP/subtracts HP
+            item["Var A"] = rand_range_weighted_very_low(1..4000)
+          when 2 # Cures status effect
+            item["Var A"] = [1, 2].sample(random: rng)
+          end
+        when "ooe"
+          possible_types = (0..0xB).to_a
+          possible_types -= [8] # Don't allow unusable items
+          unless (0x75..0xAC).include?(item["Item ID"])
+            possible_types -= [9] # Don't allow records unless it will actually play a song.
+          end
+          possible_types -= [0xB] # Don't allow attribute point increases because I don't fully understand them yet TODO
+          possible_types += [0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 4, 5] # Increase chances of some item types
+          
+          item["Type"] = possible_types.sample(random: rng)
+          
+          case item["Type"]
+          when 0, 1, 7 # Restores HP/restores MP/subtracts HP
+            item["Var A"] = rand_range_weighted_very_low(1..4000)
+          when 2 # Restores hearts
+            item["Var A"] = rand_range_weighted_low(1..500)
+          when 3 # Cures status effect
+            item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
+          end
         end
       when "Weapons"
         item["Attack"]       = rand_range_weighted_very_low(0..0xA0)
