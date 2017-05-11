@@ -220,7 +220,8 @@ module EnemyRandomizer
         #puts "CLOSE UP %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
         enemy.y_pos = 0x60
       end
-    elsif enemy.y_pos >= room_height - SCREEN_HEIGHT_IN_PIXELS
+    end
+    if enemy.y_pos >= room_height - SCREEN_HEIGHT_IN_PIXELS
       close_to_down_door = enemy.room.doors.find{|door| door.direction == :down && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
       if close_to_down_door
         #puts "CLOSE DOWN %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
