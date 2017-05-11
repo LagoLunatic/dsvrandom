@@ -7,6 +7,13 @@ module PickupRandomizer
     when "dos"
       checker.add_item(0x3D) # seal 1
       
+      if options[:unlock_boss_doors]
+        checker.add_item(0x3E) # seal 2
+        checker.add_item(0x3F) # seal 3
+        checker.add_item(0x40) # seal 4
+        checker.add_item(0x41) # seal 5
+      end
+      
       # For DoS we sometimes need pickup flags for when a soul candle gets randomized into something that's not a soul candle.
       # Flags 7A-7F are unused in the base game but still work, so use those.
       @unused_picked_up_flags = (0x7A..0x7F).to_a

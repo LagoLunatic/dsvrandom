@@ -43,6 +43,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_luck, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.unlock_boss_doors, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
@@ -85,6 +86,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
     @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
     @ui.fix_luck.setChecked(@settings[:fix_luck]) unless @settings[:fix_luck].nil?
+    @ui.unlock_boss_doors.setChecked(@settings[:unlock_boss_doors]) unless @settings[:unlock_boss_doors].nil?
     @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
@@ -135,6 +137,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
     @settings[:no_touch_screen] = @ui.no_touch_screen.checked
     @settings[:fix_luck] = @ui.fix_luck.checked
+    @settings[:unlock_boss_doors] = @ui.unlock_boss_doors.checked
     @settings[:open_world_map] = @ui.open_world_map.checked
     
     save_settings()
@@ -180,6 +183,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_enemy_stats => @ui.randomize_enemy_stats.checked(),
       :randomize_weapon_synths => @ui.randomize_weapon_synths.checked(),
       :enable_glitch_reqs => @ui.enable_glitch_reqs.checked(),
+      :unlock_boss_doors => @ui.unlock_boss_doors.checked(),
       :open_world_map => @ui.open_world_map.checked(),
     )
     randomizer.randomize()
@@ -196,6 +200,10 @@ class RandomizerWindow < Qt::Dialog
     
     if GAME == "dos" && @ui.fix_luck.checked()
       game.apply_armips_patch("dos_fix_luck")
+    end
+    
+    if GAME == "dos" && @ui.unlock_boss_doors.checked()
+      game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
     if GAME == "ooe" && @ui.open_world_map.checked()

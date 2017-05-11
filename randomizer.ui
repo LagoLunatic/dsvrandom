@@ -345,6 +345,19 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="fix_luck">
+            <property name="toolTip">
+             <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
+            </property>
+            <property name="text">
+             <string>Fix luck</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="no_touch_screen">
             <property name="toolTip">
              <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
@@ -358,15 +371,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="fix_luck">
-            <property name="toolTip">
-             <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
-            </property>
+           <widget class="QCheckBox" name="unlock_boss_doors">
             <property name="text">
-             <string>Fix luck</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Unlock boss doors</string>
             </property>
            </widget>
           </item>
@@ -469,7 +476,6 @@
   <tabstop>name_unnamed_skills</tabstop>
   <tabstop>fix_first_ability_soul</tabstop>
   <tabstop>no_touch_screen</tabstop>
-  <tabstop>fix_luck</tabstop>
   <tabstop>open_world_map</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
