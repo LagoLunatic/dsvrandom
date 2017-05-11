@@ -55,7 +55,7 @@ Defs:
   
   bossarmor: seal 1 | hwarp
   afterarmor: height | distance | backdashjump
-  undervillage: lowerwizardry & height | wizardry & cutallsuper
+  undervillage: lowerwizardry & medium height & puppet master | lowerwizardry & big height | wizardry & cutallsuper
   villagewatergate: afterarmor & distance
   
   garden: wizardry & balore | medium height & backdashjump | medium height & puppet master | big height | lowergarden & rahab  | wizardry & height
@@ -322,7 +322,7 @@ Rooms:
     room: condemntower
     00 (UMA News 3-2): height | chapel & small
     01 (Kotetsu): big height | malphas & puppet master
-    02 (High Potion): big height
+    02 (High Potion): big height | malphas & black panther | malphas & flying armor & puppet master
 #Condemned Tower & Mine of Judgment:
   00-05-02:
     room: bossgergoth & big height | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
