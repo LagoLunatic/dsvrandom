@@ -31,3 +31,19 @@ Every seed should be completable as long as you don't use the experimental optio
 The path where DSVRandom is located must only have ASCII characters in it - the program will not launch if there are any unicode characters in it.
 
 Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145
+
+### FAQ
+
+Q: Do I need to farm enemies to progress?
+
+A: No, progression items and skills won't drop from common enemies. They'll be laying around somewhere.
+Bosses in DoS and Wallman in OoE can also drop progression skills.
+
+Q: I can't find something I need to progress!
+
+A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
+You can check the spoiler log located in /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
+
+Q: I found Konami Man/Twin Bee/Vic Viper in Portrait of Ruin, but I didn't get a stat boost.
+
+A: Save and reload the game for it to take effect.
