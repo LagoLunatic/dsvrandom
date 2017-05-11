@@ -39,7 +39,7 @@ module ExtraRandomizers
       elsif item.name == "CASTLE MAP 1" && GAME == "por"
         # Also so castle map 1 in PoR doesn't cost a lot to buy.
       else
-        item["Price"] = rand_range_weighted_very_low(1..25000)
+        item["Price"] = rand_range_weighted_very_low(1..250)*100
       end
       
       case item.item_type_name
