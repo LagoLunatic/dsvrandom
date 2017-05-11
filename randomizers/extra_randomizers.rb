@@ -204,12 +204,12 @@ module ExtraRandomizers
       ].each do |bitfield_attr_name|
         enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
           enemy_dna[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
-        end
-        
-        if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
-          # Don't set both the weakness and resistance bits for a given element.
-          # Depending on the game this can be somewhat buggy.
-          enemy_dna["Resistances"][i] = false
+          
+          if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
+            # Don't set both the weakness and resistance bits for a given element.
+            # Depending on the game this can be somewhat buggy.
+            enemy_dna["Resistances"][i] = false
+          end
         end
       end
       
