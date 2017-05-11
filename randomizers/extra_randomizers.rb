@@ -34,7 +34,10 @@ module ExtraRandomizers
   
   def randomize_item_stats
     game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
-      item["Price"] = rand_range_weighted_very_low(1..25000)
+      unless item.name == "CASTLE MAP 1" && GAME == "por"
+        # Castle Map 1 is necessary for the first quest in PoR, so don't randomize its price.
+        item["Price"] = rand_range_weighted_very_low(1..25000)
+      end
       
       case item.item_type_name
       when "Consumables"
