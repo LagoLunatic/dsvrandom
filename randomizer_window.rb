@@ -44,6 +44,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_luck, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.unlock_boss_doors, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.dont_randomize_change_cube, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
@@ -87,6 +88,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
     @ui.fix_luck.setChecked(@settings[:fix_luck]) unless @settings[:fix_luck].nil?
     @ui.unlock_boss_doors.setChecked(@settings[:unlock_boss_doors]) unless @settings[:unlock_boss_doors].nil?
+    @ui.dont_randomize_change_cube.setChecked(@settings[:dont_randomize_change_cube]) unless @settings[:dont_randomize_change_cube].nil?
     @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
@@ -138,6 +140,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:no_touch_screen] = @ui.no_touch_screen.checked
     @settings[:fix_luck] = @ui.fix_luck.checked
     @settings[:unlock_boss_doors] = @ui.unlock_boss_doors.checked
+    @settings[:dont_randomize_change_cube] = @ui.dont_randomize_change_cube.checked
     @settings[:open_world_map] = @ui.open_world_map.checked
     
     save_settings()
@@ -184,6 +187,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_weapon_synths => @ui.randomize_weapon_synths.checked(),
       :enable_glitch_reqs => @ui.enable_glitch_reqs.checked(),
       :unlock_boss_doors => @ui.unlock_boss_doors.checked(),
+      :dont_randomize_change_cube => @ui.dont_randomize_change_cube.checked(),
       :open_world_map => @ui.open_world_map.checked(),
     )
     randomizer.randomize()

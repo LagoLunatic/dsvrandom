@@ -20,9 +20,14 @@ module PickupRandomizer
     when "por"
       checker.add_item(0x1AD) # call cube
       
-      # Always replace change cube with skill cube
-      checker.add_item(0x1AE) # skill cube
-      change_entity_location_to_pickup_global_id("00-00-01_01", 0x1AE)
+      if options[:dont_randomize_change_cube]
+        checker.add_item(0x1AC) # change cube
+        change_entity_location_to_pickup_global_id("00-00-01_01", 0x1AC)
+      else
+        # If the player doesn't start with change cube, give them skill cube instead so they can still use Charlotte's spells.
+        checker.add_item(0x1AE) # skill cube
+        change_entity_location_to_pickup_global_id("00-00-01_01", 0x1AE)
+      end
       
       # In the corridor where Behemoth chases you, change the code of the platform to not permanently disappear.
       # This is so the player can't get stuck if they miss an important item up there.
