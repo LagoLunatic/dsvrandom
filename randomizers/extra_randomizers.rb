@@ -34,8 +34,11 @@ module ExtraRandomizers
   
   def randomize_item_stats
     game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
-      unless item.name == "CASTLE MAP 1" && GAME == "por"
-        # Castle Map 1 is necessary for the first quest in PoR, so don't randomize its price.
+      if checker.all_progression_pickups.include?(item["Item ID"])
+        # Don't randomize the price of progression items so they can't be sold on accident.
+      elsif item.name == "CASTLE MAP 1" && GAME == "por"
+        # Also so castle map 1 in PoR doesn't cost a lot to buy.
+      else
         item["Price"] = rand_range_weighted_very_low(1..25000)
       end
       
