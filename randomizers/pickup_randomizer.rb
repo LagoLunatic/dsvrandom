@@ -6,6 +6,10 @@ module PickupRandomizer
     case GAME
     when "dos"
       checker.add_item(0x3D) # seal 1
+      
+      # For DoS we sometimes need pickup flags for when a soul candle gets randomized into something that's not a soul candle.
+      # Flags 7A-7F are unused in the base game but still work, so use those.
+      @unused_picked_up_flags = (0x7A..0x7F).to_a
     when "por"
       checker.add_item(0x1AD) # call cube
       
@@ -17,6 +21,9 @@ module PickupRandomizer
       # This is so the player can't get stuck if they miss an important item up there.
       game.fs.load_overlay(79)
       game.fs.write(0x022EC638, [0xEA000003].pack("V"))
+      
+      # We don't need spare pickup flags for PoR.
+      @unused_picked_up_flags = []
     when "ooe"
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
@@ -392,6 +399,18 @@ module PickupRandomizer
       
       enemy_dna.write_to_rom()
     elsif GAME == "dos" || GAME == "por"
+      if entity.is_pickup?
+        picked_up_flag = entity.var_a
+      end
+      
+      if picked_up_flag.nil?
+        picked_up_flag = @unused_picked_up_flags.pop()
+        
+        if picked_up_flag.nil?
+          raise "No picked up flag for this item, this error shouldn't happen"
+        end
+      end
+      
       if pickup_global_id == :money
         case rng.rand
         when 0.00..0.20 # 20% chance to be a money chest
@@ -402,9 +421,13 @@ module PickupRandomizer
           else
             entity.var_a = rng.rand(0x0E..0x0F)
           end
+          
+          # We didn't use the picked up flag, so put it back
+          @unused_picked_up_flags << picked_up_flag
         when 0.20..1.00 # 80% chance to be a money bag
           entity.type = 4
           entity.subtype = 1
+          entity.var_a = picked_up_flag
           entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         end
         
@@ -422,12 +445,16 @@ module PickupRandomizer
           entity.subtype = 1
           entity.var_a = 0
           entity.var_b = item_index
+          
+          # We didn't use the picked up flag, so put it back
+          @unused_picked_up_flags << picked_up_flag
         when "por"
           # Skill
           unless entity.is_hidden_pickup?
             entity.type = 4
           end
           entity.subtype = item_type
+          entity.var_a = picked_up_flag
           entity.var_b = item_index
         end
       else
@@ -436,6 +463,7 @@ module PickupRandomizer
           entity.type = 4
         end
         entity.subtype = item_type
+        entity.var_a = picked_up_flag
         entity.var_b = item_index
       end
       
