@@ -506,7 +506,7 @@ Rooms:
     00 (Gold Ore): 
   0E-00-09:
     room: mysterymanormid
-    06 (Dominus Agony) (Event): 
+    06 (Dominus Agony) (Event): bossbarlowe # absorbing this gets you the bad end unless you have all villagers first
 #Misty Forest Road:
   0F-00-02:
     room: mistyroad
