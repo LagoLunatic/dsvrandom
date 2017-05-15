@@ -34,8 +34,8 @@ module ExtraRandomizers
   
   def randomize_item_stats
     game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
-      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes"
-        # Don't randomize unequip items.
+      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
+        # Don't randomize unequip/strting items.
         next
       end
       
