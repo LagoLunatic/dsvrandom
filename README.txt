@@ -44,6 +44,15 @@ Q: I can't find something I need to progress!
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
 You can check the spoiler log located in /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
 
+Q: I can't make the jump in the room after Flying Armor.
+
+A: You can make the jump without any souls by doing a backdash jump off the very edge: http://i.imgur.com/ZXSHMcw.gif
+
+Q: I have double jump, but I can't progress in Minera Prison Island without Magnes.
+
+A: Do a jumpkick off the breakable wall next to the Magnes point: http://i.imgur.com/y0TXcE0.gif
+Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot is too small to hit the wall when doing a diagonal jumpkick.
+
 Q: I found Konami Man/Twin Bee/Vic Viper in Portrait of Ruin, but I didn't get a stat boost.
 
 A: Save and reload the game for it to take effect.
