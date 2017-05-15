@@ -8,6 +8,7 @@ require_relative 'randomizers/drop_randomizer'
 require_relative 'randomizers/player_randomizer'
 require_relative 'randomizers/boss_randomizer'
 require_relative 'randomizers/door_randomizer'
+require_relative 'randomizers/chest_pool_randomizer'
 require_relative 'randomizers/extra_randomizers'
 
 class Randomizer
@@ -17,6 +18,7 @@ class Randomizer
   include PlayerRandomizer
   include BossRandomizer
   include DoorRandomizer
+  include ChestPoolRandomizer
   include ExtraRandomizers
   
   attr_reader :options,
@@ -137,6 +139,10 @@ class Randomizer
     
     if options[:randomize_weapon_synths]
       randomize_weapon_synths()
+    end
+    
+    if options[:randomize_wooden_chests]
+      randomize_wooden_chests()
     end
     
     if GAME == "dos"

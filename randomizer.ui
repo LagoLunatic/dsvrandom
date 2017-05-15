@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>555</height>
+    <height>584</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -290,10 +290,22 @@
             </item>
            </layout>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QCheckBox" name="randomize_wooden_chests">
+              <property name="text">
+               <string>Wooden Chest Item Pools</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
          <zorder></zorder>
          <zorder></zorder>
          <zorder></zorder>
+         <zorder>horizontalLayoutWidget</zorder>
         </widget>
        </item>
       </layout>

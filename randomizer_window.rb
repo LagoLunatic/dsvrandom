@@ -37,6 +37,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_skill_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_weapon_synths, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_wooden_chests, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.enable_glitch_reqs, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
@@ -83,6 +84,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.randomize_skill_stats.setChecked(@settings[:randomize_skill_stats]) unless @settings[:randomize_skill_stats].nil?
     @ui.randomize_enemy_stats.setChecked(@settings[:randomize_enemy_stats]) unless @settings[:randomize_enemy_stats].nil?
     @ui.randomize_weapon_synths.setChecked(@settings[:randomize_weapon_synths]) unless @settings[:randomize_weapon_synths].nil?
+    @ui.randomize_wooden_chests.setChecked(@settings[:randomize_wooden_chests]) unless @settings[:randomize_wooden_chests].nil?
     
     @ui.enable_glitch_reqs.setChecked(@settings[:enable_glitch_reqs]) unless @settings[:enable_glitch_reqs].nil?
     
@@ -137,6 +139,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:randomize_skill_stats] = @ui.randomize_skill_stats.checked
     @settings[:randomize_enemy_stats] = @ui.randomize_enemy_stats.checked
     @settings[:randomize_weapon_synths] = @ui.randomize_weapon_synths.checked
+    @settings[:randomize_wooden_chests] = @ui.randomize_wooden_chests.checked
     
     @settings[:enable_glitch_reqs] = @ui.enable_glitch_reqs.checked
     
@@ -191,6 +194,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_skill_stats => @ui.randomize_skill_stats.checked(),
       :randomize_enemy_stats => @ui.randomize_enemy_stats.checked(),
       :randomize_weapon_synths => @ui.randomize_weapon_synths.checked(),
+      :randomize_wooden_chests => @ui.randomize_wooden_chests.checked(),
       :enable_glitch_reqs => @ui.enable_glitch_reqs.checked(),
       :unlock_boss_doors => @ui.unlock_boss_doors.checked(),
       :dont_randomize_change_cube => @ui.dont_randomize_change_cube.checked(),
