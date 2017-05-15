@@ -322,6 +322,16 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="unlock_all_modes">
+            <property name="text">
+             <string>Unlock all modes</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

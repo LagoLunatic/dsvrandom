@@ -40,6 +40,8 @@ class RandomizerWindow < Qt::Dialog
     
     connect(@ui.enable_glitch_reqs, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
+    connect(@ui.name_unnamed_skills, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.unlock_all_modes, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_luck, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -84,6 +86,8 @@ class RandomizerWindow < Qt::Dialog
     
     @ui.enable_glitch_reqs.setChecked(@settings[:enable_glitch_reqs]) unless @settings[:enable_glitch_reqs].nil?
     
+    @ui.name_unnamed_skills.setChecked(@settings[:name_unnamed_skills]) unless @settings[:name_unnamed_skills].nil?
+    @ui.unlock_all_modes.setChecked(@settings[:unlock_all_modes]) unless @settings[:unlock_all_modes].nil?
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
     @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
     @ui.fix_luck.setChecked(@settings[:fix_luck]) unless @settings[:fix_luck].nil?
@@ -136,6 +140,8 @@ class RandomizerWindow < Qt::Dialog
     
     @settings[:enable_glitch_reqs] = @ui.enable_glitch_reqs.checked
     
+    @settings[:name_unnamed_skills] = @ui.name_unnamed_skills.checked
+    @settings[:unlock_all_modes] = @ui.unlock_all_modes.checked
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
     @settings[:no_touch_screen] = @ui.no_touch_screen.checked
     @settings[:fix_luck] = @ui.fix_luck.checked
@@ -232,6 +238,10 @@ class RandomizerWindow < Qt::Dialog
     
     if @ui.name_unnamed_skills.checked()
       game.fix_unnamed_skills()
+    end
+    
+    if @ui.unlock_all_modes.checked()
+      game.apply_armips_patch("#{GAME}_unlock_everything")
     end
     
     #game.apply_armips_patch("ooe_enter_any_wall")
