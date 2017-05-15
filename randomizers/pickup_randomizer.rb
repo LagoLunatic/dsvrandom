@@ -558,8 +558,17 @@ module PickupRandomizer
           entity.var_a = picked_up_flag
           entity.var_b = pickup_global_id + 1
         else
-          case rng.rand
-          when 0.00..0.50
+          puzzle_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32, 0x46, 0x4E]
+          if puzzle_glyph_ids.include?(pickup_global_id)
+            # We need to make the glyphs that are part of a puzzle be free glyphs with a picked up flag.
+            # We can't make these be glyph statues, because glyph statues use glyph_id+2 as the flag.
+            # The puzzles are hardcoded to use the original glyph from that puzzle's glyph_id+2.
+            # Since we can't easily changed the puzzle's hardcoded flag, we instead need to make sure that same flag is never used by anything else, namely a glyph statue with one of those puzzle glyphs inside it.
+            entity.type = 4
+            entity.subtype = 2
+            entity.var_a = picked_up_flag
+            entity.var_b = pickup_global_id + 1
+          else
             # 50% chance for a glyph statue
             entity.type = 2
             entity.subtype = 2
@@ -568,12 +577,6 @@ module PickupRandomizer
             
             # We didn't use the picked up flag, so put it back
             @unused_picked_up_flags << picked_up_flag
-          else
-            # 50% chance for a free glyph
-            entity.type = 4
-            entity.subtype = 2
-            entity.var_a = picked_up_flag
-            entity.var_b = pickup_global_id + 1
           end
         end
       end
@@ -694,33 +697,33 @@ module PickupRandomizer
         event.type = 0
         event.write_to_rom()
       end
-    end
-    
-    hardcoded_glyph_location = case event_entity.subtype
-    when 0x2F # Luminatio
-      0x022C4894
-    when 0x3B # Pneuma
-      0x022C28E8
-    when 0x44 # Lapiste
-      0x022C2CB0
-    when 0x54 # Vol Umbra
-      0x022C2FBC
-    when 0x4C # Vol Fulgur
-      0x022C2490
-    when 0x52 # Vol Ignis
-      0x0221F1A0
-    when 0x47 # Vol Grando
-      0x022C230C
-    when 0x40 # Cubus
-      0x022C31DC
-    when 0x53 # Morbus
-      0x022C2354
-    when 0x76 # Dominus Agony
-      0x022C25BC
     else
-      return
+      glyph_id_location = case event_entity.subtype
+      when 0x2F # Luminatio
+        0x022C4894
+      when 0x3B # Pneuma
+        0x022C28E8
+      when 0x44 # Lapiste
+        0x022C2CB0
+      when 0x54 # Vol Umbra
+        0x022C2FBC
+      when 0x4C # Vol Fulgur
+        0x022C2490
+      when 0x52 # Vol Ignis
+        0x0221F1A0
+      when 0x47 # Vol Grando
+        0x022C230C
+      when 0x40 # Cubus
+        0x022C31DC
+      when 0x53 # Morbus
+        0x022C2354
+      when 0x76 # Dominus Agony
+        0x022C25BC
+      else
+        return
+      end
+      
+      game.fs.write(glyph_id_location, [pickup_global_id+1].pack("C"))
     end
-    
-    game.fs.write(hardcoded_glyph_location, [pickup_global_id+1].pack("C"))
   end
 end
