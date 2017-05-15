@@ -8,6 +8,7 @@ require_relative 'randomizers/drop_randomizer'
 require_relative 'randomizers/player_randomizer'
 require_relative 'randomizers/boss_randomizer'
 require_relative 'randomizers/door_randomizer'
+require_relative 'randomizers/shop_randomizer'
 require_relative 'randomizers/chest_pool_randomizer'
 require_relative 'randomizers/extra_randomizers'
 
@@ -18,6 +19,7 @@ class Randomizer
   include PlayerRandomizer
   include BossRandomizer
   include DoorRandomizer
+  include ShopRandomizer
   include ChestPoolRandomizer
   include ExtraRandomizers
   
@@ -139,6 +141,10 @@ class Randomizer
     
     if options[:randomize_weapon_synths]
       randomize_weapon_synths()
+    end
+    
+    if options[:randomize_shop]
+      randomize_shop()
     end
     
     if options[:randomize_wooden_chests]
