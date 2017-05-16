@@ -383,6 +383,8 @@ module EnemyRandomizer
         # Bee AI seems buggy and can teleport them around in very wide rooms.
         return :redo
       end
+    when "Larva"
+      enemy.var_b = rng.rand(0..0xF) # Bitfield of which of the 4 directions the larva can move in
     else
       enemy.var_a = 0
       enemy.var_b = 0
