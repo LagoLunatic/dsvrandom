@@ -20,8 +20,14 @@ module ShopRandomizer
     
     available_shop_item_ids.shuffle!(random: rng)
     
-    game.shop_item_pools.each do |pool|
+    game.shop_item_pools.each_with_index do |pool, pool_index|
       pool.item_ids.length.times do |i|
+        if GAME == "por" && pool_index == 0 && i == 0
+          pool.item_ids[i] = 0x4B+1 # Castle map 1 for the first quest
+          available_shop_item_ids.delete(0x4B)
+          next
+        end
+        
         pool.item_ids[i] = available_shop_item_ids.pop() + 1
       end
       
