@@ -8,14 +8,17 @@ module ShopRandomizer
       item["Price"] > 0
     end
     
-    available_shop_item_ids += all_non_progression_pickups.select do |item_id|
-      next unless (0x150..0x1A0).include?(item_id) # Dual crushes/relics can't have a price
-      skill_extra_data = game.items[item_id+0x6C]
-      if skill_extra_data["Price (1000G)"] == 0
-        skill_extra_data["Price (1000G)"] = rng.rand(1..15)
-        skill_extra_data.write_to_rom()
+    if GAME == "por"
+      # Skills can be in the shop in PoR.
+      available_shop_item_ids += all_non_progression_pickups.select do |item_id|
+        next unless (0x150..0x1A0).include?(item_id) # Dual crushes/relics can't have a price
+        skill_extra_data = game.items[item_id+0x6C]
+        if skill_extra_data["Price (1000G)"] == 0
+          skill_extra_data["Price (1000G)"] = rng.rand(1..15)
+          skill_extra_data.write_to_rom()
+        end
+        true
       end
-      true
     end
     
     available_shop_item_ids.shuffle!(random: rng)
