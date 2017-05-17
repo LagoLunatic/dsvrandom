@@ -264,6 +264,8 @@ module ExtraRandomizers
         "Resistances",
       ].each do |bitfield_attr_name|
         enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
+          next if bit_name == "Resistance 32" # Something related to rendering its GFX
+          
           enemy_dna[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
           
           if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
