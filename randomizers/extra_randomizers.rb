@@ -34,9 +34,15 @@ module ExtraRandomizers
   
   def randomize_item_stats
     game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
+      # Don't randomize unequip/starting items.
       if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
-        # Don't randomize unequip/strting items.
         next
+      end
+      case GAME
+      when "dos"
+        next if item.name == "Knife"
+      when "por"
+        next if item["Item ID"] == 0x61 # starting Vampire Killer
       end
       
       if checker.all_progression_pickups.include?(item["Item ID"])
@@ -188,6 +194,12 @@ module ExtraRandomizers
   
   def randomize_skill_stats
     game.items[SKILL_GLOBAL_ID_RANGE].each do |skill|
+      if @ooe_starter_glyph_id
+        next if skill["Item ID"] == @ooe_starter_glyph_id
+      else
+        next if skill.name == "Confodere"
+      end
+      
       skill["Mana cost"] = rng.rand(1..60)
       skill["DMG multiplier"] = rand_range_weighted_low(1..50)
       

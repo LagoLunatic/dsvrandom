@@ -66,6 +66,7 @@ module PickupRandomizer
       game.fs.write(0x022C3980, [0xE3A01000].pack("V"))
       game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
       checker.add_item(pickup_global_id)
+      @ooe_starter_glyph_id = pickup_global_id # Tell the skill stat randomizer what the start glyph is so it doesn't randomize it
     end
     
     place_progression_pickups()
