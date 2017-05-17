@@ -285,6 +285,8 @@ module ExtraRandomizers
       enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(0.5..3.0)).round if GAME == "por" || GAME == "ooe"
       enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"]*rng.rand(0.5..3.0)).round if GAME == "por" || GAME == "ooe"
       
+      enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
+      
       [
         "Weaknesses",
         "Resistances",
