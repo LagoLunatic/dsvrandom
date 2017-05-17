@@ -27,6 +27,16 @@ module EnemyRandomizer
         @skeletally_animated_enemy_ids << enemy_id # Probably a 3D enemy, so count it anyway
       end
     end
+    @cpu_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
+    @cpu_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
+      enemy_dna = game.enemy_dnas[enemy_id]
+      if enemy_dna.name == "Forneus"
+        true
+      else
+        false
+      end
+    end
+    
     #@assets_for_each_special_object = {}
     #SPECIAL_OBJECT_IDS.each do |special_object_id|
     #  begin
@@ -47,7 +57,7 @@ module EnemyRandomizer
     game.each_room do |room|
       @enemy_pool_for_room = []
       @num_spawners = 0
-      @total_skeletally_animated_enemies_in_room = 0
+      @total_cpu_intensive_enemies_in_room = 0
       @assets_needed_for_room = []
       
       enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
@@ -69,9 +79,9 @@ module EnemyRandomizer
       #end
       
       if enemies_in_room.length >= 6
-        # Don't let skeletally animated enemies in rooms that have lots of enemies.
+        # Don't let cpu intensive enemies in rooms that have lots of enemies.
         
-        @allowed_enemies_for_room -= @skeletally_animated_enemy_ids
+        @allowed_enemies_for_room -= @cpu_intensive_enemy_ids
       end
       
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
@@ -128,11 +138,11 @@ module EnemyRandomizer
         @assets_needed_for_room += assets
         @assets_needed_for_room.uniq!
         
-        if @total_skeletally_animated_enemies_in_room >= 2
+        if @total_cpu_intensive_enemies_in_room >= 2
           # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
           
-          @allowed_enemies_for_room -= @skeletally_animated_enemy_ids
-          @enemy_pool_for_room -= @skeletally_animated_enemy_ids
+          @allowed_enemies_for_room -= @cpu_intensive_enemy_ids
+          @enemy_pool_for_room -= @cpu_intensive_enemy_ids
         end
       end
       
@@ -190,8 +200,8 @@ module EnemyRandomizer
       @enemy_pool_for_room << random_enemy_id
       @enemy_pool_for_room.uniq!
       
-      if @skeletally_animated_enemy_ids.include?(random_enemy_id)
-        @total_skeletally_animated_enemies_in_room += 1
+      if @cpu_intensive_enemy_ids.include?(random_enemy_id)
+        @total_cpu_intensive_enemies_in_room += 1
       end
     end
   end
