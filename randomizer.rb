@@ -163,19 +163,6 @@ class Randomizer
       layer.tiles[0x28].horizontal_flip = true
       layer.write_to_rom()
     end
-    
-    if GAME == "ooe"
-      # This room in the Final Approach has two overlapping chests both containing diamonds.
-      # We don't want these to overlap as the player could easily think it's just one item and not see the one beneath it.
-      # Move one a bit to the left and the other a bit to the right.
-      
-      chest_a = game.areas[0].sectors[0xA].rooms[0xB].entities[1]
-      chest_b = game.areas[0].sectors[0xA].rooms[0xB].entities[2]
-      chest_a.x_pos = 0xE0
-      chest_b.x_pos = 0x130
-      chest_a.write_to_rom()
-      chest_b.write_to_rom()
-    end
   rescue StandardError => e
     spoiler_log.puts "ERROR!"
     raise e

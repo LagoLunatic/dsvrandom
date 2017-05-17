@@ -67,6 +67,17 @@ module PickupRandomizer
       game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
       checker.add_item(pickup_global_id)
       @ooe_starter_glyph_id = pickup_global_id # Tell the skill stat randomizer what the start glyph is so it doesn't randomize it
+      
+      # Room in the Final Approach that has two overlapping chests both containing diamonds.
+      # We don't want these to overlap as the player could easily think it's just one item and not see the one beneath it.
+      # Move one a bit to the left and the other a bit to the right. Also give one a different picked up flag.
+      chest_a = game.areas[0].sectors[0xA].rooms[0xB].entities[1]
+      chest_b = game.areas[0].sectors[0xA].rooms[0xB].entities[2]
+      chest_a.x_pos = 0xE0
+      chest_b.x_pos = 0x130
+      chest_b.var_b = @unused_picked_up_flags.pop()
+      chest_a.write_to_rom()
+      chest_b.write_to_rom()
     end
     
     place_progression_pickups()
