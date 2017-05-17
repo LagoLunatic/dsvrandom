@@ -188,7 +188,7 @@ module ExtraRandomizers
           "Resistances",
         ].each do |bitfield_attr_name|
           item[bitfield_attr_name].names.each_with_index do |bit_name, i|
-            item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+            item[bitfield_attr_name][i] = [true, false, false, false, false, false, false].sample(random: rng)
           end
         end
       end
