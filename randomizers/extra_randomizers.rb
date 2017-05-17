@@ -193,22 +193,43 @@ module ExtraRandomizers
   end
   
   def randomize_skill_stats
-    game.items[SKILL_GLOBAL_ID_RANGE].each do |skill|
+    SKILL_GLOBAL_ID_RANGE.each do |skill_global_id|
+      skill = game.items[skill_global_id]
+      
       if @ooe_starter_glyph_id
-        next if skill["Item ID"] == @ooe_starter_glyph_id
+        next if skill_global_id == @ooe_starter_glyph_id
       else
         next if skill.name == "Confodere"
       end
       
-      skill["Mana cost"] = rng.rand(1..60)
-      skill["DMG multiplier"] = rand_range_weighted_low(1..50)
+      if GAME == "por" && (0x1A2..0x1AB).include?(skill_global_id)
+        # Dual crush
+        skill["Mana cost"] = rng.rand(50..250)
+        skill["DMG multiplier"] = rand_range_weighted_low(15..85)
+      elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
+        # Glyph union
+        skill["Heart cost"] = rand_range_weighted_low(5..60)
+        skill["DMG multiplier"] = rand_range_weighted_low(15..55)
+      else
+        skill["Mana cost"] = rng.rand(1..60)
+        skill["DMG multiplier"] = rand_range_weighted_very_low(1..35)
+      end
       
       skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
       
       skill["Max at once"] = rand_range_weighted_low(1..6) if GAME == "ooe"
       skill["IFrames"] = rand_range_weighted_low(1..0x24) if GAME == "ooe"
       skill["Delay"] = rand_range_weighted_low(0..14) if GAME == "ooe"
-      # TODO glyph union
+      
+      if skill["?/Swings/Union"]
+        union_type = skill["?/Swings/Union"]
+        if union_type != 0x13
+          # Don't randomize Dominus glyphs (union type 13)
+          union_type = rng.rand(0x01..0x12)
+          low_two_bits = skill["?/Swings/Union"] & 0b11
+          skill["?/Swings/Union"] = (union_type << 2) | low_two_bits
+        end
+      end
       
       if GAME == "por" && skill["Type"] == 0
         unless [
