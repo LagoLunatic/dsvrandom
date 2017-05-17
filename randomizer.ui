@@ -294,6 +294,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_13">
             <item>
              <widget class="QCheckBox" name="randomize_shop">
+              <property name="toolTip">
+               <string>Randomizes what items are for sale in the shop.</string>
+              </property>
               <property name="text">
                <string>Shop Items</string>
               </property>
@@ -301,6 +304,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_wooden_chests">
+              <property name="toolTip">
+               <string>Randomizes the pool of items for wooden chests in each area (OoE only).</string>
+              </property>
               <property name="text">
                <string>Wooden Chest Items</string>
               </property>
@@ -312,7 +318,6 @@
          <zorder></zorder>
          <zorder></zorder>
          <zorder></zorder>
-         <zorder>horizontalLayoutWidget</zorder>
         </widget>
        </item>
       </layout>
@@ -343,6 +348,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="unlock_all_modes">
+            <property name="toolTip">
+             <string>Unlocks alternate modes that normally require you to beat the main game first.</string>
+            </property>
             <property name="text">
              <string>Unlock all modes</string>
             </property>
@@ -401,6 +409,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="unlock_boss_doors">
+            <property name="toolTip">
+             <string>You don't need to own a certain magic seal to open boss doors.</string>
+            </property>
             <property name="text">
              <string>Unlock boss doors</string>
             </property>
@@ -417,6 +428,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <widget class="QCheckBox" name="dont_randomize_change_cube">
+            <property name="toolTip">
+             <string>The change cube will always be the first item you get.</string>
+            </property>
             <property name="text">
              <string>Don't randomize Change Cube</string>
             </property>
@@ -437,7 +451,7 @@
           <item>
            <widget class="QCheckBox" name="open_world_map">
             <property name="toolTip">
-             <string>Make all areas except Dracula's Castle accesible from the start.</string>
+             <string>Make all areas except Dracula's Castle accessible from the start.</string>
             </property>
             <property name="text">
              <string>Open world map</string>

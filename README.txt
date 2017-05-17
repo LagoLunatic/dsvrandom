@@ -23,6 +23,8 @@ Item Stats: Randomizes item stats and how weapons behave.
 Skill Stats: Randomizes skill stats and how skills behave.
 Enemy Stats: Randomizes enemy stats.
 Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
+Shop Items: Randomizes what items are for sale in the shop.
+Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
 
 Every seed should be completable as long as you don't use the experimental options, though there may be bugs in the randomizer that make some seeds unwinnable.
 
