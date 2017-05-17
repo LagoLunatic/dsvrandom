@@ -70,6 +70,11 @@ module ExtraRandomizers
             possible_types.delete(3)
           end
           
+          if checker.all_progression_pickups.include?(item["Item ID"])
+            # Always make progression items unusable so the player can't accidentally eat one and softlock themself.
+            possible_types = [4]
+          end
+          
           item["Type"] = possible_types.sample(random: rng)
           
           case item["Type"]
