@@ -425,8 +425,16 @@ module PickupRandomizer
       end
       
       if pickup_global_id == :money
-        case rng.rand
-        when 0.00..0.20 # 20% chance to be a money chest
+        if entity.is_hidden_pickup? || rng.rand <= 0.80 # 80% chance to be a money bag
+          if entity.is_hidden_pickup?
+            entity.type = 7
+          else
+            entity.type = 4
+          end
+          entity.subtype = 1
+          entity.var_a = picked_up_flag
+          entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
+        else # 20% chance to be a money chest
           entity.type = 2
           entity.subtype = 1
           if GAME == "dos"
@@ -437,11 +445,6 @@ module PickupRandomizer
           
           # We didn't use the picked up flag, so put it back
           @unused_picked_up_flags << picked_up_flag
-        when 0.20..1.00 # 80% chance to be a money bag
-          entity.type = 4
-          entity.subtype = 1
-          entity.var_a = picked_up_flag
-          entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         end
         
         entity.write_to_rom()
@@ -501,7 +504,11 @@ module PickupRandomizer
       end
       
       if pickup_global_id == :money
-        entity.type = 4
+        if entity.is_hidden_pickup?
+          entity.type = 7
+        else
+          entity.type = 4
+        end
         entity.subtype = 1
         entity.var_a = picked_up_flag
         entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
