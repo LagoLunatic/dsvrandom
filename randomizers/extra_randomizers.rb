@@ -222,10 +222,6 @@ module ExtraRandomizers
       
       skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
       
-      skill["Max at once"] = rand_range_weighted_low(1..6) if GAME == "ooe"
-      skill["IFrames"] = rand_range_weighted_low(1..0x24) if GAME == "ooe"
-      skill["Delay"] = rand_range_weighted_low(0..14) if GAME == "ooe"
-      
       if skill["?/Swings/Union"]
         union_type = skill["?/Swings/Union"]
         if union_type != 0x13
@@ -256,6 +252,40 @@ module ExtraRandomizers
           # Except for the above listed skills, since the wrong character can't actually use them.
           skill["??? bitfield"][2] = [true, false].sample(random: rng)
         end
+      end
+      
+      case GAME
+      when "dos"
+        if (0xCE..0x102).include?(skill_global_id)
+          soul_extra_data = game.items[skill_global_id+0x7B]
+          soul_extra_data["Max at once"] = rand_range_weighted_low(1..3)
+          soul_extra_data["Bonus max at once"] = rand_range_weighted_low(0..2)
+          soul_extra_data.write_to_rom()
+        end
+      when "por"
+        if (0x150..0x1A0).include?(skill_global_id)
+          skill_extra_data = game.items[skill_global_id+0x6C]
+          
+          max_at_once = rand_range_weighted_low(1..8)
+          is_spell = skill["??? bitfield"][2]
+          if is_spell
+            charge_time = rand_range_weighted_very_low(8..120)
+            skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
+            skill_extra_data["SP to Master"] = 0
+          else
+            mastered_bonus_max_at_once = rand_range_weighted_low(1..6)
+            skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
+            skill_extra_data["SP to Master"] = rng.rand(1..30)*100
+          end
+          
+          skill_extra_data["Price (1000G)"] = rand_range_weighted_low(1..30)
+          
+          skill_extra_data.write_to_rom()
+        end
+      when "ooe"
+        skill["Max at once"] = rand_range_weighted_low(1..6)
+        skill["IFrames"] = rand_range_weighted_low(1..0x24)
+        skill["Delay"] = rand_range_weighted_low(0..14)
       end
       
       skill["Effects"].names.each_with_index do |bit_name, i|
