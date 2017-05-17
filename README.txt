@@ -11,6 +11,10 @@ Items/Skills: Randomizes items and skills you find lying on the ground.
 Enemy Locations: Randomizes which non-boss enemies appear where.
 Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.
 Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).
+Item Stats/Behavior: Randomizes item stats and how weapons behave.
+Skill Stats/Behavior: Randomizes skill stats and how skills behave.
+Shop Items: Randomizes what items are for sale in the shop.
+Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
 
 There are also some buggy, experimental options:
 Players: Randomizes player graphics and movement stats.
@@ -19,12 +23,8 @@ Area Connections: Randomizes which areas connect to each other.
 Room Connections: Randomizes which rooms within an area connect to each other.
 Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies.
-Item Stats: Randomizes item stats and how weapons behave.
-Skill Stats: Randomizes skill stats and how skills behave.
 Enemy Stats: Randomizes enemy stats.
 Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
-Shop Items: Randomizes what items are for sale in the shop.
-Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
 
 Every seed should be completable as long as you don't use the experimental options, though there may be bugs in the randomizer that make some seeds unwinnable.
 

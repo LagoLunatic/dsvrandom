@@ -142,6 +142,54 @@
             </item>
            </layout>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QCheckBox" name="randomize_item_stats">
+              <property name="toolTip">
+               <string>Randomizes item stats and how weapons behave.</string>
+              </property>
+              <property name="text">
+               <string>Item Stats/Behavior</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_stats">
+              <property name="toolTip">
+               <string>Randomizes skill stats and how skills behave.</string>
+              </property>
+              <property name="text">
+               <string>Skill Stats/Behavior</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QCheckBox" name="randomize_shop">
+              <property name="toolTip">
+               <string>Randomizes what items are for sale in the shop.</string>
+              </property>
+              <property name="text">
+               <string>Shop Items</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_wooden_chests">
+              <property name="toolTip">
+               <string>Randomizes the pool of items for wooden chests in each area (OoE only).</string>
+              </property>
+              <property name="text">
+               <string>Wooden Chest Items</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
@@ -243,30 +291,6 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <item>
-             <widget class="QCheckBox" name="randomize_item_stats">
-              <property name="toolTip">
-               <string>Randomizes item stats and how weapons behave.</string>
-              </property>
-              <property name="text">
-               <string>Item Stats</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_skill_stats">
-              <property name="toolTip">
-               <string>Randomizes skill stats and how skills behave.</string>
-              </property>
-              <property name="text">
-               <string>Skill Stats</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_stats">
@@ -285,30 +309,6 @@
               </property>
               <property name="text">
                <string>Weapon Synthesis</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_13">
-            <item>
-             <widget class="QCheckBox" name="randomize_shop">
-              <property name="toolTip">
-               <string>Randomizes what items are for sale in the shop.</string>
-              </property>
-              <property name="text">
-               <string>Shop Items</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_wooden_chests">
-              <property name="toolTip">
-               <string>Randomizes the pool of items for wooden chests in each area (OoE only).</string>
-              </property>
-              <property name="text">
-               <string>Wooden Chest Items</string>
               </property>
              </widget>
             </item>
@@ -523,8 +523,6 @@
   <tabstop>randomize_room_connections</tabstop>
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
-  <tabstop>randomize_item_stats</tabstop>
-  <tabstop>randomize_skill_stats</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>name_unnamed_skills</tabstop>
