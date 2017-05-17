@@ -64,6 +64,7 @@ module BossRandomizer
       queued_dna_changes[new_boss_id]["HP"]               = old_boss["HP"]
       queued_dna_changes[new_boss_id]["MP"]               = old_boss["MP"]
       queued_dna_changes[new_boss_id]["SP"]               = old_boss["SP"]
+      queued_dna_changes[new_boss_id]["AP"]               = old_boss["AP"]
       queued_dna_changes[new_boss_id]["EXP"]              = old_boss["EXP"]
       queued_dna_changes[new_boss_id]["Attack"]           = old_boss["Attack"]
       queued_dna_changes[new_boss_id]["Defense"]          = old_boss["Defense"]
@@ -75,6 +76,7 @@ module BossRandomizer
           queued_dna_changes[other_boss_id]["HP"]               = old_boss["HP"]
           queued_dna_changes[other_boss_id]["MP"]               = old_boss["MP"]
           queued_dna_changes[other_boss_id]["SP"]               = old_boss["SP"]
+          queued_dna_changes[other_boss_id]["AP"]               = old_boss["AP"]
           queued_dna_changes[other_boss_id]["EXP"]              = old_boss["EXP"]
           queued_dna_changes[other_boss_id]["Attack"]           = old_boss["Attack"]
           queued_dna_changes[other_boss_id]["Defense"]          = old_boss["Defense"]
@@ -124,8 +126,8 @@ module BossRandomizer
     
     case new_boss.name
     when "Flying Armor"
-      boss_entity.x_pos = boss_entity.room.main_layer_width * SCREEN_WIDTH_IN_PIXELS / 2
-      boss_entity.y_pos = 80
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0x50
     when "Balore"
       has_left_door = boss_entity.room.doors.find{|d| d.direction == :left}
       has_right_door = boss_entity.room.doors.find{|d| d.direction == :right}
@@ -153,8 +155,8 @@ module BossRandomizer
     when "Dario"
       boss_entity.var_b = 0
     when "Puppet Master"
-      boss_entity.x_pos = 256
-      boss_entity.y_pos = 96
+      boss_entity.x_pos = 0x100
+      boss_entity.y_pos = 0x60
       
       boss_entity.var_a = 0
     when "Gergoth"
@@ -164,7 +166,7 @@ module BossRandomizer
       end
     when "Zephyr"
       # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
-      boss_entity.x_pos = 256
+      boss_entity.x_pos = 0x100
       
       # TODO: If Zephyr spawns in a room that is 1 screen wide then either he or Soma will get stuck, regardless of what Zephyr's x pos is. Need to make sure Zephyr only spawns in rooms 2 screens wide or wider.
       # also if zephyr spawns inside rahab's room you can't reach him until you have rahab's soul.
@@ -197,7 +199,7 @@ module BossRandomizer
   def por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case old_boss.name
     when "Behemoth"
-      if boss_entity.var_b == 0x02
+      if boss_entity.var_b == 2
         # Scripted Behemoth that chases you down the hallway.
         return :skip
       end
@@ -220,15 +222,13 @@ module BossRandomizer
       if boss_entity.var_a == 0
         # Non-boss version of the giant skeleton.
         return :skip
-      end
-    end
-    
-    if new_boss.name != "Giant Skeleton"
-      boss_entity.room.entities.each do |entity|
-        if entity.type == 0x02 && entity.subtype == 0x3E && entity.var_a == 0x01
-          # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
-          entity.var_a = 0x00
-          entity.write_to_rom()
+      elsif new_boss.name != "Giant Skeleton"
+        boss_entity.room.entities.each do |entity|
+          if entity.type == 2 && entity.subtype == 0x3E && entity.var_a == 1
+            # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
+            entity.var_a = 0
+            entity.write_to_rom()
+          end
         end
       end
     end

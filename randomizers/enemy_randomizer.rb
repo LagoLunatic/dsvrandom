@@ -200,8 +200,8 @@ module EnemyRandomizer
     enemy.x_pos = [enemy.x_pos, 0x10].max
     enemy.y_pos = [enemy.y_pos, 0x10].max
     
-    room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
-    room_height = enemy.room.main_layer_height*SCREEN_HEIGHT_IN_PIXELS
+    room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
+    room_height = enemy.room.height*SCREEN_HEIGHT_IN_PIXELS
     enemy.x_pos = [enemy.x_pos, room_width-0x10].min
     enemy.y_pos = [enemy.y_pos, room_height-0x10].min
     
@@ -317,11 +317,11 @@ module EnemyRandomizer
         enemy.var_a = rng.rand(0xA0..0x1A0) # delay in frames between spawns
       end
     when "Sand Worm", "Poison Worm"
-      if enemy.room.main_layer_height > 1
+      if enemy.room.height > 1
         # Don't allow in tall rooms
         return :redo
       end
-      if enemy.room.main_layer_width <= 1
+      if enemy.room.width <= 1
         # Don't allow in non-wide rooms
         return :redo
       end
@@ -338,11 +338,11 @@ module EnemyRandomizer
       else
         enemy.var_a = rng.rand(2..6) # Max at once
         
-        room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
+        room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
         enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn them
       end
     when "Skeleton Gunman"
-      room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
+      room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
       max_left_dist = enemy.x_pos - 0x10
       max_right_dist = room_width - enemy.x_pos - 0x10
       
@@ -379,7 +379,7 @@ module EnemyRandomizer
     when "Bone Pillar", "Fish Head"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Killer Bee", "Bee Hive"
-      if enemy.room.main_layer_width > 4
+      if enemy.room.width > 4
         # Bee AI seems buggy and can teleport them around in very wide rooms.
         return :redo
       end
@@ -402,7 +402,7 @@ module EnemyRandomizer
       else # 70% chance to be a spawner
         enemy.var_a = rng.rand(3..6) # Max at once
         
-        room_width = enemy.room.main_layer_width*SCREEN_WIDTH_IN_PIXELS
+        room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
         enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn the Zombies
       end
     when "Skeleton"
@@ -452,7 +452,7 @@ module EnemyRandomizer
     when "Black Crow"
       por_adjust_randomized_enemy(enemy, enemy_dna)
     when "Nightmare"
-      if enemy.room.main_layer_width <= 1
+      if enemy.room.width <= 1
         # Don't let Nightmare appear in 1-screen wide rooms as he will just fade in and out constantly if he doesn't have a wide area.
         return :redo
       end
