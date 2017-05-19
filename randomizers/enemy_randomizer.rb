@@ -84,6 +84,11 @@ module EnemyRandomizer
         @allowed_enemies_for_room -= @cpu_intensive_enemy_ids
       end
       
+      # Don't allow spawners in Nest of Evil/Large Cavern.
+      if (GAME == "por" && room.area_index == 9) || (GAME == "ooe" && room.area_index == 0x0C)
+        @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+      end
+      
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
       original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
         enemy_dna = game.enemy_dnas[enemy.subtype]
