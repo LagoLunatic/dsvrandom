@@ -215,9 +215,6 @@ module BossRandomizer
   
   def ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case old_boss.name
-    when "Brachyura"
-      boss_entity.x_pos = 0x0080
-      boss_entity.y_pos = 0x0A20
     when "Giant Skeleton"
       if boss_entity.var_a == 0
         # Non-boss version of the giant skeleton.
