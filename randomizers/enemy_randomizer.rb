@@ -101,7 +101,7 @@ module EnemyRandomizer
       end.max
       max_allowed_enemy_attack = max_enemy_attack*@max_enemy_attack_room_multiplier
       
-      enemies_in_room.shuffle(random: rng).each do |enemy|
+      enemies_in_room.shuffle(random: rng).each_with_index do |enemy, i|
         @allowed_enemies_for_room.select! do |enemy_id|
           enemy_dna = game.enemy_dnas[enemy_id]
           if enemy_dna["Attack"] <= @weak_enemy_attack_threshold
@@ -126,7 +126,21 @@ module EnemyRandomizer
           @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
         end
         
+        if i == 0 && enemies_in_room.length > 1
+          # We don't want the first enemy we place to be one that there can only be a limited number in a given room.
+          # This is because if this one enemy goes over the asset limit for the room, then we wouldn't have any enemies left to place: the same one we already placed would go over the limit per room, while any new one would go over the asset limit.
+          # If the total number of enemies in the room is 1 it doesn't matter.
+          limitable_enemy_ids = @cpu_intensive_enemy_ids + SPAWNER_ENEMY_IDS
+          temporarily_removed_enemies = @allowed_enemies_for_room & limitable_enemy_ids
+          @allowed_enemies_for_room -= temporarily_removed_enemies
+        end
+        
         randomize_enemy(enemy)
+        
+        if temporarily_removed_enemies
+          # Add back the limitable enemies now.
+          @allowed_enemies_for_room += temporarily_removed_enemies
+        end
         
         if SPAWNER_ENEMY_IDS.include?(enemy.subtype)
           @num_spawners += 1
