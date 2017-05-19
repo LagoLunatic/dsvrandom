@@ -18,17 +18,19 @@ module ExtraRandomizers
   end
   
   def randomize_enemy_ai
-    common_enemy_dnas = game.enemy_dnas.select{|enemy_id| COMMON_ENEMY_IDS.include?(enemy_id)}
-    
-    common_enemy_dnas.each do |this_dna|
-      this_overlay = OVERLAY_FILE_FOR_ENEMY_AI[this_dna]
-      available_enemies_with_same_overlay = common_enemy_dnas.select do |other_dna|
-         other_overlay = OVERLAY_FILE_FOR_ENEMY_AI[other_dna.enemy_id]
-         other_overlay.nil? || other_overlay == this_overlay
+    COMMON_ENEMY_IDS.each do |enemy_id|
+      enemy_dna = game.enemy_dnas[enemy_id]
+      
+      this_overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_dna.enemy_id]
+      available_enemies_with_same_overlay = COMMON_ENEMY_IDS.select do |other_enemy_id|
+        other_overlay = OVERLAY_FILE_FOR_ENEMY_AI[other_enemy_id]
+        other_overlay.nil? || other_overlay == this_overlay
       end
       
-      this_dna["Running AI"] = available_enemies_with_same_overlay.sample(random: rng)["Running AI"]
-      this_dna.write_to_rom()
+      selected_enemy_id = available_enemies_with_same_overlay.sample(random: rng)
+      selected_enemy_dna = game.enemy_dnas[selected_enemy_id]
+      enemy_dna["Running AI"] = selected_enemy_dna["Running AI"]
+      enemy_dna.write_to_rom()
     end
   end
   
