@@ -288,6 +288,10 @@ module ExtraRandomizers
         skill["Max at once"] = rand_range_weighted_low(1..6)
         skill["IFrames"] = rand_range_weighted_low(1..0x24)
         skill["Delay"] = rand_range_weighted_low(0..14)
+        
+        if skill.name == "Rapidus Fio"
+          skill["Max at once"] = 1
+        end
       end
       
       skill["Effects"].names.each_with_index do |bit_name, i|
