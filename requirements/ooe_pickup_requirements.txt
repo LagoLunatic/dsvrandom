@@ -33,25 +33,25 @@ Defs:
   ruvas: wygol | nonlinear
   
   kalidus: ruvas | nonlinear
-  villagerjacob: kalidus
+  villagerjacob: villagerjacob
   
   minera: kalidus | nonlinear
-  villagerabram: minera
-  villageraeon: minera & medium height
+  villagerabram: villagerabram
+  villageraeon: villageraeon
   mineraend: minera & magnes | minera & big height | minera & double jump # double jump is enough because you can kickbounce off the breakable wall to get an effective quadruple jump.
   
   lighthouse: mineraend | nonlinear
   bossbrachyura: lighthouse & magnes | lighthouse & medium height
-  villagereugen: bossbrachyura
+  villagereugen: villagereugen
   
   kaliduslower: bossbrachyura & serpent scale
-  villagermonica: kaliduslower
+  villagermonica: villagermonica
   
   tymeo: kaliduslower | nonlinear
   tymeomid: tymeo & magnes | tymeo & big height # to get past the spike room
-  villagerlaura: tymeomid
+  villagerlaura: villagerlaura
   tymeoeast: tymeomid & medium height | tymeomid & distance
-  villagermarcel: tymeoeast
+  villagermarcel: villagermarcel
   
   mistyroad: tymeomid | nonlinear
   
@@ -60,16 +60,16 @@ Defs:
   
   somnus: skelecave | nonlinear
   somnusmid: somnus & serpent scale
-  villagerserge: somnusmid
-  villageranna: somnusmid
+  villagerserge: villagerserge
+  villageranna: villageranna
   
   giantdwelling: somnusmid | nonlinear
   giantdwellingmid: giantdwelling & medium height
-  villagerdaniela: giantdwellingmid
+  villagerdaniela: villagerdaniela
   
   tristis: giantdwellingmid | nonlinear
   tristisafterwaterfall: tristis & medium height & magnes
-  villageririna: tristisafterwaterfall
+  villageririna: villageririna
   
   oblivionridge: tristisafterwaterfall | nonlinear
   
@@ -306,6 +306,7 @@ Rooms:
     00 (Chamomile): serpent scale
   06-00-04:
     room: kalidus
+    00 (Jacob) (Villager): 
     01 (Magical Ticket): 
   06-00-07:
     room: kalidus
@@ -346,6 +347,9 @@ Rooms:
     04 (Money): 
     05 (Money): 
     06 (Money): 
+  06-01-05:
+    room: kaliduslower
+    00 (Monica) (Villager): 
   06-01-07:
     room: kaliduslower
     00 (Potion): 
@@ -353,6 +357,9 @@ Rooms:
   07-00-04:
     room: somnusmid
     02 (Money): 
+  07-00-06:
+    room: somnusmid
+    01 (Anna) (Villager): 
   07-00-07:
     room: somnusmid
     00 (Reinforced Suit): 
@@ -363,6 +370,7 @@ Rooms:
   07-00-0A:
     room: somnusmid
     01 (Vic Viper) (Hidden): 
+    02 (Serge) (Villager): 
   07-00-0D:
     room: somnusmid
     01 (Vol Ascia): 
@@ -386,6 +394,7 @@ Rooms:
   08-01-01:
     room: minera & medium height
     00 (Tower Ring): 
+    01 (Aeon) (Villager): 
   08-01-02:
     room: minera
     00 (Anti-Venom): 
@@ -398,6 +407,9 @@ Rooms:
   08-01-08:
     room: minera
     00 (Money): 
+  08-01-09:
+    room: minera
+    00 (Abram) (Villager): 
   08-02-00:
     room: minera
     00 (HEART Max Up): mineraend
@@ -415,6 +427,9 @@ Rooms:
   09-00-03:
     room: bossbrachyura
     00 (Luminatio) (Event): 
+  09-00-06:
+    room: bossbrachyura
+    00 (Eugen) (Villager): 
   09-00-07:
     room: bossbrachyura
     01 (Serpent Scale): 
@@ -422,6 +437,9 @@ Rooms:
   0A-00-00:
     room: tymeo
     02 (Blue Drops): 
+  0A-00-05:
+    room: tymeomid
+    00 (Laura) (Villager): 
   0A-00-09:
     room: tymeomid
     00 (Fides Fio): 
@@ -437,6 +455,9 @@ Rooms:
   0A-00-11:
     room: tymeoeast
     00 (Emperor Ring): 
+  0A-00-13:
+    room: tymeoeast
+    01 (Marcel) (Villager): 
   0A-01-01:
     room: tymeo
     01 (Mushroom): 
@@ -468,6 +489,9 @@ Rooms:
     00 (Lovers Ring): 
     01 (HEART Max Up): 
     03 (Amanita): 
+  0B-01-03:
+    room: tristisafterwaterfall
+    00 (Irina) (Villager): 
   0B-01-05:
     room: tristisafterwaterfall
     00 (HP Max up): 
@@ -481,6 +505,9 @@ Rooms:
   0D-00-04:
     room: giantdwelling
     00 (Caprine): giantdwellingmid
+  0D-00-05:
+    room: giantdwellingmid
+    00 (Daniela) (Villager): 
   0D-00-06:
     room: giantdwellingmid
     00 (Vol Secare): 

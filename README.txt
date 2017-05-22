@@ -15,6 +15,7 @@ Item Stats/Behavior: Randomizes item stats and how weapons behave.
 Skill Stats/Behavior: Randomizes skill stats and how skills behave.
 Shop Items: Randomizes what items are for sale in the shop.
 Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
+Villagers: Randomizes where villagers are located (OoE only).
 
 There are also some buggy, experimental options:
 Players: Randomizes player graphics and movement stats.

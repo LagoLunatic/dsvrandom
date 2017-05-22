@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>584</height>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -185,6 +185,20 @@
               </property>
               <property name="text">
                <string>Wooden Chest Items</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QCheckBox" name="randomize_villagers">
+              <property name="toolTip">
+               <string>Randomizes where villagers are located (OoE only).</string>
+              </property>
+              <property name="text">
+               <string>Villagers</string>
               </property>
              </widget>
             </item>

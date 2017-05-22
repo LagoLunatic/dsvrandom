@@ -8,12 +8,14 @@ class CompletabilityChecker
               :defs,
               :enemy_locations,
               :event_locations,
+              :villager_locations,
               :hidden_locations
   
-  def initialize(game, enable_glitches, ooe_nonlinear)
+  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
     @game = game
     @enable_glitches = enable_glitches
     @ooe_nonlinear = ooe_nonlinear
+    @ooe_randomize_villagers = ooe_randomize_villagers
     
     @rng = Random.new
     load_room_reqs()
@@ -51,6 +53,7 @@ class CompletabilityChecker
     
     @enemy_locations = []
     @event_locations = []
+    @villager_locations = []
     @hidden_locations = []
     
     rooms.each do |room_str, yaml_reqs|
@@ -75,6 +78,10 @@ class CompletabilityChecker
             entity_str = "#{room_str}_%02X" % entity_index
             @event_locations << entity_str
           end
+          if applies_to.end_with?(" (Villager)")
+            entity_str = "#{room_str}_%02X" % entity_index
+            @villager_locations << entity_str
+          end
           if applies_to.end_with?(" (Hidden)")
             entity_str = "#{room_str}_%02X" % entity_index
             @hidden_locations << entity_str
@@ -91,6 +98,8 @@ class CompletabilityChecker
       return true
     elsif reqs == false
       return false
+    elsif PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(reqs.to_sym)
+      return reqs.to_sym
     end
     
     or_reqs = reqs.split("|")
@@ -132,6 +141,10 @@ class CompletabilityChecker
         has_item = @current_items.include?(item_global_id)
         @cached_checked_reqs[@defs[req]] = has_item
         return has_item
+      elsif PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(@defs[req])
+        has_villager = @current_items.include?(@defs[req])
+        @cached_checked_reqs[@defs[req]] = has_villager
+        return has_villager
       elsif @defs[req] == true
         return true
       elsif @defs[req] == false
@@ -215,6 +228,9 @@ class CompletabilityChecker
       
       @defs.each do |name, req|
         pickups << req if req.is_a?(Integer)
+      end
+      if GAME == "ooe" && @ooe_randomize_villagers
+        pickups += PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES
       end
       
       pickups

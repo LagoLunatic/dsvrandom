@@ -40,7 +40,7 @@ class Randomizer
       raise "No seed given"
     end
     
-    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map])
+    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map], options[:randomize_villagers])
     
     int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(int_seed)

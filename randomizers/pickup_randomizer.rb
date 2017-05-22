@@ -1,5 +1,20 @@
 
 module PickupRandomizer
+  VILLAGER_NAME_TO_EVENT_FLAG = {
+    :villagerjacob => 0x2A,
+    :villagerabram => 0x2D,
+    :villageraeon => 0x3C,
+    :villagereugen => 0x38,
+    :villagermonica => 0x4F,
+    :villagerlaura => 0x32,
+    :villagermarcel => 0x40,
+    :villagerserge => 0x47,
+    :villageranna => 0x4B,
+    :villagerdaniela => 0x57,
+    :villageririna => 0x53,
+  }
+  RANDOMIZABLE_VILLAGER_NAMES = VILLAGER_NAME_TO_EVENT_FLAG.keys
+  
   def randomize_pickups_completably
     spoiler_log.puts "Randomizing pickups:"
     
@@ -136,9 +151,24 @@ module PickupRandomizer
       elsif pickups_by_locations.any?
         # No locations can access new areas, but the game isn't beatable yet.
         # This means any new areas will need at least two new items to access.
-        # So just place random pickup for now.
+        # So just place a random pickup for now.
         
-        pickup_global_id = pickups_by_locations.keys.sample(random: rng)
+        valid_pickups = pickups_by_locations.keys
+        
+        if GAME == "ooe" && options[:randomize_villagers]
+          valid_villagers = valid_pickups & RANDOMIZABLE_VILLAGER_NAMES
+          if checker.check_reqs([[:bossalbus]])
+            if valid_villagers.any?
+              # Once Albus is accessible, prioritize placing villagers over other pickups.
+              valid_pickups = valid_villagers
+            end
+          else
+            # Don't start placing villagers until Albus is accessible.
+            valid_pickups -= RANDOMIZABLE_VILLAGER_NAMES
+          end
+        end
+        
+        pickup_global_id = valid_pickups.sample(random: rng)
       else
         # All progression pickups placed.
         break
@@ -162,11 +192,41 @@ module PickupRandomizer
         next if accessible_unused_boss_locations.length > 0
       end
       
+      if !options[:randomize_villagers] && GAME == "ooe"
+        # If randomize villagers option is off, don't allow putting random things in these locations.
+        accessible_unused_villager_locations = possible_locations & checker.villager_locations
+        accessible_unused_villager_locations.each do |location|
+          possible_locations.delete(location)
+          @locations_randomized_to_have_useful_pickups << location
+          
+          # Also, give the player this villager so the checker takes this into account.
+          villager_name = get_villager_name_by_entity_location(location)
+          checker.add_item(villager_name)
+        end
+        
+        next if accessible_unused_villager_locations.length > 0
+      end
+      
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
       new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       
-      if new_possible_locations.empty?
+      if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+        valid_accessible_locations = previous_accessible_locations.map do |previous_accessible_region|
+          possible_locations = previous_accessible_region.dup
+          possible_locations -= @locations_randomized_to_have_useful_pickups
+          
+          possible_locations = filter_locations_valid_for_pickup(possible_locations, pickup_global_id)
+          
+          possible_locations = nil if possible_locations.empty?
+          
+          possible_locations
+        end.compact.flatten
+        
+        valid_accessible_locations += new_possible_locations
+        
+        new_possible_locations = valid_accessible_locations
+      elsif new_possible_locations.empty?
         # No new locations, so select an old location.
         
         valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
@@ -214,8 +274,13 @@ module PickupRandomizer
       location = new_possible_locations.sample(random: rng)
       @locations_randomized_to_have_useful_pickups << location
       
-      pickup_name = checker.defs.invert[pickup_global_id].to_s
-      pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
+      if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+        # Villager
+        pickup_str = "villager #{pickup_global_id}"
+      else
+        pickup_name = checker.defs.invert[pickup_global_id].to_s
+        pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
+      end
       location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
       area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
       if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
@@ -319,6 +384,16 @@ module PickupRandomizer
       # This is because they need to be inside a chest, and chests can't be hidden.
       locations -= checker.hidden_locations
     end
+    if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+      # Villagers can't be hidden, an event glyph, or a boss drop.
+      locations -= checker.hidden_locations
+      locations -= checker.event_locations
+      locations -= checker.enemy_locations
+      
+      # Locations too close to the top of the room shouldn't be villagers, as the Torpor glyph would spawn above the screen and not be absorbable.
+      locations_too_high_to_be_a_villager = ["00-05-07_01", "00-05-07_02", "00-05-08_02", "00-05-08_03", "00-05-0C_01", "00-06-09_00", "0D-00-04_00", "0D-00-0C_00"]
+      locations -= locations_too_high_to_be_a_villager
+    end
     
     locations
   end
@@ -418,7 +493,18 @@ module PickupRandomizer
       return
     end
     
-    if entity.type == 1
+    if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+      # Villager
+      
+      if GAME != "ooe"
+        raise "Tried to place villager in #{GAME}"
+      end
+      
+      entity.type = 2
+      entity.subtype = 0x89
+      entity.var_a = VILLAGER_NAME_TO_EVENT_FLAG[pickup_global_id]
+      entity.var_b = 0
+    elsif entity.type == 1
       # Boss
       
       item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
@@ -659,6 +745,21 @@ module PickupRandomizer
     skill_global_id = skill_local_id + SKILL_GLOBAL_ID_RANGE.begin
     
     return skill_global_id
+  end
+  
+  def get_villager_name_by_entity_location(location)
+    location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+    
+    room = game.areas[area_index].sectors[sector_index].rooms[room_index]
+    entity = room.entities[entity_index]
+    
+    if GAME == "ooe" && entity.type == 2 && entity.subtype == 0x89
+      villager_name = VILLAGER_NAME_TO_EVENT_FLAG.invert[entity.var_a]
+      return villager_name
+    else
+      raise "Not a villager: #{location}"
+    end
   end
   
   def change_hardcoded_event_pickup(event_entity, pickup_global_id)
