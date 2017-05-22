@@ -52,7 +52,14 @@ module DropRandomizer
         if enemy["Glyph"] != 0
           # Only give glyph drops to enemies that original had a glyph drop.
           # Other enemies cannot drop a glyph anyway.
-          enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
+          
+          if enemy.name.include?("Fomor") || enemy.name.include?("Demon")
+            # Fomors and Demons can actually use the glyph you give them, but only if it's a projectile arm glyph.
+            enemy["Glyph"] = get_unplaced_non_progression_projectile_glyph() - SKILL_GLOBAL_ID_RANGE.begin + 1
+          else
+            enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
+          end
+          
           if enemy["Glyph Chance"] != 100
             # Don't set glyph chance if it was originally 100%, because it won't matter for those enemies.
             # Otherwise set it to 1-20%.

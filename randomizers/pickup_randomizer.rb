@@ -383,6 +383,28 @@ module PickupRandomizer
     return skill_global_id
   end
   
+  def get_unplaced_non_progression_projectile_glyph
+    projectile_glyph_ids = (0x16..0x18).to_a + (0x1C..0x36).to_a
+    valid_skills = @unplaced_non_progression_pickups.select do |pickup_global_id|
+      projectile_glyph_ids.include?(pickup_global_id)
+    end
+    
+    skill_global_id = valid_skills.sample(random: rng)
+    
+    if skill_global_id.nil?
+      # Ran out of unplaced projectile glyphs, so place a duplicate instead.
+      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
+        projectile_glyph_ids.include?(pickup_global_id)
+      end
+      @unplaced_non_progression_pickups -= checker.current_items
+      return get_unplaced_non_progression_projectile_glyph()
+    end
+    
+    @unplaced_non_progression_pickups.delete(skill_global_id)
+    
+    return skill_global_id
+  end
+  
   def change_entity_location_to_pickup_global_id(location, pickup_global_id)
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
