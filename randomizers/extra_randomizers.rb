@@ -285,13 +285,15 @@ module ExtraRandomizers
           skill_extra_data.write_to_rom()
         end
       when "ooe"
-        skill["Max at once"] = rand_range_weighted_low(1..6)
+        if (0x37..0x4E).include?(skill_global_id)
+          # Back glyphs can't be properly toggled off if max at once is greater than 1. (Except Agartha.)
+          skill["Max at once"] = 1
+        else
+          skill["Max at once"] = rand_range_weighted_low(1..6)
+        end
+        
         skill["IFrames"] = rand_range_weighted_low(1..0x24)
         skill["Delay"] = rand_range_weighted_low(0..14)
-        
-        if skill.name == "Rapidus Fio"
-          skill["Max at once"] = 1
-        end
       end
       
       skill["Effects"].names.each_with_index do |bit_name, i|
