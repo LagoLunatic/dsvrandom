@@ -320,6 +320,22 @@ module EnemyRandomizer
       chance_b = rng.rand(0x10..0xF0)
       enemy.var_a = (chance_a << 8) | enemy_id_a
       enemy.var_b = (chance_b << 8) | enemy_id_b
+    when "White Dragon"
+      room_has_left_doors = !!enemy.room.doors.find{|door| door.direction == :left}
+      room_has_right_doors = !!enemy.room.doors.find{|door| door.direction == :right}
+      if room_has_left_doors && !room_has_right_doors
+        # On a right wall.
+        enemy.var_a = 1
+        room_width = room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
+        enemy.x_pos = room_width - 0x10
+      elsif room_has_right_doors && !room_has_left_doors
+        # On a left wall.
+        enemy.var_a = 0
+        enemy.x_pos = 0x10
+      else
+        # Hard to know where to place this enemy if the room has both left and right doors.
+        return :redo
+      end
     else
       enemy.var_a = 0
       enemy.var_b = 0
@@ -328,7 +344,7 @@ module EnemyRandomizer
   
   def por_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
-    when "Zombie", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly"
+    when "Zombie", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly", "Bone Pillar", "Fish Head", "White Dragon"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Hanged Bones", "Skeleton Tree"
       enemy.var_a = rng.rand(0..0x40) # Length
@@ -405,8 +421,6 @@ module EnemyRandomizer
       enemy.var_b = dist
     when "Blue Crow", "Black Crow"
       enemy.var_a = 1 # Teleport to the closest floor.
-    when "Bone Pillar", "Fish Head"
-      dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Killer Bee", "Bee Hive"
       if enemy.room.width > 4
         # Bee AI seems buggy and can teleport them around in very wide rooms.
@@ -422,8 +436,10 @@ module EnemyRandomizer
   
   def ooe_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
-    when "Bat", "Medusa Head"
+    when "Bat", "Medusa Head", "Bone Pillar", "Fish Head", "White Dragon"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Black Crow"
+      por_adjust_randomized_enemy(enemy, enemy_dna)
     when "Zombie", "Ghoul"
       if rng.rand <= 0.30 # 30% chance to be a single Zombie
         enemy.var_a = 0
@@ -478,15 +494,11 @@ module EnemyRandomizer
     when "Gorgon Head"
       enemy.var_a = rng.rand(300..700) # Minimum delay between spawns
       enemy.var_b = rng.rand(120..700) # Random range to add to delay between spawns
-    when "Black Crow"
-      por_adjust_randomized_enemy(enemy, enemy_dna)
     when "Nightmare"
       if enemy.room.width <= 1
         # Don't let Nightmare appear in 1-screen wide rooms as he will just fade in and out constantly if he doesn't have a wide area.
         return :redo
       end
-    when "Bone Pillar", "Fish Head"
-      dos_adjust_randomized_enemy(enemy, enemy_dna)
     else
       enemy.var_a = 0
       enemy.var_b = 0
