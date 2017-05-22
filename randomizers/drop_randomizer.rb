@@ -15,7 +15,13 @@ module DropRandomizer
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy = game.enemy_dnas[enemy_id]
       
-      if rng.rand <= 0.5 # 50% chance to have an item drop
+      can_drop_items = true
+      if GAME == "ooe" && enemy.name == "Blood Skeleton"
+        # Blood Skeletons can't be killed so they can't drop items.
+        can_drop_items = false
+      end
+      
+      if rng.rand <= 0.5 && can_drop_items # 50% chance to have an item drop
         if GAME == "por"
           enemy["Item 1"] = get_unplaced_non_progression_pickup() + 1
         else
