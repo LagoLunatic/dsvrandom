@@ -163,6 +163,26 @@ class Randomizer
       layer.tiles[0x28].horizontal_flip = true
       layer.write_to_rom()
     end
+    
+    if GAME == "ooe" && options[:open_world_map]
+      game.apply_armips_patch("ooe_nonlinear")
+      
+      # Fix some broken platforms in Tristis Pass so the player cannot become permastuck.
+      layer = game.areas[0xB].sectors[0].rooms[2].layers.first
+      layer.tiles[0xD1].index_on_tileset = 0x378
+      layer.tiles[0xD2].index_on_tileset = 0x378
+      layer.write_to_rom()
+      layer = game.areas[0xB].sectors[0].rooms[4].layers.first
+      layer.tiles[0x31].index_on_tileset = 0x37C
+      layer.tiles[0x32].index_on_tileset = 0x37C
+      layer.tiles[0x121].index_on_tileset = 0x378
+      layer.tiles[0x122].index_on_tileset = 0x378
+      layer.tiles[0x1BD].index_on_tileset = 0x37C
+      layer.tiles[0x1BE].index_on_tileset = 0x37C
+      layer.tiles[0x2AD].index_on_tileset = 0x378
+      layer.tiles[0x2AE].index_on_tileset = 0x378
+      layer.write_to_rom()
+    end
   rescue StandardError => e
     spoiler_log.puts "ERROR!"
     raise e

@@ -224,26 +224,6 @@ class RandomizerWindow < Qt::Dialog
       game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
-    if GAME == "ooe" && @ui.open_world_map.checked()
-      game.apply_armips_patch("ooe_nonlinear")
-      
-      # Fix some broken platforms in Tristis Pass so the player cannot become permastuck.
-      layer = game.areas[0xB].sectors[0].rooms[2].layers.first
-      layer.tiles[0xD1].index_on_tileset = 0x378
-      layer.tiles[0xD2].index_on_tileset = 0x378
-      layer.write_to_rom()
-      layer = game.areas[0xB].sectors[0].rooms[4].layers.first
-      layer.tiles[0x31].index_on_tileset = 0x37C
-      layer.tiles[0x32].index_on_tileset = 0x37C
-      layer.tiles[0x121].index_on_tileset = 0x378
-      layer.tiles[0x122].index_on_tileset = 0x378
-      layer.tiles[0x1BD].index_on_tileset = 0x37C
-      layer.tiles[0x1BE].index_on_tileset = 0x37C
-      layer.tiles[0x2AD].index_on_tileset = 0x378
-      layer.tiles[0x2AE].index_on_tileset = 0x378
-      layer.write_to_rom()
-    end
-    
     if @ui.name_unnamed_skills.checked()
       game.fix_unnamed_skills()
     end
@@ -251,9 +231,6 @@ class RandomizerWindow < Qt::Dialog
     if @ui.unlock_all_modes.checked()
       game.apply_armips_patch("#{GAME}_unlock_everything")
     end
-    
-    #game.apply_armips_patch("ooe_enter_any_wall")
-    #game.apply_armips_patch("dos_use_what_you_see_souls")
     
     write_to_rom(game)
   rescue StandardError => e
