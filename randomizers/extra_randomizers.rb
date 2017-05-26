@@ -212,7 +212,7 @@ module ExtraRandomizers
   end
   
   def randomize_skill_stats
-    SKILL_GLOBAL_ID_RANGE.each do |skill_global_id|
+    (SKILL_GLOBAL_ID_RANGE.to_a & all_non_progression_pickups).each do |skill_global_id|
       skill = game.items[skill_global_id]
       
       if @ooe_starter_glyph_id
