@@ -787,6 +787,13 @@ module PickupRandomizer
       # Item given when skipping the event
       game.fs.write(0x021CBC14, [item_type].pack("C"))
       game.fs.write(0x021CBC18, [item_index].pack("C"))
+      
+      # Also display the item's name in the corner when skipping the event.
+      # We add a few new lines of code in free space for this.
+      code = [0xE3A00000, 0xE3A010F0, 0xEBFDB6FD, 0xE1A00005, 0xEA042E64]
+      game.fs.write(0x020C027C, code.pack("V*"))
+      game.fs.write(0x020C027C, [pickup_global_id+1].pack("C"))
+      game.fs.write(0x021CBC20, [0xEAFBD195].pack("V"))
     end
   end
   
