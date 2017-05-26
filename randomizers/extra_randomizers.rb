@@ -162,17 +162,17 @@ module ExtraRandomizers
             
             item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
             
+            if item["Swing Anim"] == 0xA && bit_name == "Player can move"
+              # This bit must be set for throwing weapons in DoS or they won't appear.
+              item[bitfield_attr_name][i] = true
+            end
+            
             if bit_name == "Player can move"
               player_can_move = item[bitfield_attr_name][i]
             end
             
             if bit_name == "No interrupt on anim end" && player_can_move
               # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
-              item[bitfield_attr_name][i] = true
-            end
-            
-            if item["Super Anim"] == 0xA && bit_name == "Player can move"
-              # This bit must be set for throwing weapons in DoS or they won't appear.
               item[bitfield_attr_name][i] = true
             end
             
