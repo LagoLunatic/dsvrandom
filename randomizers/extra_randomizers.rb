@@ -110,14 +110,18 @@ module ExtraRandomizers
           end
         end
       when "Weapons"
-        item["Attack"]       = rand_range_weighted_very_low(0..0xA0)
-        item["Defense"]      = rand_range_weighted_very_low(0..10)
-        item["Strength"]     = rand_range_weighted_very_low(0..10)
-        item["Constitution"] = rand_range_weighted_very_low(0..10)
-        item["Intelligence"] = rand_range_weighted_very_low(0..10)
-        item["Mind"]         = rand_range_weighted_very_low(0..10) if GAME == "por" || GAME == "ooe"
-        item["Luck"]         = rand_range_weighted_very_low(0..10)
-        item["IFrames"] = rng.rand(4..0x28)
+        item["Attack"] = rand_range_weighted_very_low(0..150)
+        
+        extra_stats = ["Defense", "Strength", "Constitution", "Intelligence", "Luck"]
+        extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
+        total_num_extra_stats = extra_stats.length
+        
+        num_extra_stats_for_this_item = rand_range_weighted_very_low(0..total_num_extra_stats)
+        extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
+          item[stat_name] = rand_range_weighted_very_low(1..10)
+        end
+        
+        item["IFrames"] = rng.rand(4..45)
         
         case GAME
         when "dos"
@@ -171,16 +175,24 @@ module ExtraRandomizers
               # This bit must be set for throwing weapons in DoS or they won't appear.
               item[bitfield_attr_name][i] = true
             end
+            
+            if bit_name == "Cures vampirism & kills undead" && item[bitfield_attr_name][i] == true
+              # Don't give this weapon the magical bit if it has the cures vampirism bit because we don't want it to cure the sisters.
+              item[bitfield_attr_name][26] = false # Magical
+            end
           end
         end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
-        item["Attack"]       = rand_range_weighted_very_low(0..10)
-        item["Defense"]      = rand_range_weighted_very_low(0..0x40)
-        item["Strength"]     = rand_range_weighted_very_low(0..12)
-        item["Constitution"] = rand_range_weighted_very_low(0..12)
-        item["Intelligence"] = rand_range_weighted_very_low(0..12)
-        item["Mind"]         = rand_range_weighted_very_low(0..12) if GAME == "por" || GAME == "ooe"
-        item["Luck"]         = rand_range_weighted_very_low(0..12)
+        item["Defense"] = rand_range_weighted_very_low(0..40)
+        
+        extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
+        extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
+        total_num_extra_stats = extra_stats.length
+        
+        num_extra_stats_for_this_item = rand_range_weighted_very_low(0..total_num_extra_stats)
+        extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
+          item[stat_name] = rand_range_weighted_very_low(1..10)
+        end
         
         unless item.name == "Casual Clothes"
           item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
@@ -190,7 +202,7 @@ module ExtraRandomizers
           "Resistances",
         ].each do |bitfield_attr_name|
           item[bitfield_attr_name].names.each_with_index do |bit_name, i|
-            item[bitfield_attr_name][i] = [true, false, false, false, false, false, false].sample(random: rng)
+            item[bitfield_attr_name][i] = [true, false, false, false, false, false, false, false, false].sample(random: rng)
           end
         end
       end
@@ -215,7 +227,7 @@ module ExtraRandomizers
         skill["DMG multiplier"] = rand_range_weighted_low(15..85)
       elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
         # Glyph union
-        skill["Heart cost"] = rand_range_weighted_low(5..60)
+        skill["Heart cost"] = rand_range_weighted_low(5..50)
         skill["DMG multiplier"] = rand_range_weighted_low(15..55)
       else
         skill["Mana cost"] = rng.rand(1..60)
@@ -226,8 +238,7 @@ module ExtraRandomizers
       
       if skill["?/Swings/Union"]
         union_type = skill["?/Swings/Union"]
-        if union_type != 0x13
-          # Don't randomize Dominus glyphs (union type 13)
+        if union_type != 0x13 # Don't randomize Dominus glyphs (union type 13)
           union_type = rng.rand(0x01..0x12)
           low_two_bits = skill["?/Swings/Union"] & 0b11
           skill["?/Swings/Union"] = (union_type << 2) | low_two_bits
@@ -235,7 +246,7 @@ module ExtraRandomizers
       end
       
       if GAME == "por" && skill["Type"] == 0
-        unless [
+        skills_that_must_be_used_by_original_player = [
           "Stonewall",
           "Wrecking Ball",
           "Rampage",
@@ -249,7 +260,9 @@ module ExtraRandomizers
           "MIND Boost",
           "LUCK Boost",
           "ALL Boost",
-        ].include?(skill.name)
+        ]
+        
+        unless skills_that_must_be_used_by_original_player.include?(skill.name)
           # Randomize whether this skill is usable by Jonathan or Charlotte.
           # Except for the above listed skills, since the wrong character can't actually use them.
           skill["??? bitfield"][2] = [true, false].sample(random: rng)
@@ -297,6 +310,15 @@ module ExtraRandomizers
       end
       
       skill["Effects"].names.each_with_index do |bit_name, i|
+        if bit_name == "Cures vampirism & kills undead"
+          # Don't want to randomize this or Sanctuary won't work. Also don't want to give any other spells besides Sanctuary this.
+          next
+        end
+        if bit_name == "Magical" && skill.name == "Sanctuary"
+          # Always make sure Sanctuary has the magical bit set, in case it's a Jonathan skill and it doesn't get set automatically.
+          skill["Effects"][i] = true
+          next
+        end
         skill["Effects"][i] = [true, false, false, false].sample(random: rng)
       end
       
