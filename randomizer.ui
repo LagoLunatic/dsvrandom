@@ -202,6 +202,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_weapon_synths">
+              <property name="toolTip">
+               <string>Randomizes which items Yoko can synthesize (DoS only).</string>
+              </property>
+              <property name="text">
+               <string>Weapon Synthesis</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -313,16 +323,6 @@
               </property>
               <property name="text">
                <string>Enemy Stats</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_weapon_synths">
-              <property name="toolTip">
-               <string>Randomizes which items Yoko can synthesize (DoS only).</string>
-              </property>
-              <property name="text">
-               <string>Weapon Synthesis</string>
               </property>
              </widget>
             </item>
@@ -538,7 +538,6 @@
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
-  <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>name_unnamed_skills</tabstop>
   <tabstop>fix_first_ability_soul</tabstop>
   <tabstop>no_touch_screen</tabstop>
