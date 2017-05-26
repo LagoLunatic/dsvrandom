@@ -334,7 +334,9 @@ module ExtraRandomizers
   end
   
   def randomize_enemy_stats
-    game.enemy_dnas.each_with_index do |enemy_dna, enemy_id|
+    COMMON_ENEMY_IDS.each do |enemy_id|
+      enemy_dna = game.enemy_dnas[enemy_id]
+      
       enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.5..3.0)).round
       enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.5..3.0)).round if GAME == "dos"
       enemy_dna["SP"]      = (enemy_dna["SP"]*rng.rand(0.5..3.0)).round if GAME == "por"
@@ -353,12 +355,6 @@ module ExtraRandomizers
       ].each do |bitfield_attr_name|
         enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
           next if bit_name == "Resistance 32" # Something related to rendering its GFX
-          
-          if BOSS_IDS.include?(enemy_id) && ["Curse", "Stone", "Torpor"].include?(bit_name) && bitfield_attr_name == "Weaknesses"
-            # Don't let bosses be cursed/stoned/torpored, because some bosses will softlock the game if this happens.
-            # TODO: Test every boss to see which ones do and don't softlock the game, and only disable these bits for those bosses.
-            next
-          end
           
           enemy_dna[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
           
