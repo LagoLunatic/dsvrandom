@@ -530,6 +530,12 @@
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
+  <tabstop>randomize_item_stats</tabstop>
+  <tabstop>randomize_skill_stats</tabstop>
+  <tabstop>randomize_shop</tabstop>
+  <tabstop>randomize_wooden_chests</tabstop>
+  <tabstop>randomize_villagers</tabstop>
+  <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>enable_glitch_reqs</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
@@ -538,11 +544,15 @@
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
-  <tabstop>name_unnamed_skills</tabstop>
-  <tabstop>fix_first_ability_soul</tabstop>
-  <tabstop>no_touch_screen</tabstop>
-  <tabstop>open_world_map</tabstop>
   <tabstop>about_button</tabstop>
+  <tabstop>name_unnamed_skills</tabstop>
+  <tabstop>unlock_all_modes</tabstop>
+  <tabstop>fix_first_ability_soul</tabstop>
+  <tabstop>fix_luck</tabstop>
+  <tabstop>no_touch_screen</tabstop>
+  <tabstop>unlock_boss_doors</tabstop>
+  <tabstop>dont_randomize_change_cube</tabstop>
+  <tabstop>open_world_map</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>

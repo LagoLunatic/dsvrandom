@@ -79,7 +79,8 @@ Defs:
   mysterymanormid: mysterymanor & medium height
   bossalbus: mysterymanormid
   
-  bossbarlowe: ecclesia & bossalbus & villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
+  allvillagers: villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
+  bossbarlowe: ecclesia & bossalbus & allvillagers
   
   trainchamber: backexit | nonlinear
   trainchamberend: trainchamber & magnes & double jump
@@ -288,7 +289,7 @@ Rooms:
   02-00-04:
     room: ecclesia
     05 (Record 1): 
-    #07 (Glyph Sleeve): # this only appears on hard mode
+    #07 (Glyph Sleeve): # don't randomize this, always start the player with the glyph sleeve
 #Training Chamber:
   03-00-01:
     room: trainchamber
@@ -533,7 +534,7 @@ Rooms:
     00 (Gold Ore): 
   0E-00-09:
     room: mysterymanormid
-    06 (Dominus Agony) (Event): bossbarlowe # absorbing this gets you the bad end unless you have all villagers first
+    06 (Dominus Agony) (Event): bossalbus & allvillagers # absorbing this gets you the bad end unless you have all villagers first
 #Misty Forest Road:
   0F-00-02:
     room: mistyroad
@@ -586,7 +587,7 @@ Rooms:
     01 (HP Max up): 
   12-00-08:
     room: monasterymid
-    00 (Cubus) (Event): false # don't place progression pickups here
+    00 (Cubus) (Event): false # don't place progression pickups here, too many things can solve this block puzzle
   12-00-09:
     room: monasterymid
     00 (Culter): 
