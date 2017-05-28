@@ -29,7 +29,7 @@ module ExtraRandomizers
       
       selected_enemy_id = available_enemies_with_same_overlay.sample(random: rng)
       selected_enemy_dna = game.enemy_dnas[selected_enemy_id]
-      enemy_dna["Running AI"] = selected_enemy_dna["Running AI"]
+      enemy_dna["Update Code"] = selected_enemy_dna["Update Code"]
       enemy_dna.write_to_rom()
     end
   end
