@@ -271,8 +271,8 @@ Rooms:
     room: bossdario
     #05 (Dario) (Enemy): # don't try to give dario something, because he can't drop a soul because he doesn't actually die.
   00-03-16:
-    room: upperrightgarden | garden & vwarp
-    00 (Handgun): 
+    room: 
+    00 (Handgun): upperrightgarden & height | garden & vwarp # height needed to get out
   00-03-18:
     room: lowergarden
     00 (Small Sword): 
