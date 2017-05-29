@@ -30,7 +30,7 @@ module EnemyRandomizer
     @cpu_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
     @cpu_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
-      if enemy_dna.name == "Forneus"
+      if ["Forneus", "Spin Devil"].include?(enemy_dna.name)
         true
       else
         false
