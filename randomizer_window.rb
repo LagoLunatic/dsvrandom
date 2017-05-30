@@ -45,6 +45,7 @@ class RandomizerWindow < Qt::Dialog
     
     connect(@ui.name_unnamed_skills, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.unlock_all_modes, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.reveal_breakable_walls, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_luck, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -94,6 +95,7 @@ class RandomizerWindow < Qt::Dialog
     
     @ui.name_unnamed_skills.setChecked(@settings[:name_unnamed_skills]) unless @settings[:name_unnamed_skills].nil?
     @ui.unlock_all_modes.setChecked(@settings[:unlock_all_modes]) unless @settings[:unlock_all_modes].nil?
+    @ui.reveal_breakable_walls.setChecked(@settings[:reveal_breakable_walls]) unless @settings[:reveal_breakable_walls].nil?
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
     @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
     @ui.fix_luck.setChecked(@settings[:fix_luck]) unless @settings[:fix_luck].nil?
@@ -151,6 +153,7 @@ class RandomizerWindow < Qt::Dialog
     
     @settings[:name_unnamed_skills] = @ui.name_unnamed_skills.checked
     @settings[:unlock_all_modes] = @ui.unlock_all_modes.checked
+    @settings[:reveal_breakable_walls] = @ui.reveal_breakable_walls.checked
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
     @settings[:no_touch_screen] = @ui.no_touch_screen.checked
     @settings[:fix_luck] = @ui.fix_luck.checked
@@ -234,6 +237,10 @@ class RandomizerWindow < Qt::Dialog
     
     if @ui.unlock_all_modes.checked()
       game.apply_armips_patch("#{GAME}_unlock_everything")
+    end
+    
+    if @ui.reveal_breakable_walls.checked()
+      game.apply_armips_patch("#{GAME}_reveal_breakable_walls")
     end
     
     write_to_rom(game)

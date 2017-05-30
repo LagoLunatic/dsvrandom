@@ -373,6 +373,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="reveal_breakable_walls">
+            <property name="text">
+             <string>Reveal breakable walls</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
