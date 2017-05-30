@@ -3,6 +3,39 @@ require_relative 'ui_randomizer'
 require_relative 'randomizer'
 
 class RandomizerWindow < Qt::Dialog
+  OPTIONS = %i(
+    randomize_pickups
+    randomize_enemies
+    randomize_enemy_drops
+    randomize_boss_souls
+    randomize_item_stats
+    randomize_skill_stats
+    randomize_shop
+    randomize_wooden_chests
+    randomize_villagers
+    randomize_weapon_synths
+    
+    randomize_players
+    randomize_bosses
+    randomize_area_connections
+    randomize_room_connections
+    randomize_starting_room
+    randomize_enemy_ai
+    randomize_enemy_stats
+    
+    enable_glitch_reqs
+
+    name_unnamed_skills
+    unlock_all_modes
+    reveal_breakable_walls
+    fix_first_ability_soul
+    no_touch_screen
+    fix_luck
+    unlock_boss_doors
+    dont_randomize_change_cube
+    open_world_map
+  )
+  
   slots "update_settings()"
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
@@ -23,35 +56,9 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.output_folder_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_output_folder()"))
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
-    connect(@ui.randomize_pickups, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_enemies, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_bosses, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_enemy_drops, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_boss_souls, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_villagers, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_area_connections, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_room_connections, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_starting_room, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_enemy_ai, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_players, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_item_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_skill_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_enemy_stats, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_weapon_synths, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_shop, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.randomize_wooden_chests, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    
-    connect(@ui.enable_glitch_reqs, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    
-    connect(@ui.name_unnamed_skills, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.unlock_all_modes, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.reveal_breakable_walls, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.fix_luck, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.unlock_boss_doors, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.dont_randomize_change_cube, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
-    connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    OPTIONS.each do |option_name|
+      connect(@ui.send(option_name), SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    end
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
     connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
@@ -73,35 +80,9 @@ class RandomizerWindow < Qt::Dialog
     @ui.output_folder.setText(@settings[:output_folder]) if @settings[:output_folder]
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
-    @ui.randomize_pickups.setChecked(@settings[:randomize_pickups]) unless @settings[:randomize_pickups].nil?
-    @ui.randomize_enemies.setChecked(@settings[:randomize_enemies]) unless @settings[:randomize_enemies].nil?
-    @ui.randomize_bosses.setChecked(@settings[:randomize_bosses]) unless @settings[:randomize_bosses].nil?
-    @ui.randomize_enemy_drops.setChecked(@settings[:randomize_enemy_drops]) unless @settings[:randomize_enemy_drops].nil?
-    @ui.randomize_boss_souls.setChecked(@settings[:randomize_boss_souls]) unless @settings[:randomize_boss_souls].nil?
-    @ui.randomize_villagers.setChecked(@settings[:randomize_villagers]) unless @settings[:randomize_villagers].nil?
-    @ui.randomize_area_connections.setChecked(@settings[:randomize_area_connections]) unless @settings[:randomize_area_connections].nil?
-    @ui.randomize_room_connections.setChecked(@settings[:randomize_room_connections]) unless @settings[:randomize_room_connections].nil?
-    @ui.randomize_starting_room.setChecked(@settings[:randomize_starting_room]) unless @settings[:randomize_starting_room].nil?
-    @ui.randomize_enemy_ai.setChecked(@settings[:randomize_enemy_ai]) unless @settings[:randomize_enemy_ai].nil?
-    @ui.randomize_players.setChecked(@settings[:randomize_players]) unless @settings[:randomize_players].nil?
-    @ui.randomize_item_stats.setChecked(@settings[:randomize_item_stats]) unless @settings[:randomize_item_stats].nil?
-    @ui.randomize_skill_stats.setChecked(@settings[:randomize_skill_stats]) unless @settings[:randomize_skill_stats].nil?
-    @ui.randomize_enemy_stats.setChecked(@settings[:randomize_enemy_stats]) unless @settings[:randomize_enemy_stats].nil?
-    @ui.randomize_weapon_synths.setChecked(@settings[:randomize_weapon_synths]) unless @settings[:randomize_weapon_synths].nil?
-    @ui.randomize_shop.setChecked(@settings[:randomize_shop]) unless @settings[:randomize_shop].nil?
-    @ui.randomize_wooden_chests.setChecked(@settings[:randomize_wooden_chests]) unless @settings[:randomize_wooden_chests].nil?
-    
-    @ui.enable_glitch_reqs.setChecked(@settings[:enable_glitch_reqs]) unless @settings[:enable_glitch_reqs].nil?
-    
-    @ui.name_unnamed_skills.setChecked(@settings[:name_unnamed_skills]) unless @settings[:name_unnamed_skills].nil?
-    @ui.unlock_all_modes.setChecked(@settings[:unlock_all_modes]) unless @settings[:unlock_all_modes].nil?
-    @ui.reveal_breakable_walls.setChecked(@settings[:reveal_breakable_walls]) unless @settings[:reveal_breakable_walls].nil?
-    @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
-    @ui.no_touch_screen.setChecked(@settings[:no_touch_screen]) unless @settings[:no_touch_screen].nil?
-    @ui.fix_luck.setChecked(@settings[:fix_luck]) unless @settings[:fix_luck].nil?
-    @ui.unlock_boss_doors.setChecked(@settings[:unlock_boss_doors]) unless @settings[:unlock_boss_doors].nil?
-    @ui.dont_randomize_change_cube.setChecked(@settings[:dont_randomize_change_cube]) unless @settings[:dont_randomize_change_cube].nil?
-    @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
+    OPTIONS.each do |option_name|
+      @ui.send(option_name).setChecked(@settings[option_name]) unless @settings[option_name].nil?
+    end
   end
   
   def save_settings
@@ -131,35 +112,9 @@ class RandomizerWindow < Qt::Dialog
     @settings[:output_folder] = @ui.output_folder.text
     @settings[:seed] = @ui.seed.text
     
-    @settings[:randomize_pickups] = @ui.randomize_pickups.checked
-    @settings[:randomize_enemies] = @ui.randomize_enemies.checked
-    @settings[:randomize_bosses] = @ui.randomize_bosses.checked
-    @settings[:randomize_enemy_drops] = @ui.randomize_enemy_drops.checked
-    @settings[:randomize_boss_souls] = @ui.randomize_boss_souls.checked
-    @settings[:randomize_villagers] = @ui.randomize_villagers.checked
-    @settings[:randomize_area_connections] = @ui.randomize_area_connections.checked
-    @settings[:randomize_room_connections] = @ui.randomize_room_connections.checked
-    @settings[:randomize_starting_room] = @ui.randomize_starting_room.checked
-    @settings[:randomize_enemy_ai] = @ui.randomize_enemy_ai.checked
-    @settings[:randomize_players] = @ui.randomize_players.checked
-    @settings[:randomize_item_stats] = @ui.randomize_item_stats.checked
-    @settings[:randomize_skill_stats] = @ui.randomize_skill_stats.checked
-    @settings[:randomize_enemy_stats] = @ui.randomize_enemy_stats.checked
-    @settings[:randomize_weapon_synths] = @ui.randomize_weapon_synths.checked
-    @settings[:randomize_shop] = @ui.randomize_shop.checked
-    @settings[:randomize_wooden_chests] = @ui.randomize_wooden_chests.checked
-    
-    @settings[:enable_glitch_reqs] = @ui.enable_glitch_reqs.checked
-    
-    @settings[:name_unnamed_skills] = @ui.name_unnamed_skills.checked
-    @settings[:unlock_all_modes] = @ui.unlock_all_modes.checked
-    @settings[:reveal_breakable_walls] = @ui.reveal_breakable_walls.checked
-    @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
-    @settings[:no_touch_screen] = @ui.no_touch_screen.checked
-    @settings[:fix_luck] = @ui.fix_luck.checked
-    @settings[:unlock_boss_doors] = @ui.unlock_boss_doors.checked
-    @settings[:dont_randomize_change_cube] = @ui.dont_randomize_change_cube.checked
-    @settings[:open_world_map] = @ui.open_world_map.checked
+    OPTIONS.each do |option_name|
+      @settings[option_name] = @ui.send(option_name).checked
+    end
     
     save_settings()
   end
