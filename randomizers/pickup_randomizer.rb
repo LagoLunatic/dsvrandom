@@ -68,6 +68,7 @@ module PickupRandomizer
       # But we also need to give the chest a unique flag, because it shares the flag with the one from Minera in normal mode.
       sleeve_chest = game.areas[2].sectors[0].rooms[4].entities[7]
       sleeve_chest.var_b = @unused_picked_up_flags.pop()
+      sleeve_chest.write_to_rom()
       # We also make sure the chest in Minera appears even on hard mode.
       entity_hider = game.areas[8].sectors[2].rooms[7].entities[1]
       entity_hider.type = 0
