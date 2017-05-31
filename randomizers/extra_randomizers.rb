@@ -81,7 +81,7 @@ module ExtraRandomizers
           
           case item["Type"]
           when 0, 1, 3 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(1..4000)
+            item["Var A"] = rand_range_weighted_very_low(1..1500)
           when 2 # Cures status effect
             item["Var A"] = [1, 2].sample(random: rng)
           end
@@ -102,9 +102,9 @@ module ExtraRandomizers
           
           case item["Type"]
           when 0, 1, 7 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(1..4000)
+            item["Var A"] = rand_range_weighted_very_low(1..1500)
           when 2 # Restores hearts
-            item["Var A"] = rand_range_weighted_low(1..500)
+            item["Var A"] = rand_range_weighted_low(1..400)
           when 3 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
@@ -319,7 +319,7 @@ module ExtraRandomizers
           skill["Effects"][i] = true
           next
         end
-        skill["Effects"][i] = [true, false, false, false].sample(random: rng)
+        skill["Effects"][i] = [true, false, false, false, false].sample(random: rng)
       end
       
       skill["Unwanted States"].names.each_with_index do |bit_name, i|
@@ -356,7 +356,7 @@ module ExtraRandomizers
         enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
           next if bit_name == "Resistance 32" # Something related to rendering its GFX
           
-          enemy_dna[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
+          enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false, false, false, false].sample(random: rng)
           
           if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
             # Don't set both the weakness and resistance bits for a given element.
