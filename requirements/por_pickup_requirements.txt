@@ -139,6 +139,7 @@ Rooms:
   00-01-03:
     room: midentrance
     00 (Head Guard): 
+    01 (Magus Ring): 
   00-01-04:
     room: entrance
     00 (Short Sword): 

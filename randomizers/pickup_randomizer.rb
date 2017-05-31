@@ -304,7 +304,8 @@ module PickupRandomizer
   
   def place_non_progression_pickups
     remaining_locations = checker.all_locations.keys - @locations_randomized_to_have_useful_pickups
-    remaining_locations.each_with_index do |location, i|
+    chaos_ring_placed = false
+    remaining_locations.shuffle(random: rng).each_with_index do |location, i|
       if checker.enemy_locations.include?(location)
         # Boss
         pickup_global_id = get_unplaced_non_progression_skill()
@@ -326,6 +327,12 @@ module PickupRandomizer
         when 0.50..1.00 # 50% chance to be an item
           pickup_global_id = get_unplaced_non_progression_item()
         end
+      elsif GAME == "dos" && !chaos_ring_placed
+        pickup_global_id = 0xCD
+        chaos_ring_placed = true
+      elsif GAME == "por" && !chaos_ring_placed
+        pickup_global_id = 0x12C
+        chaos_ring_placed = true
       elsif GAME == "por"
         # Pickup
         case rng.rand
@@ -566,6 +573,25 @@ module PickupRandomizer
           # We didn't use the picked up flag, so put it back
           @unused_picked_up_flags << picked_up_flag
         end
+        
+        entity.write_to_rom()
+        return
+      end
+      
+      # Make sure Chaos/Magus Ring isn't easily available.
+      if GAME == "dos" && pickup_global_id == 0xCD # Chaos Ring
+        entity.type = 2
+        entity.subtype = 0x4C # All-souls-owned item
+        entity.var_a = picked_up_flag
+        entity.var_b = pickup_global_id + 1
+        
+        entity.write_to_rom()
+        return
+      elsif GAME == "por" && pickup_global_id == 0x12C # Magus Ring
+        entity.type = 6 # All-quests-complete item
+        entity.subtype = 7
+        entity.var_a = picked_up_flag
+        entity.var_b = 6
         
         entity.write_to_rom()
         return
