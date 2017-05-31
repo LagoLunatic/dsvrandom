@@ -9,7 +9,8 @@ class CompletabilityChecker
               :enemy_locations,
               :event_locations,
               :villager_locations,
-              :hidden_locations
+              :hidden_locations,
+              :mirror_locations
   
   def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
     @game = game
@@ -55,6 +56,7 @@ class CompletabilityChecker
     @event_locations = []
     @villager_locations = []
     @hidden_locations = []
+    @mirror_locations = []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
@@ -70,21 +72,21 @@ class CompletabilityChecker
           entity_index = applies_to.to_i(16)
           @room_reqs[room_str][:entities][entity_index] = parsed_reqs
           
+          entity_str = "#{room_str}_%02X" % entity_index
           if applies_to.end_with?(" (Enemy)")
-            entity_str = "#{room_str}_%02X" % entity_index
             @enemy_locations << entity_str
           end
           if applies_to.end_with?(" (Event)")
-            entity_str = "#{room_str}_%02X" % entity_index
             @event_locations << entity_str
           end
           if applies_to.end_with?(" (Villager)")
-            entity_str = "#{room_str}_%02X" % entity_index
             @villager_locations << entity_str
           end
           if applies_to.end_with?(" (Hidden)")
-            entity_str = "#{room_str}_%02X" % entity_index
             @hidden_locations << entity_str
+          end
+          if applies_to.end_with?(" (Mirror)")
+            @mirror_locations << entity_str
           end
         end
       end

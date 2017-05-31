@@ -315,6 +315,9 @@ module PickupRandomizer
       elsif GAME == "ooe" && checker.event_locations.include?(location)
         # Event glyph
         pickup_global_id = get_unplaced_non_progression_skill()
+      elsif GAME == "dos" && checker.mirror_locations.include?(location)
+        # Soul candles shouldn't be placed in mirrors, as they will appear even outside the mirror.
+        pickup_global_id = get_unplaced_non_progression_item()
       elsif GAME == "ooe"
         # Pickup
         case rng.rand
@@ -382,6 +385,9 @@ module PickupRandomizer
     if GAME == "dos" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you souls in DoS.
       locations -= checker.event_locations
+      
+      # Don't let soul candles be inside mirrors. They don't get hidden, and are accessible without Paranoia.
+      locations -= checker.mirror_locations
     end
     if GAME == "ooe" && ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you items in OoE.

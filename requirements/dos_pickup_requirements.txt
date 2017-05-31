@@ -146,7 +146,7 @@ Rooms:
   00-00-13:
     room: afterarmor
     05 (Cape): 
-    06 (Tear Of Blood): paranoia | hwarp
+    06 (Tear Of Blood) (Mirror): paranoia | hwarp
   00-00-15: # drawbridge
     0A (Gold Stud): villagewatergate & big height | rahab & big height
     0B (Crimson Cloak): height
@@ -188,13 +188,13 @@ Rooms:
   00-01-1A:
     room: towerguesthouse & height
     02 (Ring Mail): 
-    03 (Dracula's Tunic): paranoia
+    03 (Dracula's Tunic) (Mirror): paranoia
   00-01-1C:
     room: bossparanoia
     00 (Paranoia) (Enemy): 
   00-01-20:
     room: bossparanoia
-    06 (Mana Prism): paranoia
+    06 (Mana Prism) (Mirror): paranoia
   00-01-23:
     room: puppetguesthouse
     00 (UMA News 2-2): 
@@ -239,7 +239,7 @@ Rooms:
   00-02-12:
     room: wizardry & balore
     02 (Combat Knife): 
-    03 (Rosary): paranoia
+    03 (Rosary) (Mirror): paranoia
   00-02-14:
     room: wizardry
     00 (Foie Gras): balore | small | vwarp
@@ -307,7 +307,7 @@ Rooms:
   00-04-11:
     room: chapel
     02 (Red Scarf): 
-    03 (Megingiord): paranoia
+    03 (Megingiord) (Mirror): paranoia
   00-04-12:
     room: chapel
     01 (High Mind Up): height | black panther
@@ -377,7 +377,7 @@ Rooms:
   00-07-05:
     room: ruins & medium height
     03 (Mana Prism): 
-    04 (Super Potion): paranoia
+    04 (Super Potion) (Mirror): paranoia
   00-07-0C:
     room: ruins
     05 (Rare Ring): balore | hwarpsucc
@@ -397,7 +397,7 @@ Rooms:
   00-08-1A:
     room: clocktower & height
     02 (Scale Mail): 
-    03 (Platinum Stud): paranoia
+    03 (Platinum Stud) (Mirror): paranoia
   00-08-1C:
     room: clocktower & height
     00 (UMA News 3-3): 
