@@ -34,6 +34,7 @@ class RandomizerWindow < Qt::Dialog
     unlock_boss_doors
     dont_randomize_change_cube
     open_world_map
+    always_dowsing
   )
   
   slots "update_settings()"
@@ -184,6 +185,10 @@ class RandomizerWindow < Qt::Dialog
     
     if GAME == "dos" && @ui.unlock_boss_doors.checked()
       game.apply_armips_patch("dos_skip_boss_door_seals")
+    end
+    
+    if GAME == "ooe" && @ui.always_dowsing.checked()
+      game.apply_armips_patch("ooe_always_dowsing")
     end
     
     if @ui.name_unnamed_skills.checked()

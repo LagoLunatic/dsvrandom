@@ -485,6 +485,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="always_dowsing">
+            <property name="text">
+             <string>Always have Dowsing Hat effect</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
