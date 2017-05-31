@@ -328,7 +328,13 @@ module PickupRandomizer
         when 0.25..0.50 # 25% chance to be a skill
           pickup_global_id = get_unplaced_non_progression_skill()
         when 0.50..1.00 # 50% chance to be an item
-          pickup_global_id = get_unplaced_non_progression_item()
+          if checker.hidden_locations.include?(location)
+            # Don't let relics be inside breakable walls in OoE.
+            # This is because they need to be inside a chest, and chests can't be hidden.
+            pickup_global_id = get_unplaced_non_progression_item_except_ooe_relics()
+          else
+            pickup_global_id = get_unplaced_non_progression_item()
+          end
         end
       elsif GAME == "dos" && !chaos_ring_placed
         pickup_global_id = 0xCD
@@ -470,6 +476,32 @@ module PickupRandomizer
     @unplaced_non_progression_pickups.delete(skill_global_id)
     
     return skill_global_id
+  end
+  
+  def get_unplaced_non_progression_item_except_ooe_relics
+    valid_ids = ITEM_GLOBAL_ID_RANGE.to_a
+    if GAME == "ooe"
+      valid_ids -= (0x6F..0x74).to_a
+    end
+    unplaced_non_progression_items = @unplaced_non_progression_pickups.select do |pickup_global_id|
+      valid_ids.include?(pickup_global_id)
+    end
+    
+    item_global_id = unplaced_non_progression_items.sample(random: rng)
+    
+    if item_global_id.nil?
+      #puts "RAN OUT OF ITEMS"
+      # Ran out of unplaced items, so place a duplicate instead.
+      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
+        valid_ids.include?(pickup_global_id)
+      end
+      @unplaced_non_progression_pickups -= checker.current_items
+      return get_unplaced_non_progression_item()
+    end
+    
+    @unplaced_non_progression_pickups.delete(item_global_id)
+    
+    return item_global_id
   end
   
   def get_unplaced_non_progression_projectile_glyph

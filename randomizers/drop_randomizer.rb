@@ -24,6 +24,9 @@ module DropRandomizer
       if rng.rand <= 0.5 && can_drop_items # 50% chance to have an item drop
         if GAME == "por"
           enemy["Item 1"] = get_unplaced_non_progression_pickup() + 1
+        elsif GAME == "ooe"
+          # Don't let enemies drop relics since they won't auto-equip.
+          enemy["Item 1"] = get_unplaced_non_progression_item_except_ooe_relics() + 1
         else
           enemy["Item 1"] = get_unplaced_non_progression_item() + 1
         end
@@ -31,6 +34,9 @@ module DropRandomizer
         if rng.rand <= 0.5 # Further 50% chance (25% total) to have a second item drop
           if GAME == "por"
             enemy["Item 2"] = get_unplaced_non_progression_pickup() + 1
+          elsif GAME == "ooe"
+            # Don't let enemies drop relics since they won't auto-equip.
+            enemy["Item 2"] = get_unplaced_non_progression_item_except_ooe_relics() + 1
           else
             enemy["Item 2"] = get_unplaced_non_progression_item() + 1
           end
