@@ -55,6 +55,8 @@ module ExtraRandomizers
         item["Price"] = rand_range_weighted_very_low(1..250)*100
       end
       
+      description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+      
       case item.item_type_name
       when "Consumables"
         case GAME
@@ -85,6 +87,28 @@ module ExtraRandomizers
           when 2 # Cures status effect
             item["Var A"] = [1, 2].sample(random: rng)
           end
+          
+          case item["Type"]
+          when 0
+            description.decoded_string = "Restores #{item["Var A"]} HP."
+          when 1
+            description.decoded_string = "Restores #{item["Var A"]} MP."
+          when 2
+            case item["Var A"]
+            when 1
+              description.decoded_string = "Cures poison."
+            when 2
+              description.decoded_string = "Nullifies curse."
+            end
+          when 3
+            description.decoded_string = "Subtracts #{item["Var A"]} HP."
+          when 7
+            description.decoded_string = "HP Max up."
+          when 8
+            description.decoded_string = "MP Max up."
+          end
+          
+          description.write_to_rom()
         when "ooe"
           possible_types = (0..0xB).to_a
           possible_types -= [8] # Don't allow unusable items
@@ -108,6 +132,40 @@ module ExtraRandomizers
           when 3 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
+          
+          case item["Type"]
+          when 0
+            description.decoded_string = "Restores #{item["Var A"]} HP."
+          when 1
+            description.decoded_string = "Restores #{item["Var A"]} MP."
+          when 2
+            description.decoded_string = "Restores #{item["Var A"]} hearts."
+          when 3
+            case item["Var A"]
+            when 1
+              description.decoded_string = "Cures poison."
+            when 2
+              description.decoded_string = "Nullifies curse."
+            when 4
+              description.decoded_string = "Cures petrify."
+            end
+          when 4
+            description.decoded_string = "Increases your maximum HP."
+          when 5
+            description.decoded_string = "Increases your maximum MP."
+          when 6
+            description.decoded_string = "Increases your heart maximum."
+          when 7
+            description.decoded_string = "Subtracts #{item["Var A"]} HP."
+          when 9
+            description.decoded_string = "Adjust the background music to your liking."
+          when 0xA
+            description.decoded_string = "A one-way pass to return to the village immediately."
+          when 0xB
+            description.decoded_string = "Increases your attribute points."
+          end
+          
+          description.write_to_rom()
         end
       when "Weapons"
         item["Attack"] = rand_range_weighted_very_low(0..150)
