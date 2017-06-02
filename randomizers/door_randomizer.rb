@@ -71,8 +71,6 @@ module DoorRandomizer
     
     game.areas.each do |area|
       area.sectors.each do |sector|
-        puts "SECTOR #{sector.sector_index}"
-        
         # First get the "subsectors" in this sector.
         # A subsector is a group of rooms in a sector that can access each other.
         # This separates certains sectors into multiple parts like the first sector of PoR.
@@ -157,6 +155,11 @@ module DoorRandomizer
             
             accessible_remaining_doors += remaining_doors.values.flatten.select{|door| door.room == current_room}
             accessible_remaining_doors.uniq!
+            accessible_remaining_doors = accessible_remaining_doors & remaining_doors.values.flatten
+            
+            if accessible_remaining_doors.empty?
+              break
+            end
             
             inside_door = accessible_remaining_doors.sample(random: rng)
             remaining_doors[inside_door.direction].delete(inside_door)
