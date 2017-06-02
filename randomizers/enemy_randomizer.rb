@@ -336,6 +336,17 @@ module EnemyRandomizer
         # Hard to know where to place this enemy if the room has both left and right doors.
         return :redo
       end
+    when "Flying Humanoid"
+      # Don't let Flying Humanoid in large rooms. His hitbox is only on the upper left screen, and we don't want them to be disjointed.
+      if enemy.room.width > 1 || enemy.room.height > 1
+        return :redo
+      end
+      
+      # Dont let Flying Humanoid in rooms with other enemies. His huge hitbox blocks bullets from the guns, making it so you can't hit other enemies.
+      num_enemies_in_room = enemy.room.entities.select{|e| e.is_enemy?}.length
+      if num_enemies_in_room > 1
+        return :redo
+      end
     else
       enemy.var_a = 0
       enemy.var_b = 0
