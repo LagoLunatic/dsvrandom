@@ -374,7 +374,7 @@ module PickupRandomizer
     @all_non_progression_pickups ||= begin
       all_non_progression_pickups = PICKUP_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups
       
-      all_non_progression_pickups -= FAKE_PICKUP_GLOBAL_IDS
+      all_non_progression_pickups -= NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
       
       all_non_progression_pickups
     end

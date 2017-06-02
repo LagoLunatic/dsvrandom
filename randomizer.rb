@@ -50,6 +50,25 @@ class Randomizer
     @weak_enemy_attack_threshold = 28
     @max_enemy_attack_room_multiplier = 1.3
     @max_spawners_per_room = 1
+    
+    load_randomizer_constants()
+  end
+  
+  def load_randomizer_constants
+    # Load game-specific randomizer constants.
+    orig_verbosity = $VERBOSE
+    $VERBOSE = nil
+    case GAME
+    when "dos"
+      load './dsvrandom/constants/dos_randomizer_constants.rb'
+    when "por"
+      load './dsvrandom/constants/dos_randomizer_constants.rb'
+    when "ooe"
+      load './dsvrandom/constants/dos_randomizer_constants.rb'
+    else
+      raise "Unsupported game."
+    end
+    $VERBOSE = orig_verbosity
   end
   
   def rand_range_weighted_low(range)
