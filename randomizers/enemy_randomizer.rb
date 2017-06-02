@@ -314,8 +314,16 @@ module EnemyRandomizer
     when "Mud Demon"
       enemy.var_b = rng.rand(0..0x50) # Max rand spawn distance
     when "Stolas"
-      enemy_id_a = @allowed_enemies_for_room.sample(random: rng)
-      enemy_id_b = @allowed_enemies_for_room.sample(random: rng)
+      if @allowed_enemies_for_room.any?
+        enemy_id_a = @allowed_enemies_for_room.sample(random: rng)
+        enemy_id_b = @allowed_enemies_for_room.sample(random: rng)
+      elsif @enemy_pool_for_room.any?
+        enemy_id_a = @enemy_pool_for_room.sample(random: rng)
+        enemy_id_b = @enemy_pool_for_room.sample(random: rng)
+      else
+        return :redo
+      end
+      
       chance_a = rng.rand(0x10..0xF0)
       chance_b = rng.rand(0x10..0xF0)
       enemy.var_a = (chance_a << 8) | enemy_id_a
