@@ -129,10 +129,20 @@ module DoorRandomizer
                 next if map_tile.left_wall
               when :right
                 next if map_tile.right_wall
+                if GAME == "dos" || GAME == "aos"
+                  # Right walls in DoS are handled as the left wall of the tile to the right.
+                  right_map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos+1 &&  tile.y_pos == map_tile_y_pos}
+                  next if right_map_tile.left_wall
+                end
               when :up
                 next if map_tile.top_wall
               when :down
                 next if map_tile.bottom_wall
+                if GAME == "dos" || GAME == "aos"
+                  # Bottom walls in DoS are handled as the top wall of the tile below.
+                  below_map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos &&  tile.y_pos == map_tile_y_pos+1}
+                  next if below_map_tile.top_wall
+                end
               end
               
               remaining_doors[door.direction] << door
