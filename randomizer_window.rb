@@ -97,15 +97,25 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def browse_for_clean_rom
-    clean_rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", nil, "NDS ROM Files (*.nds)")
+    if @settings[:clean_rom_path] && File.file?(@settings[:clean_rom_path])
+      default_dir = File.dirname(@settings[:clean_rom_path])
+    end
+    
+    clean_rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS ROM Files (*.nds)")
     return if clean_rom_path.nil?
     @ui.clean_rom.text = clean_rom_path
+    update_settings()
   end
   
   def browse_for_output_folder
-    output_folder_path = Qt::FileDialog.getExistingDirectory(self, "Select output folder", nil)
+    if @settings[:output_folder] && File.directory?(@settings[:output_folder])
+      default_dir = @settings[:output_folder]
+    end
+    
+    output_folder_path = Qt::FileDialog.getExistingDirectory(self, "Select output folder", default_dir)
     return if output_folder_path.nil?
     @ui.output_folder.text = output_folder_path
+    update_settings()
   end
   
   def update_settings
@@ -121,6 +131,27 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def randomize
+    unless File.file?(@ui.clean_rom.text)
+      Qt::MessageBox.warning(self, "No ROM specified", "Must specify clean ROM path.")
+      return
+    end
+    unless File.directory?(@ui.output_folder.text)
+      Qt::MessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized ROM.")
+      return
+    end
+    
+    game = Game.new
+    game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
+    
+    if !["dos", "por", "ooe"].include?(GAME)
+      Qt::MessageBox.warning(self, "Unsupported game", "ROM is not a supported game.")
+      return
+    end
+    if REGION != :usa
+      Qt::MessageBox.warning(self, "Unsupported region", "Only the US versions are supported.")
+      return
+    end
+    
     seed = @settings[:seed].to_s.strip.gsub(/\s/, "")
     
     if seed.empty?
@@ -140,9 +171,6 @@ class RandomizerWindow < Qt::Dialog
     @ui.seed.text = @settings[:seed]
     
     @sanitized_seed = seed
-    
-    game = Game.new
-    game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
     
     randomizer = Randomizer.new(seed, game,
       :randomize_pickups => @ui.randomize_pickups.checked(),
@@ -204,6 +232,9 @@ class RandomizerWindow < Qt::Dialog
     end
     
     write_to_rom(game)
+  rescue NDSFileSystem::InvalidFileError => e
+    Qt::MessageBox.warning(self, "Unrecognized game", "Specified ROM is not recognized.")
+    return
   rescue StandardError => e
     Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
   end
