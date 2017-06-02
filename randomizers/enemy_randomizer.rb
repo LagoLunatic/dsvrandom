@@ -30,7 +30,7 @@ module EnemyRandomizer
     @cpu_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
     @cpu_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
-      if ["Forneus", "Spin Devil"].include?(enemy_dna.name)
+      if ["Forneus", "Spin Devil", "Stolas"].include?(enemy_dna.name)
         true
       else
         false
@@ -314,12 +314,16 @@ module EnemyRandomizer
     when "Mud Demon"
       enemy.var_b = rng.rand(0..0x50) # Max rand spawn distance
     when "Stolas"
-      if @allowed_enemies_for_room.any?
-        enemy_id_a = @allowed_enemies_for_room.sample(random: rng)
-        enemy_id_b = @allowed_enemies_for_room.sample(random: rng)
-      elsif @enemy_pool_for_room.any?
+      if @enemy_pool_for_room.any?
         enemy_id_a = @enemy_pool_for_room.sample(random: rng)
         enemy_id_b = @enemy_pool_for_room.sample(random: rng)
+      elsif (@allowed_enemies_for_room-@cpu_intensive_enemy_ids).any?
+        enemy_id_a = (@allowed_enemies_for_room-@cpu_intensive_enemy_ids).sample(random: rng)
+        enemy_id_b = (@allowed_enemies_for_room-@cpu_intensive_enemy_ids).sample(random: rng)
+        
+        @enemy_pool_for_room << enemy_id_a
+        @enemy_pool_for_room << enemy_id_b
+        @enemy_pool_for_room.uniq!
       else
         return :redo
       end
