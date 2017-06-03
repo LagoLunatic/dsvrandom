@@ -79,9 +79,13 @@ module PlayerRandomizer
       player["??? bitfield"][0], other_player["??? bitfield"][0] = other_player["??? bitfield"][0], player["??? bitfield"][0]
     end
     
-    players.each do |player|
+    players.each_with_index do |player, i|
       player["Actions"][1] = true # Can use weapons
-      player["Actions"][16] = false # No gravity
+      if ["Stella", "Loretta"].include?(player.name)
+        player["Actions"][16] = true # No gravity
+      else
+        player["Actions"][16] = false # No gravity
+      end
       if player["Damage types"]
         player["Damage types"][18] = true # Can be hit
       end
