@@ -88,6 +88,10 @@ module EnemyRandomizer
       if (GAME == "por" && room.area_index == 9) || (GAME == "ooe" && room.area_index == 0x0C)
         @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
       end
+      # Don't allow spawners in the train room.
+      if GAME == "por" && room.area_index == 2 && room.sector_index == 0 && room.room_index == 1
+        @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+      end
       
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
       original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
