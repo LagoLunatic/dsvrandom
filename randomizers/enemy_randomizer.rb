@@ -391,8 +391,27 @@ module EnemyRandomizer
       enemy.y_pos = 0x20
     when "Spittle Bone", "Vice Beetle"
       # TODO: move out of floor
-      enemy.var_a = rng.rand(0..3) # wall direction
-      enemy.var_b = rng.rand(0x600..0x1200) # speed
+      
+      # Set wall diretion. But we don't want it to try to go to a wall where's there's empty space for a door.
+      # So we remove directions that have a door in that direction directly in line with the enemy.
+      possible_directions = [0, 1, 2, 3]
+      left_door = enemy.room.doors.find{|door| door.direction == :left && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
+      possible_directions -= [2] if left_door
+      right_door = enemy.room.doors.find{|door| door.direction == :right && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
+      possible_directions -= [3] if right_door
+      up_door = enemy.room.doors.find{|door| door.direction == :up && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
+      possible_directions -= [1] if up_door
+      down_door = enemy.room.doors.find{|door| door.direction == :down && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
+      possible_directions -= [0] if down_door
+      # TODO: This bug can also happen in outdoor areas with no ceiling.
+      
+      if possible_directions.empty?
+        return :redo
+      end
+      
+      enemy.var_a = possible_directions.sample(random: rng)
+      
+      enemy.var_b = rng.rand(0x600..0x1800) # speed
     when "Razor Bat"
       # 70% chance to be a single Razor Bat, 30% chance to be a spawner.
       if rng.rand <= 0.7
