@@ -374,6 +374,18 @@ module EnemyRandomizer
     when "Zombie", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly", "Bone Pillar", "Fish Head", "White Dragon"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Hanged Bones", "Skeleton Tree"
+      # Try to limit possible buggy positions where it will be near a door and not let you enter the room.
+      if enemy.room.width <= 1
+        return :redo
+      end
+      if enemy.x_pos < 0x80
+        enemy.x_pos = 0x80
+      end
+      room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
+      if enemy.x_pos > room_width - 0x80
+        enemy.x_pos = room_width - 0x80
+      end
+      
       enemy.var_a = rng.rand(0..0x40) # Length
       enemy.var_b = 0
       enemy.y_pos = 0x20
