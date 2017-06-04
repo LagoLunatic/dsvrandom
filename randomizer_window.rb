@@ -172,29 +172,12 @@ class RandomizerWindow < Qt::Dialog
     
     @sanitized_seed = seed
     
-    randomizer = Randomizer.new(seed, game,
-      :randomize_pickups => @ui.randomize_pickups.checked(),
-      :randomize_enemies => @ui.randomize_enemies.checked(),
-      :randomize_bosses => @ui.randomize_bosses.checked(),
-      :randomize_enemy_drops => @ui.randomize_enemy_drops.checked(),
-      :randomize_boss_souls => @ui.randomize_boss_souls.checked(),
-      :randomize_villagers => @ui.randomize_villagers.checked(),
-      :randomize_area_connections => @ui.randomize_area_connections.checked(),
-      :randomize_room_connections => @ui.randomize_room_connections.checked(),
-      :randomize_starting_room => @ui.randomize_starting_room.checked(),
-      :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
-      :randomize_players => @ui.randomize_players.checked(),
-      :randomize_item_stats => @ui.randomize_item_stats.checked(),
-      :randomize_skill_stats => @ui.randomize_skill_stats.checked(),
-      :randomize_enemy_stats => @ui.randomize_enemy_stats.checked(),
-      :randomize_weapon_synths => @ui.randomize_weapon_synths.checked(),
-      :randomize_shop => @ui.randomize_shop.checked(),
-      :randomize_wooden_chests => @ui.randomize_wooden_chests.checked(),
-      :enable_glitch_reqs => @ui.enable_glitch_reqs.checked(),
-      :unlock_boss_doors => @ui.unlock_boss_doors.checked(),
-      :dont_randomize_change_cube => @ui.dont_randomize_change_cube.checked(),
-      :open_world_map => @ui.open_world_map.checked(),
-    )
+    options_hash = {}
+    OPTIONS.each do |option_name|
+      options_hash[option_name] = @ui.send(option_name).checked
+    end
+    
+    randomizer = Randomizer.new(seed, game, options_hash)
     randomizer.randomize()
     
     if GAME == "dos" && @ui.fix_first_ability_soul.checked()
