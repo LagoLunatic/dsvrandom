@@ -21,6 +21,10 @@ module EnemyRandomizer
         elsif OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
           @skeletally_animated_enemy_ids << enemy_id
         end
+        if enemy_dna.name == "Necromancer"
+          # Also add Zombie's assets since he summons zombies.
+          @assets_for_each_enemy[enemy_id] += @assets_for_each_enemy[1]
+        end
       rescue StandardError => e
         puts "Error getting sprite info for enemy id %02X" % enemy_id
         @assets_for_each_enemy[enemy_id] = []
@@ -126,7 +130,7 @@ module EnemyRandomizer
         # Remove enemies that would go over the asset cap.
         asset_slots_left = MAX_ASSETS_PER_ROOM - @assets_needed_for_room.size
         @allowed_enemies_for_room.select! do |enemy_id|
-          needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size
+          needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size # TODO actually check unique assets, not just the number
           needed_assets_for_enemy <= asset_slots_left
         end
         
