@@ -550,6 +550,8 @@ module PickupRandomizer
       entity.subtype = 0x89
       entity.var_a = VILLAGER_NAME_TO_EVENT_FLAG[pickup_global_id]
       entity.var_b = 0
+      
+      entity.write_to_rom()
     elsif entity.type == 1
       # Boss
       
