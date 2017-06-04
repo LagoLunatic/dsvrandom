@@ -27,8 +27,8 @@ module EnemyRandomizer
         @skeletally_animated_enemy_ids << enemy_id # Probably a 3D enemy, so count it anyway
       end
     end
-    @cpu_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
-    @cpu_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
+    @resource_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
+    @resource_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
       if ["Forneus", "Spin Devil", "Stolas", "Necromancer"].include?(enemy_dna.name)
         true
@@ -57,7 +57,7 @@ module EnemyRandomizer
     game.each_room do |room|
       @enemy_pool_for_room = []
       @num_spawners = 0
-      @total_cpu_intensive_enemies_in_room = 0
+      @total_resource_intensive_enemies_in_room = 0
       @assets_needed_for_room = []
       
       enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
@@ -81,7 +81,7 @@ module EnemyRandomizer
       if enemies_in_room.length >= 6
         # Don't let cpu intensive enemies in rooms that have lots of enemies.
         
-        @allowed_enemies_for_room -= @cpu_intensive_enemy_ids
+        @allowed_enemies_for_room -= @resource_intensive_enemy_ids
       end
       
       # Don't allow spawners in Nest of Evil/Large Cavern.
@@ -139,7 +139,7 @@ module EnemyRandomizer
           # We don't want the first enemy we place to be one that there can only be a limited number in a given room.
           # This is because if this one enemy goes over the asset limit for the room, then we wouldn't have any enemies left to place: the same one we already placed would go over the limit per room, while any new one would go over the asset limit.
           # If the total number of enemies in the room is 1 it doesn't matter.
-          limitable_enemy_ids = @cpu_intensive_enemy_ids + SPAWNER_ENEMY_IDS
+          limitable_enemy_ids = @resource_intensive_enemy_ids + SPAWNER_ENEMY_IDS
           temporarily_removed_enemies = @allowed_enemies_for_room & limitable_enemy_ids
           @allowed_enemies_for_room -= temporarily_removed_enemies
         end
@@ -161,11 +161,11 @@ module EnemyRandomizer
         @assets_needed_for_room += assets
         @assets_needed_for_room.uniq!
         
-        if @total_cpu_intensive_enemies_in_room >= 2
+        if @total_resource_intensive_enemies_in_room >= 2
           # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
           
-          @allowed_enemies_for_room -= @cpu_intensive_enemy_ids
-          @enemy_pool_for_room -= @cpu_intensive_enemy_ids
+          @allowed_enemies_for_room -= @resource_intensive_enemy_ids
+          @enemy_pool_for_room -= @resource_intensive_enemy_ids
         end
       end
       
@@ -223,8 +223,8 @@ module EnemyRandomizer
       @enemy_pool_for_room << random_enemy_id
       @enemy_pool_for_room.uniq!
       
-      if @cpu_intensive_enemy_ids.include?(random_enemy_id)
-        @total_cpu_intensive_enemies_in_room += 1
+      if @resource_intensive_enemy_ids.include?(random_enemy_id)
+        @total_resource_intensive_enemies_in_room += 1
       end
     end
   end
@@ -351,9 +351,9 @@ module EnemyRandomizer
       if @enemy_pool_for_room.any?
         enemy_id_a = @enemy_pool_for_room.sample(random: rng)
         enemy_id_b = @enemy_pool_for_room.sample(random: rng)
-      elsif (@allowed_enemies_for_room-@cpu_intensive_enemy_ids).any?
-        enemy_id_a = (@allowed_enemies_for_room-@cpu_intensive_enemy_ids).sample(random: rng)
-        enemy_id_b = (@allowed_enemies_for_room-@cpu_intensive_enemy_ids).sample(random: rng)
+      elsif (@allowed_enemies_for_room-@resource_intensive_enemy_ids).any?
+        enemy_id_a = (@allowed_enemies_for_room-@resource_intensive_enemy_ids).sample(random: rng)
+        enemy_id_b = (@allowed_enemies_for_room-@resource_intensive_enemy_ids).sample(random: rng)
         
         @enemy_pool_for_room << enemy_id_a
         @enemy_pool_for_room << enemy_id_b
@@ -543,7 +543,8 @@ module EnemyRandomizer
     when "Ghost"
       enemy.var_a = rng.rand(1..4) # Max ghosts on screen at once.
     when "Skull Spider"
-      # Move out of the floor
+      # Move out of the floor TODO this doesn't work
+      # TODO the vars do something
       enemy.y_pos -= 0x08
     when "Gelso"
       if rng.rand <= 0.40 # 40% chance to be a single Gelso
