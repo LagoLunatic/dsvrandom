@@ -202,7 +202,7 @@ module ExtraRandomizers
           end
           
           item["Crit type/Palette"] = rng.rand(0..0x13)
-          item["Graphical Effect"] = rng.rand(0..7)
+          item["Special Effect"] = rng.rand(0..7)
         end
         
         [
