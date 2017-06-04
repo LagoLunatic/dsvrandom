@@ -107,8 +107,6 @@ module ExtraRandomizers
           when 8
             description.decoded_string = "MP Max up."
           end
-          
-          description.write_to_rom()
         when "ooe"
           possible_types = (0..0xB).to_a
           possible_types -= [8] # Don't allow unusable items
@@ -164,8 +162,6 @@ module ExtraRandomizers
           when 0xB
             description.decoded_string = "Increases your attribute points."
           end
-          
-          description.write_to_rom()
         end
       when "Weapons"
         item["Attack"] = rand_range_weighted_very_low(0..150)
@@ -267,6 +263,8 @@ module ExtraRandomizers
       
       item.write_to_rom()
     end
+    
+    game.text_database.write_to_rom()
   end
   
   def randomize_skill_stats
