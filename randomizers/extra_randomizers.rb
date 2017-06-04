@@ -216,7 +216,7 @@ module ExtraRandomizers
             
             item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
             
-            if item["Swing Anim"] == 0xA && bit_name == "Player can move"
+            if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
               # This bit must be set for throwing weapons in DoS or they won't appear.
               item[bitfield_attr_name][i] = true
             end
