@@ -62,9 +62,9 @@ class Randomizer
     when "dos"
       load './dsvrandom/constants/dos_randomizer_constants.rb'
     when "por"
-      load './dsvrandom/constants/dos_randomizer_constants.rb'
+      load './dsvrandom/constants/por_randomizer_constants.rb'
     when "ooe"
-      load './dsvrandom/constants/dos_randomizer_constants.rb'
+      load './dsvrandom/constants/ooe_randomizer_constants.rb'
     else
       raise "Unsupported game."
     end
