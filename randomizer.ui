@@ -375,6 +375,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="reveal_breakable_walls">
+            <property name="toolTip">
+             <string>Breakable walls will always blink as if you have Peeping Eye/Eye for Decay on.</string>
+            </property>
             <property name="text">
              <string>Reveal breakable walls</string>
             </property>
@@ -487,6 +490,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="always_dowsing">
+            <property name="toolTip">
+             <string>Hidden blue chests always make a beeping sound.</string>
+            </property>
             <property name="text">
              <string>Always have Dowsing Hat effect</string>
             </property>
