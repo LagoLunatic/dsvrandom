@@ -274,6 +274,30 @@ module EnemyRandomizer
     end
   end
   
+  def get_valid_wall_directions(enemy)
+    # We don't want Spittle Bone/Slime/etc to try to teleport to a wall that doesn't exist.
+    # So we remove directions that have a door in that direction directly in line with the enemy.
+    
+    possible_directions = [0, 1, 2, 3]
+    
+    left_door = enemy.room.doors.find{|door| door.direction == :left && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
+    possible_directions -= [2] if left_door
+    right_door = enemy.room.doors.find{|door| door.direction == :right && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
+    possible_directions -= [3] if right_door
+    up_door = enemy.room.doors.find{|door| door.direction == :up && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
+    possible_directions -= [1] if up_door
+    down_door = enemy.room.doors.find{|door| door.direction == :down && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
+    possible_directions -= [0] if down_door
+    
+    if GAME == "por" || GAME == "ooe"
+      # In PoR and OoE there are outside rooms with no ceiling.
+      # I don't know how to detect these, so just never allow them to go to the ceiling in these games.
+      possible_directions -= [1]
+    end
+    
+    return possible_directions
+  end
+  
   def dos_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
     when "Zombie", "Ghoul"
@@ -294,7 +318,13 @@ module EnemyRandomizer
     when "Skull Archer"
       enemy.var_a = rng.rand(0..8) # Arrow speed.
     when "Slime", "Tanjelly"
-      enemy.var_a = rng.rand(0..3) # Floor/ceiling/left wall/right wall
+      possible_directions = get_valid_wall_directions(enemy)
+      
+      if possible_directions.empty?
+        return :redo
+      end
+      
+      enemy.var_a = possible_directions.sample(random: rng)
     when "Mollusca", "Giant Slug"
       # Mollusca and Giant Slug have a very high chance of bugging out when placed near cliffs.
       # They can cause the screen to flash rapidly and take up most of the screen.
@@ -392,18 +422,7 @@ module EnemyRandomizer
     when "Spittle Bone", "Vice Beetle"
       # TODO: move out of floor
       
-      # Set wall diretion. But we don't want it to try to go to a wall where's there's empty space for a door.
-      # So we remove directions that have a door in that direction directly in line with the enemy.
-      possible_directions = [0, 1, 2, 3]
-      left_door = enemy.room.doors.find{|door| door.direction == :left && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
-      possible_directions -= [2] if left_door
-      right_door = enemy.room.doors.find{|door| door.direction == :right && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
-      possible_directions -= [3] if right_door
-      up_door = enemy.room.doors.find{|door| door.direction == :up && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
-      possible_directions -= [1] if up_door
-      down_door = enemy.room.doors.find{|door| door.direction == :down && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
-      possible_directions -= [0] if down_door
-      # TODO: This bug can also happen in outdoor areas with no ceiling.
+      possible_directions = get_valid_wall_directions(enemy)
       
       if possible_directions.empty?
         return :redo
