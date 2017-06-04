@@ -4,7 +4,7 @@ DSVRandom (DSVania Randomizer) is a randomizer for the three Castlevania games f
 Source code: https://github.com/LagoLunatic/dsvrandom
 Report issues here: https://github.com/LagoLunatic/dsvrandom/issues
 
-### Features
+### Randomization options
 
 DSVRandom has options to randomize:
 Items/Skills: Randomizes items and skills you find lying on the ground.
@@ -45,7 +45,8 @@ Bosses in DoS and Wallman in OoE can also drop progression skills.
 Q: I can't find something I need to progress!
 
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
-You can check the spoiler log located in /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
+If you check the "Reveal breakable walls" option in the Game tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.
+You can also check the spoiler log located in /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
 
 Q: I can't make the jump in the room after Flying Armor.
 
