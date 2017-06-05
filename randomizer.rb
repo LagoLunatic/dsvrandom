@@ -42,8 +42,8 @@ class Randomizer
     
     @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map], options[:randomize_villagers])
     
-    int_seed = Digest::MD5.hexdigest(seed).to_i(16)
-    @rng = Random.new(int_seed)
+    @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
+    @rng = Random.new(@int_seed)
     
     # TODO: Make the below variables customizable in an advanced settings tab.
     @enemy_difficulty_preservation_weight_exponent = 3
@@ -71,6 +71,10 @@ class Randomizer
     $VERBOSE = orig_verbosity
   end
   
+  def reset_rng
+    @rng = Random.new(@int_seed)
+  end
+  
   def rand_range_weighted_low(range)
     random_float = (1 - Math.sqrt(1 - rng.rand()))
     return (random_float * (range.max + 1 - range.min) + range.min).floor
@@ -95,6 +99,7 @@ class Randomizer
     spoiler_log.puts "Selected options: #{options_string}"
     
     if options[:randomize_pickups]
+      reset_rng()
       randomize_pickups_completably()
     end
     
@@ -102,10 +107,12 @@ class Randomizer
     @unplaced_non_progression_pickups -= checker.current_items
     
     if options[:randomize_enemy_drops]
+      reset_rng()
       randomize_enemy_drops()
     end
     
     if options[:randomize_pickups]
+      reset_rng()
       place_non_progression_pickups()
     end
     
@@ -118,55 +125,68 @@ class Randomizer
     end
     
     if options[:randomize_enemies]
+      reset_rng()
       randomize_enemies()
     end
     
     if options[:randomize_bosses]
+      reset_rng()
       randomize_bosses()
     end
     
     if options[:randomize_area_connections]
+      reset_rng()
       randomize_transition_doors()
     end
     
     if options[:randomize_room_connections]
+      reset_rng()
       randomize_non_transition_doors()
     end
     
     if options[:randomize_starting_room]
+      reset_rng()
       game.fix_top_screen_on_new_game()
       randomize_starting_room()
     end
     
     if options[:randomize_enemy_ai]
+      reset_rng()
       randomize_enemy_ai()
     end
     
     if options[:randomize_players]
+      reset_rng()
       randomize_players()
     end
     
     if options[:randomize_item_stats]
+      reset_rng()
       randomize_item_stats()
     end
     
     if options[:randomize_skill_stats]
+      reset_rng()
       randomize_skill_stats()
     end
     
     if options[:randomize_enemy_stats]
+      reset_rng()
       randomize_enemy_stats()
     end
     
     if options[:randomize_weapon_synths]
+      reset_rng()
       randomize_weapon_synths()
     end
     
     if options[:randomize_shop]
+      reset_rng()
       randomize_shop()
     end
     
     if options[:randomize_wooden_chests]
+      reset_rng()
       randomize_wooden_chests()
     end
     
