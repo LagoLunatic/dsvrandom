@@ -9,19 +9,24 @@ module BossRandomizer
     remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
     failed_boss_ids_for_this_boss = []
     queued_dna_changes = Hash.new{|h, k| h[k] = {}}
+    already_randomized_bosses = {}
     
     boss_entities.shuffle(random: rng).each do |boss_entity|
       old_boss_id = boss_entity.subtype
       old_boss = game.enemy_dnas[old_boss_id]
       
-      possible_boss_ids_for_this_boss = remaining_boss_ids - failed_boss_ids_for_this_boss
-      if possible_boss_ids_for_this_boss.empty?
-        # Nothing this could possibly randomize into and work correctly. Skip.
-        failed_boss_ids_for_this_boss = []
-        next
+      if already_randomized_bosses[old_boss_id]
+        new_boss_id = already_randomized_bosses[old_boss_id]
+      else
+        possible_boss_ids_for_this_boss = remaining_boss_ids - failed_boss_ids_for_this_boss
+        if possible_boss_ids_for_this_boss.empty?
+          # Nothing this could possibly randomize into and work correctly. Skip.
+          failed_boss_ids_for_this_boss = []
+          next
+        end
+        
+        new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
       end
-      
-      new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
       new_boss = game.enemy_dnas[new_boss_id]
       
       result = case GAME
@@ -47,6 +52,8 @@ module BossRandomizer
       remaining_boss_ids.delete(new_boss_id)
       
       boss_entity.write_to_rom()
+      
+      already_randomized_bosses[old_boss_id] = new_boss_id
       
       # Update the boss doors for the new boss
       new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
