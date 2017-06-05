@@ -81,6 +81,7 @@ Defs:
   
   condemntower: chapel & cutallsuper | chapel & small | clocktower & hwarp
   bossgergoth: condemntower & height
+  aftergergoth: bossgergoth & big height | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
   
   hellintro: chapel & small | chapel & hwarp | hellcenter & rahab
   hell: hellcenter | wizardry & cutallsuper | garden & rahab
@@ -90,7 +91,7 @@ Defs:
   ruins: hell & distance & zephyr | hell & height & zephyr | hellcenter & cutallsuper
   bossbatcompany: ruins & seal 4 | ruins & hwarp
   
-  clocktower: condemntower & height & tower key | upperrightgarden & height | pinnacle & big height
+  clocktower: condemntower & height & tower key & aftergergoth | upperrightgarden & height | pinnacle & big height
   bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
   
   pinnacle: uppertowerguesthouse | bosszephyr & bat mode | clocktower & hwarp & bat mode
@@ -325,7 +326,7 @@ Rooms:
     02 (High Potion): big height | malphas & black panther | malphas & flying armor & puppet master
 #Condemned Tower & Mine of Judgment:
   00-05-02:
-    room: bossgergoth & big height | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
+    room: aftergergoth
     00 (Tower Key): 
   00-05-03:
     room: condemntower & height
