@@ -98,6 +98,34 @@ class Randomizer
     spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
     spoiler_log.puts "Selected options: #{options_string}"
     
+    @max_up_items = []
+    if options[:randomize_item_stats]
+      reset_rng()
+      case GAME
+      when "por"
+        possible_max_up_ids = (0..0x5F).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        2.times do
+          max_up_id = possible_max_up_ids.sample(random: rng)
+          possible_max_up_ids.delete(max_up_id)
+          @max_up_items << max_up_id
+        end
+      when "ooe"
+        possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        3.times do
+          max_up_id = possible_max_up_ids.sample(random: rng)
+          possible_max_up_ids.delete(max_up_id)
+          @max_up_items << max_up_id
+        end
+      end
+    else
+      case GAME
+      when "por"
+        @max_up_items = [0x08, 0x09]
+      when "ooe"
+        @max_up_items = [0x7F, 0x80, 0x81]
+      end
+    end
+    
     if options[:randomize_pickups]
       reset_rng()
       randomize_pickups_completably()

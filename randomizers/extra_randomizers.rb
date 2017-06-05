@@ -64,11 +64,7 @@ module ExtraRandomizers
           possible_types = (0..0x8).to_a
           possible_types -= [4, 5, 6] # Don't allow unusable items
           possible_types += [0, 0, 0, 1, 7, 8] # Increase chances of some item types
-          if GAME == "dos"
-            # No HP/MP max ups in DoS
-            possible_types.delete(7)
-            possible_types.delete(8)
-          end
+          possible_types -= [7, 8] # Don't allow max ups, only certain items we already chose earlier may be max ups.
           # Don't allow potions/mind ups to subtract HP
           if (0..5).include?(item["Item ID"])
             possible_types.delete(3)
@@ -77,6 +73,14 @@ module ExtraRandomizers
           if checker.all_progression_pickups.include?(item["Item ID"])
             # Always make progression items unusable so the player can't accidentally eat one and softlock themself.
             possible_types = [4]
+          end
+          
+          if @max_up_items[0] == item["Item ID"]
+            # HP Max Up
+            possible_types = [7]
+          elsif @max_up_items[1] == item["Item ID"]
+            # MP Max Up
+            possible_types = [8]
           end
           
           item["Type"] = possible_types.sample(random: rng)
@@ -109,15 +113,27 @@ module ExtraRandomizers
           end
         when "ooe"
           possible_types = (0..0xB).to_a
+          possible_types -= [4, 5, 6] # Don't allow max ups, only certain items we already chose earlier may be max ups.
           possible_types -= [8] # Don't allow unusable items
           unless (0x75..0xAC).include?(item["Item ID"])
             possible_types -= [9] # Don't allow records unless it will actually play a song.
           end
           possible_types -= [0xB] # Don't allow attribute point increases because I don't fully understand them yet TODO
-          possible_types += [0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 4, 5] # Increase chances of some item types
+          possible_types += [0, 0, 0, 0, 0, 1, 2, 2, 3, 3] # Increase chances of some item types
           # Don't allow potions/mind ups/heart repairs to subtract HP
           if (0x75..0x7B).include?(item["Item ID"])
             possible_types.delete(7)
+          end
+          
+          if @max_up_items[0] == item["Item ID"]
+            # HP Max Up
+            possible_types = [4]
+          elsif @max_up_items[1] == item["Item ID"]
+            # MP Max Up
+            possible_types = [5]
+          elsif @max_up_items[2] == item["Item ID"]
+            # HEART Max Up
+            possible_types = [6]
           end
           
           item["Type"] = possible_types.sample(random: rng)

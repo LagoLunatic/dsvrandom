@@ -15,8 +15,11 @@ module ChestPoolRandomizer
       item["Price"] >= 4000
     end
     
-    available_common_wooden_chest_item_ids = (0x75..0x7E).to_a + (0x82..0xA3).to_a + (0xBA..0xD1).to_a
+    available_common_wooden_chest_item_ids = (0x75..0xA3).to_a + (0xBA..0xD1).to_a
     available_common_wooden_chest_item_ids -= available_rare_wooden_chest_item_ids
+    
+    available_common_wooden_chest_item_ids -= @max_up_items
+    available_rare_wooden_chest_item_ids -= @max_up_items
     
     available_common_wooden_chest_item_ids.shuffle!(random: rng)
     available_rare_wooden_chest_item_ids.shuffle!(random: rng)
