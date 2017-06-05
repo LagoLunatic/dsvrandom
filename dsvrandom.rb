@@ -1,3 +1,6 @@
+
+DEBUG = true
+
 require 'Qt'
 require 'fileutils'
 require 'yaml'

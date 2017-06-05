@@ -66,6 +66,11 @@ class RandomizerWindow < Qt::Dialog
     
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
+    unless DEBUG
+      @ui.groupBox_5.hide()
+      self.resize(640, 457)
+    end
+    
     self.show()
   end
   
