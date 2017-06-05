@@ -76,7 +76,7 @@ Defs:
   argilaswamp: oblivionridge | nonlinear
   
   mysterymanor: argilaswamp | nonlinear
-  mysterymanormid: mysterymanor & medium height
+  mysterymanormid: mysterymanor & medium height | mysterymanor & distance
   bossalbus: mysterymanormid
   
   allvillagers: villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
