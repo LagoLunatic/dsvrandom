@@ -581,9 +581,61 @@ module EnemyRandomizer
         # Don't let Nightmare appear in 1-screen wide rooms as he will just fade in and out constantly if he doesn't have a wide area.
         return :redo
       end
+    when "Tin Man"
+      # If Tin Man is placed on a 1-tile-wide jump-through-platform he will crash the game because his AI isn't sure where to put him.
+      # So move him downwards to the nearest *solid* floor to prevent this.
+      coll = RoomCollision.new(enemy.room)
+      y = coll.get_floor_y(enemy)
+      if y.nil?
+        # No solid floor
+        return :redo
+      end
+      enemy.y_pos = y
     else
       enemy.var_a = 0
       enemy.var_b = 0
     end
+  end
+end
+
+class RoomCollision
+  attr_reader :collision_layer,
+              :collision_tileset,
+              :tiles
+  
+  def initialize(room)
+    @collision_layer = room.layers.first
+    @collision_tileset = CollisionTileset.new(collision_layer.collision_tileset)
+    
+    @tiles = []
+    collision_layer.tiles.each do |tile|
+      @tiles << collision_tileset.tiles[tile.index_on_tileset]
+    end
+  end
+  
+  def [](x, y)
+    x = x / 0x10
+    y = y / 0x10
+    room_width_in_tiles = room.width*SCREEN_WIDTH_IN_TILES
+    tile_index = x + y*room_width_in_tiles
+    collision_tile = tiles[tile_index]
+    
+    collision_tile
+  end
+  
+  def get_floor_y(entity)
+    room_width = room.width*SCREEN_WIDTH_IN_PIXELS
+    room_height = room.height*SCREEN_HEIGHT_IN_PIXELS
+    
+    x = entity.x_pos
+    chosen_y = nil
+    (entity.y_pos..room_height).step(0x10) do |y|
+      if coll[x,y].is_solid?
+        chosen_y = y
+        break
+      end
+    end
+    
+    return chosen_y
   end
 end
