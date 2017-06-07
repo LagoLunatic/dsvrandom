@@ -89,7 +89,7 @@ module ExtraRandomizers
           when 0, 1, 3 # Restores HP/restores MP/subtracts HP
             item["Var A"] = rand_range_weighted_very_low(1..1500)
           when 2 # Cures status effect
-            item["Var A"] = [1, 2].sample(random: rng)
+            item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
           
           case item["Type"]
@@ -103,6 +103,8 @@ module ExtraRandomizers
               description.decoded_string = "Cures poison."
             when 2
               description.decoded_string = "Nullifies curse."
+            when 4
+              description.decoded_string = "Cures petrify."
             end
           when 3
             description.decoded_string = "Subtracts #{item["Var A"]} HP."
