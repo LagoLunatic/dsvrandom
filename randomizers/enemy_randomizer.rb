@@ -584,7 +584,7 @@ module EnemyRandomizer
     when "Tin Man"
       # If Tin Man is placed on a 1-tile-wide jump-through-platform he will crash the game because his AI isn't sure where to put him.
       # So move him downwards to the nearest *solid* floor to prevent this.
-      coll = RoomCollision.new(enemy.room)
+      coll = RoomCollision.new(enemy.room, game.fs)
       y = coll.get_floor_y(enemy)
       if y.nil?
         # No solid floor
@@ -599,13 +599,18 @@ module EnemyRandomizer
 end
 
 class RoomCollision
-  attr_reader :collision_layer,
+  attr_reader :room,
+              :fs,
+              :collision_layer,
               :collision_tileset,
               :tiles
   
-  def initialize(room)
+  def initialize(room, fs)
+    @room = room
+    @fs = fs
+    
     @collision_layer = room.layers.first
-    @collision_tileset = CollisionTileset.new(collision_layer.collision_tileset)
+    @collision_tileset = CollisionTileset.new(collision_layer.collision_tileset_pointer, fs)
     
     @tiles = []
     collision_layer.tiles.each do |tile|
@@ -630,7 +635,7 @@ class RoomCollision
     x = entity.x_pos
     chosen_y = nil
     (entity.y_pos..room_height).step(0x10) do |y|
-      if coll[x,y].is_solid?
+      if self[x,y].is_solid?
         chosen_y = y
         break
       end
