@@ -1,6 +1,6 @@
 
 module EnemyRandomizer
-  MAX_ASSETS_PER_ROOM = 12
+  MAX_ASSETS_PER_ROOM = 20
   
   def randomize_enemies
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
@@ -41,22 +41,22 @@ module EnemyRandomizer
       end
     end
     
-    #@assets_for_each_special_object = {}
-    #SPECIAL_OBJECT_IDS.each do |special_object_id|
-    #  begin
-    #    special_object = game.special_objects[special_object_id]
-    #    sprite_info = special_object.extract_gfx_and_palette_and_sprite_from_create_code
-    #    if sprite_info.gfx_file_pointers == COMMON_SPRITE[:gfx_files]
-    #      # Don't count the common sprite.
-    #      @assets_for_each_special_object[special_object_id] = []
-    #    else
-    #      @assets_for_each_special_object[special_object_id] = sprite_info.gfx_file_pointers
-    #    end
-    #  rescue StandardError => e
-    #    puts "Error getting sprite info for object id %02X" % special_object_id
-    #    @assets_for_each_special_object[special_object_id] = []
-    #  end
-    #end
+    @assets_for_each_special_object = {}
+    SPECIAL_OBJECT_IDS.each do |special_object_id|
+      begin
+        special_object = game.special_objects[special_object_id]
+        sprite_info = special_object.extract_gfx_and_palette_and_sprite_from_create_code
+        if sprite_info.gfx_file_pointers == COMMON_SPRITE[:gfx_files]
+          # Don't count the common sprite.
+          @assets_for_each_special_object[special_object_id] = []
+        else
+          @assets_for_each_special_object[special_object_id] = sprite_info.gfx_file_pointers
+        end
+      rescue StandardError => e
+        puts "Error getting sprite info for object id %02X" % special_object_id
+        @assets_for_each_special_object[special_object_id] = []
+      end
+    end
     
     game.each_room do |room|
       @enemy_pool_for_room = []
@@ -74,13 +74,13 @@ module EnemyRandomizer
       
       next if enemies_in_room.empty?
       
-      #objects_in_room = room.entities.select{|e| e.is_special_object?}
-      #objects_in_room.each do |object|
-      #  assets = @assets_for_each_special_object[object.subtype]
-      #  puts "OBJ: %02X, ASSETS: #{assets}" % object.subtype
-      #  @assets_needed_for_room += assets
-      #  @assets_needed_for_room.uniq!
-      #end
+      objects_in_room = room.entities.select{|e| e.is_special_object?}
+      objects_in_room.each do |object|
+        assets = @assets_for_each_special_object[object.subtype]
+        #puts "OBJ: %02X, ASSETS: #{assets}" % object.subtype
+        @assets_needed_for_room += assets
+        @assets_needed_for_room.uniq!
+      end
       
       if enemies_in_room.length >= 6
         # Don't let cpu intensive enemies in rooms that have lots of enemies.
@@ -130,7 +130,7 @@ module EnemyRandomizer
         # Remove enemies that would go over the asset cap.
         asset_slots_left = MAX_ASSETS_PER_ROOM - @assets_needed_for_room.size
         @allowed_enemies_for_room.select! do |enemy_id|
-          needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size # TODO actually check unique assets, not just the number
+          needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size
           needed_assets_for_enemy <= asset_slots_left
         end
         
