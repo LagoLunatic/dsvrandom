@@ -554,6 +554,22 @@ module PickupRandomizer
       entity.var_b = 0
       
       entity.write_to_rom()
+      
+      if pickup_global_id == :villageranna
+        # Anna must have Tom in her room, or her event will crash the game.
+        room = entity.room
+        cat = Entity.new(room, room.fs)
+        
+        cat.x_pos = entity.x_pos
+        cat.y_pos = entity.y_pos
+        cat.type = 2
+        cat.subtype = 0x3F
+        cat.var_a = 3
+        cat.var_b = 1
+        
+        room.entities << cat
+        room.write_entities_to_rom()
+      end
     elsif entity.type == 1
       # Boss
       
