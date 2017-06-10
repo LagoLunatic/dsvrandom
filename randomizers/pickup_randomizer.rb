@@ -109,6 +109,7 @@ module PickupRandomizer
   def place_progression_pickups
     previous_accessible_locations = []
     @locations_randomized_to_have_useful_pickups = []
+    @rooms_that_already_have_a_villager = ["11-00-08"] # George
     on_leftovers = false
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
@@ -415,6 +416,12 @@ module PickupRandomizer
       # Locations too close to the top of the room shouldn't be villagers, as the Torpor glyph would spawn above the screen and not be absorbable.
       locations_too_high_to_be_a_villager = ["00-05-07_01", "00-05-07_02", "00-05-08_02", "00-05-08_03", "00-05-0C_01", "00-06-09_00", "0D-00-04_00", "0D-00-0C_00"]
       locations -= locations_too_high_to_be_a_villager
+      
+      # Two villagers shouldn't be placed in the same room, or their events will conflict and not work correctly.
+      locations.select! do |location|
+        room_str = location[0,8]
+        !@rooms_that_already_have_a_villager.include?(room_str)
+      end
     end
     
     locations
@@ -547,6 +554,9 @@ module PickupRandomizer
       if GAME != "ooe"
         raise "Tried to place villager in #{GAME}"
       end
+      
+      room_str = location[0,8]
+      @rooms_that_already_have_a_villager << room_str
       
       entity.type = 2
       entity.subtype = 0x89
