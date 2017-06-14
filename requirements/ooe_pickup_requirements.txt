@@ -83,7 +83,7 @@ Defs:
   bossbarlowe: ecclesia & bossalbus & allvillagers
   
   trainchamber: backexit | nonlinear
-  trainchamberend: trainchamber & magnes & double jump
+  trainchamberend: trainchamber & magnes & double jump | trainchamber & redire
   
   largecavern: backexit | nonlinear
   
