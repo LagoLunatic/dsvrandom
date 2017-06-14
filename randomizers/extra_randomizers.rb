@@ -87,7 +87,7 @@ module ExtraRandomizers
           
           case item["Type"]
           when 0, 1, 3 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(1..1500)
+            item["Var A"] = rand_range_weighted_very_low(1..1000)
           when 2 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
@@ -142,7 +142,7 @@ module ExtraRandomizers
           
           case item["Type"]
           when 0, 1, 7 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(1..1500)
+            item["Var A"] = rand_range_weighted_very_low(1..1000)
           when 2 # Restores hearts
             item["Var A"] = rand_range_weighted_low(1..400)
           when 3 # Cures status effect
@@ -305,7 +305,7 @@ module ExtraRandomizers
         skill["DMG multiplier"] = rand_range_weighted_low(15..55)
       else
         skill["Mana cost"] = rng.rand(1..60)
-        skill["DMG multiplier"] = rand_range_weighted_very_low(1..35)
+        skill["DMG multiplier"] = rand_range_weighted_low(5..35)
       end
       
       skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
