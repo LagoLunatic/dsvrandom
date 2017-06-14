@@ -1,6 +1,6 @@
 
 module EnemyRandomizer
-  MAX_ASSETS_PER_ROOM = 20
+  MAX_ASSETS_PER_ROOM = 17
   
   def randomize_enemies
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
