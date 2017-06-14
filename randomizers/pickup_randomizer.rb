@@ -109,7 +109,16 @@ module PickupRandomizer
   def place_progression_pickups
     previous_accessible_locations = []
     @locations_randomized_to_have_useful_pickups = []
-    @rooms_that_already_have_a_villager = ["11-00-08"] # George
+    @rooms_that_already_have_an_event = []
+    game.each_room do |room|
+      room.entities.each do |entity|
+        if entity.is_special_object? && (0x5F..0x88).include?(entity.subtype)
+          room_str = "%02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index]
+          @rooms_that_already_have_an_event << room_str
+          break
+        end
+      end
+    end
     on_leftovers = false
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
@@ -420,7 +429,7 @@ module PickupRandomizer
       # Two villagers shouldn't be placed in the same room, or their events will conflict and not work correctly.
       locations.select! do |location|
         room_str = location[0,8]
-        !@rooms_that_already_have_a_villager.include?(room_str)
+        !@rooms_that_already_have_an_event.include?(room_str)
       end
     end
     
@@ -556,7 +565,7 @@ module PickupRandomizer
       end
       
       room_str = location[0,8]
-      @rooms_that_already_have_a_villager << room_str
+      @rooms_that_already_have_an_event << room_str
       
       entity.type = 2
       entity.subtype = 0x89
