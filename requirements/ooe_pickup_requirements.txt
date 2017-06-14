@@ -599,7 +599,6 @@ Rooms:
     00 (HEART Max Up): 
   12-00-0D:
     room: monasterymid
-    01 (Tasty Meat) (Hidden): 
     02 (Red Drops) (Hidden): 
     04 (Money): 
   12-00-10:
