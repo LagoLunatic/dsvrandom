@@ -32,6 +32,7 @@ class RandomizerWindow < Qt::Dialog
     no_touch_screen
     fix_luck
     unlock_boss_doors
+    fix_infinite_quest_rewards
     dont_randomize_change_cube
     open_world_map
     always_dowsing
@@ -201,6 +202,10 @@ class RandomizerWindow < Qt::Dialog
     
     if GAME == "dos" && @ui.unlock_boss_doors.checked()
       game.apply_armips_patch("dos_skip_boss_door_seals")
+    end
+    
+    if GAME == "por" && @ui.fix_infinite_quest_rewards.checked()
+      game.apply_armips_patch("por_fix_infinite_quest_rewards")
     end
     
     if GAME == "ooe" && @ui.always_dowsing.checked()

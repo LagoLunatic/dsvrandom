@@ -454,6 +454,16 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
+           <widget class="QCheckBox" name="fix_infinite_quest_rewards">
+            <property name="text">
+             <string>Fix infinite quest rewards bug</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="dont_randomize_change_cube">
             <property name="toolTip">
              <string>The change cube will always be the first item you get.</string>
