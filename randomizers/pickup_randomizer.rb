@@ -714,6 +714,12 @@ module PickupRandomizer
         picked_up_flag = entity.var_a
       end
       
+      if (0..0x51).include?(picked_up_flag)
+        # In OoE, these picked up flags are used by glyph statues automatically and we can't control those.
+        # Therefore we need to reassign pickups that were free glyphs in the original game a new pickup flag, so it doesn't conflict with where those glyphs (Rapidus Fio and Volaticus) got moved to when randomized.
+        picked_up_flag = nil
+      end
+      
       if picked_up_flag.nil?
         picked_up_flag = @unused_picked_up_flags.pop()
         
