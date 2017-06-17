@@ -72,7 +72,7 @@ module ExtraRandomizers
         when "dos", "por"
           possible_types = (0..0x8).to_a
           possible_types -= [4, 5, 6] # Don't allow unusable items
-          possible_types += [0, 0, 0, 1, 7, 8] # Increase chances of some item types
+          possible_types += [0, 0, 0, 0, 0, 0, 1, 1, 2] # Increase chances of some item types
           possible_types -= [7, 8] # Don't allow max ups, only certain items we already chose earlier may be max ups.
           # Don't allow potions/mind ups to subtract HP
           if (0..5).include?(item["Item ID"])
@@ -125,7 +125,7 @@ module ExtraRandomizers
             possible_types -= [9] # Don't allow records unless it will actually play a song.
           end
           possible_types -= [0xB] # Don't allow attribute point increases because I don't fully understand them yet TODO
-          possible_types += [0, 0, 0, 0, 0, 1, 2, 2, 3, 3] # Increase chances of some item types
+          possible_types += [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3] # Increase chances of some item types
           # Don't allow potions/mind ups/heart repairs to subtract HP
           if (0x75..0x7B).include?(item["Item ID"])
             possible_types.delete(7)
