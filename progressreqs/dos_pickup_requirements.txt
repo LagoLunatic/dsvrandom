@@ -234,6 +234,7 @@ Rooms:
   00-02-0B:
     room: wizardry
     00 (Blunt Sword): 
+    01 (Money Chest): 
   00-02-10:
     room: wizardry & cutallsuper | hell & big height
     00 (Aquarius): 
@@ -259,6 +260,7 @@ Rooms:
     room: garden
     00 (Fleuret): 
     01 (Breastplate): 
+    16 (Money Chest): 
   00-03-01:
     room: midgarden
     00 (Elfin Robe): 
@@ -422,12 +424,22 @@ Rooms:
   00-09-0A:
     room: pinnacle & height
     02 (Truffle): 
+  00-09-0B:
+    room: pinnacle & big height | pinnacle & hwarp & malphas & puppet master | pinnacle & height & hwarp & black panther & puppet master | pinnacle & hwarp & black panther & puppet master | pinnacle & hwarp & & malphas & black panther
+    01 (Money Chest): 
+    02 (Money Chest): 
+    03 (Money Chest): 
   00-09-0E:
     room: pinnacle & height
     00 (Mana Prism): 
   00-09-11:
     room: pinnacle & height
     03 (Lance): 
+  00-09-16:
+    room: pinnacle & big height
+    01 (Money Chest): 
+    02 (Money Chest): 
+    03 (Money Chest): 
 #The Abyss:
   00-0B-06:
     room: abyss
