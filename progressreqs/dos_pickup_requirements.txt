@@ -84,8 +84,8 @@ Defs:
   aftergergoth: bossgergoth & big height | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
   
   hellintro: chapel & small | chapel & hwarp | hellcenter & rahab
-  hell: hellcenter | wizardry & cutallsuper | garden & rahab
-  hellcenter: hellintro & rahab & bossrahab | hell & rahab & height | hell & rahab & hwarpsucc
+  hell: hellcenter & rahab | hellcenter & malphas | wizardry & cutallsuper | garden & rahab
+  hellcenter: hellintro & rahab & bossrahab | hell & height | hell & hwarpsucc
   bossrahab: hellintro & seal 3 | hellintro & hwarp
   
   ruins: hell & distance & zephyr | hell & height & zephyr | hellcenter & cutallsuper
