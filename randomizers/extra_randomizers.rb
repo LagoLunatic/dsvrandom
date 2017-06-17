@@ -35,7 +35,9 @@ module ExtraRandomizers
   end
   
   def randomize_item_stats
-    game.items[ITEM_GLOBAL_ID_RANGE].each do |item|
+    (ITEM_GLOBAL_ID_RANGE.to_a & all_non_progression_pickups).each do |item_global_id|
+      item = game.items[item_global_id]
+      
       # Don't randomize unequip/starting items.
       if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
         next
@@ -47,10 +49,8 @@ module ExtraRandomizers
         next if item["Item ID"] == 0x61 # starting Vampire Killer
       end
       
-      if checker.all_progression_pickups.include?(item["Item ID"])
-        # Don't randomize the price of progression items so they can't be sold on accident.
-      elsif item.name == "CASTLE MAP 1" && GAME == "por"
-        # Also so castle map 1 in PoR doesn't cost a lot to buy.
+      if item.name == "CASTLE MAP 1" && GAME == "por"
+        # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
       else
         item["Price"] = rand_range_weighted_very_low(1..250)*100
       end
@@ -68,11 +68,6 @@ module ExtraRandomizers
           # Don't allow potions/mind ups to subtract HP
           if (0..5).include?(item["Item ID"])
             possible_types.delete(3)
-          end
-          
-          if checker.all_progression_pickups.include?(item["Item ID"])
-            # Always make progression items unusable so the player can't accidentally eat one and softlock themself.
-            possible_types = [4]
           end
           
           if @max_up_items[0] == item["Item ID"]
