@@ -451,7 +451,7 @@ module ExtraRandomizers
       item_list_for_type & all_non_progression_pickups
     end
     
-    available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE
+    available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE.to_a
     available_souls.map!{|global_id| global_id - 0xCE}
     
     WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
