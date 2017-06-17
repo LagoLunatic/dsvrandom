@@ -1,10 +1,10 @@
 
-DSVRandom (DSVania Randomizer) is a randomizer for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. Currently it's only compatible with the North American versions.
+DSVRandom (DSVania Randomizer) is a randomizer for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's only compatible with the North American versions.
 
 Source code: https://github.com/LagoLunatic/dsvrandom
 Report issues here: https://github.com/LagoLunatic/dsvrandom/issues
 
-### Randomization options
+### What does it randomize?
 
 DSVRandom has options to randomize:
 Items/Skills: Randomizes items and skills you find lying on the ground.
