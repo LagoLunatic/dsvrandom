@@ -319,11 +319,11 @@ module DoorRandomizer
   def remove_door_blockers
     obj_subtypes_to_remove = case GAME
     when "dos"
-      []
+      [0x43, 0x44, 0x46, 0x57, 0x1E, 0x2B]
     when "por"
       [0x37, 0x30, 0x3B]
     when "ooe"
-      []
+      [0x5C]
     end
     
     game.each_room do |room|
