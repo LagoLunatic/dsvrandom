@@ -44,7 +44,7 @@ module ExtraRandomizers
   end
   
   def randomize_item_stats
-    (ITEM_GLOBAL_ID_RANGE.to_a & all_non_progression_pickups).each do |item_global_id|
+    (ITEM_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
       item = game.items[item_global_id]
       
       # Don't randomize unequip/starting items.
