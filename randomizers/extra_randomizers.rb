@@ -451,6 +451,9 @@ module ExtraRandomizers
       item_list_for_type & all_non_progression_pickups
     end
     
+    available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE
+    available_souls.map!{|global_id| global_id - 0xCE}
+    
     WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
       chain = WeaponSynthChain.new(index, game.fs)
       
@@ -466,7 +469,7 @@ module ExtraRandomizers
         items_available_for_this_chain.delete(created_item)
         
         synth.required_item_id = req_item + 1
-        synth.required_soul_id = rng.rand(SKILL_LOCAL_ID_RANGE)
+        synth.required_soul_id = available_souls.sample(random: rng)
         synth.created_item_id = created_item + 1
         
         synth.write_to_rom()
