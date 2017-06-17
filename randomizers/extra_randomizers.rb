@@ -34,6 +34,15 @@ module ExtraRandomizers
     end
   end
   
+  def get_n_damage_types(all_damage_types, possible_n_values)
+    known_damage_type_names = all_damage_types.select{|name| name !~ /\d$/}
+    normal_damage_types = all_damage_types[0,8] & known_damage_type_names
+    known_damage_type_names += normal_damage_types # Double the chance of normal damage types compared to status effects and other bits.
+    num_damage_types = possible_n_values.sample(random: rng)
+    damage_types_to_set = known_damage_type_names.sample(num_damage_types)
+    damage_types_to_set
+  end
+  
   def randomize_item_stats
     (ITEM_GLOBAL_ID_RANGE.to_a & all_non_progression_pickups).each do |item_global_id|
       item = game.items[item_global_id]
@@ -218,35 +227,38 @@ module ExtraRandomizers
           item["Special Effect"] = rng.rand(0..7)
         end
         
-        [
-          "Effects",
-          "Swing Modifiers",
-        ].each do |bitfield_attr_name|
-          player_can_move = nil
+        player_can_move = nil
+        item["Swing Modifiers"].names.each_with_index do |bit_name, i|
+          next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
           
-          item[bitfield_attr_name].names.each_with_index do |bit_name, i|
-            next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
-            
-            item[bitfield_attr_name][i] = [true, false, false, false].sample(random: rng)
-            
-            if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
-              # This bit must be set for throwing weapons in DoS or they won't appear.
-              item[bitfield_attr_name][i] = true
-            end
-            
-            if bit_name == "Player can move"
-              player_can_move = item[bitfield_attr_name][i]
-            end
-            
-            if bit_name == "No interrupt on anim end" && player_can_move
-              # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
-              item[bitfield_attr_name][i] = true
-            end
-            
-            if bit_name == "Cures vampirism & kills undead" && item[bitfield_attr_name][i] == true
-              # Don't give this weapon the magical bit if it has the cures vampirism bit because we don't want it to cure the sisters.
-              item[bitfield_attr_name][26] = false # Magical
-            end
+          item["Swing Modifiers"][i] = [true, false, false, false].sample(random: rng)
+          
+          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
+            # This bit must be set for throwing weapons in DoS or they won't appear.
+            item["Swing Modifiers"][i] = true
+          end
+          
+          if bit_name == "Player can move"
+            player_can_move = item["Swing Modifiers"][i]
+          end
+          
+          if bit_name == "No interrupt on anim end" && player_can_move
+            # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
+            item["Swing Modifiers"][i] = true
+          end
+        end
+        
+        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"], [1, 1, 1, 2, 2, 3, 4])
+        item["Effects"].names.each_with_index do |bit_name, i|
+          if damage_types_to_set.include?(bit_name)
+            item["Effects"][i] = true
+          else
+            item["Effects"][i] = false
+          end
+          
+          if bit_name == "Cures vampirism & kills undead" && item["Effects"][i] == true
+            # Don't give this weapon the magical bit if it has the cures vampirism bit because we don't want it to cure the sisters.
+            item["Effects"][26] = false # Magical
           end
         end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
@@ -265,11 +277,12 @@ module ExtraRandomizers
           item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
         end
         
-        [
-          "Resistances",
-        ].each do |bitfield_attr_name|
-          item[bitfield_attr_name].names.each_with_index do |bit_name, i|
-            item[bitfield_attr_name][i] = [true, false, false, false, false, false, false, false, false].sample(random: rng)
+        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Resistances"], [0, 0, 0, 0, 0, 0, 1])
+        item["Resistances"].names.each_with_index do |bit_name, i|
+          if damage_types_to_set.include?(bit_name)
+            item["Resistances"][i] = true
+          else
+            item["Resistances"][i] = false
           end
         end
       end
@@ -378,17 +391,18 @@ module ExtraRandomizers
         skill["Delay"] = rand_range_weighted_low(0..14)
       end
       
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"], [1, 1, 1, 2, 2, 3, 4])
       skill["Effects"].names.each_with_index do |bit_name, i|
         if bit_name == "Cures vampirism & kills undead"
-          # Don't want to randomize this or Sanctuary won't work. Also don't want to give any other spells besides Sanctuary this.
+          # Don't want to give any other spells besides Sanctuary this.
           next
         end
-        if bit_name == "Magical" && skill.name == "Sanctuary"
-          # Always make sure Sanctuary has the magical bit set, in case it's a Jonathan skill and it doesn't get set automatically.
+        
+        if damage_types_to_set.include?(bit_name)
           skill["Effects"][i] = true
-          next
+        else
+          skill["Effects"][i] = false
         end
-        skill["Effects"][i] = [true, false, false, false, false].sample(random: rng)
       end
       
       skill["Unwanted States"].names.each_with_index do |bit_name, i|
