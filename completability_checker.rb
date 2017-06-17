@@ -25,7 +25,7 @@ class CompletabilityChecker
   end
   
   def load_room_reqs
-    yaml = YAML::load_file("./dsvrandom/requirements/#{GAME}_pickup_requirements.txt")
+    yaml = YAML::load_file("./dsvrandom/progressreqs/#{GAME}_pickup_requirements.txt")
     @room_reqs = {}
     
     defs = yaml["Defs"]
