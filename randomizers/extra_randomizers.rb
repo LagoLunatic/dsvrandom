@@ -248,7 +248,8 @@ module ExtraRandomizers
           end
         end
         
-        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"], [1, 1, 1, 2, 2, 3, 4])
+        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
+        damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
         item["Effects"].names.each_with_index do |bit_name, i|
           if damage_types_to_set.include?(bit_name)
             item["Effects"][i] = true
@@ -391,7 +392,8 @@ module ExtraRandomizers
         skill["Delay"] = rand_range_weighted_low(0..14)
       end
       
-      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"], [1, 1, 1, 2, 2, 3, 4])
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
+      damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
       skill["Effects"].names.each_with_index do |bit_name, i|
         if bit_name == "Cures vampirism & kills undead"
           # Don't want to give any other spells besides Sanctuary this.
