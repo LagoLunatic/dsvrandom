@@ -274,6 +274,23 @@ module ExtraRandomizers
           # Therefore we set the damage types bitfield to match so it at least displays the correct values.
           item["Effects"].value = 4 # Slash
         end
+        
+        if item["Special Effect"] == 5
+          # The Heaven Sword "throw the weapon in front of you" effect only uses the first frame of the weapon's sprite.
+          # If the first frame has no hitbox the weapon won't be able to hit enemies.
+          # So we reorder the frames so that one with a hitbox is first.
+          weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
+          sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
+          possible_frames = sprite.frames.select{|frame| frame.hitboxes.any?}
+          if possible_frames.any?
+            # Select the first frame with a hitbox.
+            frame = possible_frames.first
+            # Move that frame to the front.
+            sprite.frames.delete(frame)
+            sprite.frames.unshift(frame)
+            sprite.write_to_rom()
+          end
+        end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
         item["Defense"] = rand_range_weighted_very_low(0..40)
         
