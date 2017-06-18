@@ -11,6 +11,11 @@ module EnemyRandomizer
     @assets_for_each_enemy = {}
     @skeletally_animated_enemy_ids = []
     ENEMY_IDS.each do |enemy_id|
+      if REUSED_ENEMY_INFO[enemy_id] && REUSED_ENEMY_INFO[enemy_id][:init_code] == -1
+        @assets_for_each_enemy[enemy_id] = []
+        @skeletally_animated_enemy_ids << enemy_id # Probably a 3D enemy, so count it anyway
+      end
+      
       begin
         enemy_dna = game.enemy_dnas[enemy_id]
         sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
@@ -43,6 +48,11 @@ module EnemyRandomizer
     
     @assets_for_each_special_object = {}
     SPECIAL_OBJECT_IDS.each do |special_object_id|
+      if REUSED_SPECIAL_OBJECT_INFO[special_object_id] && REUSED_SPECIAL_OBJECT_INFO[special_object_id][:init_code] == -1
+        @assets_for_each_special_object[special_object_id] = []
+        next
+      end
+      
       begin
         special_object = game.special_objects[special_object_id]
         sprite_info = special_object.extract_gfx_and_palette_and_sprite_from_create_code
