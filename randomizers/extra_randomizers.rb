@@ -224,7 +224,11 @@ module ExtraRandomizers
           end
           
           item["Crit type/Palette"] = rng.rand(0..0x13)
-          item["Special Effect"] = rng.rand(0..7)
+          if rng.rand <= 0.50 # 50% chance to have a special effect
+            item["Special Effect"] = rng.rand(1..7)
+          else
+            item["Special Effect"] = 0
+          end
         end
         
         player_can_move = nil
