@@ -224,7 +224,9 @@ module ExtraRandomizers
           end
           
           item["Crit type/Palette"] = rng.rand(0..0x13)
-          if rng.rand <= 0.50 # 50% chance to have a special effect
+          if item.name == "Heaven's Sword" || item.name == "Tori"
+            item["Special Effect"] = [1, 5, 6, 7].sample(random: rng)
+          elsif rng.rand <= 0.50 # 50% chance to have a special effect
             item["Special Effect"] = rng.rand(1..7)
           else
             item["Special Effect"] = 0
