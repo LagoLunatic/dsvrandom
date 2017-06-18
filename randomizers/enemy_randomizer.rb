@@ -89,12 +89,16 @@ module EnemyRandomizer
       end
       
       # Don't allow spawners in Nest of Evil/Large Cavern.
-      if (GAME == "por" && room.area_index == 9) || (GAME == "ooe" && room.area_index == 0x0C)
+      if (GAME == "por" && room.area_index == 9) || (GAME == "ooe" && room.area_index == 0xC)
         @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
       end
       # Don't allow spawners in the train room.
       if GAME == "por" && room.area_index == 2 && room.sector_index == 0 && room.room_index == 1
         @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+      end
+      # Don't allow Blood Skeletons in Large Cavern since they can't be killed.
+      if GAME == "ooe" && room.area_index == 0xC
+        @allowed_enemies_for_room -= [0x4B]
       end
       
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
