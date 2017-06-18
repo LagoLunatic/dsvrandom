@@ -201,7 +201,7 @@ module ExtraRandomizers
         
         case GAME
         when "dos"
-          unless [9, 0xA].include?(item["Swing Anim"])
+          unless [9, 0xA, 0xB].include?(item["Swing Anim"])
             # Only randomize swing anim if it wasn't originally a throwing/firing weapon.
             # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
             item["Swing Anim"] = rng.rand(0..0xC)
