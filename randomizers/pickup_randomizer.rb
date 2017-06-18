@@ -544,12 +544,18 @@ module PickupRandomizer
     return skill_global_id
   end
   
-  def change_entity_location_to_pickup_global_id(location, pickup_global_id)
+  def get_entity_by_location_str(location)
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     
     room = game.areas[area_index].sectors[sector_index].rooms[room_index]
     entity = room.entities[entity_index]
+    
+    return entity
+  end
+  
+  def change_entity_location_to_pickup_global_id(location, pickup_global_id)
+    entity = get_entity_by_location_str(location)
     
     if checker.event_locations.include?(location)
       # Event with a hardcoded item/glyph.
@@ -827,11 +833,7 @@ module PickupRandomizer
   end
   
   def get_entity_skill_drop_by_entity_location(location)
-    location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
-    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
-    
-    room = game.areas[area_index].sectors[sector_index].rooms[room_index]
-    entity = room.entities[entity_index]
+    entity = get_entity_by_location_str(location)
     
     if entity.type != 1
       raise "Not an enemy: #{location}"
@@ -858,11 +860,7 @@ module PickupRandomizer
   end
   
   def get_villager_name_by_entity_location(location)
-    location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
-    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
-    
-    room = game.areas[area_index].sectors[sector_index].rooms[room_index]
-    entity = room.entities[entity_index]
+    entity = get_entity_by_location_str(location)
     
     if GAME == "ooe" && entity.type == 2 && entity.subtype == 0x89
       villager_name = VILLAGER_NAME_TO_EVENT_FLAG.invert[entity.var_a]
