@@ -2,6 +2,8 @@
 module EnemyRandomizer
   MAX_ASSETS_PER_ROOM = 17
   
+  attr_reader :coll
+  
   def randomize_enemies
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
       COMMON_ENEMY_IDS.include?(enemy_id)
@@ -83,6 +85,8 @@ module EnemyRandomizer
       enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
       
       next if enemies_in_room.empty?
+      
+      @coll = RoomCollision.new(room, game.fs)
       
       objects_in_room = room.entities.select{|e| e.is_special_object?}
       objects_in_room.each do |object|
@@ -233,6 +237,9 @@ module EnemyRandomizer
       ooe_adjust_randomized_enemy(enemy, enemy_dna)
     end
     
+    # We fix the enemy position twice in case the enemy-specific adjustment moved it down onto a door or something.
+    fix_enemy_position(enemy)
+    
     if result == :redo
       randomize_enemy(enemy)
     else
@@ -358,6 +365,14 @@ module EnemyRandomizer
       enemy.var_a = rng.rand(1..5)
     when "Bone Pillar", "Fish Head"
       enemy.var_a = rng.rand(1..8)
+      
+      # Move down to the nearest floor
+      y = coll.get_floor_y(enemy, allow_jumpthrough: true)
+      if y.nil?
+        # No solid floor
+        return :redo
+      end
+      enemy.y_pos = y
     when "Malachi"
       enemy.var_a = 0
     when "Medusa Head"
@@ -598,10 +613,9 @@ module EnemyRandomizer
     when "Tin Man"
       # If Tin Man is placed on a 1-tile-wide jump-through-platform he will crash the game because his AI isn't sure where to put him.
       # So move him downwards to the nearest *solid* floor to prevent this.
-      coll = RoomCollision.new(enemy.room, game.fs)
-      y = coll.get_floor_y(enemy)
+      y = coll.get_floor_y(enemy, allow_jumpthrough: false)
       if y.nil?
-        # No solid floor
+        # No floor
         return :redo
       end
       enemy.y_pos = y
@@ -642,7 +656,7 @@ class RoomCollision
     collision_tile
   end
   
-  def get_floor_y(entity)
+  def get_floor_y(entity, allow_jumpthrough: false)
     room_width = room.width*SCREEN_WIDTH_IN_PIXELS
     room_height = room.height*SCREEN_HEIGHT_IN_PIXELS
     
@@ -651,6 +665,13 @@ class RoomCollision
     (entity.y_pos..room_height).step(0x10) do |y|
       if self[x,y].is_solid?
         chosen_y = y
+        break
+      end
+      if self[x,y].is_jumpthrough_platform? && allow_jumpthrough
+        chosen_y = y
+        if self[x,y].is_bottom_half?
+          chosen_y += 8
+        end
         break
       end
     end
