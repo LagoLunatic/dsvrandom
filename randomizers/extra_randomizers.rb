@@ -148,7 +148,7 @@ module ExtraRandomizers
           when 0, 1, 7 # Restores HP/restores MP/subtracts HP
             item["Var A"] = rand_range_weighted_very_low(1..1000)
           when 2 # Restores hearts
-            item["Var A"] = rand_range_weighted_low(1..400)
+            item["Var A"] = rand_range_weighted_very_low(1..350)
           when 3 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
