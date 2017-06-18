@@ -56,7 +56,7 @@ Defs:
   bossarmor: seal 1 | hwarp
   afterarmor: height | distance | backdashjump
   undervillage: lowerwizardry & medium height & puppet master | lowerwizardry & big height | wizardry & cutallsuper
-  villagewatergate: afterarmor & distance
+  villagewatergate: afterarmor & distance | afterarmor & puppet master
   
   garden: wizardry & balore | medium height & backdashjump | medium height & puppet master | big height | lowergarden & rahab  | wizardry & height
   midgarden: garden & height | garden & vwarpseal
