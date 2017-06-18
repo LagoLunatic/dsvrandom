@@ -75,14 +75,17 @@ class Randomizer
     @rng = Random.new(@int_seed)
   end
   
-  def rand_range_weighted_low(range)
-    random_float = (1 - Math.sqrt(1 - rng.rand()))
+  def rand_range_weighted_low(range, weight_exponent: 1)
+    random_float = 1 - rand()
+    weight_exponent.times do
+      random_float = Math.sqrt(random_float)
+    end
+    random_float = 1 - random_float
     return (random_float * (range.max + 1 - range.min) + range.min).floor
   end
   
   def rand_range_weighted_very_low(range)
-    random_float = (1 - Math.sqrt(Math.sqrt(1 - rng.rand())))
-    return (random_float * (range.max + 1 - range.min) + range.min).floor
+    return rand_range_weighted_low(range, weight_exponent: 2)
   end
   
   def randomize
