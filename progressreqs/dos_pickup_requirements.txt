@@ -119,7 +119,7 @@ Rooms:
     room: undervillage & height
     01 (Caviar): 
   00-00-07: 
-    04 (High Potion): height
+    04 (High Potion): medium height | height & distance
   00-00-08:
     room: afterarmor
     02 (Claymore): 
@@ -172,7 +172,7 @@ Rooms:
     room: puppetguesthouse
     00 (Magic Seal 3): 
   00-01-0A:
-    room: towerguesthouse
+    room: towerguesthouse | medium height | height & distance # the 1 room can be accessed by going up that room in the lost village
     01 (Cestus): 
   00-01-0E:
     room: towerguesthouse
