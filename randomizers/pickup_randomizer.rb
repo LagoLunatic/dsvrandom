@@ -252,7 +252,10 @@ module PickupRandomizer
         end.compact
         
         if valid_previous_accessible_regions.empty?
-          raise "Bug: Failed to find any spots to place pickup.\nSeed is #{@seed}."
+          item_names = checker.current_items.map do |global_id|
+            checker.defs.invert[global_id]
+          end
+          raise "Bug: Failed to find any spots to place pickup.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
         end
         
         if on_leftovers
