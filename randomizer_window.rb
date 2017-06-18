@@ -67,10 +67,7 @@ class RandomizerWindow < Qt::Dialog
     
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
-    unless DEBUG
-      @ui.groupBox_5.hide()
-      self.resize(640, 457)
-    end
+    update_settings()
     
     self.show()
   end
@@ -131,6 +128,16 @@ class RandomizerWindow < Qt::Dialog
     
     OPTIONS.each do |option_name|
       @settings[option_name] = @ui.send(option_name).checked
+    end
+    
+    if !@settings[:randomize_pickups]
+      @ui.randomize_boss_souls.checked = false
+      @ui.randomize_boss_souls.enabled = false
+      @ui.randomize_villagers.checked = false
+      @ui.randomize_villagers.enabled = false
+    else
+      @ui.randomize_boss_souls.enabled = true
+      @ui.randomize_villagers.enabled = true
     end
     
     save_settings()
