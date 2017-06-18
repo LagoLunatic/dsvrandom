@@ -270,7 +270,7 @@ module ExtraRandomizers
         if item["Special Effect"] == 6
           # Illusion fist effect overrides damage types bitfield.
           # Therefore we set the damage types bitfield to match so it at least displays the correct values.
-          item["Effects"].values = 4 # Slash
+          item["Effects"].value = 4 # Slash
         end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
         item["Defense"] = rand_range_weighted_very_low(0..40)
