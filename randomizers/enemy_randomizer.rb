@@ -662,7 +662,7 @@ class RoomCollision
     
     x = entity.x_pos
     chosen_y = nil
-    (entity.y_pos..room_height).step(0x10) do |y|
+    (entity.y_pos..room_height-1).step(0x10) do |y|
       if self[x,y].is_solid?
         chosen_y = y
         break
