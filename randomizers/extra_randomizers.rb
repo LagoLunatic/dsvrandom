@@ -324,8 +324,10 @@ module ExtraRandomizers
   end
   
   def randomize_skill_stats
-    (SKILL_GLOBAL_ID_RANGE.to_a & all_non_progression_pickups).each do |skill_global_id|
+    SKILL_GLOBAL_ID_RANGE.each do |skill_global_id|
       skill = game.items[skill_global_id]
+      
+      progress_skill = !all_non_progression_pickups.include?(skill_global_id)
       
       if @ooe_starter_glyph_id
         next if skill_global_id == @ooe_starter_glyph_id
@@ -335,14 +337,16 @@ module ExtraRandomizers
       
       if GAME == "por" && (0x1A2..0x1AB).include?(skill_global_id)
         # Dual crush
-        skill["Mana cost"] = rng.rand(50..250)
+        skill["Mana cost"] = rng.rand(50..250) unless progress_skill
         skill["DMG multiplier"] = rand_range_weighted_low(15..85)
       elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
         # Glyph union
         skill["Heart cost"] = rand_range_weighted_low(5..50)
         skill["DMG multiplier"] = rand_range_weighted_low(15..55)
+        
+        skill["Heart cost"] = 0 if skill_global_id == 0x68 # Dominus union shouldn't cost hearts
       else
-        skill["Mana cost"] = rng.rand(1..60)
+        skill["Mana cost"] = rng.rand(1..60) unless progress_skill
         skill["DMG multiplier"] = rand_range_weighted_low(5..35)
       end
       
@@ -383,7 +387,7 @@ module ExtraRandomizers
       
       case GAME
       when "dos"
-        if (0xCE..0x102).include?(skill_global_id)
+        if (0xCE..0x102).include?(skill_global_id) && !progress_skill
           soul_extra_data = game.items[skill_global_id+0x7B]
           soul_extra_data["Max at once"] = rand_range_weighted_low(1..3)
           soul_extra_data["Bonus max at once"] = rand_range_weighted_low(0..2)
@@ -393,16 +397,18 @@ module ExtraRandomizers
         if (0x150..0x1A0).include?(skill_global_id)
           skill_extra_data = game.items[skill_global_id+0x6C]
           
-          max_at_once = rand_range_weighted_low(1..8)
-          is_spell = skill["??? bitfield"][2]
-          if is_spell
-            charge_time = rand_range_weighted_very_low(8..120)
-            skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
-            skill_extra_data["SP to Master"] = 0
-          else
-            mastered_bonus_max_at_once = rand_range_weighted_low(1..6)
-            skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
-            skill_extra_data["SP to Master"] = rng.rand(1..30)*100
+          unless progress_skill
+            max_at_once = rand_range_weighted_low(1..8)
+            is_spell = skill["??? bitfield"][2]
+            if is_spell
+              charge_time = rand_range_weighted_very_low(8..120)
+              skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
+              skill_extra_data["SP to Master"] = 0
+            else
+              mastered_bonus_max_at_once = rand_range_weighted_low(1..6)
+              skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
+              skill_extra_data["SP to Master"] = rng.rand(1..30)*100
+            end
           end
           
           skill_extra_data["Price (1000G)"] = rand_range_weighted_low(1..30)
@@ -418,14 +424,14 @@ module ExtraRandomizers
         end
         
         skill["IFrames"] = rand_range_weighted_low(1..0x24)
-        skill["Delay"] = rand_range_weighted_low(0..14)
+        skill["Delay"] = rand_range_weighted_low(0..14) unless progress_skill
       end
       
       damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
       damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
       skill["Effects"].names.each_with_index do |bit_name, i|
         if bit_name == "Cures vampirism & kills undead"
-          # Don't want to give any other spells besides Sanctuary this.
+          # Don't want to randomize this or Sanctuary won't work. Also don't want to give any other spells besides Sanctuary this.
           next
         end
         
@@ -433,6 +439,11 @@ module ExtraRandomizers
           skill["Effects"][i] = true
         else
           skill["Effects"][i] = false
+        end
+        
+        if bit_name == "Magical" && skill.name == "Sanctuary"
+          # Always make sure Sanctuary has the magical bit set, in case it's a Jonathan skill and it doesn't get set automatically.
+          skill["Effects"][i] = true
         end
       end
       
