@@ -312,7 +312,7 @@ module ExtraRandomizers
           end
         end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
-        item["Defense"] = rand_range_weighted_very_low(0..40)
+        item["Defense"] = rand_range_weighted_very_low(0..45)
         
         extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
@@ -320,7 +320,7 @@ module ExtraRandomizers
         
         num_extra_stats_for_this_item = rand_range_weighted_very_low(0..total_num_extra_stats)
         extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
-          item[stat_name] = rand_range_weighted_very_low(1..10)
+          item[stat_name] = rand_range_weighted_low(1..100, weight_exponent: 4)
         end
         
         unless item.name == "Casual Clothes"
