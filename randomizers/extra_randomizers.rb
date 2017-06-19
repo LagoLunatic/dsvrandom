@@ -479,8 +479,10 @@ module ExtraRandomizers
   end
   
   def randomize_enemy_stats
-    COMMON_ENEMY_IDS.each do |enemy_id|
+    ENEMY_IDS.each do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
+      
+      is_boss = BOSS_IDS.include?(enemy_id)
       
       min_mult = 0.5
       max_mult = 2.5
@@ -502,6 +504,9 @@ module ExtraRandomizers
       ].each do |bitfield_attr_name|
         enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
           next if bit_name == "Resistance 32" # Something related to rendering its GFX
+          
+          # Randomize boss elemental weaknesses/resistances, but not status effect weaknesses, etc.
+          next if is_boss && i >= 8
           
           enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false, false, false, false].sample(random: rng)
           
