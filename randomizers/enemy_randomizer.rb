@@ -120,7 +120,6 @@ module EnemyRandomizer
         enemy_dna = game.enemy_dnas[enemy.subtype]
         difficulty + enemy_dna["Attack"]
       end
-      new_room_difficulty = 0
       
       # Only allow tough enemies in the room up to 2x the original room's difficulty.
       remaining_new_room_difficulty = original_room_difficulty*2
@@ -177,7 +176,8 @@ module EnemyRandomizer
           @num_spawners += 1
         end
         
-        remaining_new_room_difficulty -= enemy.subtype
+        enemy_dna = game.enemy_dnas[enemy.subtype]
+        remaining_new_room_difficulty -= enemy_dna["Attack"]
         
         assets = @assets_for_each_enemy[enemy.subtype]
         @assets_needed_for_room += assets
