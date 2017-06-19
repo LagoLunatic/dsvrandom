@@ -214,6 +214,20 @@
             </item>
            </layout>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_stats">
+              <property name="toolTip">
+               <string>Randomizes enemy stats.</string>
+              </property>
+              <property name="text">
+               <string>Enemy Stats</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
@@ -309,20 +323,6 @@
               </property>
               <property name="text">
                <string>Enemy AI</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_stats">
-              <property name="toolTip">
-               <string>Randomizes enemy stats.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Stats</string>
               </property>
              </widget>
             </item>

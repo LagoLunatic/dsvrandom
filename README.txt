@@ -17,6 +17,7 @@ Shop Items: Randomizes what items are for sale in the shop.
 Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
 Villagers: Randomizes where villagers are located (OoE only).
 Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
+Enemy Stats: Randomizes enemy stats.
 
 There are also some buggy, experimental options:
 Players: Randomizes player graphics and movement stats.
@@ -25,7 +26,6 @@ Area Connections: Randomizes which areas connect to each other.
 Room Connections: Randomizes which rooms within an area connect to each other.
 Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies (extremely buggy).
-Enemy Stats: Randomizes enemy stats.
 
 Every seed should be completable as long as you don't use the experimental options, though there may be bugs in the randomizer that make some seeds unwinnable.
 
