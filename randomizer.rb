@@ -51,6 +51,28 @@ class Randomizer
     @max_enemy_attack_room_multiplier = 1.3
     @max_spawners_per_room = 1
     
+    @item_price_range = 100..25000
+    @weapon_attack_range = 0..150
+    @weapon_iframes_range = 4..55
+    @armor_defense_range = 0..45
+    @item_extra_stats_range = 1..100
+    @restorative_amount_range = 1..1000
+    @heart_restorative_amount_range = 1..350
+    
+    @skill_price_1000g_range = 1..30
+    @skill_dmg_range = 5..55
+    @crush_or_union_dmg_range = 15..85
+    @subweapon_sp_to_master_range = 100..3000
+    @spell_charge_time_range = 8..120
+    @skill_mana_cost_range = 1..60
+    @crush_mana_cost_range = 50..250
+    @union_heart_cost_range = 5..50
+    @skill_max_at_once_range = 1..8
+    @glyph_attack_delay_range = 1..20
+    
+    @min_enemy_stat_multiplier = 0.5
+    @max_enemy_stat_multiplier = 2.5
+    
     load_randomizer_constants()
   end
   

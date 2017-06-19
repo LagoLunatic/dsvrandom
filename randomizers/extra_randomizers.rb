@@ -66,7 +66,7 @@ module ExtraRandomizers
       elsif item.name == "CASTLE MAP 1" && GAME == "por"
         # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
       else
-        item["Price"] = rand_range_weighted_very_low(1..250)*100
+        item["Price"] = rand_range_weighted_very_low(@item_price_range)/100*100
       end
       
       description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
@@ -101,7 +101,7 @@ module ExtraRandomizers
           
           case item["Type"]
           when 0, 1, 3 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(1..1000)
+            item["Var A"] = rand_range_weighted_very_low(@restorative_amount_range)
           when 2 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
@@ -161,9 +161,9 @@ module ExtraRandomizers
           
           case item["Type"]
           when 0, 1, 7 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(1..1000)
+            item["Var A"] = rand_range_weighted_very_low(@restorative_amount_range)
           when 2 # Restores hearts
-            item["Var A"] = rand_range_weighted_very_low(1..350)
+            item["Var A"] = rand_range_weighted_very_low(@heart_restorative_amount_range)
           when 3 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
@@ -201,7 +201,7 @@ module ExtraRandomizers
           end
         end
       when "Weapons"
-        item["Attack"] = rand_range_weighted_very_low(0..150)
+        item["Attack"] = rand_range_weighted_very_low(@weapon_attack_range)
         
         extra_stats = ["Defense", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
@@ -209,10 +209,10 @@ module ExtraRandomizers
         
         num_extra_stats_for_this_item = rand_range_weighted_very_low(0..total_num_extra_stats)
         extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
-          item[stat_name] = rand_range_weighted_low(1..100, weight_exponent: 4)
+          item[stat_name] = rand_range_weighted_low(@item_extra_stats_range, weight_exponent: 4)
         end
         
-        item["IFrames"] = rng.rand(4..55)
+        item["IFrames"] = rng.rand(@weapon_iframes_range)
         
         case GAME
         when "dos"
@@ -312,7 +312,7 @@ module ExtraRandomizers
           end
         end
       when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
-        item["Defense"] = rand_range_weighted_very_low(0..45)
+        item["Defense"] = rand_range_weighted_very_low(@armor_defense_range)
         
         extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
@@ -320,7 +320,7 @@ module ExtraRandomizers
         
         num_extra_stats_for_this_item = rand_range_weighted_very_low(0..total_num_extra_stats)
         extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
-          item[stat_name] = rand_range_weighted_low(1..100, weight_exponent: 4)
+          item[stat_name] = rand_range_weighted_low(@item_extra_stats_range, weight_exponent: 4)
         end
         
         unless item.name == "Casual Clothes"
@@ -357,17 +357,17 @@ module ExtraRandomizers
       
       if GAME == "por" && (0x1A2..0x1AB).include?(skill_global_id)
         # Dual crush
-        skill["Mana cost"] = rng.rand(50..250) unless progress_skill
-        skill["DMG multiplier"] = rand_range_weighted_low(15..85)
+        skill["Mana cost"] = rng.rand(@crush_mana_cost_range) unless progress_skill
+        skill["DMG multiplier"] = rand_range_weighted_low(@crush_or_union_dmg_range)
       elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
         # Glyph union
-        skill["Heart cost"] = rand_range_weighted_low(5..50)
-        skill["DMG multiplier"] = rand_range_weighted_low(15..85)
+        skill["Heart cost"] = rand_range_weighted_low(@union_heart_cost_range)
+        skill["DMG multiplier"] = rand_range_weighted_low(@crush_or_union_dmg_range)
         
         skill["Heart cost"] = 0 if skill_global_id == 0x68 # Dominus union shouldn't cost hearts
       else
-        skill["Mana cost"] = rng.rand(1..60) unless progress_skill
-        skill["DMG multiplier"] = rand_range_weighted_low(5..55, weight_exponent: 3)
+        skill["Mana cost"] = rng.rand(@skill_mana_cost_range) unless progress_skill
+        skill["DMG multiplier"] = rand_range_weighted_low(@skill_dmg_range, weight_exponent: 3)
       end
       
       skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
@@ -418,20 +418,20 @@ module ExtraRandomizers
           skill_extra_data = game.items[skill_global_id+0x6C]
           
           unless progress_skill
-            max_at_once = rand_range_weighted_low(1..8)
+            max_at_once = rand_range_weighted_low(@skill_max_at_once_range)
             is_spell = skill["??? bitfield"][2]
             if is_spell
-              charge_time = rand_range_weighted_very_low(8..120)
+              charge_time = rand_range_weighted_very_low(@spell_charge_time_range)
               skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
               skill_extra_data["SP to Master"] = 0
             else
               mastered_bonus_max_at_once = rand_range_weighted_low(1..6)
               skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
-              skill_extra_data["SP to Master"] = rng.rand(1..30)*100
+              skill_extra_data["SP to Master"] = rng.rand(@subweapon_sp_to_master_range)/100*100
             end
           end
           
-          skill_extra_data["Price (1000G)"] = rand_range_weighted_low(1..30)
+          skill_extra_data["Price (1000G)"] = rand_range_weighted_low(@skill_price_range)
           
           skill_extra_data.write_to_rom()
         end
@@ -440,11 +440,11 @@ module ExtraRandomizers
           # Back glyphs can't be properly toggled off if max at once is greater than 1. (Except Agartha.)
           skill["Max at once"] = 1
         else
-          skill["Max at once"] = rand_range_weighted_low(1..6)
+          skill["Max at once"] = rand_range_weighted_low(@skill_max_at_once_range)
         end
         
-        skill["IFrames"] = rand_range_weighted_low(4..55)
-        skill["Delay"] = rand_range_weighted_low(1..20) unless progress_skill
+        skill["IFrames"] = rand_range_weighted_low(@weapon_iframes_range)
+        skill["Delay"] = rand_range_weighted_low(@glyph_attack_delay_range) unless progress_skill
       end
       
       damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
@@ -484,8 +484,8 @@ module ExtraRandomizers
       
       is_boss = BOSS_IDS.include?(enemy_id)
       
-      min_mult = 0.5
-      max_mult = 2.5
+      min_mult = @min_enemy_stat_multiplier
+      max_mult = @max_enemy_stat_multiplier
       enemy_dna["HP"]               = (enemy_dna["HP"]              *rng.rand(min_mult..max_mult)).round
       enemy_dna["MP"]               = (enemy_dna["MP"]              *rng.rand(min_mult..max_mult)).round if GAME == "dos"
       enemy_dna["SP"]               = (enemy_dna["SP"]              *rng.rand(min_mult..max_mult)).round if GAME == "por"
