@@ -16,6 +16,7 @@ module EnemyRandomizer
       if REUSED_ENEMY_INFO[enemy_id] && REUSED_ENEMY_INFO[enemy_id][:init_code] == -1
         @assets_for_each_enemy[enemy_id] = []
         @skeletally_animated_enemy_ids << enemy_id # Probably a 3D enemy, so count it anyway
+        next
       end
       
       begin
