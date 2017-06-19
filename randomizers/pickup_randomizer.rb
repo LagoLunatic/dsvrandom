@@ -336,11 +336,11 @@ module PickupRandomizer
         case rng.rand
         when 0.00..0.02 # 2% chance to be money
           pickup_global_id = :money
-        when 0.02..0.25 # 23% chance to be a max up
+        when 0.02..0.20 # 18% chance to be a max up
           pickup_global_id = @max_up_items.sample(random: rng)
-        when 0.25..0.50 # 25% chance to be a skill
+        when 0.20..0.45 # 25% chance to be a skill
           pickup_global_id = get_unplaced_non_progression_skill()
-        when 0.50..1.00 # 50% chance to be an item
+        when 0.45..1.00 # 55% chance to be an item
           if checker.hidden_locations.include?(location)
             # Don't let relics be inside breakable walls in OoE.
             # This is because they need to be inside a chest, and chests can't be hidden.
