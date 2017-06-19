@@ -90,7 +90,7 @@
                <string>Randomizes items and skills you find lying on the ground.</string>
               </property>
               <property name="text">
-               <string>Items/Skills</string>
+               <string>Item/Skill Locations</string>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -305,7 +305,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_enemy_ai">
               <property name="toolTip">
-               <string>Shuffles the AI of non-boss enemies.</string>
+               <string>Shuffles the AI of non-boss enemies (extremely buggy).</string>
               </property>
               <property name="text">
                <string>Enemy AI</string>
@@ -455,6 +455,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <widget class="QCheckBox" name="fix_infinite_quest_rewards">
+            <property name="toolTip">
+             <string>Fixes a bug where you could get any quest reward over and over again.</string>
+            </property>
             <property name="text">
              <string>Fix infinite quest rewards bug</string>
             </property>
