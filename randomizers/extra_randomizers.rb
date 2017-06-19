@@ -44,8 +44,10 @@ module ExtraRandomizers
   end
   
   def randomize_item_stats
-    (ITEM_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
+    (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
       item = game.items[item_global_id]
+      
+      progress_item = checker.all_progression_pickups.include?(item_global_id)
       
       # Don't randomize unequip/starting items.
       if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
@@ -58,7 +60,10 @@ module ExtraRandomizers
         next if item["Item ID"] == 0x61 # starting Vampire Killer
       end
       
-      if item.name == "CASTLE MAP 1" && GAME == "por"
+      if progress_item
+        # Always make progression items be worth 0 gold so they can't be sold on accident.
+        item["Price"] = 0
+      elsif item.name == "CASTLE MAP 1" && GAME == "por"
         # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
       else
         item["Price"] = rand_range_weighted_very_low(1..250)*100
@@ -77,6 +82,11 @@ module ExtraRandomizers
           # Don't allow potions/mind ups to subtract HP
           if (0..5).include?(item["Item ID"])
             possible_types.delete(3)
+          end
+          
+          if progress_item
+            # Always make progression items unusable so the player can't accidentally eat one and softlock themself.
+            possible_types = [4]
           end
           
           if @max_up_items[0] == item["Item ID"]
@@ -129,6 +139,11 @@ module ExtraRandomizers
           # Don't allow potions/mind ups/heart repairs to subtract HP
           if (0x75..0x7B).include?(item["Item ID"])
             possible_types.delete(7)
+          end
+          
+          if progress_item
+            # Always make progression items unusable so the player can't accidentally eat one and softlock themself.
+            possible_types = [4]
           end
           
           if @max_up_items[0] == item["Item ID"]
@@ -206,7 +221,7 @@ module ExtraRandomizers
             # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
             item["Swing Anim"] = rng.rand(0..0xC)
           end
-          item["Super Anim"] = rng.rand(0..0xE)
+          item["Super Anim"] = rng.rand(0..0xE) unless progress_item
         when "por"
           if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
             # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
@@ -223,7 +238,12 @@ module ExtraRandomizers
             item["Swing Anim"] = 9
           end
           
-          item["Crit type/Palette"] = rng.rand(0..0x13)
+          unless progress_item
+            palette = item["Crit type/Palette"] & 0xC0
+            crit_type = rng.rand(0..0x13)
+            item["Crit type/Palette"] = palette | crit_type
+          end
+          
           if item.name == "Heaven's Sword" || item.name == "Tori"
             item["Special Effect"] = [1, 5, 6, 7].sample(random: rng)
           elsif rng.rand <= 0.50 # 50% chance to have a special effect
