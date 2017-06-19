@@ -1,39 +1,5 @@
 
-module ExtraRandomizers
-  def randomize_starting_room
-    rooms = []
-    game.each_room do |room|
-      next if room.layers.length == 0
-      next if room.doors.length == 0
-      
-      next if room.area.name.include?("Boss Rush")
-      
-      next if room.sector.name.include?("Boss Rush")
-      
-      rooms << room
-    end
-    
-    room = rooms.sample(random: rng)
-    game.set_starting_room(room.area_index, room.sector_index, room.room_index)
-  end
-  
-  def randomize_enemy_ai
-    COMMON_ENEMY_IDS.each do |enemy_id|
-      enemy_dna = game.enemy_dnas[enemy_id]
-      
-      this_overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_dna.enemy_id]
-      available_enemies_with_same_overlay = COMMON_ENEMY_IDS.select do |other_enemy_id|
-        other_overlay = OVERLAY_FILE_FOR_ENEMY_AI[other_enemy_id]
-        other_overlay.nil? || other_overlay == this_overlay
-      end
-      
-      selected_enemy_id = available_enemies_with_same_overlay.sample(random: rng)
-      selected_enemy_dna = game.enemy_dnas[selected_enemy_id]
-      enemy_dna["Update Code"] = selected_enemy_dna["Update Code"]
-      enemy_dna.write_to_rom()
-    end
-  end
-  
+module ItemSkillStatRandomizer
   def get_n_damage_types(all_damage_types, possible_n_values)
     known_damage_type_names = all_damage_types.select{|name| name !~ /\d$/}
     normal_damage_types = all_damage_types[0,8] & known_damage_type_names
@@ -475,86 +441,6 @@ module ExtraRandomizers
       end
       
       skill.write_to_rom()
-    end
-  end
-  
-  def randomize_enemy_stats
-    ENEMY_IDS.each do |enemy_id|
-      enemy_dna = game.enemy_dnas[enemy_id]
-      
-      is_boss = BOSS_IDS.include?(enemy_id)
-      
-      enemy_dna["HP"]               = (enemy_dna["HP"]              *rng.rand(@enemy_stat_mult_range)).round
-      enemy_dna["MP"]               = (enemy_dna["MP"]              *rng.rand(@enemy_stat_mult_range)).round if GAME == "dos"
-      enemy_dna["SP"]               = (enemy_dna["SP"]              *rng.rand(@enemy_stat_mult_range)).round if GAME == "por"
-      enemy_dna["AP"]               = (enemy_dna["AP"]              *rng.rand(@enemy_stat_mult_range)).round if GAME == "ooe"
-      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *rng.rand(@enemy_stat_mult_range)).round
-      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *rng.rand(@enemy_stat_mult_range)).round
-      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *rng.rand(@enemy_stat_mult_range)).round if GAME == "dos"
-      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(@enemy_stat_mult_range)).round if GAME == "por" || GAME == "ooe"
-      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *rng.rand(@enemy_stat_mult_range)).round if GAME == "por" || GAME == "ooe"
-      
-      enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
-      
-      [
-        "Weaknesses",
-        "Resistances",
-      ].each do |bitfield_attr_name|
-        enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
-          next if bit_name == "Resistance 32" # Something related to rendering its GFX
-          
-          # Randomize boss elemental weaknesses/resistances, but not status effect weaknesses, etc.
-          next if is_boss && i >= 8
-          
-          enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false, false, false, false].sample(random: rng)
-          
-          if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
-            # Don't set both the weakness and resistance bits for a given element.
-            # Depending on the game this can be somewhat buggy.
-            enemy_dna["Resistances"][i] = false
-          end
-        end
-      end
-      
-      enemy_dna.write_to_rom()
-    end
-  end
-  
-  def randomize_weapon_synths
-    return unless GAME == "dos"
-    
-    items_by_type = []
-    items_by_type << (0x00..0x41).to_a # Consumables
-    items_by_type << (0x42..0x90).to_a # Weapons
-    items_by_type << (0x91..0xAE).to_a # Body armor
-    items_by_type << (0xAF..0xCD).to_a # Accessories
-    items_by_type.map! do |item_list_for_type|
-      item_list_for_type & all_non_progression_pickups
-    end
-    
-    available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE.to_a
-    available_souls.map!{|global_id| global_id - 0xCE}
-    
-    WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
-      chain = WeaponSynthChain.new(index, game.fs)
-      
-      item_types_with_enough_items = items_by_type.select do |item_list_for_type|
-        item_list_for_type.length >= chain.synths.length*2
-      end
-      items_available_for_this_chain = item_types_with_enough_items.sample(random: rng)#.dup
-      
-      chain.synths.each do |synth|
-        req_item = items_available_for_this_chain.sample(random: rng)
-        items_available_for_this_chain.delete(req_item)
-        created_item = items_available_for_this_chain.sample(random: rng)
-        items_available_for_this_chain.delete(created_item)
-        
-        synth.required_item_id = req_item + 1
-        synth.required_soul_id = available_souls.sample(random: rng)
-        synth.created_item_id = created_item + 1
-        
-        synth.write_to_rom()
-      end
     end
   end
 end

@@ -10,7 +10,11 @@ require_relative 'randomizers/boss_randomizer'
 require_relative 'randomizers/door_randomizer'
 require_relative 'randomizers/shop_randomizer'
 require_relative 'randomizers/chest_pool_randomizer'
-require_relative 'randomizers/extra_randomizers'
+require_relative 'randomizers/item_skill_stat_randomizer'
+require_relative 'randomizers/enemy_stat_randomizer'
+require_relative 'randomizers/weapon_synth_randomizer'
+require_relative 'randomizers/starting_room_randomizer'
+require_relative 'randomizers/enemy_ai_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -21,7 +25,11 @@ class Randomizer
   include DoorRandomizer
   include ShopRandomizer
   include ChestPoolRandomizer
-  include ExtraRandomizers
+  include ItemSkillStatRandomizer
+  include EnemyStatRandomizer
+  include WeaponSynthRandomizer
+  include StartingRoomRandomizer
+  include EnemyAIRandomizer
   
   attr_reader :options,
               :seed,
