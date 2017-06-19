@@ -117,7 +117,7 @@ module EnemyRandomizer
       
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
       original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
-        enemy_dna = game.enemy_dnas[enemy.subtype]
+        enemy_dna = @original_enemy_dnas[enemy.subtype]
         difficulty + enemy_dna["Attack"]
       end
       
@@ -126,7 +126,7 @@ module EnemyRandomizer
       
       # Only allow enemies up to 1.5x tougher than the toughest enemy in the original room.
       max_enemy_attack = enemies_in_room.map do |enemy|
-        enemy_dna = game.enemy_dnas[enemy.subtype]
+        enemy_dna = @original_enemy_dnas[enemy.subtype]
         enemy_dna["Attack"]
       end.max
       max_allowed_enemy_attack = max_enemy_attack*@max_enemy_attack_room_multiplier

@@ -155,6 +155,17 @@ class Randomizer
       game.fs.write(0x02300808, [0xE1A00000].pack("V"))
     end
     
+    @original_enemy_dnas = []
+    ENEMY_IDS.each do |enemy_id|
+      enemy_dna = EnemyDNA.new(enemy_id, game.fs)
+      @original_enemy_dnas << enemy_dna
+    end
+    
+    if options[:randomize_enemy_stats]
+      reset_rng()
+      randomize_enemy_stats()
+    end
+    
     if options[:randomize_enemies]
       reset_rng()
       randomize_enemies()
@@ -199,11 +210,6 @@ class Randomizer
     if options[:randomize_skill_stats]
       reset_rng()
       randomize_skill_stats()
-    end
-    
-    if options[:randomize_enemy_stats]
-      reset_rng()
-      randomize_enemy_stats()
     end
     
     if options[:randomize_weapon_synths]
