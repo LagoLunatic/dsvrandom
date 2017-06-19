@@ -425,7 +425,7 @@ Rooms:
     room: pinnacle & height
     02 (Truffle): 
   00-09-0B:
-    room: pinnacle & big height | pinnacle & hwarp & malphas & puppet master | pinnacle & height & hwarp & black panther & puppet master | pinnacle & hwarp & black panther & puppet master | pinnacle & hwarp & & malphas & black panther
+    room: pinnacle & big height | pinnacle & hwarp & malphas & puppet master | pinnacle & height & hwarp & black panther & puppet master | pinnacle & hwarp & black panther & puppet master | pinnacle & hwarp & malphas & black panther
     01 (Money Chest): 
     02 (Money Chest): 
     03 (Money Chest): 
