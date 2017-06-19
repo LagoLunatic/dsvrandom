@@ -70,8 +70,7 @@ class Randomizer
     @skill_max_at_once_range        = [1..8      , low_weight: 1]
     @glyph_attack_delay_range       = [1..20     , low_weight: 1]
     
-    @min_enemy_stat_multiplier = 0.5
-    @max_enemy_stat_multiplier = 2.5
+    @enemy_stat_mult_range = 0.5..2.5
     
     load_randomizer_constants()
   end
@@ -97,6 +96,14 @@ class Randomizer
     @rng = Random.new(@int_seed)
   end
   
+  # Gets a random number within a range, but weighted low.
+  # The higher the low_weight argument the more strongly low weighted it is. Examples:
+  # 0 -> 50%
+  # 1 -> 33%
+  # 2 -> 21%
+  # 3 -> 11.5%
+  # 4 -> 6.5%
+  # 5 -> 3.5%
   def rand_range_weighted_low(range, low_weight: 1)
     random_float = 1 - rand()
     low_weight.times do
