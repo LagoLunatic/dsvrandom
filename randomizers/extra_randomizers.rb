@@ -209,10 +209,10 @@ module ExtraRandomizers
         
         num_extra_stats_for_this_item = rand_range_weighted_very_low(0..total_num_extra_stats)
         extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
-          item[stat_name] = rand_range_weighted_very_low(1..10)
+          item[stat_name] = rand_range_weighted_low(1..100, weight_exponent: 4)
         end
         
-        item["IFrames"] = rng.rand(4..45)
+        item["IFrames"] = rng.rand(4..55)
         
         case GAME
         when "dos"
@@ -362,12 +362,12 @@ module ExtraRandomizers
       elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
         # Glyph union
         skill["Heart cost"] = rand_range_weighted_low(5..50)
-        skill["DMG multiplier"] = rand_range_weighted_low(15..55)
+        skill["DMG multiplier"] = rand_range_weighted_low(15..85)
         
         skill["Heart cost"] = 0 if skill_global_id == 0x68 # Dominus union shouldn't cost hearts
       else
         skill["Mana cost"] = rng.rand(1..60) unless progress_skill
-        skill["DMG multiplier"] = rand_range_weighted_low(5..35)
+        skill["DMG multiplier"] = rand_range_weighted_low(5..55, weight_exponent: 3)
       end
       
       skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
@@ -443,8 +443,8 @@ module ExtraRandomizers
           skill["Max at once"] = rand_range_weighted_low(1..6)
         end
         
-        skill["IFrames"] = rand_range_weighted_low(1..0x24)
-        skill["Delay"] = rand_range_weighted_low(0..14) unless progress_skill
+        skill["IFrames"] = rand_range_weighted_low(4..55)
+        skill["Delay"] = rand_range_weighted_low(1..20) unless progress_skill
       end
       
       damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
@@ -482,15 +482,17 @@ module ExtraRandomizers
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
       
-      enemy_dna["HP"]      = (enemy_dna["HP"]*rng.rand(0.5..3.0)).round
-      enemy_dna["MP"]      = (enemy_dna["MP"]*rng.rand(0.5..3.0)).round if GAME == "dos"
-      enemy_dna["SP"]      = (enemy_dna["SP"]*rng.rand(0.5..3.0)).round if GAME == "por"
-      enemy_dna["AP"]      = (enemy_dna["AP"]*rng.rand(0.5..3.0)).round if GAME == "ooe"
-      enemy_dna["EXP"]     = (enemy_dna["EXP"]*rng.rand(0.5..3.0)).round
-      enemy_dna["Attack"]  = (enemy_dna["Attack"]*rng.rand(0.5..3.0)).round
-      enemy_dna["Defense"] = (enemy_dna["Defense"]*rng.rand(0.5..3.0)).round if GAME == "dos"
-      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(0.5..3.0)).round if GAME == "por" || GAME == "ooe"
-      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"]*rng.rand(0.5..3.0)).round if GAME == "por" || GAME == "ooe"
+      min_mult = 0.5
+      max_mult = 2.5
+      enemy_dna["HP"]               = (enemy_dna["HP"]              *rng.rand(min_mult..max_mult)).round
+      enemy_dna["MP"]               = (enemy_dna["MP"]              *rng.rand(min_mult..max_mult)).round if GAME == "dos"
+      enemy_dna["SP"]               = (enemy_dna["SP"]              *rng.rand(min_mult..max_mult)).round if GAME == "por"
+      enemy_dna["AP"]               = (enemy_dna["AP"]              *rng.rand(min_mult..max_mult)).round if GAME == "ooe"
+      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *rng.rand(min_mult..max_mult)).round
+      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *rng.rand(min_mult..max_mult)).round
+      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *rng.rand(min_mult..max_mult)).round if GAME == "dos"
+      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(min_mult..max_mult)).round if GAME == "por" || GAME == "ooe"
+      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *rng.rand(min_mult..max_mult)).round if GAME == "por" || GAME == "ooe"
       
       enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
       
