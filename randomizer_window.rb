@@ -184,6 +184,7 @@ class RandomizerWindow < Qt::Dialog
     
     if seed.empty?
       generate_seed()
+      seed = @settings[:seed]
     end
     
     if seed =~ /[^a-zA-Z0-9\-_']/
