@@ -6,8 +6,47 @@ module BossRandomizer
       boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
     end
     
+    # Determine unique boss rooms.
+    boss_rooms_for_each_boss = {}
+    boss_entities.each do |boss_entity|
+      boss_rooms_for_each_boss[boss_entity.subtype] ||= []
+      boss_rooms_for_each_boss[boss_entity.subtype] << boss_entity.room
+      boss_rooms_for_each_boss[boss_entity.subtype].uniq!
+    end
+    # Figure out what bosses can be placed in what rooms.
+    boss_swaps_that_work = {}
+    boss_rooms_for_each_boss.each do |old_boss_id, boss_rooms|
+      old_boss = game.enemy_dnas[old_boss_id]
+      
+      RANDOMIZABLE_BOSS_IDS.each do |new_boss_id|
+        new_boss = game.enemy_dnas[new_boss_id]
+        
+        all_rooms_work = boss_rooms.all? do |boss_room|
+          boss_entity = boss_room.entities.select{|e| e.is_boss? && e.subtype == old_boss_id}.first
+          case GAME
+          when "dos"
+            dos_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+          when "por"
+            por_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+          when "ooe"
+            ooe_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+          end
+        end
+        
+        if all_rooms_work
+          boss_swaps_that_work[old_boss_id] ||= []
+          boss_swaps_that_work[old_boss_id] << new_boss_id
+        end
+      end
+    end
+    # Limit to swaps that work both ways.
+    boss_swaps_that_work.each do |old_boss_id, new_boss_ids|
+      new_boss_ids.select! do |new_boss_id|
+        boss_swaps_that_work[new_boss_id].include?(old_boss_id)
+      end
+    end
+    
     remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
-    failed_boss_ids_for_this_boss = []
     queued_dna_changes = Hash.new{|h, k| h[k] = {}}
     already_randomized_bosses = {}
     
@@ -16,13 +55,13 @@ module BossRandomizer
       old_boss = game.enemy_dnas[old_boss_id]
       
       already_randomized_new_boss_id = already_randomized_bosses[old_boss_id]
-      if already_randomized_new_boss_id && !failed_boss_ids_for_this_boss.include?(already_randomized_new_boss_id)
+      if already_randomized_new_boss_id
         new_boss_id = already_randomized_new_boss_id
       else
-        possible_boss_ids_for_this_boss = remaining_boss_ids - failed_boss_ids_for_this_boss
+        possible_boss_ids_for_this_boss = boss_swaps_that_work[old_boss_id] & remaining_boss_ids
         if possible_boss_ids_for_this_boss.empty?
           # Nothing this could possibly randomize into and work correctly. Skip.
-          failed_boss_ids_for_this_boss = []
+          puts "BOSS %02X FAILED!" % old_boss_id
           next
         end
         
@@ -39,15 +78,9 @@ module BossRandomizer
         ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
       end
       if result == :skip
-        failed_boss_ids_for_this_boss = []
         next
       end
-      if result == :redo
-        failed_boss_ids_for_this_boss << new_boss_id
-        redo
-      else
-        failed_boss_ids_for_this_boss = []
-      end
+      puts "BOSS %02X-%02X" % [old_boss_id, new_boss_id]
       
       boss_entity.subtype = new_boss_id
       remaining_boss_ids.delete(new_boss_id)
@@ -55,6 +88,7 @@ module BossRandomizer
       boss_entity.write_to_rom()
       
       already_randomized_bosses[old_boss_id] = new_boss_id
+      already_randomized_bosses[new_boss_id] = old_boss_id
       
       # Update the boss doors for the new boss
       new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
@@ -114,6 +148,38 @@ module BossRandomizer
     end
   end
   
+  def dos_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    case new_boss.name
+    when "Balore"
+      has_left_door = boss_entity.room.doors.find{|d| d.direction == :left}
+      has_right_door = boss_entity.room.doors.find{|d| d.direction == :right}
+      
+      if has_left_door && has_right_door
+        # Balore has to be set as facing left OR right by the randomizer, he won't automatically face the direction the player entered from.
+        return false
+      end
+    when "Zephyr"
+      # If Zephyr spawns in a room that is 1 screen wide then either he or Soma will get stuck, regardless of what Zephyr's x pos is.
+      if boss_entity.room.width < 2
+        return false
+      end
+      # If Zephyr spawns in Rahab's room you can't reach him unless you can move underwater.
+      if old_boss.name == "Rahab"
+        return false
+      end
+    end
+    
+    return true
+  end
+  
+  def por_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    return true
+  end
+  
+  def ooe_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    return true
+  end
+  
   def dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case old_boss.name
     when "Balore"
@@ -140,10 +206,7 @@ module BossRandomizer
       has_left_door = boss_entity.room.doors.find{|d| d.direction == :left}
       has_right_door = boss_entity.room.doors.find{|d| d.direction == :right}
       
-      if has_left_door && has_right_door
-        # Balore has to be set as facing left OR right by the randomizer, he won't automatically face the direction the player entered from.
-        return :redo
-      elsif has_right_door
+      if has_right_door
         boss_entity.var_a = 1
         boss_entity.x_pos = 0x10
         boss_entity.y_pos = 0xB0
@@ -172,12 +235,13 @@ module BossRandomizer
         # Set Gergoth to boss rush mode, unless he's in his tower.
         boss_entity.var_a = 0
       end
+      
+      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Zephyr"
       # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
       boss_entity.x_pos = 0x100
-      
-      # TODO: If Zephyr spawns in a room that is 1 screen wide then either he or Soma will get stuck, regardless of what Zephyr's x pos is. Need to make sure Zephyr only spawns in rooms 2 screens wide or wider.
-      # also if zephyr spawns inside rahab's room you can't reach him until you have rahab's soul.
+    when "Bat Company"
+      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Paranoia"
       # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
       # This combination of x and y seems to be one of the least buggy.
@@ -186,21 +250,34 @@ module BossRandomizer
       
       boss_entity.var_a = 2
       
-      if boss_entity.room.room_index == 0xB && boss_entity.room.sector_index == 0
-        # If Paranoia is placed in Flying Armor's room the game will softlock when you kill him.
-        # This is because of the event with Yoko in Flying Armor's room, so remove the event.
-        
-        event = boss_entity.room.entities[6]
-        event.type = 0
-        event.write_to_rom()
-      end
+      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
     when "Death"
-      # TODO: when you kill death in a room besides his own, he just freezes up, soft locking the game.
+      # If there are any candle's in Death's room, he will softlock the game when you kill him.
+      # Why? I dunno.
+      boss_entity.room.entities.each do |entity|
+        if entity.is_special_object? && entity.subtype == 1 && entity.var_a != 0
+          entity.type = 0
+          entity.write_to_rom()
+        end
+      end
+      
+      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     else
       boss_entity.var_a = 1
+    end
+  end
+  
+  def remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    if GAME == "dos" boss_entity.room.room_index == 0xB && boss_entity.room.sector_index == 0
+      # If certain bosses are placed in Flying Armor's room the game will softlock when you kill the boss.
+      # This is because of the event with Yoko in Flying Armor's room, so remove the event.
+      
+      event = boss_entity.room.entities[6]
+      event.type = 0
+      event.write_to_rom()
     end
   end
   
