@@ -42,7 +42,6 @@ class RandomizerWindow < Qt::Dialog
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
   slots "randomize()"
-  slots "cancel_write_to_rom_thread()"
   slots "open_about()"
   
   def initialize
@@ -191,73 +190,55 @@ class RandomizerWindow < Qt::Dialog
     end
     
     randomizer = Randomizer.new(seed, game, options_hash)
-    randomizer.randomize()
     
-    if GAME == "dos" && @ui.fix_first_ability_soul.checked()
-      game.apply_armips_patch("dos_fix_first_ability_soul")
+    max_val = options_hash.select{|k,v| k.to_s.start_with?("randomize_") && v}.length
+    max_val += 20 if options_hash[:randomize_pickups]
+    max_val += 7 if options_hash[:randomize_enemies]
+    max_val += 2 # Initialization
+    @progress_dialog = ProgressDialog.new("Randomizing", "Initializing...", max_val)
+    @progress_dialog.execute do
+      begin
+        randomizer.randomize() do |options_completed, next_option_description|
+          break if @progress_dialog.nil?
+          
+          Qt.execute_in_main_thread do
+            if @progress_dialog && !@progress_dialog.wasCanceled
+              @progress_dialog.setValue(options_completed)
+              @progress_dialog.labelText = next_option_description
+            end
+          end
+        end
+      rescue StandardError => e
+        Qt.execute_in_main_thread do
+          @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+          @progress_dialog = nil
+          Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
+        end
+        return
+      end
+      
+      Qt.execute_in_main_thread do
+        @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+        @progress_dialog = nil
+        write_to_rom(game)
+      end
     end
-    
-    if GAME == "dos" && @ui.no_touch_screen.checked()
-      game.apply_armips_patch("dos_skip_drawing_seals")
-      game.apply_armips_patch("dos_melee_balore_blocks")
-      game.apply_armips_patch("dos_skip_name_signing")
-    end
-    
-    if GAME == "dos" && @ui.fix_luck.checked()
-      game.apply_armips_patch("dos_fix_luck")
-    end
-    
-    if GAME == "dos" && @ui.unlock_boss_doors.checked()
-      game.apply_armips_patch("dos_skip_boss_door_seals")
-    end
-    
-    if GAME == "por" && @ui.fix_infinite_quest_rewards.checked()
-      game.apply_armips_patch("por_fix_infinite_quest_rewards")
-    end
-    
-    if GAME == "ooe" && @ui.always_dowsing.checked()
-      game.apply_armips_patch("ooe_always_dowsing")
-    end
-    
-    if @ui.name_unnamed_skills.checked()
-      game.fix_unnamed_skills()
-    end
-    
-    if @ui.unlock_all_modes.checked()
-      game.apply_armips_patch("#{GAME}_unlock_everything")
-    end
-    
-    if @ui.reveal_breakable_walls.checked()
-      game.apply_armips_patch("#{GAME}_reveal_breakable_walls")
-    end
-    
-    write_to_rom(game)
   rescue NDSFileSystem::InvalidFileError => e
     Qt::MessageBox.warning(self, "Unrecognized game", "Specified ROM is not recognized.")
     return
-  rescue StandardError => e
-    Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
   end
   
   def write_to_rom(game)
-    @progress_dialog = Qt::ProgressDialog.new
-    @progress_dialog.windowTitle = "Building"
-    @progress_dialog.labelText = "Writing files to ROM"
-    @progress_dialog.maximum = game.fs.files_without_dirs.length
-    @progress_dialog.windowModality = Qt::ApplicationModal
-    @progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
-    @progress_dialog.setFixedSize(@progress_dialog.size);
-    connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
-    @progress_dialog.show
-    
     FileUtils.mkdir_p(@ui.output_folder.text)
     game_with_caps = GAME.dup
     game_with_caps[0] = game_with_caps[0].upcase
     game_with_caps[2] = game_with_caps[2].upcase
-    output_rom_filename = "#{game_with_caps} Random #{@sanitized_seed}.nds"
+    output_rom_filename = "#{game_with_caps} #{@sanitized_seed}.nds"
     output_rom_path = File.join(@ui.output_folder.text, output_rom_filename)
     
-    @write_to_rom_thread = Thread.new do
+    max_val = game.fs.files_without_dirs.length
+    @progress_dialog = ProgressDialog.new("Building", "Writing files to ROM", max_val)
+    @progress_dialog.execute do
       game.fs.write_to_rom(output_rom_path) do |files_written|
         next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
         break if @progress_dialog.nil?
@@ -270,20 +251,41 @@ class RandomizerWindow < Qt::Dialog
       end
       
       Qt.execute_in_main_thread do
-        @progress_dialog.setValue(game.fs.files_without_dirs.length) unless @progress_dialog.wasCanceled
+        @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
         @progress_dialog = nil
         Qt::MessageBox.information(self, "Done", "Randomization complete.\n\nOutput ROM:\n#{output_rom_filename}\n\nThe progression spoiler log is at:\n/logs/spoiler_log.txt")
       end
     end
   end
   
+  def open_about
+    @about_dialog = Qt::MessageBox::about(self, "DSVania Randomizer", "DSVania Randomizer Version #{DSVRANDOM_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/dsvrandom\n\nReport issues here:\nhttps://github.com/LagoLunatic/dsvrandom/issues")
+  end
+end
+
+class ProgressDialog < Qt::ProgressDialog
+  slots "cancel_write_to_rom_thread()"
+  
+  def initialize(title, description, max_val)
+    super()
+    self.windowTitle = title
+    self.labelText = description
+    self.maximum = max_val
+    self.windowModality = Qt::ApplicationModal
+    self.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
+    self.setFixedSize(self.size);
+    connect(self, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
+    self.show
+  end
+  
+  def execute(&block)
+    @write_to_rom_thread = Thread.new do
+      yield
+    end
+  end
+  
   def cancel_write_to_rom_thread
     puts "Cancelled."
     @write_to_rom_thread.kill
-    @progress_dialog = nil
-  end
-  
-  def open_about
-    @about_dialog = Qt::MessageBox::about(self, "DSVania Randomizer", "DSVania Randomizer Version #{DSVRANDOM_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/dsvrandom\n\nReport issues here:\nhttps://github.com/LagoLunatic/dsvrandom/issues")
   end
 end

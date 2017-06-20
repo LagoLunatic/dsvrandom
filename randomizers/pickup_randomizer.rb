@@ -15,7 +15,7 @@ module PickupRandomizer
   }
   RANDOMIZABLE_VILLAGER_NAMES = VILLAGER_NAME_TO_EVENT_FLAG.keys
   
-  def randomize_pickups_completably
+  def randomize_pickups_completably(&block)
     spoiler_log.puts "Randomizing pickups:"
     
     case GAME
@@ -96,7 +96,11 @@ module PickupRandomizer
       chest_b.write_to_rom()
     end
     
-    place_progression_pickups()
+    total_progression_pickups = checker.all_progression_pickups.length
+    place_progression_pickups() do |progression_pickups_placed|
+      percent_done = progression_pickups_placed.to_f / total_progression_pickups
+      yield percent_done
+    end
     
     if !checker.game_beatable?
       item_names = checker.current_items.map do |global_id|
@@ -106,10 +110,11 @@ module PickupRandomizer
     end
   end
   
-  def place_progression_pickups
+  def place_progression_pickups(&block)
     previous_accessible_locations = []
     @locations_randomized_to_have_useful_pickups = []
     @rooms_that_already_have_an_event = []
+    progression_pickups_placed = 0
     game.each_room do |room|
       room.entities.each do |entity|
         if entity.is_special_object? && (0x5F..0x88).include?(entity.subtype)
@@ -305,14 +310,19 @@ module PickupRandomizer
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
       is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
-      spoiler_str = "Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str} (#{area_name})"
+      spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str} (#{area_name})"
       spoiler_log.puts spoiler_str
       #puts spoiler_str
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
+      
+      progression_pickups_placed += 1
+      yield(progression_pickups_placed)
     end
+    
+    spoiler_log.puts "All progression pickups placed successfully."
   end
   
   def place_non_progression_pickups

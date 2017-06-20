@@ -126,6 +126,8 @@ class Randomizer
   end
   
   def randomize
+    options_completed = 0
+    
     options_string = options.select{|k,v| v == true}.keys.join(", ")
     
     FileUtils.mkdir_p("./logs")
@@ -166,22 +168,32 @@ class Randomizer
       end
     end
     
+    options_completed += 2
+    
     if options[:randomize_pickups]
+      yield [options_completed, "Placing progression pickups..."]
       reset_rng()
-      randomize_pickups_completably()
+      randomize_pickups_completably() do |percent|
+        yield [options_completed+percent*20, "Placing progression pickups..."]
+      end
+      options_completed += 20
     end
     
     @unplaced_non_progression_pickups = all_non_progression_pickups.dup
     @unplaced_non_progression_pickups -= checker.current_items
     
     if options[:randomize_enemy_drops]
+      yield [options_completed, "Randomizing enemy drops..."]
       reset_rng()
       randomize_enemy_drops()
+      options_completed += 1
     end
     
     if options[:randomize_pickups]
+      yield [options_completed, "Randomizing other pickups..."]
       reset_rng()
       place_non_progression_pickups()
+      options_completed += 1
     end
     
     if options[:randomize_boss_souls] && GAME == "dos"
@@ -199,71 +211,111 @@ class Randomizer
     end
     
     if options[:randomize_enemy_stats]
+      yield [options_completed, "Randomizing enemy stats..."]
       reset_rng()
       randomize_enemy_stats()
+      options_completed += 1
     end
     
     if options[:randomize_enemies]
+      yield [options_completed, "Placing enemies..."]
       reset_rng()
-      randomize_enemies()
+      randomize_enemies() do |percent|
+        yield [options_completed+percent*7, "Placing enemies..."]
+      end
+      options_completed += 7
     end
     
     if options[:randomize_bosses]
+      yield [options_completed, "Shuffling bosses..."]
       reset_rng()
       randomize_bosses()
+      options_completed += 1
     end
     
     if options[:randomize_area_connections]
+      yield [options_completed, "Connecting areas..."]
       reset_rng()
       randomize_transition_doors()
+      options_completed += 1
     end
     
     if options[:randomize_room_connections]
+      yield [options_completed, "Connecting rooms..."]
       reset_rng()
       randomize_non_transition_doors()
+      options_completed += 1
     end
     
     if options[:randomize_starting_room]
+      yield [options_completed, "Selecting starting room..."]
       reset_rng()
       game.fix_top_screen_on_new_game()
       randomize_starting_room()
+      options_completed += 1
     end
     
     if options[:randomize_enemy_ai]
+      yield [options_completed, "Shuffling enemy AI..."]
       reset_rng()
       randomize_enemy_ai()
+      options_completed += 1
     end
     
     if options[:randomize_players]
+      yield [options_completed, "Randomizing players..."]
       reset_rng()
       randomize_players()
+      options_completed += 1
     end
     
     if options[:randomize_item_stats]
+      yield [options_completed, "Randomizing item stats..."]
       reset_rng()
       randomize_item_stats()
+      options_completed += 1
     end
     
     if options[:randomize_skill_stats]
+      yield [options_completed, "Randomizing skill stats..."]
       reset_rng()
       randomize_skill_stats()
+      options_completed += 1
     end
     
     if options[:randomize_weapon_synths]
+      yield [options_completed, "Randomizing weapon synths..."]
       reset_rng()
       randomize_weapon_synths()
+      options_completed += 1
     end
     
     if options[:randomize_shop]
+      yield [options_completed, "Randomizing shop..."]
       reset_rng()
       randomize_shop()
+      options_completed += 1
     end
     
     if options[:randomize_wooden_chests]
+      yield [options_completed, "Randomizing wooden chests..."]
       reset_rng()
       randomize_wooden_chests()
+      options_completed += 1
     end
     
+    yield [options_completed, "Applying tweaks..."]
+    apply_tweaks()
+  rescue StandardError => e
+    spoiler_log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
+    raise e
+  ensure
+    spoiler_log.puts
+    spoiler_log.puts
+    spoiler_log.close()
+  end
+  
+  def apply_tweaks
     if GAME == "dos"
       # Modify that one pit in the Demon Guest House so the player can't get stuck in it without double jump.
       
@@ -296,13 +348,44 @@ class Randomizer
       layer.tiles[0x2AE].index_on_tileset = 0x378
       layer.write_to_rom()
     end
-  rescue StandardError => e
-    spoiler_log.puts "ERROR!"
-    raise e
-  ensure
-    spoiler_log.puts
-    spoiler_log.puts
-    spoiler_log.close()
+    
+    if GAME == "dos" && options[:fix_first_ability_soul]
+      game.apply_armips_patch("dos_fix_first_ability_soul")
+    end
+    
+    if GAME == "dos" && options[:no_touch_screen]
+      game.apply_armips_patch("dos_skip_drawing_seals")
+      game.apply_armips_patch("dos_melee_balore_blocks")
+      game.apply_armips_patch("dos_skip_name_signing")
+    end
+    
+    if GAME == "dos" && options[:fix_luck]
+      game.apply_armips_patch("dos_fix_luck")
+    end
+    
+    if GAME == "dos" && options[:unlock_boss_doors]
+      game.apply_armips_patch("dos_skip_boss_door_seals")
+    end
+    
+    if GAME == "por" && options[:fix_infinite_quest_rewards]
+      game.apply_armips_patch("por_fix_infinite_quest_rewards")
+    end
+    
+    if GAME == "ooe" && options[:always_dowsing]
+      game.apply_armips_patch("ooe_always_dowsing")
+    end
+    
+    if options[:name_unnamed_skills]
+      game.fix_unnamed_skills()
+    end
+    
+    if options[:unlock_all_modes]
+      game.apply_armips_patch("#{GAME}_unlock_everything")
+    end
+    
+    if options[:reveal_breakable_walls]
+      game.apply_armips_patch("#{GAME}_reveal_breakable_walls")
+    end
   end
   
   def inspect; to_s; end

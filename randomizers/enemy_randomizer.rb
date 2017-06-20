@@ -71,6 +71,11 @@ module EnemyRandomizer
       end
     end
     
+    total_rooms = 0
+    game.each_room do |room|
+      total_rooms += 1
+    end
+    rooms_done = 0
     game.each_room do |room|
       @enemy_pool_for_room = []
       @num_spawners = 0
@@ -193,6 +198,10 @@ module EnemyRandomizer
       end
       
       #puts "ASSETS: #{@assets_needed_for_room.size}, ROOM: %02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index] if @assets_needed_for_room.size > 10
+      
+      rooms_done += 1
+      percent_done = rooms_done.to_f / total_rooms
+      yield percent_done
     end
   end
   
