@@ -67,7 +67,7 @@ module ItemSkillStatRandomizer
           
           case item["Type"]
           when 0, 1, 3 # Restores HP/restores MP/subtracts HP
-            item["Var A"] = rand_range_weighted_very_low(@restorative_amount_range)
+            item["Var A"] = rand_range_weighted_low(*@restorative_amount_range)
           when 2 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           end
