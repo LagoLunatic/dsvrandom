@@ -15,8 +15,9 @@ module BossRandomizer
       old_boss_id = boss_entity.subtype
       old_boss = game.enemy_dnas[old_boss_id]
       
-      if already_randomized_bosses[old_boss_id]
-        new_boss_id = already_randomized_bosses[old_boss_id]
+      already_randomized_new_boss_id = already_randomized_bosses[old_boss_id]
+      if already_randomized_new_boss_id && !failed_boss_ids_for_this_boss.include?(already_randomized_new_boss_id)
+        new_boss_id = already_randomized_new_boss_id
       else
         possible_boss_ids_for_this_boss = remaining_boss_ids - failed_boss_ids_for_this_boss
         if possible_boss_ids_for_this_boss.empty?
