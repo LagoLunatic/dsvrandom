@@ -91,10 +91,11 @@ module BossRandomizer
       already_randomized_bosses[new_boss_id] = old_boss_id
       
       # Update the boss doors for the new boss
+      old_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[old_boss_id] || 0
       new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
       ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
         room.entities.each do |entity|
-          if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE
+          if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE && entity.var_b == old_boss_door_var_b
             entity.var_b = new_boss_door_var_b
             
             entity.write_to_rom()
@@ -169,6 +170,11 @@ module BossRandomizer
       end
     end
     
+    if old_boss.name == "Rahab" && ["Malphas", "Dmitrii", "Dario", "Gergoth", "Zephyr", "Paranoia", "Abaddon"].include?(new_boss.name)
+      # These bosses will fall to below the water level in Rahab's room, which is a problem if the player doesn't have Rahab yet.
+      return false
+    end
+    
     return true
   end
   
@@ -220,6 +226,7 @@ module BossRandomizer
         boss_entity.y_pos = 0xB0
       end
     when "Malphas"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.var_b = 0
     when "Dmitrii"
       boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
