@@ -497,6 +497,11 @@ module EnemyRandomizer
       
       enemy.var_a = 1
     when "Mud Man", "Mummy"
+      if enemy_dna.name == "Mud Man" && enemy.room.layers.length == 1
+        # If mud men are placed in a room with only 1 layer (e.g. some rooms in Dark Academy with a 3D background) they will crash the game on real hardware.
+        return :redo
+      end
+      
       # 10% chance to be a single one, 90% chance to be a spawner.
       if rng.rand <= 0.10
         enemy.var_a = 0
