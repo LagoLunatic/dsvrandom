@@ -15,5 +15,7 @@ module StartingRoomRandomizer
     
     room = rooms.sample(random: rng)
     game.set_starting_room(room.area_index, room.sector_index, room.room_index)
+    
+    @starting_room = room
   end
 end

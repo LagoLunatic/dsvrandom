@@ -15,6 +15,7 @@ require_relative 'randomizers/enemy_stat_randomizer'
 require_relative 'randomizers/weapon_synth_randomizer'
 require_relative 'randomizers/starting_room_randomizer'
 require_relative 'randomizers/enemy_ai_randomizer'
+require_relative 'randomizers/starting_items_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -30,6 +31,7 @@ class Randomizer
   include WeaponSynthRandomizer
   include StartingRoomRandomizer
   include EnemyAIRandomizer
+  include StartingItemsRandomizer
   
   attr_reader :options,
               :seed,
@@ -168,6 +170,21 @@ class Randomizer
       end
     end
     
+    # Specifies which pickup flags weren't used in the original game in case we need new ones for something.
+    case GAME
+    when "dos"
+      # For DoS we sometimes need pickup flags for when a soul candle gets randomized into something that's not a soul candle.
+      # Flags 7A-7F are unused in the base game but still work, so use those.
+      @unused_picked_up_flags = (0x7A..0x7F).to_a
+    when "por"
+      # We don't need spare pickup flags for the pickup randomizer in PoR, but we do need it for the starting item randomizer.
+      @unused_picked_up_flags = (0x177..0x17F).to_a
+    when "ooe"
+      # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
+      # Flags 12F-149 are unused in the base game but still work, so use those.
+      @unused_picked_up_flags = (0x12F..0x149).to_a
+    end
+    
     options_completed += 2
     
     if options[:randomize_pickups]
@@ -252,6 +269,22 @@ class Randomizer
       reset_rng()
       game.fix_top_screen_on_new_game()
       randomize_starting_room()
+      options_completed += 1
+    else
+      @starting_room = case GAME
+      when "dos"
+        game.areas[0].sectors[0].rooms[1]
+      when "por"
+        game.areas[0].sectors[0].rooms[0]
+      when "ooe"
+        game.areas[2].sectors[0].rooms[4]
+      end
+    end
+    
+    if options[:randomize_starting_items]
+      yield [options_completed, "Placing starting items..."]
+      reset_rng()
+      randomize_starting_items()
       options_completed += 1
     end
     

@@ -18,6 +18,7 @@ Wooden Chest Items: Randomizes the pool of items for wooden chests in each area 
 Villagers: Randomizes where villagers are located (OoE only).
 Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
 Enemy Stats: Randomizes enemy stats.
+Starting Items: Starts you out with 3 random extra items and 3 random extra skills.
 
 There are also some buggy, experimental options:
 Players: Randomizes player graphics and movement stats.

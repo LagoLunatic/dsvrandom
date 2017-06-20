@@ -233,6 +233,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_starting_items">
+              <property name="toolTip">
+               <string>Starts you out with 3 random extra items and 3 random extra skills.</string>
+              </property>
+              <property name="text">
+               <string>Starting Items</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>

@@ -28,10 +28,6 @@ module PickupRandomizer
         checker.add_item(0x40) # seal 4
         checker.add_item(0x41) # seal 5
       end
-      
-      # For DoS we sometimes need pickup flags for when a soul candle gets randomized into something that's not a soul candle.
-      # Flags 7A-7F are unused in the base game but still work, so use those.
-      @unused_picked_up_flags = (0x7A..0x7F).to_a
     when "por"
       checker.add_item(0x1AD) # call cube
       
@@ -48,17 +44,10 @@ module PickupRandomizer
       # This is so the player can't get stuck if they miss an important item up there.
       game.fs.load_overlay(79)
       game.fs.write(0x022EC638, [0xEA000003].pack("V"))
-      
-      # We don't need spare pickup flags for PoR.
-      @unused_picked_up_flags = []
     when "ooe"
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
       checker.add_item(0x1E) # torpor. the player will get enough of these as it is
-      
-      # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
-      # Flags 12F-149 are unused in the base game but still work, so use those.
-      @unused_picked_up_flags = (0x12F..0x149).to_a
       
       # Give the player the glyph sleeve in Ecclesia like in hard mode.
       # To do this just get rid of the entity hider that hides it on normal mode.

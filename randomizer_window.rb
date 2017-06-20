@@ -22,6 +22,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_starting_room
     randomize_enemy_ai
     randomize_enemy_stats
+    randomize_starting_items
     
     enable_glitch_reqs
 
