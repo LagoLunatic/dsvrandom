@@ -6,15 +6,20 @@ module EnemyStatRandomizer
       
       is_boss = BOSS_IDS.include?(enemy_id)
       
-      enemy_dna["HP"]               = (enemy_dna["HP"]              *rng.rand(@enemy_stat_mult_range)).round
-      enemy_dna["MP"]               = (enemy_dna["MP"]              *rng.rand(@enemy_stat_mult_range)).round if GAME == "dos"
-      enemy_dna["SP"]               = (enemy_dna["SP"]              *rng.rand(@enemy_stat_mult_range)).round if GAME == "por"
-      enemy_dna["AP"]               = (enemy_dna["AP"]              *rng.rand(@enemy_stat_mult_range)).round if GAME == "ooe"
-      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *rng.rand(@enemy_stat_mult_range)).round
-      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *rng.rand(@enemy_stat_mult_range)).round
-      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *rng.rand(@enemy_stat_mult_range)).round if GAME == "dos"
-      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(@enemy_stat_mult_range)).round if GAME == "por" || GAME == "ooe"
-      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *rng.rand(@enemy_stat_mult_range)).round if GAME == "por" || GAME == "ooe"
+      if is_boss
+        stat_mult_range = @boss_stat_mult_range
+      else
+        stat_mult_range = @enemy_stat_mult_range
+      end
+      enemy_dna["HP"]               = (enemy_dna["HP"]              *rng.rand(stat_mult_range)).round
+      enemy_dna["MP"]               = (enemy_dna["MP"]              *rng.rand(stat_mult_range)).round if GAME == "dos"
+      enemy_dna["SP"]               = (enemy_dna["SP"]              *rng.rand(stat_mult_range)).round if GAME == "por"
+      enemy_dna["AP"]               = (enemy_dna["AP"]              *rng.rand(stat_mult_range)).round if GAME == "ooe"
+      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *rng.rand(stat_mult_range)).round
+      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *rng.rand(stat_mult_range)).round
+      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *rng.rand(stat_mult_range)).round if GAME == "dos"
+      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(stat_mult_range)).round if GAME == "por" || GAME == "ooe"
+      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *rng.rand(stat_mult_range)).round if GAME == "por" || GAME == "ooe"
       
       enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
       

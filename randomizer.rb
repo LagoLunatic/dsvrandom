@@ -81,6 +81,7 @@ class Randomizer
     @glyph_attack_delay_range       = [1..20     , low_weight: 1]
     
     @enemy_stat_mult_range = 0.5..2.5
+    @boss_stat_mult_range  = 0.75..1.25
     
     load_randomizer_constants()
   end
