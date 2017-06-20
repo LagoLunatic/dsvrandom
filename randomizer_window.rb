@@ -41,6 +41,7 @@ class RandomizerWindow < Qt::Dialog
   slots "update_settings()"
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
+  slots "generate_seed()"
   slots "randomize()"
   slots "open_about()"
   
@@ -55,6 +56,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.clean_rom_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_clean_rom()"))
     connect(@ui.output_folder, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     connect(@ui.output_folder_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_output_folder()"))
+    connect(@ui.generate_seed_button, SIGNAL("clicked()"), self, SLOT("generate_seed()"))
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
     OPTIONS.each do |option_name|
@@ -142,6 +144,19 @@ class RandomizerWindow < Qt::Dialog
     save_settings()
   end
   
+  def generate_seed
+    # Generate a new random seed composed of 2 adjectives and a noun.
+    adjectives = File.read("./dsvrandom/seedgen_adjectives.txt").split("\n").sample(2)
+    noun = File.read("./dsvrandom/seedgen_nouns.txt").split("\n").sample
+    words = adjectives + [noun]
+    words.map!{|word| word.capitalize}
+    seed = words.join("")
+    
+    @settings[:seed] = seed
+    @ui.seed.text = @settings[:seed]
+    save_settings()
+  end
+  
   def randomize
     unless File.file?(@ui.clean_rom.text)
       Qt::MessageBox.warning(self, "No ROM specified", "Must specify clean ROM path.")
@@ -167,20 +182,16 @@ class RandomizerWindow < Qt::Dialog
     seed = @settings[:seed].to_s.strip.gsub(/\s/, "")
     
     if seed.empty?
-      # Generate a new seed
-      available_seed_chars = ["0".."9", "A".."Z", "a".."z"].map(&:to_a).flatten
-      seed = ""
-      9.times do
-        seed << available_seed_chars.sample
-      end
+      generate_seed()
     end
     
-    if seed =~ /[^a-zA-Z0-9\-_]/
-      raise "Invalid seed. Seed can only have letters, numbers, dashes, and underscores in it."
+    if seed =~ /[^a-zA-Z0-9\-_']/
+      raise "Invalid seed. Seed can only have letters, numbers, dashes, underscores, and apostrophes in it."
     end
     
     @settings[:seed] = seed
     @ui.seed.text = @settings[:seed]
+    save_settings()
     
     @sanitized_seed = seed
     
