@@ -652,6 +652,7 @@ class RoomCollision
     @room = room
     @fs = fs
     
+    room.sector.load_necessary_overlay()
     @collision_layer = room.layers.first
     @collision_tileset = CollisionTileset.new(collision_layer.collision_tileset_pointer, fs)
     
