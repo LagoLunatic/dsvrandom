@@ -271,7 +271,7 @@ module BossRandomizer
   end
   
   def remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    if GAME == "dos" boss_entity.room.room_index == 0xB && boss_entity.room.sector_index == 0
+    if GAME == "dos" && boss_entity.room.room_index == 0xB && boss_entity.room.sector_index == 0
       # If certain bosses are placed in Flying Armor's room the game will softlock when you kill the boss.
       # This is because of the event with Yoko in Flying Armor's room, so remove the event.
       
