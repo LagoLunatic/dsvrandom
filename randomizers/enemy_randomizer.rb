@@ -643,6 +643,9 @@ module EnemyRandomizer
         return :redo
       end
       enemy.y_pos = y
+      
+      # If var A is nonzero, Tin Man will be able to fall off ledges - but long falls will crash the game, so disable this.
+      enemy.var_a = 0
     else
       enemy.var_a = 0
       enemy.var_b = 0
