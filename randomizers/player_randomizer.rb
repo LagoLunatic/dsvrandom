@@ -3,14 +3,7 @@ module PlayerRandomizer
   def randomize_players
     players = game.players
     
-    # Make sure at least one player from each mode in PoR is female, or Astarte can bug out.
-    female_player_indexes = []
-    female_player_indexes << [0, 1].sample(random: rng)
-    female_player_indexes << [2, 3].sample(random: rng)
-    female_player_indexes << [4, 5].sample(random: rng)
-    female_player_indexes << 6
-    
-    players.each_with_index do |player, player_index|
+    players.each do |player|
       player["Walking speed"]       =  rng.rand(0x1400..0x2000)
       player["Jump force"]          = -rng.rand(0x5A00..0x6000)
       player["Double jump force"]   = -rng.rand(0x4A00..0x6000)
@@ -45,15 +38,6 @@ module PlayerRandomizer
           
           if ["Can slide", "Can use weapons", "Can up-pose", "Can absorb glyphs"].include?(bit_name)
             player[bitfield_attr_name][i] = true
-            next
-          end
-          
-          if bit_name == "Is female"
-            if female_player_indexes.include?(player_index)
-              player[bitfield_attr_name][i] = true
-            else
-              player[bitfield_attr_name][i] = [false, false, false, true].sample(random: rng)
-            end
             next
           end
           
