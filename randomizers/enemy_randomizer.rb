@@ -247,6 +247,8 @@ module EnemyRandomizer
     
     enemy_dna = game.enemy_dnas[random_enemy_id]
     
+    enemy.var_a = 0
+    enemy.var_b = 0
     result = case GAME
     when "dos"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
@@ -445,9 +447,6 @@ module EnemyRandomizer
       if num_enemies_in_room > 1
         return :redo
       end
-    else
-      enemy.var_a = 0
-      enemy.var_b = 0
     end
   end
   
@@ -562,9 +561,6 @@ module EnemyRandomizer
       end
     when "Larva"
       enemy.var_b = rng.rand(0..0xF) # Bitfield of which of the 4 directions the larva can move in
-    else
-      enemy.var_a = 0
-      enemy.var_b = 0
     end
   end
   
@@ -603,6 +599,13 @@ module EnemyRandomizer
       # Move out of the floor TODO this doesn't work
       # TODO the vars do something
       enemy.y_pos -= 0x08
+    when "Skeleton Frisky"
+      y = coll.get_floor_y(enemy, allow_jumpthrough: true)
+      if y.nil?
+        # No floor, Frisky will crash the game
+        return :redo
+      end
+      enemy.y_pos = y
     when "Gelso"
       if rng.rand <= 0.40 # 40% chance to be a single Gelso
         enemy.var_a = 0
@@ -646,9 +649,6 @@ module EnemyRandomizer
       
       # If var A is nonzero, Tin Man will be able to fall off ledges - but long falls will crash the game, so disable this.
       enemy.var_a = 0
-    else
-      enemy.var_a = 0
-      enemy.var_b = 0
     end
   end
 end
