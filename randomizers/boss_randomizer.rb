@@ -42,6 +42,7 @@ module BossRandomizer
     # Limit to swaps that work both ways.
     boss_swaps_that_work.each do |old_boss_id, new_boss_ids|
       new_boss_ids.select! do |new_boss_id|
+        next if boss_swaps_that_work[new_boss_id].nil?
         boss_swaps_that_work[new_boss_id].include?(old_boss_id)
       end
     end
