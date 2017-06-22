@@ -16,7 +16,7 @@ Shop Items: Randomizes what items are for sale in the shop.
 Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
 Villagers: Randomizes where villagers are located (OoE only).
 Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
-Enemy Stats: Randomizes enemy stats.
+Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.
 Starting Items: Starts you out with 3 random extra items and 3 random extra skills.
 
 There are also some buggy, experimental options:
@@ -70,4 +70,4 @@ A: Save and reload the game for it to take effect.
 
 Q: Sometimes I can charge spells in midair?
 
-A: One of the many things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
+A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.

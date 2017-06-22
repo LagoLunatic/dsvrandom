@@ -226,7 +226,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_enemy_stats">
               <property name="toolTip">
-               <string>Randomizes enemy stats.</string>
+               <string>Randomizes enemy stats, weaknesses, and resistances.</string>
               </property>
               <property name="text">
                <string>Enemy Stats</string>
