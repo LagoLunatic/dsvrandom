@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>619</height>
+    <height>621</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -233,16 +233,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_starting_items">
-              <property name="toolTip">
-               <string>Starts you out with 3 random extra items and 3 random extra skills.</string>
-              </property>
-              <property name="text">
-               <string>Starting Items</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
          </layout>
@@ -255,14 +245,28 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QCheckBox" name="enable_glitch_reqs">
-            <property name="toolTip">
-             <string>If checked, certain glitches may be necessary to beat the game.</string>
-            </property>
-            <property name="text">
-             <string>Allow requiring glitches to win</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <widget class="QCheckBox" name="enable_glitch_reqs">
+              <property name="toolTip">
+               <string>If checked, certain glitches may be necessary to beat the game.</string>
+              </property>
+              <property name="text">
+               <string>Allow requiring glitches to win</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_starting_items">
+              <property name="toolTip">
+               <string>Starts you out with 3 random extra items and 3 random extra skills.</string>
+              </property>
+              <property name="text">
+               <string>Bonus starting items</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -579,6 +583,7 @@
   <tabstop>seed</tabstop>
   <tabstop>clean_rom_browse_button</tabstop>
   <tabstop>output_folder_browse_button</tabstop>
+  <tabstop>generate_seed_button</tabstop>
   <tabstop>randomize_pickups</tabstop>
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>
@@ -589,24 +594,28 @@
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
+  <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>enable_glitch_reqs</tabstop>
+  <tabstop>randomize_starting_items</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_area_connections</tabstop>
   <tabstop>randomize_room_connections</tabstop>
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
-  <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>about_button</tabstop>
+  <tabstop>tabWidget</tabstop>
   <tabstop>name_unnamed_skills</tabstop>
   <tabstop>unlock_all_modes</tabstop>
+  <tabstop>reveal_breakable_walls</tabstop>
   <tabstop>fix_first_ability_soul</tabstop>
   <tabstop>fix_luck</tabstop>
   <tabstop>no_touch_screen</tabstop>
   <tabstop>unlock_boss_doors</tabstop>
+  <tabstop>fix_infinite_quest_rewards</tabstop>
   <tabstop>dont_randomize_change_cube</tabstop>
   <tabstop>open_world_map</tabstop>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>always_dowsing</tabstop>
  </tabstops>
  <resources/>
  <connections/>
