@@ -339,7 +339,7 @@ module ItemSkillStatRandomizer
       skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
       
       if skill["?/Swings/Union"]
-        union_type = skill["?/Swings/Union"]
+        union_type = skill["?/Swings/Union"] >> 2
         if union_type != 0x13 # Don't randomize Dominus glyphs (union type 13)
           union_type = rng.rand(0x01..0x12)
           low_two_bits = skill["?/Swings/Union"] & 0b11
