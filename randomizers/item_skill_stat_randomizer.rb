@@ -250,8 +250,8 @@ module ItemSkillStatRandomizer
           end
           
           if bit_name == "Cures vampirism & kills undead" && item["Effects"][i] == true
-            # Don't give this weapon the magical bit if it has the cures vampirism bit because we don't want it to cure the sisters.
-            item["Effects"][26] = false # Magical
+            # Don't give this weapon the spell bit if it has the cures vampirism bit because we don't want it to cure the sisters.
+            item["Effects"][26] = false # Spell
           end
         end
         
@@ -427,8 +427,8 @@ module ItemSkillStatRandomizer
           skill["Effects"][i] = false
         end
         
-        if bit_name == "Magical" && skill.name == "Sanctuary"
-          # Always make sure Sanctuary has the magical bit set, in case it's a Jonathan skill and it doesn't get set automatically.
+        if bit_name == "Is a spell" && skill.name == "Sanctuary"
+          # Always make sure Sanctuary has the spell bit set, in case it's a Jonathan skill and it doesn't get set automatically.
           skill["Effects"][i] = true
         end
       end
