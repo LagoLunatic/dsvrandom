@@ -33,7 +33,7 @@ module EnemyStatRandomizer
           # Randomize boss elemental weaknesses/resistances, but not status effect weaknesses, etc.
           next if is_boss && i >= 8
           
-          enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false, false, false, false].sample(random: rng)
+          enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
           
           if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
             # Don't set both the weakness and resistance bits for a given element.
