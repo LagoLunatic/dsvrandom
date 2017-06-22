@@ -23,6 +23,14 @@ module StartingItemsRandomizer
       entity.x_pos = 0x80 - 0x10
       entity.y_pos = 0x60
       
+      case GAME
+      when "por"
+        if @starting_room == game.areas[0].sectors[0].rooms[0]
+          # Don't interfere with the intro cutscene or the game will crash.
+          entity.x_pos = 0x160
+        end
+      end
+      
       y = coll.get_floor_y(entity, allow_jumpthrough: true)
       unless y.nil?
         entity.y_pos = y
