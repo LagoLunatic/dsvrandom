@@ -1,7 +1,8 @@
 
 NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
   [0x60, 0xA9, 0xE3, 0x109, 0x126, 0x150, 0x1A1] + # unequip dummy items (---)
-  [0x12C] # magus ring (placed separately by the randomizer logic)
+  [0x12C] + # magus ring (placed separately by the randomizer logic)
+  [0x4F, 0x50, 0x51] # the hard mode clear rewards that give +50 to certain stats. these make the game too easy
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x09, 0x18, 0x24, 0x38, 0x49, 0x68]
 
