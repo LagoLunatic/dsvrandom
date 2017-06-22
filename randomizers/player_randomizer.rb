@@ -87,6 +87,7 @@ module PlayerRandomizer
         player["Actions"][16] = false # No gravity
       end
       if player["Damage types"]
+        player["Damage types"][17] = false # Take half damage & Reflect projectiles
         player["Damage types"][18] = true # Can be hit
       end
       
