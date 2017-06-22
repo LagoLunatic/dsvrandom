@@ -1,8 +1,7 @@
 
-DSVRandom (DSVania Randomizer) is a randomizer for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's only compatible with the North American versions.
+DSVania Randomizer is a randomizer for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's only compatible with the North American versions.
 
 Source code: https://github.com/LagoLunatic/dsvrandom
-Report issues here: https://github.com/LagoLunatic/dsvrandom/issues
 
 ### What does it randomize?
 
@@ -28,7 +27,10 @@ Room Connections: Randomizes which rooms within an area connect to each other.
 Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies (extremely buggy).
 
-Every seed should be completable as long as you don't use the experimental options, though there may be bugs in the randomizer that make some seeds unwinnable.
+Every seed should be completable as long as you don't use the experimental options.
+If you think you've found a seed that's unwinnable, first check the spoiler log to make sure you haven't missed something.
+If you haven't missed anything then you can report bugs here: https://github.com/LagoLunatic/dsvrandom/issues
+When making a bug report be sure to include the seed, randomizer version number, and all the options you checked. The easiest way to do that is to simply copy paste the relevant entry from the spoiler log, which lists all of those.
 
 ### Requirements
 
