@@ -159,9 +159,9 @@ module ItemSkillStatRandomizer
           when 7
             description.decoded_string = "Subtracts #{item["Var A"]} HP."
           when 9
-            description.decoded_string = "Adjust the background music to your liking."
+            description.decoded_string = "Adjust the background music\\nto your liking."
           when 0xA
-            description.decoded_string = "A one-way pass to return to the village immediately."
+            description.decoded_string = "A one-way pass to return\\nto the village immediately."
           when 0xB
             description.decoded_string = "Increases your attribute points."
           end
