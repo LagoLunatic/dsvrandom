@@ -43,6 +43,10 @@ Q: Do I need to farm enemies to progress?
 A: No, progression items and skills won't drop from common enemies. They'll be laying around somewhere.
 Bosses in DoS and Wallman in OoE can also drop progression skills.
 
+Q: Do I need to damage boost or jumpkick off enemies to progress?
+
+A: No, progressing won't require anything involving common enemies. You won't need to jump on spikes either.
+
 Q: I can't find something I need to progress!
 
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
@@ -61,3 +65,7 @@ Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot
 Q: I found Konami Man/Twin Bee/Vic Viper in Portrait of Ruin, but I didn't get a stat boost.
 
 A: Save and reload the game for it to take effect.
+
+Q: Sometimes I can charge spells in midair?
+
+A: One of the many things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
