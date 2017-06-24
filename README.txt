@@ -63,10 +63,6 @@ Q: I have double jump, but I can't progress in Minera Prison Island without Magn
 A: Do a jumpkick off the breakable wall next to the Magnes point: http://i.imgur.com/y0TXcE0.gif
 Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot is too small to hit the wall when doing a diagonal jumpkick.
 
-Q: I found Konami Man/Twin Bee/Vic Viper in Portrait of Ruin, but I didn't get a stat boost.
-
-A: Save and reload the game for it to take effect.
-
 Q: Sometimes I can charge spells in midair?
 
 A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
