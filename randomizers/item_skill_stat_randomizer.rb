@@ -356,6 +356,7 @@ module ItemSkillStatRandomizer
       if GAME == "por" && skill["Type"] == 0
         skills_that_must_be_used_by_original_player = [
           "Stonewall",
+          "Gnebu",
           "Wrecking Ball",
           "Rampage",
           "Toad Morph",
@@ -437,6 +438,11 @@ module ItemSkillStatRandomizer
           # Always make sure Sanctuary has the spell bit set, in case it's a Jonathan skill and it doesn't get set automatically.
           skill["Effects"][i] = true
         end
+      end
+      
+      if GAME == "por" && skill_global_id == 0x155 # Grand Cross
+        # Grand Cross normally can't be used by Charlotte, so we unset a few bits so that it can be.
+        skill["Unwanted States"].value = 0x78C418
       end
       
       skill["Unwanted States"].names.each_with_index do |bit_name, i|
