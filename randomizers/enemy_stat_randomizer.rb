@@ -21,6 +21,14 @@ module EnemyStatRandomizer
       enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(stat_mult_range)).round if GAME == "por" || GAME == "ooe"
       enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *rng.rand(stat_mult_range)).round if GAME == "por" || GAME == "ooe"
       
+      # Don't let some stats be 0.
+      enemy_dna["HP"]               = 1 if enemy_dna["HP"] < 1
+      enemy_dna["MP"]               = 1 if GAME == "dos" && enemy_dna["MP"] < 1
+      enemy_dna["SP"]               = 1 if GAME == "por" && enemy_dna["SP"] < 1
+      enemy_dna["AP"]               = 1 if GAME == "ooe" && enemy_dna["AP"] < 1
+      enemy_dna["EXP"]              = 1 if enemy_dna["EXP"] < 1
+      enemy_dna["Attack"]           = 1 if enemy_dna["Attack"] < 1
+      
       enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
       
       [
