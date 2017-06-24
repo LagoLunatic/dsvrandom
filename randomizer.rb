@@ -68,6 +68,7 @@ class Randomizer
     @item_extra_stats_range         = [1..100    , low_weight: 4]
     @restorative_amount_range       = [1..1000   , low_weight: 2]
     @heart_restorative_amount_range = [1..350    , low_weight: 2]
+    @ap_increase_amount_range       = [1..65535  , low_weight: 5]
     
     @skill_price_1000g_range        = [1..30     , low_weight: 1]
     @skill_dmg_range                = [5..55     , low_weight: 3]

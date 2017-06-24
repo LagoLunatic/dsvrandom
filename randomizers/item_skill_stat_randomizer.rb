@@ -94,17 +94,21 @@ module ItemSkillStatRandomizer
             description.decoded_string = "MP Max up."
           end
         when "ooe"
-          possible_types = (0..0xB).to_a
+          possible_types = (0..0xA).to_a
           possible_types -= [4, 5, 6] # Don't allow max ups, only certain items we already chose earlier may be max ups.
           possible_types -= [8] # Don't allow unusable items
           unless (0x75..0xAC).include?(item["Item ID"])
             possible_types -= [9] # Don't allow records unless it will actually play a song.
           end
-          possible_types -= [0xB] # Don't allow attribute point increases because I don't fully understand them yet TODO
           possible_types += [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 3, 3] # Increase chances of some item types
           # Don't allow potions/mind ups/heart repairs to subtract HP
           if (0x75..0x7B).include?(item["Item ID"])
             possible_types.delete(7)
+          end
+          
+          if (0x9C..0xA0).include?(item["Item ID"]) && rng.rand >= 0.60
+            # Drops. These are the only ones that can be AP increasers, so give them a 60% to be an AP increaser.
+            possible_types = [0xB]
           end
           
           if progress_item
@@ -132,6 +136,8 @@ module ItemSkillStatRandomizer
             item["Var A"] = rand_range_weighted_low(*@heart_restorative_amount_range)
           when 3 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
+          when 0xB # Increases AP
+            item["Var A"] = rand_range_weighted_low(*@ap_increase_amount_range)
           end
           
           case item["Type"]
@@ -163,7 +169,7 @@ module ItemSkillStatRandomizer
           when 0xA
             description.decoded_string = "A one-way pass to return\\nto the village immediately."
           when 0xB
-            description.decoded_string = "Increases your attribute points."
+            # Don't change description of drops.
           end
         end
       when "Weapons"
