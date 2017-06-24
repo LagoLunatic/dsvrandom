@@ -266,7 +266,7 @@ class RandomizerWindow < Qt::Dialog
       Qt.execute_in_main_thread do
         @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
         @progress_dialog = nil
-        Qt::MessageBox.information(self, "Done", "Randomization complete.\n\nOutput ROM:\n#{output_rom_filename}\n\nThe progression spoiler log is at:\n/logs/spoiler_log.txt")
+        Qt::MessageBox.information(self, "Done", "Randomization complete.\n\nOutput ROM:\n#{output_rom_filename}\n\nIf you get stuck, check the FAQ\nin the readme, and the progression\nspoiler log here: /logs/spoiler_log.txt")
       end
     end
   end
