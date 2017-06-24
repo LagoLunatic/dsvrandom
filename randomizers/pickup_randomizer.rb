@@ -652,7 +652,7 @@ module PickupRandomizer
           if GAME == "dos"
             entity.var_a = 0x10
           else
-            entity.var_a = rng.rand(0x0E..0x0F)
+            entity.var_a = [0xE, 0xF, 0x12].sample(random: rng)
           end
           
           # We didn't use the picked up flag, so put it back

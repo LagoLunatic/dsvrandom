@@ -520,7 +520,8 @@ Rooms:
   03-01-18:
     room: sandygrave
     00 (1,000 Blades): medium height
-    01 (Money): medium height
+    01 (Money): 
+    0D (Money Chest): medium height
   03-01-1B:
     room: sandygrave
     00 (High Potion): medium height
@@ -577,6 +578,7 @@ Rooms:
     room: innerforgottencity
     00 (Venus Brooch): 
     01 (Money): 
+    0B (Money Chest): 
   04-01-22:
     room: forgottencity
     00 (Platinum Corset): 
