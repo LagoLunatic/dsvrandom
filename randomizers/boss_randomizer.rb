@@ -96,6 +96,7 @@ module BossRandomizer
       
       boss_entity.subtype = new_boss_id
       remaining_boss_ids.delete(new_boss_id)
+      remaining_boss_ids.delete(old_boss_id)
       
       boss_entity.write_to_rom()
       
