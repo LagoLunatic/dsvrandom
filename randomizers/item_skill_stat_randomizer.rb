@@ -169,7 +169,10 @@ module ItemSkillStatRandomizer
           when 0xA
             description.decoded_string = "A one-way pass to return\\nto the village immediately."
           when 0xB
-            # Don't change description of drops.
+            ap_types = %w(flame ice lightning light dark)
+            ap_type_index = item["Item ID"]-0x9C
+            ap_type = ap_types[ap_type_index]
+            description.decoded_string = "Increases your #{ap_type}\\nattribute points by #{item["Var A"]}."
           end
         end
       when "Weapons"
