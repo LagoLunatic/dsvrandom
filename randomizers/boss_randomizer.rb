@@ -6,6 +6,16 @@ module BossRandomizer
       boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
     end
     
+    if GAME == "dos"
+      # Turn the throne room Dario entity into Aguni so the boss randomizer logic works.
+      throne_room_dario = game.areas[0].sectors[9].rooms[1].entities[6]
+      throne_room_dario.subtype = 0x70
+      
+      # Remove the throne room event because it doesn't work without Dario.
+      throne_room_event = game.areas[0].sectors[9].rooms[1].entities[2]
+      throne_room_event.type = 0
+    end
+    
     # Determine unique boss rooms.
     boss_rooms_for_each_boss = {}
     boss_entities.each do |boss_entity|
@@ -165,10 +175,6 @@ module BossRandomizer
       if boss_entity.room.width < 2
         return false
       end
-      # If Zephyr spawns in Rahab's room you can't reach him unless you can move underwater.
-      if old_boss.name == "Rahab"
-        return false
-      end
     end
     
     if old_boss.name == "Rahab" && ["Malphas", "Dmitrii", "Dario", "Gergoth", "Zephyr", "Paranoia", "Abaddon"].include?(new_boss.name)
@@ -247,7 +253,10 @@ module BossRandomizer
       remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Zephyr"
       # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
-      boss_entity.x_pos = 0x100
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      
+      # Boss rush Zephyr.
+      boss_entity.var_a = 0
     when "Bat Company"
       remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Paranoia"
