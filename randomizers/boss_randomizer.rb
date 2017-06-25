@@ -14,6 +14,7 @@ module BossRandomizer
       # Remove the throne room event because it doesn't work without Dario.
       throne_room_event = game.areas[0].sectors[9].rooms[1].entities[2]
       throne_room_event.type = 0
+      throne_room_event.write_to_rom()
     end
     
     # Determine unique boss rooms.
