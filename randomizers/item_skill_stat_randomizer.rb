@@ -379,6 +379,12 @@ module ItemSkillStatRandomizer
           # Except for the above listed skills, since the wrong character can't actually use them.
           skill["??? bitfield"][2] = [true, false].sample(random: rng)
         end
+        
+        # Set either the sub or spell bit in the damage types bitfield to let enemies know what this is now.
+        is_spell = skill["??? bitfield"][2]
+        is_sub = !is_spell
+        skill["Effects"][25] = is_sub
+        skill["Effects"][26] = is_spell
       end
       
       case GAME
@@ -431,15 +437,19 @@ module ItemSkillStatRandomizer
           next
         end
         
+        if bit_name == "Is a spell" && skill.name == "Sanctuary"
+          # Always make sure Sanctuary has the spell bit set, in case it's a Jonathan skill and it doesn't get set automatically.
+          skill["Effects"][i] = true
+          next
+        elsif bit_name == "Is a subweapon" || bit_name == "Is a spell"
+          # Don't randomize these bits, they're necessary for skills to work properly.
+          next
+        end
+        
         if damage_types_to_set.include?(bit_name)
           skill["Effects"][i] = true
         else
           skill["Effects"][i] = false
-        end
-        
-        if bit_name == "Is a spell" && skill.name == "Sanctuary"
-          # Always make sure Sanctuary has the spell bit set, in case it's a Jonathan skill and it doesn't get set automatically.
-          skill["Effects"][i] = true
         end
       end
       
