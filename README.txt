@@ -42,7 +42,7 @@ Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft
 Q: Do I need to farm enemies to progress?
 
 A: No, progression items and skills won't drop from common enemies. They'll be laying around somewhere.
-Bosses in DoS and Wallman in OoE can also drop progression skills.
+All bosses (except Dario) in DoS and Wallman in OoE can also drop progression skills.
 
 Q: Do I need to damage boost or jumpkick off enemies to progress?
 
@@ -51,7 +51,7 @@ A: No, progressing won't require anything involving common enemies. You won't ne
 Q: I can't find something I need to progress!
 
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
-If you check the "Reveal breakable walls" option in the Game tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.
+If you check the "Reveal breakable walls" option in the Game Tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.
 You can also check the spoiler log located in /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
 
 Q: I can't make the jump in the room after Flying Armor.
@@ -63,7 +63,11 @@ Q: I have double jump, but I can't progress in Minera Prison Island without Magn
 A: Do a jumpkick off the breakable wall next to the Magnes point: http://i.imgur.com/y0TXcE0.gif
 Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot is too small to hit the wall when doing a diagonal jumpkick.
 
-Q: Sometimes I can charge spells in midair?
+Q: I think I'm stuck after using Yoko to get rid of my Skeleton, Axe Armor, Killer Clown, or Ukoback soul.
+
+A: Those souls are required for progression, but unlike in the base game, they can't be farmed from enemies in the randomizer. You'll get softlocked if you get rid of the only one you have.
+
+Q: Why can I charge spells in midair sometimes?
 
 A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
 
