@@ -66,3 +66,7 @@ Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot
 Q: Sometimes I can charge spells in midair?
 
 A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
+
+Q: There are a few candles with glitchy, corrupted-looking graphics.
+
+A: This is a known bug that happens in DoS sometimes.
