@@ -44,6 +44,17 @@ module PickupRandomizer
       # This is so the player can't get stuck if they miss an important item up there.
       game.fs.load_overlay(79)
       game.fs.write(0x022EC638, [0xEA000003].pack("V"))
+      
+      # Room in Sandy Grave that has two overlapping Charm Necklaces.
+      # We don't want these to overlap as the player could easily think it's just one item and not see the one beneath it.
+      # Move one a bit to the left and the other a bit to the right. Also give one a different picked up flag.
+      item_a = game.areas[3].sectors[0].rooms[0x13].entities[0]
+      item_b = game.areas[3].sectors[0].rooms[0x13].entities[1]
+      item_a.x_pos = 0x120
+      item_b.x_pos = 0x140
+      item_b.var_a = @unused_picked_up_flags.pop()
+      item_a.write_to_rom()
+      item_b.write_to_rom()
     when "ooe"
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
