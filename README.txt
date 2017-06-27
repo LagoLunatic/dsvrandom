@@ -27,8 +27,8 @@ Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies (extremely buggy).
 
 Every seed should be completable as long as you don't use the experimental options.
-If you think you've found a seed that's unwinnable, first check the spoiler log to make sure you haven't missed something.
-If you haven't missed anything then you can report bugs here: https://github.com/LagoLunatic/dsvrandom/issues
+If you think you've found a seed that's unwinnable, first check the spoiler log (located at /logs/spoiler_log.txt) to make sure you haven't missed something.
+If you haven't missed anything then you can report the bug here: https://github.com/LagoLunatic/dsvrandom/issues
 When making a bug report be sure to include the seed, randomizer version number, and all the options you checked. The easiest way to do that is to simply copy paste the relevant entry from the spoiler log, which lists all of those.
 
 ### Requirements
@@ -52,7 +52,7 @@ Q: I can't find something I need to progress!
 
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
 If you check the "Reveal breakable walls" option in the Game Tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.
-You can also check the spoiler log located in /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
+You can also check the spoiler log located at /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
 
 Q: I can't make the jump in the room after Flying Armor.
 
@@ -70,6 +70,10 @@ A: Those souls are required for progression, but unlike in the base game, they c
 Q: Why can I charge spells in midair sometimes?
 
 A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
+
+Q: I'm using some experimental options, and I think I'm stuck.
+
+A: The experimental options are incomplete and it's rare for the game to be beatable if you use them.
 
 Q: There are a few candles with glitchy, corrupted-looking graphics.
 
