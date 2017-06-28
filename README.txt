@@ -78,3 +78,7 @@ A: The experimental options are incomplete and it's rare for the game to be beat
 Q: There are a few candles with glitchy, corrupted-looking graphics.
 
 A: This is a known bug that happens in DoS sometimes.
+
+Q: I'm playing Portrait of Ruin randomized on my flash card, and getting a lot of crashes.
+
+A: This is a bug with PoR that occurs only on certain flash cards, such as R4 cards. It happens in vanilla PoR too, so it's unrelated to the randomizer. I recommend playing on emulator if you get this issue on your card.
