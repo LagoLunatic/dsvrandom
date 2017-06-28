@@ -50,7 +50,8 @@ module EnemyRandomizer
         "Mollusca",
         "Giant Slug",
         "Invisible Man",
-        "Quetzalcoatl"
+        "Quetzalcoatl",
+        "Ukoback",
       ].include?(enemy_dna.name)
         true
       else
