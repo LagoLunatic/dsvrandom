@@ -224,6 +224,7 @@ class RandomizerWindow < Qt::Dialog
       rescue StandardError => e
         Qt.execute_in_main_thread do
           @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+          @progress_dialog.hide()
           @progress_dialog = nil
           Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
         end
@@ -232,6 +233,7 @@ class RandomizerWindow < Qt::Dialog
       
       Qt.execute_in_main_thread do
         @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+        @progress_dialog.hide()
         @progress_dialog = nil
         write_to_rom(game)
       end
