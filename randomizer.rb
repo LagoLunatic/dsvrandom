@@ -61,25 +61,25 @@ class Randomizer
     @max_enemy_attack_room_multiplier = 1.3
     @max_spawners_per_room = 1
     
-    @item_price_range               = [100..25000, low_weight: 2]
-    @weapon_attack_range            = [0..150    , low_weight: 2]
+    @item_price_range               = [100..25000, average: 5000]
+    @weapon_attack_range            = [0..150    , average: 30]
     @weapon_iframes_range           =  4..55
-    @armor_defense_range            = [0..45     , low_weight: 2]
-    @item_extra_stats_range         = [1..100    , low_weight: 4]
-    @restorative_amount_range       = [1..1000   , low_weight: 2]
-    @heart_restorative_amount_range = [1..350    , low_weight: 2]
-    @ap_increase_amount_range       = [1..65535  , low_weight: 5]
+    @armor_defense_range            = [0..55     , average: 6]
+    @item_extra_stats_range         = [1..100    , average: 7]
+    @restorative_amount_range       = [1..1000   , average: 200]
+    @heart_restorative_amount_range = [1..350    , average: 75]
+    @ap_increase_amount_range       = [1..65535  , average: 2000]
     
-    @skill_price_1000g_range        = [1..30     , low_weight: 1]
-    @skill_dmg_range                = [5..55     , low_weight: 3]
-    @crush_or_union_dmg_range       = [15..85    , low_weight: 1]
+    @skill_price_1000g_range        = [1..30     , average: 10]
+    @skill_dmg_range                = [5..55     , average: 5]
+    @crush_or_union_dmg_range       = [15..85    , average: 23]
     @subweapon_sp_to_master_range   =  100..3000
-    @spell_charge_time_range        = [8..120    , low_weight: 2]
+    @spell_charge_time_range        = [8..120    , average: 22]
     @skill_mana_cost_range          =  1..60
     @crush_mana_cost_range          =  50..250
-    @union_heart_cost_range         = [5..50     , low_weight: 1]
-    @skill_max_at_once_range        = [1..8      , low_weight: 1]
-    @glyph_attack_delay_range       = [1..20     , low_weight: 1]
+    @union_heart_cost_range         = [5..50     , average: 20]
+    @skill_max_at_once_range        = [1..8      , average: 2]
+    @glyph_attack_delay_range       = [1..20     , average: 6]
     
     @enemy_stat_mult_range = 0.5..2.5
     @boss_stat_mult_range  = 0.75..1.25
@@ -108,26 +108,50 @@ class Randomizer
     @rng = Random.new(@int_seed)
   end
   
-  # Gets a random number within a range, but weighted low.
-  # The higher the low_weight argument the more strongly low weighted it is. Examples:
-  # 0 -> 50%
-  # 1 -> 33%
-  # 2 -> 21%
-  # 3 -> 11.5%
-  # 4 -> 6.5%
-  # 5 -> 3.5%
-  def rand_range_weighted_low(range, low_weight: 1)
-    random_float = 1 - rand()
-    low_weight.times do
-      random_float = Math.sqrt(random_float)
+  # Gets a random number with a range, but weighted towards a certain average.
+  # It uses a normal distribution and rejects values outside the correct range.
+  # Standard deviation is 1/4th the size of the range.
+  def rand_range_weighted(range, average: (range.begin+range.end)/2)
+    if average < range.begin || average > range.end
+      raise "Bad random range! Average #{average} not within range #{range}."
     end
-    random_float = 1 - random_float
-    return (random_float * (range.max + 1 - range.min) + range.min).floor
+    
+    theta = 2 * Math::PI * rng.rand()
+    rho = Math.sqrt(-2 * Math.log(1 - rng.rand()))
+    stddev = (range.end-range.begin).to_f/4
+    scale = stddev * rho
+    x = average + scale * Math.cos(theta)
+    #y = average + scale * Math.sin(theta) # Don't care about the second value
+    
+    num = x.round
+    if num < range.begin || num > range.end
+      # Retry until we get a value within the range.
+      return rand_range_weighted(range, average: average)
+    else
+      return num
+    end
   end
   
-  def rand_range_weighted_very_low(range)
-    return rand_range_weighted_low(range, low_weight: 2)
-  end
+  ## Gets a random number within a range, but weighted low.
+  ## The higher the low_weight argument the more strongly low weighted it is. Examples:
+  ## 0 -> 50%
+  ## 1 -> 33%
+  ## 2 -> 21%
+  ## 3 -> 11.5%
+  ## 4 -> 6.5%
+  ## 5 -> 3.5%
+  #def rand_range_weighted_low(range, low_weight: 1)
+  #  random_float = 1 - rand()
+  #  low_weight.times do
+  #    random_float = Math.sqrt(random_float)
+  #  end
+  #  random_float = 1 - random_float
+  #  return (random_float * (range.max + 1 - range.min) + range.min).floor
+  #end
+  #
+  #def rand_range_weighted_very_low(range)
+  #  return rand_range_weighted_low(range, low_weight: 2)
+  #end
   
   def randomize
     options_completed = 0
