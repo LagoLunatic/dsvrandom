@@ -41,15 +41,15 @@ class RandomizerWindow < Qt::Dialog
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
     :enemy_difficulty_label         => "<b>Enemy Placement Difficulty</b>",
-    :max_room_difficulty_mult       => "Max per-room Difficulty Multiplier",
-    :max_enemy_difficulty_mult      => "Max per-enemy Difficulty Multiplier",
+    :max_room_difficulty_mult       => "Max Per-Room Difficulty Multiplier",
+    :max_enemy_difficulty_mult      => "Max Per-Enemy Difficulty Multiplier",
     :enemy_id_preservation_exponent => "Enemy ID Preservation Weighting",
     
-    :drop_chances_label             => "<b>Average enemy drop chances:</b>",
+    :drop_chances_label             => "<b>Average Enemy Drop Chances</b>",
     :item_drop_chance_range         => "Item Drop Chance",
     :skill_drop_chance_range        => "Soul/Glyph Drop Chance",
     
-    :item_stat_label                => "<b>Average Item Stats:</b>",
+    :item_stat_label                => "<b>Average Item Stats</b>",
     :item_price_range               => "Item Price",
     :weapon_attack_range            => "Weapon ATK",
     :weapon_iframes_range           => "Weapon IFrames",
@@ -59,8 +59,8 @@ class RandomizerWindow < Qt::Dialog
     :heart_restorative_amount_range => "Heart Repair Amount",
     :ap_increase_amount_range       => "Attribute Point Boost Amount",
     
-    :skill_stat_label               => "<b>Average Skill Stats:</b>",
-    :skill_price_range              => "Skill Price (PoR)",
+    :skill_stat_label               => "<b>Average Skill Stats</b>",
+    :skill_price_range              => "Subweapon/Spell Price",
     :skill_dmg_range                => "Skill Damage",
     :crush_or_union_dmg_range       => "Dual Crush/Glyph Union Damage",
     :subweapon_sp_to_master_range   => "Subweapon SP To Master",
@@ -71,7 +71,7 @@ class RandomizerWindow < Qt::Dialog
     :skill_max_at_once_range        => "Skill Max-on-screen",
     :glyph_attack_delay_range       => "Glyph Attack Delay",
     
-    :enemy_stat_label               => "<b>Average Enemy Stat Multiplier:</b>",
+    :enemy_stat_label               => "<b>Average Enemy Stat Multipliers</b>",
     :enemy_stat_mult_range          => "Common Enemy Multiplier",
     :boss_stat_mult_range           => "Boss Multiplier",
   }
