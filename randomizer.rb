@@ -42,6 +42,10 @@ class Randomizer
               :checker
   
   DIFFICULTY_RANGES = {
+    :max_room_difficulty_mult       => 1.0..5.0,
+    :max_enemy_difficulty_mult      => 1.0..5.0,
+    :enemy_id_preservation_exponent => 0.0..5.0,
+    
     :item_drop_chance_range         => 1..25,
     :skill_drop_chance_range        => 1..15,
     
@@ -70,6 +74,10 @@ class Randomizer
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
+      :max_room_difficulty_mult       => 2.0,
+      :max_enemy_difficulty_mult      => 1.3,
+      :enemy_id_preservation_exponent => 3.0,
+      
       :item_drop_chance_range         => 13,
       :skill_drop_chance_range        => 8,
       :item_price_range               => 5000,
@@ -111,20 +119,23 @@ class Randomizer
     @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(@int_seed)
     
-    # TODO: Make the below variables customizable in an advanced settings tab.
-    @enemy_difficulty_preservation_weight_exponent = 3
     @weak_enemy_attack_threshold = 28
-    @max_enemy_attack_room_multiplier = 1.3
     @max_spawners_per_room = 1
     
     @difficulty_settings = {}
     DIFFICULTY_RANGES.each do |name, range|
       average = difficulty_settings_averages[name]
-      @difficulty_settings[name] = [range, average]
+      
+      unless range.include?(average)
+        raise "#{average} is not within range #{range}"
+      end
+      
+      if name.to_s.end_with?("range")
+        @difficulty_settings[name] = [range, average]
+      else
+        @difficulty_settings[name] = average
+      end
     end
-    
-    @enemy_stat_mult_range = 0.5..2.5
-    @boss_stat_mult_range  = 0.75..1.25
     
     load_randomizer_constants()
   end

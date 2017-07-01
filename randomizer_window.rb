@@ -40,6 +40,11 @@ class RandomizerWindow < Qt::Dialog
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
+    :enemy_difficulty_label         => "<b>Enemy Placement Difficulty</b>",
+    :max_room_difficulty_mult       => "Max per-room Difficulty Multiplier",
+    :max_enemy_difficulty_mult      => "Max per-enemy Difficulty Multiplier",
+    :enemy_id_preservation_exponent => "Enemy ID Preservation Weighting",
+    
     :drop_chances_label             => "<b>Average enemy drop chances:</b>",
     :item_drop_chance_range         => "Item Drop Chance",
     :skill_drop_chance_range        => "Soul/Glyph Drop Chance",
@@ -358,7 +363,12 @@ class RandomizerWindow < Qt::Dialog
       difficulty_settings_averages[option_name] = average
     end
     
-    randomizer = Randomizer.new(seed, game, options_hash, difficulty_settings_averages)
+    begin
+      randomizer = Randomizer.new(seed, game, options_hash, difficulty_settings_averages)
+    rescue StandardError => e
+      Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
+      return
+    end
     
     max_val = options_hash.select{|k,v| k.to_s.start_with?("randomize_") && v}.length
     max_val += 20 if options_hash[:randomize_pickups]

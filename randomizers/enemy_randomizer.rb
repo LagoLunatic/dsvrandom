@@ -137,15 +137,15 @@ module EnemyRandomizer
         difficulty + enemy_dna["Attack"]
       end
       
-      # Only allow tough enemies in the room up to 2x the original room's difficulty.
-      remaining_new_room_difficulty = original_room_difficulty*2
+      # Only allow tough enemies in the room up to the original room's difficulty times a multiplier.
+      remaining_new_room_difficulty = original_room_difficulty*@difficulty_settings[:max_room_difficulty_mult]
       
       # Only allow enemies up to 1.5x tougher than the toughest enemy in the original room.
       max_enemy_attack = enemies_in_room.map do |enemy|
         enemy_dna = @original_enemy_dnas[enemy.subtype]
         enemy_dna["Attack"]
       end.max
-      max_allowed_enemy_attack = max_enemy_attack*@max_enemy_attack_room_multiplier
+      max_allowed_enemy_attack = max_enemy_attack*@difficulty_settings[:max_enemy_difficulty_mult]
       
       enemies_in_room.shuffle(random: rng).each_with_index do |enemy, i|
         @allowed_enemies_for_room.select! do |enemy_id|
@@ -237,7 +237,7 @@ module EnemyRandomizer
       weights = @allowed_enemies_for_room.map do |possible_enemy_id|
         id_difference = (possible_enemy_id - enemy.subtype).abs
         weight = max_enemy_id - id_difference
-        weight**@enemy_difficulty_preservation_weight_exponent
+        weight**@difficulty_settings[:enemy_id_preservation_exponent]
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
       weighted_enemy_ids = @allowed_enemies_for_room.zip(ps).to_h
