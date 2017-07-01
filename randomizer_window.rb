@@ -40,6 +40,10 @@ class RandomizerWindow < Qt::Dialog
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
+    :drop_chances_label             => "<b>Average enemy drop chances:</b>",
+    :item_drop_chance_range         => "Item Drop Chance",
+    :skill_drop_chance_range        => "Soul/Glyph Drop Chance",
+    
     :item_stat_label                => "<b>Average Item Stats:</b>",
     :item_price_range               => "Item Price",
     :weapon_attack_range            => "Weapon ATK",
@@ -141,6 +145,10 @@ class RandomizerWindow < Qt::Dialog
       Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
         slider = @slider_widgets_by_name[option_name]
         average = @settings[:difficulty_options][option_name]
+        if average.nil?
+          # If some options are missing default to what it is on easy.
+          average = Randomizer::DIFFICULTY_LEVELS["Easy"][option_name]
+        end
         slider.value = average
         slider.setToolTip(slider.tooltip_text)
       end

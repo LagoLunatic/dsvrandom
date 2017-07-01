@@ -48,18 +48,43 @@ module DropRandomizer
         enemy["Item 2"] = 0
       end
       
+      item_1_chance = named_rand_range_weighted(:item_drop_chance_range)
+      item_2_chance = named_rand_range_weighted(:item_drop_chance_range)
+      skill_chance = named_rand_range_weighted(:skill_drop_chance_range)
+      
       case GAME
       when "dos"
-        enemy["Item Chance"] = rng.rand(0x04..0x50)
+        internal_item_chance = (item_1_chance/100.0*1024/3).floor
+        internal_item_chance = 1 if internal_item_chance < 1
+        internal_item_chance = 255 if internal_item_chance > 255
+        enemy["Item Chance"] = internal_item_chance
         
         enemy["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
-        enemy["Soul Chance"] = rng.rand(0x01..0x30)
+        
+        internal_soul_chance = (skill_chance/100.0*512).floor
+        internal_soul_chance = 1 if internal_soul_chance < 1
+        internal_soul_chance = 255 if internal_soul_chance > 255
+        enemy["Soul Chance"] = internal_soul_chance
       when "por"
-        enemy["Item 1 Chance"] = rng.rand(0x01..0x32)
-        enemy["Item 2 Chance"] = rng.rand(0x01..0x32)
+        internal_item_1_chance = (item_1_chance*2.56).floor
+        internal_item_1_chance = 1 if internal_item_1_chance < 1
+        internal_item_1_chance = 255 if internal_item_1_chance > 255
+        enemy["Item 1 Chance"] = internal_item_1_chance
+        
+        internal_item_2_chance = (item_2_chance*2.56).floor
+        internal_item_2_chance = 1 if internal_item_2_chance < 1
+        internal_item_2_chance = 255 if internal_item_2_chance > 255
+        enemy["Item 2 Chance"] = internal_item_2_chance
       when "ooe"
-        enemy["Item 1 Chance"] = rng.rand(0x01..0x0F)
-        enemy["Item 2 Chance"] = rng.rand(0x01..0x0F)
+        internal_item_1_chance = item_1_chance
+        internal_item_1_chance = 1 if internal_item_1_chance < 1
+        internal_item_1_chance = 255 if internal_item_1_chance > 255
+        enemy["Item 1 Chance"] = internal_item_1_chance
+        
+        internal_item_2_chance = item_2_chance
+        internal_item_2_chance = 1 if internal_item_2_chance < 1
+        internal_item_2_chance = 255 if internal_item_2_chance > 255
+        enemy["Item 2 Chance"] = internal_item_2_chance
         
         if enemy["Glyph"] != 0
           # Only give glyph drops to enemies that original had a glyph drop.
@@ -72,10 +97,11 @@ module DropRandomizer
             enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
           end
           
-          if enemy["Glyph Chance"] != 100
-            # Don't set glyph chance if it was originally 100%, because it won't matter for those enemies.
-            # Otherwise set it to 1-20%.
-            enemy["Glyph Chance"] = rng.rand(1..20)
+          if enemy["Glyph Chance"] != 100 # Don't set glyph chance if it was originally 100%, because it won't matter for those enemies.
+            internal_skill_chance = skill_chance
+            internal_skill_chance = 1 if internal_skill_chance < 1
+            internal_skill_chance = 255 if internal_skill_chance > 255
+            enemy["Glyph Chance"] = internal_skill_chance
           end
         end
       end

@@ -42,6 +42,9 @@ class Randomizer
               :checker
   
   DIFFICULTY_RANGES = {
+    :item_drop_chance_range         => 1..25,
+    :skill_drop_chance_range        => 1..15,
+    
     :item_price_range               => 100..25000,
     :weapon_attack_range            => 0..150,
     :weapon_iframes_range           => 4..55,
@@ -67,6 +70,8 @@ class Randomizer
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
+      :item_drop_chance_range         => 13,
+      :skill_drop_chance_range        => 8,
       :item_price_range               => 5000,
       :weapon_attack_range            => 30,
       :weapon_iframes_range           => 30,
