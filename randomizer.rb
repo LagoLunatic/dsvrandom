@@ -41,7 +41,52 @@ class Randomizer
               :game,
               :checker
   
-  def initialize(seed, game, options)
+  DIFFICULTY_RANGES = {
+    :item_price_range               => 100..25000,
+    :weapon_attack_range            => 0..150,
+    :weapon_iframes_range           => 4..55,
+    :armor_defense_range            => 0..55,
+    :item_extra_stats_range         => 1..100,
+    :restorative_amount_range       => 1..1000,
+    :heart_restorative_amount_range => 1..350,
+    :ap_increase_amount_range       => 1..65535,
+    
+    :skill_price_range              => 1000..30000,
+    :skill_dmg_range                => 5..55,
+    :crush_or_union_dmg_range       => 15..85,
+    :subweapon_sp_to_master_range   => 100..3000,
+    :spell_charge_time_range        => 8..120,
+    :skill_mana_cost_range          => 1..60,
+    :crush_mana_cost_range          => 50..250,
+    :union_heart_cost_range         => 5..50,
+    :skill_max_at_once_range        => 1..8,
+    :glyph_attack_delay_range       => 1..20,
+  }
+  DIFFICULTY_PRESETS = {
+    "Easy" => {
+      :item_price_range               => 5000,
+      :weapon_attack_range            => 30,
+      :weapon_iframes_range           => 30,
+      :armor_defense_range            => 10,
+      :item_extra_stats_range         => 7,
+      :restorative_amount_range       => 200,
+      :heart_restorative_amount_range => 75,
+      :ap_increase_amount_range       => 2000,
+      
+      :skill_price_range              => 10000,
+      :skill_dmg_range                => 11,
+      :crush_or_union_dmg_range       => 38,
+      :subweapon_sp_to_master_range   => 1500,
+      :spell_charge_time_range        => 32,
+      :skill_mana_cost_range          => 30,
+      :crush_mana_cost_range          => 150,
+      :union_heart_cost_range         => 20,
+      :skill_max_at_once_range        => 2,
+      :glyph_attack_delay_range       => 7,
+    }
+  }
+  
+  def initialize(seed, game, options, difficulty_settings_averages)
     @seed = seed
     @game = game
     @options = options
@@ -61,25 +106,11 @@ class Randomizer
     @max_enemy_attack_room_multiplier = 1.3
     @max_spawners_per_room = 1
     
-    @item_price_range               = [100..25000, average: 5000]
-    @weapon_attack_range            = [0..150    , average: 30]
-    @weapon_iframes_range           =  4..55
-    @armor_defense_range            = [0..55     , average: 6]
-    @item_extra_stats_range         = [1..100    , average: 7]
-    @restorative_amount_range       = [1..1000   , average: 200]
-    @heart_restorative_amount_range = [1..350    , average: 75]
-    @ap_increase_amount_range       = [1..65535  , average: 2000]
-    
-    @skill_price_1000g_range        = [1..30     , average: 10]
-    @skill_dmg_range                = [5..55     , average: 5]
-    @crush_or_union_dmg_range       = [15..85    , average: 23]
-    @subweapon_sp_to_master_range   =  100..3000
-    @spell_charge_time_range        = [8..120    , average: 22]
-    @skill_mana_cost_range          =  1..60
-    @crush_mana_cost_range          =  50..250
-    @union_heart_cost_range         = [5..50     , average: 20]
-    @skill_max_at_once_range        = [1..8      , average: 2]
-    @glyph_attack_delay_range       = [1..20     , average: 6]
+    @difficulty_settings = {}
+    DIFFICULTY_RANGES.each do |name, range|
+      average = difficulty_settings_averages[name]
+      @difficulty_settings[name] = [range, average]
+    end
     
     @enemy_stat_mult_range = 0.5..2.5
     @boss_stat_mult_range  = 0.75..1.25
@@ -130,6 +161,12 @@ class Randomizer
     else
       return num
     end
+  end
+  
+  def named_rand_range_weighted(name)
+    p @difficulty_settings[name]
+    range, average = @difficulty_settings[name]
+    rand_range_weighted(range, average: average)
   end
   
   ## Gets a random number within a range, but weighted low.

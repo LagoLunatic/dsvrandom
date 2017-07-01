@@ -39,9 +39,33 @@ class RandomizerWindow < Qt::Dialog
     always_dowsing
   )
   
+  DIFFICULTY_OPTION_PRETTY_NAMES = {
+    :item_price_range               => "Item Price",
+    :weapon_attack_range            => "Weapon ATK",
+    :weapon_iframes_range           => "Weapon IFrames",
+    :armor_defense_range            => "Armor DEF",
+    :item_extra_stats_range         => "Other stats",
+    :restorative_amount_range       => "Restorative Amount",
+    :heart_restorative_amount_range => "Heart Repair Amount",
+    :ap_increase_amount_range       => "Attribute Point Boost Amount",
+    
+    :skill_price_range              => "Skill Price (PoR)",
+    :skill_dmg_range                => "Skill Damage",
+    :crush_or_union_dmg_range       => "Dual Crush/Glyph Union Damage",
+    :subweapon_sp_to_master_range   => "Subweapon SP To Master",
+    :spell_charge_time_range        => "Spell Charge Time",
+    :skill_mana_cost_range          => "Skill Mana Cost",
+    :crush_mana_cost_range          => "Dual Crush Mana Cost",
+    :union_heart_cost_range         => "Glyph Union Heart Cost",
+    :skill_max_at_once_range        => "Skill Max-on-screen",
+    :glyph_attack_delay_range       => "Glyph Attack Delay"
+  }
+  
   slots "update_settings()"
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
+  slots "difficulty_slider_moved()"
+  slots "difficulty_slider_moved(int)"
   slots "generate_seed()"
   slots "randomize()"
   slots "open_about()"
@@ -70,6 +94,8 @@ class RandomizerWindow < Qt::Dialog
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
     update_settings()
+    
+    load_difficulty_options()
     
     self.show()
   end
@@ -145,6 +171,54 @@ class RandomizerWindow < Qt::Dialog
     save_settings()
   end
   
+  def load_difficulty_options
+    # Remove the grey background color of the scroll area.
+    @ui.scrollArea.setStyleSheet("QScrollArea {background-color:transparent;}");
+    @ui.scrollAreaWidgetContents.setStyleSheet("background-color:transparent;");
+    
+    form_layout = @ui.scrollAreaWidgetContents.layout
+    
+    Randomizer::DIFFICULTY_RANGES.each_with_index do |(option_name, option_value_range), i|
+      option_value_range = Randomizer::DIFFICULTY_RANGES[option_name]
+      pretty_name = DIFFICULTY_OPTION_PRETTY_NAMES[option_name]
+      
+      label = Qt::Label.new(@ui.scrollAreaWidgetContents)
+      label.text = pretty_name# + " (#{option_value_range})"
+      form_layout.setWidget(i, Qt::FormLayout::LabelRole, label)
+      
+      slider = Qt::Slider.new(@ui.scrollAreaWidgetContents)
+      slider.pageStep = 1
+      slider.orientation = Qt::Horizontal
+      slider.minimum = option_value_range.begin
+      slider.maximum = option_value_range.end
+      connect(slider, SIGNAL("sliderPressed()"), self, SLOT("difficulty_slider_moved()"))
+      connect(slider, SIGNAL("sliderMoved(int)"), self, SLOT("difficulty_slider_moved(int)"))
+      form_layout.setWidget(i, Qt::FormLayout::FieldRole, slider)
+    end
+    
+    Randomizer::DIFFICULTY_PRESETS.keys.each do |name|
+      @ui.difficulty_preset.addItem(name)
+    end
+    
+    diff_averages = Randomizer::DIFFICULTY_PRESETS["Easy"]
+    diff_averages.each_with_index do |(option_name, average), i|
+      slider = form_layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+      slider.value = average
+      slider.setToolTip(slider.value.to_s)
+    end
+  end
+  
+  def difficulty_slider_moved(value = nil)
+    # Shows the tooltip containing the current value of the slider.
+    slider = sender()
+    slider.setToolTip(slider.value.to_s)
+    global_pos = slider.rect.topLeft
+    global_pos.x += Qt::Style.sliderPositionFromValue(slider.minimum, slider.maximum, slider.value, slider.width())
+    global_pos.y += slider.height / 2
+    toolTipEvent = Qt::HelpEvent.new(Qt::Event::ToolTip, Qt::Point.new(0, 0), slider.mapToGlobal(global_pos))
+    $qApp.sendEvent(slider, toolTipEvent)
+  end
+  
   def generate_seed
     # Generate a new random seed composed of 2 adjectives and a noun.
     adjectives = File.read("./dsvrandom/seedgen_adjectives.txt").split("\n").sample(2)
@@ -202,7 +276,14 @@ class RandomizerWindow < Qt::Dialog
       options_hash[option_name] = @ui.send(option_name).checked
     end
     
-    randomizer = Randomizer.new(seed, game, options_hash)
+    difficulty_settings_averages = {}
+    Randomizer::DIFFICULTY_RANGES.keys.each_with_index do |name, i|
+      slider = @ui.scrollAreaWidgetContents.layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+      average = slider.value
+      difficulty_settings_averages[name] = average
+    end
+    
+    randomizer = Randomizer.new(seed, game, options_hash, difficulty_settings_averages)
     
     max_val = options_hash.select{|k,v| k.to_s.start_with?("randomize_") && v}.length
     max_val += 20 if options_hash[:randomize_pickups]
