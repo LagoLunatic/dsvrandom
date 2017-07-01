@@ -75,8 +75,7 @@ class RandomizerWindow < Qt::Dialog
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
   slots "difficulty_level_changed(int)"
-  slots "difficulty_slider_moved()"
-  slots "difficulty_slider_moved(int)"
+  slots "difficulty_slider_value_changed(int)"
   slots "generate_seed()"
   slots "randomize()"
   slots "open_about()"
@@ -149,7 +148,9 @@ class RandomizerWindow < Qt::Dialog
           # If some options are missing default to what it is on easy.
           average = Randomizer::DIFFICULTY_LEVELS["Easy"][option_name]
         end
+        slider.blockSignals(true)
         slider.value = average
+        slider.blockSignals(false)
         slider.setToolTip(slider.tooltip_text)
       end
     else
@@ -246,8 +247,7 @@ class RandomizerWindow < Qt::Dialog
       
       slider.pageStep = 1
       slider.orientation = Qt::Horizontal
-      connect(slider, SIGNAL("sliderPressed()"), self, SLOT("difficulty_slider_moved()"))
-      connect(slider, SIGNAL("sliderMoved(int)"), self, SLOT("difficulty_slider_moved(int)"))
+      connect(slider, SIGNAL("valueChanged(int)"), self, SLOT("difficulty_slider_value_changed(int)"))
       form_layout.setWidget(i, Qt::FormLayout::FieldRole, slider)
       @slider_widgets_by_name[option_name] = slider
     end
@@ -258,7 +258,7 @@ class RandomizerWindow < Qt::Dialog
     end
   end
   
-  def difficulty_slider_moved(value = nil)
+  def difficulty_slider_value_changed(value)
     # Shows the tooltip containing the current value of the slider.
     slider = sender()
     slider.setToolTip(slider.tooltip_text)
@@ -284,7 +284,9 @@ class RandomizerWindow < Qt::Dialog
       
       difficulty_level_options.each do |option_name, average|
         slider = @slider_widgets_by_name[option_name]
+        slider.blockSignals(true)
         slider.value = average
+        slider.blockSignals(false)
         slider.setToolTip(slider.tooltip_text)
       end
     end
