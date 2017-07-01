@@ -3,7 +3,6 @@ require 'yaml'
 
 class CompletabilityChecker
   attr_reader :game,
-              :rng,
               :current_items,
               :defs,
               :enemy_locations,
@@ -18,7 +17,6 @@ class CompletabilityChecker
     @ooe_nonlinear = ooe_nonlinear
     @ooe_randomize_villagers = ooe_randomize_villagers
     
-    @rng = Random.new
     load_room_reqs()
     @current_items = []
     @debug = false
