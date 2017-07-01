@@ -62,7 +62,7 @@ class Randomizer
     :skill_max_at_once_range        => 1..8,
     :glyph_attack_delay_range       => 1..20,
   }
-  DIFFICULTY_PRESETS = {
+  DIFFICULTY_LEVELS = {
     "Easy" => {
       :item_price_range               => 5000,
       :weapon_attack_range            => 30,

@@ -556,7 +556,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="difficulty_preset"/>
+          <widget class="QComboBox" name="difficulty_level"/>
          </item>
         </layout>
        </item>

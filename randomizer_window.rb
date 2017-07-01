@@ -64,6 +64,7 @@ class RandomizerWindow < Qt::Dialog
   slots "update_settings()"
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
+  slots "difficulty_level_changed(int)"
   slots "difficulty_slider_moved()"
   slots "difficulty_slider_moved(int)"
   slots "generate_seed()"
@@ -74,6 +75,8 @@ class RandomizerWindow < Qt::Dialog
     super(nil, Qt::WindowMinimizeButtonHint)
     @ui = Ui_Randomizer.new
     @ui.setup_ui(self)
+    
+    initialize_difficulty_sliders()
     
     load_settings()
     
@@ -93,9 +96,9 @@ class RandomizerWindow < Qt::Dialog
     
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
-    update_settings()
+    connect(@ui.difficulty_level, SIGNAL("activated(int)"), self, SLOT("difficulty_level_changed(int)"))
     
-    load_difficulty_options()
+    update_settings()
     
     self.show()
   end
@@ -114,6 +117,29 @@ class RandomizerWindow < Qt::Dialog
     
     OPTIONS.each do |option_name|
       @ui.send(option_name).setChecked(@settings[option_name]) unless @settings[option_name].nil?
+    end
+    
+    difficulty_level_options = Randomizer::DIFFICULTY_LEVELS[@settings[:difficulty_level]]
+    if difficulty_level_options
+      # Preset difficulty level.
+      @ui.difficulty_level.count.times do |i|
+        if @ui.difficulty_level.itemText(i) == @settings[:difficulty_level]
+          difficulty_level_changed(i)
+          break
+        end
+      end
+    elsif @settings[:difficulty_options]
+      # Custom difficulty.
+      form_layout = @ui.scrollAreaWidgetContents.layout
+      
+      @settings[:difficulty_options].each_with_index do |(option_name, average), i|
+        slider = form_layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+        slider.value = average
+        slider.setToolTip(slider.value.to_s)
+      end
+    else
+      # First boot, default to easy difficulty.
+      difficulty_level_changed(1)
     end
   end
   
@@ -168,10 +194,18 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_villagers.enabled = true
     end
     
+    @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)
+    @settings[:difficulty_options] = {}
+    Randomizer::DIFFICULTY_RANGES.keys.each_with_index do |name, i|
+      slider = @ui.scrollAreaWidgetContents.layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+      average = slider.value
+      @settings[:difficulty_options][name] = average
+    end
+    
     save_settings()
   end
   
-  def load_difficulty_options
+  def initialize_difficulty_sliders
     # Remove the grey background color of the scroll area.
     @ui.scrollArea.setStyleSheet("QScrollArea {background-color:transparent;}");
     @ui.scrollAreaWidgetContents.setStyleSheet("background-color:transparent;");
@@ -196,15 +230,9 @@ class RandomizerWindow < Qt::Dialog
       form_layout.setWidget(i, Qt::FormLayout::FieldRole, slider)
     end
     
-    Randomizer::DIFFICULTY_PRESETS.keys.each do |name|
-      @ui.difficulty_preset.addItem(name)
-    end
-    
-    diff_averages = Randomizer::DIFFICULTY_PRESETS["Easy"]
-    diff_averages.each_with_index do |(option_name, average), i|
-      slider = form_layout.itemAt(i, Qt::FormLayout::FieldRole).widget
-      slider.value = average
-      slider.setToolTip(slider.value.to_s)
+    @ui.difficulty_level.addItem("Custom")
+    Randomizer::DIFFICULTY_LEVELS.keys.each do |name|
+      @ui.difficulty_level.addItem(name)
     end
   end
   
@@ -217,6 +245,29 @@ class RandomizerWindow < Qt::Dialog
     global_pos.y += slider.height / 2
     toolTipEvent = Qt::HelpEvent.new(Qt::Event::ToolTip, Qt::Point.new(0, 0), slider.mapToGlobal(global_pos))
     $qApp.sendEvent(slider, toolTipEvent)
+    
+    @ui.difficulty_level.setCurrentIndex(0)
+    
+    update_settings()
+  end
+  
+  def difficulty_level_changed(diff_index)
+    @ui.difficulty_level.setCurrentIndex(diff_index)
+    
+    difficulty_name = @ui.difficulty_level.itemText(diff_index)
+    
+    diff_averages = Randomizer::DIFFICULTY_LEVELS[difficulty_name]
+    if diff_averages
+      form_layout = @ui.scrollAreaWidgetContents.layout
+      
+      diff_averages.each_with_index do |(option_name, average), i|
+        slider = form_layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+        slider.value = average
+        slider.setToolTip(slider.value.to_s)
+      end
+    end
+    
+    update_settings()
   end
   
   def generate_seed
