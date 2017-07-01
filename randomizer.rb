@@ -61,6 +61,9 @@ class Randomizer
     :union_heart_cost_range         => 5..50,
     :skill_max_at_once_range        => 1..8,
     :glyph_attack_delay_range       => 1..20,
+    
+    :enemy_stat_mult_range          => 0.5..2.5,
+    :boss_stat_mult_range           => 0.75..1.25,
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
@@ -83,6 +86,9 @@ class Randomizer
       :union_heart_cost_range         => 20,
       :skill_max_at_once_range        => 2,
       :glyph_attack_delay_range       => 7,
+    
+      :enemy_stat_mult_range          => 1.0,
+      :boss_stat_mult_range           => 1.0,
     }
   }
   
@@ -147,6 +153,10 @@ class Randomizer
       raise "Bad random range! Average #{average} not within range #{range}."
     end
     
+    if range.begin.is_a?(Float) || range.end.is_a?(Float) || average.is_a?(Float)
+      float_mode = true
+    end
+    
     theta = 2 * Math::PI * rng.rand()
     rho = Math.sqrt(-2 * Math.log(1 - rng.rand()))
     stddev = (range.end-range.begin).to_f/4
@@ -154,7 +164,9 @@ class Randomizer
     x = average + scale * Math.cos(theta)
     #y = average + scale * Math.sin(theta) # Don't care about the second value
     
-    num = x.round
+    num = x
+    num = x.round unless float_mode
+    
     if num < range.begin || num > range.end
       # Retry until we get a value within the range.
       return rand_range_weighted(range, average: average)
@@ -164,7 +176,8 @@ class Randomizer
   end
   
   def named_rand_range_weighted(name)
-    p @difficulty_settings[name]
+    #p name
+    #p @difficulty_settings[name]
     range, average = @difficulty_settings[name]
     rand_range_weighted(range, average: average)
   end

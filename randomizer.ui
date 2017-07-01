@@ -570,7 +570,7 @@
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Specify custom difficulty values below. You can only customize the average weighting, not the range.</string>
+          <string>Specify custom difficulty values below:</string>
          </property>
         </widget>
        </item>

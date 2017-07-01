@@ -7,19 +7,19 @@ module EnemyStatRandomizer
       is_boss = BOSS_IDS.include?(enemy_id)
       
       if is_boss
-        stat_mult_range = @boss_stat_mult_range
+        stat_mult_range_name = :boss_stat_mult_range
       else
-        stat_mult_range = @enemy_stat_mult_range
+        stat_mult_range_name = :enemy_stat_mult_range
       end
-      enemy_dna["HP"]               = (enemy_dna["HP"]              *rng.rand(stat_mult_range)).round
-      enemy_dna["MP"]               = (enemy_dna["MP"]              *rng.rand(stat_mult_range)).round if GAME == "dos"
-      enemy_dna["SP"]               = (enemy_dna["SP"]              *rng.rand(stat_mult_range)).round if GAME == "por"
-      enemy_dna["AP"]               = (enemy_dna["AP"]              *rng.rand(stat_mult_range)).round if GAME == "ooe"
-      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *rng.rand(stat_mult_range)).round
-      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *rng.rand(stat_mult_range)).round
-      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *rng.rand(stat_mult_range)).round if GAME == "dos"
-      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*rng.rand(stat_mult_range)).round if GAME == "por" || GAME == "ooe"
-      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *rng.rand(stat_mult_range)).round if GAME == "por" || GAME == "ooe"
+      enemy_dna["HP"]               = (enemy_dna["HP"]              *named_rand_range_weighted(stat_mult_range_name)).round
+      enemy_dna["MP"]               = (enemy_dna["MP"]              *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "dos"
+      enemy_dna["SP"]               = (enemy_dna["SP"]              *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "por"
+      enemy_dna["AP"]               = (enemy_dna["AP"]              *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "ooe"
+      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *named_rand_range_weighted(stat_mult_range_name)).round
+      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *named_rand_range_weighted(stat_mult_range_name)).round
+      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "dos"
+      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*named_rand_range_weighted(stat_mult_range_name)).round if GAME == "por" || GAME == "ooe"
+      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "por" || GAME == "ooe"
       
       # Don't let some stats be 0.
       enemy_dna["HP"]               = 1 if enemy_dna["HP"] < 1

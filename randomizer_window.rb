@@ -40,6 +40,7 @@ class RandomizerWindow < Qt::Dialog
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
+    :item_stat_label                => "<b>Average Item Stats:</b>",
     :item_price_range               => "Item Price",
     :weapon_attack_range            => "Weapon ATK",
     :weapon_iframes_range           => "Weapon IFrames",
@@ -49,6 +50,7 @@ class RandomizerWindow < Qt::Dialog
     :heart_restorative_amount_range => "Heart Repair Amount",
     :ap_increase_amount_range       => "Attribute Point Boost Amount",
     
+    :skill_stat_label               => "<b>Average Skill Stats:</b>",
     :skill_price_range              => "Skill Price (PoR)",
     :skill_dmg_range                => "Skill Damage",
     :crush_or_union_dmg_range       => "Dual Crush/Glyph Union Damage",
@@ -58,7 +60,11 @@ class RandomizerWindow < Qt::Dialog
     :crush_mana_cost_range          => "Dual Crush Mana Cost",
     :union_heart_cost_range         => "Glyph Union Heart Cost",
     :skill_max_at_once_range        => "Skill Max-on-screen",
-    :glyph_attack_delay_range       => "Glyph Attack Delay"
+    :glyph_attack_delay_range       => "Glyph Attack Delay",
+    
+    :enemy_stat_label               => "<b>Average Enemy Stat Multiplier:</b>",
+    :enemy_stat_mult_range          => "Common Enemy Multiplier",
+    :boss_stat_mult_range           => "Boss Multiplier",
   }
   
   slots "update_settings()"
@@ -132,10 +138,11 @@ class RandomizerWindow < Qt::Dialog
       # Custom difficulty.
       form_layout = @ui.scrollAreaWidgetContents.layout
       
-      @settings[:difficulty_options].each_with_index do |(option_name, average), i|
-        slider = form_layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+      Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+        slider = @slider_widgets_by_name[option_name]
+        average = @settings[:difficulty_options][option_name]
         slider.value = average
-        slider.setToolTip(slider.value.to_s)
+        slider.setToolTip(slider.tooltip_text)
       end
     else
       # First boot, default to easy difficulty.
@@ -196,10 +203,10 @@ class RandomizerWindow < Qt::Dialog
     
     @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)
     @settings[:difficulty_options] = {}
-    Randomizer::DIFFICULTY_RANGES.keys.each_with_index do |name, i|
-      slider = @ui.scrollAreaWidgetContents.layout.itemAt(i, Qt::FormLayout::FieldRole).widget
-      average = slider.value
-      @settings[:difficulty_options][name] = average
+    Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+      slider = @slider_widgets_by_name[option_name]
+      average = slider.true_value
+      @settings[:difficulty_options][option_name] = average
     end
     
     save_settings()
@@ -211,23 +218,30 @@ class RandomizerWindow < Qt::Dialog
     @ui.scrollAreaWidgetContents.setStyleSheet("background-color:transparent;");
     
     form_layout = @ui.scrollAreaWidgetContents.layout
+    @slider_widgets_by_name = {}
     
-    Randomizer::DIFFICULTY_RANGES.each_with_index do |(option_name, option_value_range), i|
-      option_value_range = Randomizer::DIFFICULTY_RANGES[option_name]
-      pretty_name = DIFFICULTY_OPTION_PRETTY_NAMES[option_name]
-      
+    DIFFICULTY_OPTION_PRETTY_NAMES.each_with_index do |(option_name, pretty_name), i|
       label = Qt::Label.new(@ui.scrollAreaWidgetContents)
-      label.text = pretty_name# + " (#{option_value_range})"
+      label.text = pretty_name
       form_layout.setWidget(i, Qt::FormLayout::LabelRole, label)
       
-      slider = Qt::Slider.new(@ui.scrollAreaWidgetContents)
-      slider.pageStep = 1
-      slider.orientation = Qt::Horizontal
+      option_value_range = Randomizer::DIFFICULTY_RANGES[option_name]
+      if option_value_range.nil?
+        # Not a real option, just descriptive text.
+        next
+      end
+      
+      is_float = option_value_range.begin.is_a?(Float) || option_value_range.end.is_a?(Float)
+      slider = DifficultySlider.new(@ui.scrollAreaWidgetContents, is_float)
       slider.minimum = option_value_range.begin
       slider.maximum = option_value_range.end
+      
+      slider.pageStep = 1
+      slider.orientation = Qt::Horizontal
       connect(slider, SIGNAL("sliderPressed()"), self, SLOT("difficulty_slider_moved()"))
       connect(slider, SIGNAL("sliderMoved(int)"), self, SLOT("difficulty_slider_moved(int)"))
       form_layout.setWidget(i, Qt::FormLayout::FieldRole, slider)
+      @slider_widgets_by_name[option_name] = slider
     end
     
     @ui.difficulty_level.addItem("Custom")
@@ -239,7 +253,7 @@ class RandomizerWindow < Qt::Dialog
   def difficulty_slider_moved(value = nil)
     # Shows the tooltip containing the current value of the slider.
     slider = sender()
-    slider.setToolTip(slider.value.to_s)
+    slider.setToolTip(slider.tooltip_text)
     global_pos = slider.rect.topLeft
     global_pos.x += Qt::Style.sliderPositionFromValue(slider.minimum, slider.maximum, slider.value, slider.width())
     global_pos.y += slider.height / 2
@@ -256,14 +270,14 @@ class RandomizerWindow < Qt::Dialog
     
     difficulty_name = @ui.difficulty_level.itemText(diff_index)
     
-    diff_averages = Randomizer::DIFFICULTY_LEVELS[difficulty_name]
-    if diff_averages
+    difficulty_level_options = Randomizer::DIFFICULTY_LEVELS[difficulty_name]
+    if difficulty_level_options
       form_layout = @ui.scrollAreaWidgetContents.layout
       
-      diff_averages.each_with_index do |(option_name, average), i|
-        slider = form_layout.itemAt(i, Qt::FormLayout::FieldRole).widget
+      difficulty_level_options.each do |option_name, average|
+        slider = @slider_widgets_by_name[option_name]
         slider.value = average
-        slider.setToolTip(slider.value.to_s)
+        slider.setToolTip(slider.tooltip_text)
       end
     end
     
@@ -328,10 +342,10 @@ class RandomizerWindow < Qt::Dialog
     end
     
     difficulty_settings_averages = {}
-    Randomizer::DIFFICULTY_RANGES.keys.each_with_index do |name, i|
-      slider = @ui.scrollAreaWidgetContents.layout.itemAt(i, Qt::FormLayout::FieldRole).widget
-      average = slider.value
-      difficulty_settings_averages[name] = average
+    Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+      slider = @slider_widgets_by_name[option_name]
+      average = slider.true_value
+      difficulty_settings_averages[option_name] = average
     end
     
     randomizer = Randomizer.new(seed, game, options_hash, difficulty_settings_averages)
@@ -434,5 +448,53 @@ class ProgressDialog < Qt::ProgressDialog
   def cancel_write_to_rom_thread
     puts "Cancelled."
     @write_to_rom_thread.kill
+  end
+end
+
+class DifficultySlider < Qt::Slider
+  def initialize(parent, is_float)
+    super(parent)
+    
+    @is_float = is_float
+  end
+  
+  def minimum=(min)
+    if @is_float
+      super(min*100)
+    else
+      super(min)
+    end
+  end
+  
+  def maximum=(max)
+    if @is_float
+      super(max*100)
+    else
+      super(max)
+    end
+  end
+  
+  def value=(val)
+    if @is_float
+      super(val*100)
+    else
+      super(val)
+    end
+  end
+  
+  def true_value
+    if @is_float
+      value/100.0
+    else
+      value
+    end
+  end
+  
+  def tooltip_text
+    if @is_float
+      (value/100.0).to_s
+    else
+      value.to_s
+    end
   end
 end
