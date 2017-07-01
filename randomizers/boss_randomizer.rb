@@ -1,6 +1,8 @@
 
 module BossRandomizer
   def randomize_bosses
+    dos_randomize_final_boss()
+    
     boss_entities = []
     game.each_room do |room|
       boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
@@ -343,5 +345,18 @@ module BossRandomizer
       boss_entity.x_pos = 0xCC
       boss_entity.y_pos = 0xAF
     end
+  end
+  
+  def dos_randomize_final_boss
+    return unless GAME == "dos"
+    
+    menace_room_data = [0xA, 0, 2, 0x80, 0xA0].pack("CCvvv")
+    somacula_room_data = [0x10, 0, 2, 0x1A0, 0xB0].pack("CCvvv")
+    
+    soma_mode_final_boss = [menace_room_data, somacula_room_data].sample(random: rng)
+    game.fs.write(0x0222BE1C, soma_mode_final_boss)
+    
+    julius_mode_final_boss = [menace_room_data, somacula_room_data].sample(random: rng)
+    game.fs.write(0x0222BE14, julius_mode_final_boss)
   end
 end
