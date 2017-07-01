@@ -54,7 +54,7 @@ Defs:
   backdashjump: true
   
   bossarmor: seal 1 | hwarp
-  afterarmor: height | distance | backdashjump
+  afterarmor: bossarmor & height | bossarmor & distance | bossarmor & backdashjump
   undervillage: lowerwizardry & medium height & puppet master | lowerwizardry & big height | wizardry & cutallsuper
   villagewatergate: afterarmor & distance | afterarmor & puppet master
   
