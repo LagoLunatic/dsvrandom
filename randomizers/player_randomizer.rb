@@ -81,6 +81,7 @@ module PlayerRandomizer
     
     players.each_with_index do |player, i|
       player["Actions"][1] = true # Can use weapons
+      player["Actions"][6] = true # Can superjump
       if ["Stella", "Loretta"].include?(player.name)
         player["Actions"][16] = true # No gravity
       else
