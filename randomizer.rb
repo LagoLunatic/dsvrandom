@@ -16,6 +16,7 @@ require_relative 'randomizers/weapon_synth_randomizer'
 require_relative 'randomizers/starting_room_randomizer'
 require_relative 'randomizers/enemy_ai_randomizer'
 require_relative 'randomizers/starting_items_randomizer'
+require_relative 'randomizers/skill_sprites_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -32,6 +33,7 @@ class Randomizer
   include StartingRoomRandomizer
   include EnemyAIRandomizer
   include StartingItemsRandomizer
+  include SkillSpriteRandomizer
   
   attr_reader :options,
               :seed,
@@ -405,6 +407,13 @@ class Randomizer
       yield [options_completed, "Randomizing skill stats..."]
       reset_rng()
       randomize_skill_stats()
+      options_completed += 1
+    end
+    
+    if options[:randomize_skill_sprites]
+      yield [options_completed, "Shuffling skill sprites..."]
+      reset_rng()
+      randomize_skill_sprites()
       options_completed += 1
     end
     
