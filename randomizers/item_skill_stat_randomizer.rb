@@ -2,8 +2,6 @@
 module ItemSkillStatRandomizer
   def get_n_damage_types(all_damage_types, possible_n_values)
     known_damage_type_names = all_damage_types.select{|name| name !~ /\d$/}
-    normal_damage_types = all_damage_types[0,8] & known_damage_type_names
-    known_damage_type_names += normal_damage_types # Double the chance of normal damage types compared to status effects and other bits.
     num_damage_types = possible_n_values.sample(random: rng)
     damage_types_to_set = known_damage_type_names.sample(num_damage_types)
     damage_types_to_set
@@ -249,8 +247,22 @@ module ItemSkillStatRandomizer
           end
         end
         
-        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
+        
+        if rng.rand() >= 0.30
+          # Increase the chance of a pure physical weapon.
+          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 2, 3])
+        else
+          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
+        end
+        
+        if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+          # 10% chance to add status effects.
+          damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
+        end
+        
+        # Add extra bits.
         damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+        
         item["Effects"].names.each_with_index do |bit_name, i|
           if damage_types_to_set.include?(bit_name)
             item["Effects"][i] = true
@@ -429,8 +441,22 @@ module ItemSkillStatRandomizer
         skill["Delay"] = named_rand_range_weighted(:glyph_attack_delay_range) unless progress_skill
       end
       
-      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16], [1, 1, 1, 2, 2, 3, 4])
+      
+      if GAME == "ooe" && rng.rand() >= 0.40
+        # Increase the chance of a pure physical glyph in OoE.
+        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 1, 2])
+      else
+        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
+      end
+      
+      if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+        # 10% chance to add status effects.
+        damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
+      end
+      
+      # Add extra bits.
       damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+      
       skill["Effects"].names.each_with_index do |bit_name, i|
         if bit_name == "Cures vampirism & kills undead"
           # Don't want to randomize this or Sanctuary won't work. Also don't want to give any other spells besides Sanctuary this.
