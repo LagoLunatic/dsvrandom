@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>621</height>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -239,39 +239,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_6">
-         <property name="title">
-          <string>Difficulty options</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_14">
-            <item>
-             <widget class="QCheckBox" name="enable_glitch_reqs">
-              <property name="toolTip">
-               <string>If checked, certain glitches may be necessary to beat the game.</string>
-              </property>
-              <property name="text">
-               <string>Allow requiring glitches to win</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_starting_items">
-              <property name="toolTip">
-               <string>Starts you out with 3 random extra items and 3 random extra skills.</string>
-              </property>
-              <property name="text">
-               <string>Bonus starting items</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
           <string>Experimental randomization options (buggy and not guaranteed completable)</string>
@@ -349,10 +316,105 @@
             </item>
            </layout>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_sprites">
+              <property name="text">
+               <string>Skill Sprites</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
          <zorder></zorder>
          <zorder></zorder>
          <zorder></zorder>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Difficulty Settings</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_16">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Difficulty level</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="difficulty_level"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <widget class="QCheckBox" name="enable_glitch_reqs">
+           <property name="toolTip">
+            <string>If checked, certain glitches may be necessary to beat the game.</string>
+           </property>
+           <property name="text">
+            <string>Allow requiring glitches to win</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="bonus_starting_items">
+           <property name="toolTip">
+            <string>Starts you out with 3 random extra items and 3 random extra skills.</string>
+           </property>
+           <property name="text">
+            <string>Bonus starting items</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Specify custom difficulty values below:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>590</width>
+            <height>418</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout_5">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -541,66 +603,6 @@
       <zorder>groupBox_2</zorder>
       <zorder>groupBox_4</zorder>
      </widget>
-     <widget class="QWidget" name="tab_3">
-      <attribute name="title">
-       <string>Difficulty Settings</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_7">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_16">
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Difficulty level</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="difficulty_level"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Specify custom difficulty values below:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>590</width>
-            <height>447</height>
-           </rect>
-          </property>
-          <layout class="QFormLayout" name="formLayout_5">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
    <item>
@@ -655,16 +657,19 @@
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
-  <tabstop>enable_glitch_reqs</tabstop>
-  <tabstop>randomize_starting_items</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_area_connections</tabstop>
   <tabstop>randomize_room_connections</tabstop>
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
+  <tabstop>randomize_skill_sprites</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
+  <tabstop>difficulty_level</tabstop>
+  <tabstop>enable_glitch_reqs</tabstop>
+  <tabstop>bonus_starting_items</tabstop>
+  <tabstop>scrollArea</tabstop>
   <tabstop>name_unnamed_skills</tabstop>
   <tabstop>unlock_all_modes</tabstop>
   <tabstop>reveal_breakable_walls</tabstop>

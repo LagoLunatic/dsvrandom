@@ -373,7 +373,7 @@ class Randomizer
       end
     end
     
-    if options[:randomize_starting_items]
+    if options[:bonus_starting_items]
       yield [options_completed, "Placing starting items..."]
       reset_rng()
       randomize_starting_items()

@@ -22,9 +22,10 @@ class RandomizerWindow < Qt::Dialog
     randomize_starting_room
     randomize_enemy_ai
     randomize_enemy_stats
-    randomize_starting_items
+    randomize_skill_sprites
     
     enable_glitch_reqs
+    bonus_starting_items
 
     name_unnamed_skills
     unlock_all_modes
