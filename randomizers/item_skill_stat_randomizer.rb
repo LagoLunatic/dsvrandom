@@ -467,5 +467,33 @@ module ItemSkillStatRandomizer
       
       skill.write_to_rom()
     end
+    
+    ooe_sort_glyph_tiers()
+  end
+  
+  def ooe_sort_glyph_tiers
+    return unless GAME == "ooe"
+    
+    # Sorts the damage, iframes, attack delay, and max at once of the tiers in each glyph family.
+    skills = game.items[SKILL_GLOBAL_ID_RANGE]
+    skills_by_family = skills.group_by{|skill| skill.name.match(/^(?:Vol |Melio )?(.*)$/)[1]}
+    skills_by_family = skills_by_family.values.select{|family| family.size > 1}
+    skills_by_family = skills_by_family.reject!{|family| ["---", ""].include?(family.first.name)}
+    
+    skills_by_family.each do |family|
+      sorted_dmg_mults = family.map{|skill| skill["DMG multiplier"]}.sort
+      sorted_iframes = family.map{|skill| skill["IFrames"]}.sort.reverse
+      sorted_delays = family.map{|skill| skill["Delay"]}.sort.reverse
+      sorted_max_at_onces = family.map{|skill| skill["Max at once"]}.sort
+      
+      family.each_with_index do |skill|
+        skill["DMG multiplier"] = sorted_dmg_mults.shift
+        skill["IFrames"] = sorted_iframes.shift
+        skill["Delay"] = sorted_delays.shift
+        skill["Max at once"] = sorted_max_at_onces.shift
+        
+        skill.write_to_rom()
+      end
+    end
   end
 end
