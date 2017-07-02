@@ -12,14 +12,51 @@ module EnemyStatRandomizer
         stat_mult_range_name = :enemy_stat_mult_range
       end
       enemy_dna["HP"]               = (enemy_dna["HP"]              *named_rand_range_weighted(stat_mult_range_name)).round
-      enemy_dna["MP"]               = (enemy_dna["MP"]              *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "dos"
-      enemy_dna["SP"]               = (enemy_dna["SP"]              *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "por"
-      enemy_dna["AP"]               = (enemy_dna["AP"]              *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "ooe"
-      enemy_dna["EXP"]              = (enemy_dna["EXP"]             *named_rand_range_weighted(stat_mult_range_name)).round
       enemy_dna["Attack"]           = (enemy_dna["Attack"]          *named_rand_range_weighted(stat_mult_range_name)).round
-      enemy_dna["Defense"]          = (enemy_dna["Defense"]         *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "dos"
-      enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*named_rand_range_weighted(stat_mult_range_name)).round if GAME == "por" || GAME == "ooe"
-      enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"] *named_rand_range_weighted(stat_mult_range_name)).round if GAME == "por" || GAME == "ooe"
+      
+      case GAME
+      when "dos"
+        if enemy_dna["Defense"] == 0 && rng.rand() >= 0.50
+          enemy_dna["Defense"] += rng.rand(0..5)
+        end
+        enemy_dna["Defense"] = (enemy_dna["Defense"]*named_rand_range_weighted(stat_mult_range_name)).round
+      when "por", "ooe"
+        if enemy_dna["Physical Defense"] == 0 && rng.rand() >= 0.50
+          enemy_dna["Physical Defense"] += rng.rand(0..5)
+        end
+        if enemy_dna["Magical Defense"] == 0 && rng.rand() >= 0.50
+          enemy_dna["Magical Defense"] += rng.rand(0..5)
+        end
+        
+        if rng.rand() >= 0.50
+          # 50% chance to change up the enemy's physical and magical defense.
+          case rng.rand(1..3)
+          when 1
+            # Swap phys and magic def.
+            enemy_dna["Physical Defense"], enemy_dna["Magical Defense"] = enemy_dna["Magical Defense"], enemy_dna["Physical Defense"]
+          when 2
+            # Set both phys and magic def to phys def.
+            enemy_dna["Physical Defense"], enemy_dna["Magical Defense"] = enemy_dna["Physical Defense"], enemy_dna["Physical Defense"]
+          when 3
+            # Set both phys and magic def to magic def.
+            enemy_dna["Physical Defense"], enemy_dna["Magical Defense"] = enemy_dna["Magical Defense"], enemy_dna["Magical Defense"]
+          end
+        end
+        
+        enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"]*named_rand_range_weighted(stat_mult_range_name)).round
+      end
+      
+      case GAME
+      when "dos"
+        enemy_dna["MP"] = (enemy_dna["MP"]*named_rand_range_weighted(stat_mult_range_name)).round
+      when "por"
+        enemy_dna["SP"] = (enemy_dna["SP"]*named_rand_range_weighted(stat_mult_range_name)).round
+      when "ooe"
+        enemy_dna["AP"] = (enemy_dna["AP"]*named_rand_range_weighted(stat_mult_range_name)).round
+      end
+      
+      enemy_dna["EXP"] = (enemy_dna["EXP"]*named_rand_range_weighted(stat_mult_range_name)).round
       
       # Don't let some stats be 0.
       enemy_dna["HP"]               = 1 if enemy_dna["HP"] < 1
