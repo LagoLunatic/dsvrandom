@@ -72,9 +72,11 @@ class RandomizerWindow < Qt::Dialog
     :skill_max_at_once_range        => "Skill Max-on-screen",
     :glyph_attack_delay_range       => "Glyph Attack Delay",
     
-    :enemy_stat_label               => "<b>Average Enemy Stat Multipliers</b>",
-    :enemy_stat_mult_range          => "Common Enemy Multiplier",
-    :boss_stat_mult_range           => "Boss Multiplier",
+    :enemy_stat_label               => "<b>Average Enemy Stats</b>",
+    :enemy_stat_mult_range          => "Common Enemy Stat Multiplier",
+    :enemy_num_weaknesses_range     => "Common Enemy # of Weaknesses",
+    :enemy_num_resistances_range    => "Common Enemy # of Resistances",
+    :boss_stat_mult_range           => "Boss Stat Multiplier",
   }
   
   slots "update_settings()"

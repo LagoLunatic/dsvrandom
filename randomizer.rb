@@ -72,6 +72,8 @@ class Randomizer
     :glyph_attack_delay_range       => 1..20,
     
     :enemy_stat_mult_range          => 0.5..2.5,
+    :enemy_num_weaknesses_range     => 0..8,
+    :enemy_num_resistances_range    => 0..8,
     :boss_stat_mult_range           => 0.75..1.25,
   }
   DIFFICULTY_LEVELS = {
@@ -103,6 +105,8 @@ class Randomizer
       :glyph_attack_delay_range       => 7,
     
       :enemy_stat_mult_range          => 1.0,
+      :enemy_num_weaknesses_range     => 2,
+      :enemy_num_resistances_range    => 2,
       :boss_stat_mult_range           => 1.0,
     }
   }

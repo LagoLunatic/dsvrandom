@@ -31,6 +31,39 @@ module EnemyStatRandomizer
       
       enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
       
+      if GAME == "ooe"
+        all_non_status_elements = ENEMY_DNA_BITFIELD_ATTRIBUTES["Weaknesses"][0,7]
+      else
+        all_non_status_elements = ENEMY_DNA_BITFIELD_ATTRIBUTES["Weaknesses"][0,8]
+      end
+      
+      if is_boss
+        # Make sure bosses have the same number of weaknesses/resistances as they originally did.
+        
+        orig_num_weaknesses = 0
+        all_non_status_elements.each_with_index do |name, i|
+          if enemy_dna["Weaknesses"][i]
+            orig_num_weaknesses += 1
+          end
+        end
+        
+        orig_num_resists = 0
+        all_non_status_elements.each_with_index do |name, i|
+          if enemy_dna["Resistances"][i]
+            orig_num_resists += 1
+          end
+        end
+        
+        num_weaknesses = orig_num_weaknesses
+        num_resists = orig_num_resists
+      else
+        num_weaknesses = named_rand_range_weighted(:enemy_num_weaknesses_range)
+        num_resists = named_rand_range_weighted(:enemy_num_resistances_range)
+      end
+      
+      weakness_names = all_non_status_elements.sample(num_weaknesses)
+      resist_names = all_non_status_elements.sample(num_resists)
+      
       [
         "Weaknesses",
         "Resistances",
@@ -38,10 +71,19 @@ module EnemyStatRandomizer
         enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
           next if bit_name == "Resistance 32" # Something related to rendering its GFX
           
-          # Randomize boss elemental weaknesses/resistances, but not status effect weaknesses, etc.
-          next if is_boss && i >= 8
-          
-          enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
+          if all_non_status_elements.include?(bit_name)
+            if bitfield_attr_name == "Weaknesses" && weakness_names.include?(bit_name) || bitfield_attr_name == "Resistances" && resist_names.include?(bit_name)
+              enemy_dna[bitfield_attr_name][i] = true
+            else
+              enemy_dna[bitfield_attr_name][i] = false
+            end
+          elsif is_boss
+            # Don't randomize boss status effect weaknesses.
+            next
+          else
+            # Status effects for common enemies.
+            enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
+          end
           
           if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
             # Don't set both the weakness and resistance bits for a given element.
