@@ -248,8 +248,7 @@ class RandomizerWindow < Qt::Dialog
         next
       end
       
-      is_float = option_value_range.begin.is_a?(Float) || option_value_range.end.is_a?(Float)
-      slider = DifficultySlider.new(@ui.scrollAreaWidgetContents, is_float)
+      slider = FloatSlider.new(@ui.scrollAreaWidgetContents)
       slider.minimum = option_value_range.begin
       slider.maximum = option_value_range.end
       
@@ -474,50 +473,24 @@ class ProgressDialog < Qt::ProgressDialog
   end
 end
 
-class DifficultySlider < Qt::Slider
-  def initialize(parent, is_float)
-    super(parent)
-    
-    @is_float = is_float
-  end
-  
+class FloatSlider < Qt::Slider
   def minimum=(min)
-    if @is_float
-      super(min*100)
-    else
-      super(min)
-    end
+    super(min*100)
   end
   
   def maximum=(max)
-    if @is_float
-      super(max*100)
-    else
-      super(max)
-    end
+    super(max*100)
   end
   
   def value=(val)
-    if @is_float
-      super(val*100)
-    else
-      super(val)
-    end
+    super(val*100)
   end
   
   def true_value
-    if @is_float
-      value/100.0
-    else
-      value
-    end
+    value/100.0
   end
   
   def tooltip_text
-    if @is_float
-      (value/100.0).to_s
-    else
-      value.to_s
-    end
+    (value/100.0).to_s
   end
 end

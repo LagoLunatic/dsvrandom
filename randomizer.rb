@@ -175,7 +175,7 @@ class Randomizer
       raise "Bad random range! Average #{average} not within range #{range}."
     end
     
-    if range.begin.is_a?(Float) || range.end.is_a?(Float) || average.is_a?(Float)
+    if range.begin.is_a?(Float) || range.end.is_a?(Float)
       float_mode = true
     end
     
