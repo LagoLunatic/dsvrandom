@@ -55,7 +55,7 @@ class Randomizer
     :weapon_attack_range            => 0..150,
     :weapon_iframes_range           => 4..55,
     :armor_defense_range            => 0..55,
-    :item_extra_stats_range         => 1..100,
+    :item_extra_stats_range         => 1..50,
     :restorative_amount_range       => 1..1000,
     :heart_restorative_amount_range => 1..350,
     :ap_increase_amount_range       => 1..65535,
@@ -181,7 +181,7 @@ class Randomizer
     
     theta = 2 * Math::PI * rng.rand()
     rho = Math.sqrt(-2 * Math.log(1 - rng.rand()))
-    stddev = (range.end-range.begin).to_f/4
+    stddev = (range.end-range.begin).to_f/5
     scale = stddev * rho
     x = average + scale * Math.cos(theta)
     #y = average + scale * Math.sin(theta) # Don't care about the second value
