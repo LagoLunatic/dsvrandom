@@ -573,6 +573,13 @@ module EnemyRandomizer
         room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
         enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn the Zombies
       end
+    when "Sea Stinger"
+      if rng.rand <= 0.10 # 10% chance to be a single Sea Stinger
+        enemy.var_a = 0
+        enemy.var_b = 0
+      else # 90% chance to be a spawner
+        enemy.var_a = rng.rand(2..12) # Max at once
+      end
     when "Skeleton"
       enemy.var_a = rng.rand(0..1) # Can jump away.
     when "Bone Archer"
