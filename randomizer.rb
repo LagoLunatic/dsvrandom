@@ -246,6 +246,7 @@ class Randomizer
       case GAME
       when "por"
         possible_max_up_ids = (0..0x5F).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        possible_max_up_ids -= [0x00, 0x04] # Don't let starting items (potion and high tonic) be max ups.
         2.times do
           max_up_id = possible_max_up_ids.sample(random: rng)
           possible_max_up_ids.delete(max_up_id)
@@ -253,6 +254,7 @@ class Randomizer
         end
       when "ooe"
         possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
         3.times do
           max_up_id = possible_max_up_ids.sample(random: rng)
           possible_max_up_ids.delete(max_up_id)
