@@ -904,10 +904,29 @@ module PickupRandomizer
     
     if event_entity.subtype == 0x65 # Mina's Talisman
       item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
-      # Item given when watching the event
-      game.fs.write(0x021CB9F4, [item_type].pack("C"))
-      game.fs.write(0x021CB9F8, [item_index].pack("C"))
-      # Item name shown in the corner of the screen
+      
+      if (0x3D..0x41).include?(pickup_global_id)
+        # Magic seal. These need to call a different function to be properly given.
+        
+        seal_index = pickup_global_id - 0x3D
+        # Seal given when watching the event
+        game.fs.write(0x021CB9F4, [seal_index].pack("C"))
+        game.fs.write(0x021CB9FC, [0xEB006ECF].pack("V")) # Call func 021E7540
+        # Seal given when skipping the event
+        game.fs.write(0x021CBC14, [seal_index].pack("C"))
+        game.fs.write(0x021CBC1C, [0xEB006E47].pack("V")) # Call func 021E7540
+      else
+        # Regular item.
+        
+        # Item given when watching the event
+        game.fs.write(0x021CB9F4, [item_type].pack("C"))
+        game.fs.write(0x021CB9F8, [item_index].pack("C"))
+        # Item given when skipping the event
+        game.fs.write(0x021CBC14, [item_type].pack("C"))
+        game.fs.write(0x021CBC18, [item_index].pack("C"))
+      end
+      
+      # Item name shown in the corner of the when watching the event screen
       game.fs.write(0x021CBA08, [item_type].pack("C"))
       game.fs.write(0x021CBA0C, [item_index].pack("C"))
       # Item given when skipping the event
