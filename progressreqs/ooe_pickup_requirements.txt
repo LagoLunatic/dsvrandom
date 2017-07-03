@@ -487,9 +487,9 @@ Rooms:
     01 (Vol Grando) (Event): 
   0B-01-02:
     room: tristisafterwaterfall
-    00 (Lovers Ring): 
-    01 (HEART Max Up): 
-    03 (Amanita): 
+    00 (Lovers Ring) (No glyphs): 
+    01 (HEART Max Up) (No glyphs): 
+    03 (Amanita) (No glyphs): 
   0B-01-03:
     room: tristisafterwaterfall
     00 (Irina) (Villager): 

@@ -228,6 +228,8 @@ module PickupRandomizer
       new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       
       if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+        # Place villagers anywhere that's accessible, with no weighting towards later areas.
+        
         valid_accessible_locations = previous_accessible_locations.map do |previous_accessible_region|
           possible_locations = previous_accessible_region.dup
           possible_locations -= @locations_randomized_to_have_useful_pickups
@@ -434,7 +436,6 @@ module PickupRandomizer
       locations -= checker.hidden_locations
       locations -= checker.event_locations
       locations -= checker.enemy_locations
-      locations -= checker.no_glyph_locations
       
       # Locations too close to the top of the room shouldn't be villagers, as the Torpor glyph would spawn above the screen and not be absorbable.
       locations_too_high_to_be_a_villager = ["00-05-07_01", "00-05-07_02", "00-05-08_02", "00-05-08_03", "00-05-0C_01", "00-06-09_00", "0D-00-04_00", "0D-00-0C_00"]
