@@ -256,7 +256,7 @@ module ItemSkillStatRandomizer
         end
         
         if damage_types_to_set.length < 4 && rng.rand() <= 0.10
-          # 10% chance to add status effects.
+          # 10% chance to add a status effect.
           damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
         end
         
@@ -450,7 +450,7 @@ module ItemSkillStatRandomizer
       end
       
       if damage_types_to_set.length < 4 && rng.rand() <= 0.10
-        # 10% chance to add status effects.
+        # 10% chance to add a status effect.
         damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
       end
       
@@ -494,10 +494,10 @@ module ItemSkillStatRandomizer
       skill.write_to_rom()
     end
     
-    ooe_sort_glyph_tiers()
+    ooe_handle_glyph_tiers()
   end
   
-  def ooe_sort_glyph_tiers
+  def ooe_handle_glyph_tiers
     return unless GAME == "ooe"
     
     # Sorts the damage, iframes, attack delay, and max at once of the tiers in each glyph family.
@@ -512,11 +512,37 @@ module ItemSkillStatRandomizer
       sorted_delays = family.map{|skill| skill["Delay"]}.sort.reverse
       sorted_max_at_onces = family.map{|skill| skill["Max at once"]}.sort
       
-      family.each_with_index do |skill|
+      prev_tier_damage_types = nil
+      family.each do |skill|
         skill["DMG multiplier"] = sorted_dmg_mults.shift
         skill["IFrames"] = sorted_iframes.shift
         skill["Delay"] = sorted_delays.shift
         skill["Max at once"] = sorted_max_at_onces.shift
+        
+        if prev_tier_damage_types
+          # Copy the lower tier's damage types to the higher tiers.
+          skill["Effects"] = prev_tier_damage_types
+          
+          current_damage_types = []
+          skill["Effects"].names.each_with_index do |bit_name, i|
+            break if i > 11
+            current_damage_types << bit_name if skill["Effects"][i]
+          end
+          
+          if rng.rand() >= 0.50 && current_damage_types.length < 4
+            # 50% chance for Vol to have one more damage type than normal, and for Melio to have one more damage type than Vol.
+            possible_new_damage_types = ITEM_BITFIELD_ATTRIBUTES["Effects"][0,16]
+            possible_new_damage_types -= current_damage_types
+            new_damage_type_name = get_n_damage_types(possible_new_damage_types, [1]).first
+            skill["Effects"].names.each_with_index do |bit_name, i|
+              if new_damage_type_name == bit_name
+                skill["Effects"][i] = true
+              end
+            end
+          end
+        end
+        
+        prev_tier_damage_types = skill["Effects"]
         
         skill.write_to_rom()
       end
