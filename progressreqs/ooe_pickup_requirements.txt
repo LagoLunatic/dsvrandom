@@ -562,7 +562,7 @@ Rooms:
 #Skeleton Cave:
   11-00-03:
     room: skelecave
-    00 (HP Max up): medium height | distance
+    00 (HP Max up) (No glyphs): medium height | distance
   11-00-05:
     room: skelecave
     01 (Black Drops) (Hidden): 
@@ -572,7 +572,7 @@ Rooms:
     00 (Ordinary Rock): 
   11-00-09:
     room: skelecave
-    00 (HEART Max Up): medium height
+    00 (HEART Max Up) (No glyphs): medium height
 #Monastery:
   12-00-03:
     room: monastery
