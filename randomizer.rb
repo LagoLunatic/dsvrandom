@@ -311,14 +311,6 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_boss_souls] && GAME == "dos"
-      # If the player beats Balore but doesn't own Balore's soul they will appear stuck. (Though they could always escape with suspend.)
-      # So get rid of the line of code Balore runs when he dies that recreates the Balore blocks in the room.
-      
-      game.fs.load_overlay(23)
-      game.fs.write(0x02300808, [0xE1A00000].pack("V"))
-    end
-    
     @original_enemy_dnas = []
     ENEMY_IDS.each do |enemy_id|
       enemy_dna = EnemyDNA.new(enemy_id, game.fs)
@@ -485,6 +477,22 @@ class Randomizer
       layer.tiles[0x2AD].index_on_tileset = 0x378
       layer.tiles[0x2AE].index_on_tileset = 0x378
       layer.write_to_rom()
+    end
+    
+    if options[:randomize_boss_souls] && GAME == "dos"
+      # If the player beats Balore but doesn't own Balore's soul they will appear stuck. (Though they could always escape with suspend.)
+      # So get rid of the line of code Balore runs when he dies that recreates the Balore blocks in the room.
+      
+      game.fs.load_overlay(23)
+      game.fs.write(0x02300808, [0xE1A00000].pack("V"))
+    end
+    
+    if options[:randomize_enemies] && GAME == "por"
+      # Remove the line of code that spawns the sand to go along with Sand Worm/Poison Worm.
+      # This sand can cause various bugs depending on the room, such as teleporting the player out of bounds, preventing the player from picking up items, and turning the background into an animated rainbow.
+      
+      game.fs.load_overlay(69)
+      game.fs.write(0x022DA394, [0xE3A00000].pack("V"))
     end
     
     if GAME == "dos" && options[:fix_first_ability_soul]

@@ -491,14 +491,6 @@ module EnemyRandomizer
         enemy.var_a = rng.rand(0xA0..0x1A0) # delay in frames between spawns
       end
     when "Sand Worm", "Poison Worm"
-      if enemy.room.height > 1
-        # Don't allow in tall rooms
-        return :redo
-      end
-      if enemy.room.width <= 1
-        # Don't allow in non-wide rooms
-        return :redo
-      end
       if enemy.room.doors.find{|door| door.y_pos >= 1}
         # Don't allow in rooms that have a door in the floor
         return :redo
