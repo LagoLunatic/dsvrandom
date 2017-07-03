@@ -613,6 +613,11 @@ module PickupRandomizer
         
         room.entities << cat
         room.write_entities_to_rom()
+        
+        # Remove the Tom in Anna's original room since he's not needed there.
+        original_cat = game.areas[7].sectors[0].rooms[6].entities[2]
+        original_cat.type = 0
+        original_cat.write_to_rom()
       end
     elsif entity.type == 1
       # Boss
