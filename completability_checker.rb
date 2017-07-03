@@ -9,7 +9,8 @@ class CompletabilityChecker
               :event_locations,
               :villager_locations,
               :hidden_locations,
-              :mirror_locations
+              :mirror_locations,
+              :no_glyph_locations
   
   def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
     @game = game
@@ -55,6 +56,7 @@ class CompletabilityChecker
     @villager_locations = []
     @hidden_locations = []
     @mirror_locations = []
+    @no_glyph_locations = []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
@@ -85,6 +87,9 @@ class CompletabilityChecker
           end
           if applies_to.end_with?(" (Mirror)")
             @mirror_locations << entity_str
+          end
+          if applies_to.end_with?(" (No glyphs)")
+            @no_glyph_locations << entity_str
           end
         end
       end

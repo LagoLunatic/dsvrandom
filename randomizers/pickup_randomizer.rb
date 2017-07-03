@@ -445,6 +445,10 @@ module PickupRandomizer
         !@rooms_that_already_have_an_event.include?(room_str)
       end
     end
+    if GAME == "ooe" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      # Don't put progression glyph in certain locations where the player could easily get them early.
+      locations -= checker.no_glyph_locations
+    end
     
     locations
   end

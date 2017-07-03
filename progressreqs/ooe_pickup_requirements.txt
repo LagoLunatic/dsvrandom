@@ -583,7 +583,7 @@ Rooms:
     05 (Magnes) (Event): 
   12-00-07:
     room: monasterymid
-    00 (Fool Ring): medium height | distance
+    00 (Fool Ring) (No glyphs): medium height | distance # No glyphs because it's such a low platform you can get the glyph without getting on top of the platform.
     01 (HP Max up): 
   12-00-08:
     room: monasterymid
