@@ -119,7 +119,9 @@ module EnemyStatRandomizer
             next
           else
             # Status effects for common enemies.
-            enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
+            if GAME == "dos" || bitfield_attr_name == "Weaknesses" # Don't set status effect resists in PoR/OoE since they do nothing anyway.
+              enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
+            end
           end
           
           if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
