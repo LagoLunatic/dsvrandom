@@ -117,6 +117,8 @@ class RandomizerWindow < Qt::Dialog
     
     update_settings()
     
+    self.resize(1, 1)
+    
     self.show()
   end
   
