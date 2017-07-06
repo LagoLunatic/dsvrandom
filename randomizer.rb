@@ -284,6 +284,7 @@ class Randomizer
       # Flags 12F-149 are unused in the base game but still work, so use those.
       @unused_picked_up_flags = (0x12F..0x149).to_a
     end
+    @used_picked_up_flags = []
     
     options_completed += 2
     

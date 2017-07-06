@@ -650,7 +650,7 @@ module PickupRandomizer
         picked_up_flag = entity.var_a
       end
       
-      if picked_up_flag.nil?
+      if picked_up_flag.nil? || @used_picked_up_flags.include?(picked_up_flag)
         picked_up_flag = @unused_picked_up_flags.pop()
         
         if picked_up_flag.nil?
@@ -667,6 +667,7 @@ module PickupRandomizer
           end
           entity.subtype = 1
           entity.var_a = picked_up_flag
+          @used_picked_up_flags << picked_up_flag
           entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         else # 20% chance to be a money chest
           entity.type = 2
@@ -690,6 +691,7 @@ module PickupRandomizer
         entity.type = 2
         entity.subtype = 0x4C # All-souls-owned item
         entity.var_a = picked_up_flag
+        @used_picked_up_flags << picked_up_flag
         entity.var_b = pickup_global_id + 1
         
         entity.write_to_rom()
@@ -698,6 +700,7 @@ module PickupRandomizer
         entity.type = 6 # All-quests-complete item
         entity.subtype = 7
         entity.var_a = picked_up_flag
+        @used_picked_up_flags << picked_up_flag
         entity.var_b = 6
         
         entity.write_to_rom()
@@ -724,6 +727,7 @@ module PickupRandomizer
           end
           entity.subtype = item_type
           entity.var_a = picked_up_flag
+          @used_picked_up_flags << picked_up_flag
           entity.var_b = item_index
         end
       else
@@ -733,6 +737,7 @@ module PickupRandomizer
         end
         entity.subtype = item_type
         entity.var_a = picked_up_flag
+        @used_picked_up_flags << picked_up_flag
         entity.var_b = item_index
       end
       
@@ -750,7 +755,7 @@ module PickupRandomizer
         picked_up_flag = nil
       end
       
-      if picked_up_flag.nil?
+      if picked_up_flag.nil? || @used_picked_up_flags.include?(picked_up_flag)
         picked_up_flag = @unused_picked_up_flags.pop()
         
         if picked_up_flag.nil?
@@ -770,6 +775,7 @@ module PickupRandomizer
         end
         entity.subtype = 1
         entity.var_a = picked_up_flag
+        @used_picked_up_flags << picked_up_flag
         entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         
         entity.write_to_rom()
@@ -782,6 +788,7 @@ module PickupRandomizer
         entity.subtype = 0x16
         entity.var_a = pickup_global_id + 1
         entity.var_b = picked_up_flag
+        @used_picked_up_flags << picked_up_flag
         
         entity.write_to_rom()
         return
@@ -793,6 +800,7 @@ module PickupRandomizer
           entity.type = 7
           entity.subtype = 0xFF
           entity.var_a = picked_up_flag
+          @used_picked_up_flags << picked_up_flag
           entity.var_b = pickup_global_id + 1
         else
           case rng.rand
@@ -802,11 +810,13 @@ module PickupRandomizer
             entity.subtype = 0x16
             entity.var_a = pickup_global_id + 1
             entity.var_b = picked_up_flag
+            @used_picked_up_flags << picked_up_flag
           when 0.70..0.95
             # 15% chance for an item on the ground
             entity.type = 4
             entity.subtype = 0xFF
             entity.var_a = picked_up_flag
+            @used_picked_up_flags << picked_up_flag
             entity.var_b = pickup_global_id + 1
           else
             # 5% chance for a hidden blue chest
@@ -814,6 +824,7 @@ module PickupRandomizer
             entity.subtype = 0x17
             entity.var_a = pickup_global_id + 1
             entity.var_b = picked_up_flag
+            @used_picked_up_flags << picked_up_flag
           end
         end
       else
@@ -823,6 +834,7 @@ module PickupRandomizer
           entity.type = 7
           entity.subtype = 2
           entity.var_a = picked_up_flag
+          @used_picked_up_flags << picked_up_flag
           entity.var_b = pickup_global_id + 1
         else
           puzzle_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32, 0x46, 0x4E]
@@ -834,6 +846,7 @@ module PickupRandomizer
             entity.type = 4
             entity.subtype = 2
             entity.var_a = picked_up_flag
+            @used_picked_up_flags << picked_up_flag
             entity.var_b = pickup_global_id + 1
           else
             # 50% chance for a glyph statue
