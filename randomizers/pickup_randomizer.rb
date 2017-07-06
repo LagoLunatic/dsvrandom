@@ -948,10 +948,6 @@ module PickupRandomizer
       # Item name shown in the corner of the when watching the event screen
       game.fs.write(0x021CBA08, [item_type].pack("C"))
       game.fs.write(0x021CBA0C, [item_index].pack("C"))
-      # Item given when skipping the event
-      game.fs.write(0x021CBC14, [item_type].pack("C"))
-      game.fs.write(0x021CBC18, [item_index].pack("C"))
-      
       # Also display the item's name in the corner when skipping the event.
       # We add a few new lines of code in free space for this.
       code = [0xE3A00000, 0xE3A010F0, 0xEBFDB6FD, 0xE1A00005, 0xEA042E64]
