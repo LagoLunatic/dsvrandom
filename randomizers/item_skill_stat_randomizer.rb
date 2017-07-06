@@ -183,6 +183,10 @@ module ItemSkillStatRandomizer
         num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
         extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
           item[stat_name] = named_rand_range_weighted(:item_extra_stats_range)
+          if item[stat_name] < 0 && stat_name == "Defense"
+            # Defense is unsigned
+            item[stat_name] = 0
+          end
         end
         
         item["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
@@ -308,6 +312,10 @@ module ItemSkillStatRandomizer
         num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
         extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
           item[stat_name] = named_rand_range_weighted(:item_extra_stats_range)
+          if item[stat_name] < 0 && stat_name == "Attack"
+            # Attack is unsigned
+            item[stat_name] = 0
+          end
         end
         
         unless item.name == "Casual Clothes"

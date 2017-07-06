@@ -55,7 +55,7 @@ class Randomizer
     :weapon_attack_range            => 0..150,
     :weapon_iframes_range           => 4..55,
     :armor_defense_range            => 0..55,
-    :item_extra_stats_range         => 1..50,
+    :item_extra_stats_range         => -25..50,
     :restorative_amount_range       => 1..1000,
     :heart_restorative_amount_range => 1..350,
     :ap_increase_amount_range       => 1..65535,
@@ -84,6 +84,7 @@ class Randomizer
       
       :item_drop_chance_range         => 13,
       :skill_drop_chance_range        => 8,
+      
       :item_price_range               => 5000,
       :weapon_attack_range            => 30,
       :weapon_iframes_range           => 30,
