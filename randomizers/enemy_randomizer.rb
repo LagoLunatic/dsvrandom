@@ -452,6 +452,11 @@ module EnemyRandomizer
       if num_enemies_in_room > 1
         return :redo
       end
+    when "Homunculus"
+      if enemy.room.width > 3 || enemy.room.height > 3
+        # Homunculus freaks out in large rooms.
+        return :redo
+      end
     end
   end
   
