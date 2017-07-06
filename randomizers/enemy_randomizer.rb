@@ -130,6 +130,10 @@ module EnemyRandomizer
       if GAME == "ooe" && room.area_index == 0xC
         @allowed_enemies_for_room -= [0x4B]
       end
+      # Don't allow Mimics in Large Cavern since they can't be opened there, for some unknown reason.
+      if GAME == "ooe" && room.area_index == 0xC
+        @allowed_enemies_for_room -= [0x4D]
+      end
       
       # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
       original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
