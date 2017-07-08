@@ -587,7 +587,7 @@ module EnemyRandomizer
         enemy.var_a = 0
         enemy.var_b = 0
       else # 90% chance to be a spawner
-        enemy.var_a = rng.rand(2..12) # Max at once
+        enemy.var_a = rng.rand(2..6) # Max at once
       end
     when "Skeleton"
       enemy.var_a = rng.rand(0..1) # Can jump away.
