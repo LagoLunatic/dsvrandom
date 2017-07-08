@@ -1,6 +1,8 @@
 
 module BossRandomizer
   def randomize_bosses
+    spoiler_log.puts "Shuffling bosses:"
+    
     dos_randomize_final_boss()
     
     boss_entities = []
@@ -94,7 +96,10 @@ module BossRandomizer
       if result == :skip
         next
       end
-      puts "BOSS %02X-%02X" % [old_boss_id, new_boss_id]
+      
+      spoiler_str = "  Replacing boss %02X (#{old_boss.name}) with boss %02X (#{new_boss.name})" % [old_boss_id, new_boss_id]
+      puts spoiler_str
+      spoiler_log.puts spoiler_str
       
       boss_entity.subtype = new_boss_id
       remaining_boss_ids.delete(new_boss_id)
@@ -165,6 +170,8 @@ module BossRandomizer
       
       boss.write_to_rom()
     end
+    
+    spoiler_log.puts "All bosses randomized successfully."
   end
   
   def dos_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
