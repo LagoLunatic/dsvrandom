@@ -230,13 +230,24 @@ module BossRandomizer
         if boss_index.nil?
           boss_index = 0
         end
-        boss_death_bit = (1 << boss_index)
-        game.fs.write(0x0219EF44, [boss_death_bit].pack("C"))
+        
+        game.fs.replace_hardcoded_bit_constant(0x0219EF44, boss_index)
       end
     when "Paranoia"
       if boss_entity.var_a == 1
         # Mini-paranoia.
         return :skip
+      elsif boss_entity.var_a == 2
+        # Normal Paranoia.
+        
+        # Mini Paranoia is hardcoded to disappear once Paranoia's boss death flag is set, so we need to switch him to use the new boss's boss death flag.
+        boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
+        if boss_index.nil?
+          boss_index = 0
+        end
+        
+        game.fs.load_overlay(35)
+        game.fs.replace_hardcoded_bit_constant(0x02305B1C, boss_index)
       end
     end
     
