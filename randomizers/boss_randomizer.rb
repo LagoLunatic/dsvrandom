@@ -216,6 +216,16 @@ module BossRandomizer
         boss_entity.write_to_rom()
         return :skip
       end
+    when "Gergoth"
+      if GAME == "dos" && boss_entity.room.sector_index == 5
+        # Condemned Tower. Replace the boss death flag checked by the floors of the tower so they check the new boss instead.
+        boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
+        if boss_index.nil?
+          boss_index = 0
+        end
+        boss_death_bit = (1 << boss_index)
+        game.fs.write(0x0219EF44, [boss_death_bit].pack("C"))
+      end
     when "Paranoia"
       if boss_entity.var_a == 1
         # Mini-paranoia.
