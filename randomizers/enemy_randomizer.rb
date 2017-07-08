@@ -309,17 +309,37 @@ module EnemyRandomizer
         enemy.y_pos = 0x60
       end
     end
-    if enemy.y_pos >= room_height - SCREEN_HEIGHT_IN_PIXELS
+    if enemy.y_pos >= room_height - 0x80
       close_to_down_door = enemy.room.doors.find{|door| door.direction == :down && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
       if close_to_down_door
         #puts "CLOSE DOWN %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
-        if room_height - 0x40 < enemy.y_pos
-          enemy.y_pos = room_height - 0x40
-        end
-        if (0x51..0xAF).include?(enemy.x_pos % 0x100)
-          # Over the center of a door.
-          # Also move it a little to the left or right a little, so it doesn't fall on the player's head.
-          enemy.x_pos = enemy.x_pos/0x100*0x100 + [0x50, 0xB0].sample(random: rng)
+        enemy.y_pos = room_height - 0x80
+      end
+    end
+    
+    # We either want the enemy to have a solid floor below it, or to have a jumpthrough floor which is not right at the bottom of the room.
+    # No floor at all would cause some enemies to crash the game, and others to be inside the door.
+    # A jumpthrough platform right at the bottom of the room would be on top of a door, and we don't want enemies on that since it would block the player.
+    solid_y = coll.get_floor_y(enemy, allow_jumpthrough: false)
+    jumpthrough_y = coll.get_floor_y(enemy, allow_jumpthrough: true)
+    if jumpthrough_y.nil? || (solid_y.nil? && jumpthrough_y >= room_height - 0x20)
+      #puts "NO FLOOR! %02X-%02X-%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index]
+      
+      # Try to move it 2 blocks left or right, that should fix it most of the time.
+      enemy.x_pos += 0x20
+      
+      solid_y = coll.get_floor_y(enemy, allow_jumpthrough: false)
+      jumpthrough_y = coll.get_floor_y(enemy, allow_jumpthrough: true)
+      if jumpthrough_y.nil? || (solid_y.nil? && jumpthrough_y >= room_height - 0x20)
+        enemy.x_pos -= 0x40
+        
+        solid_y = coll.get_floor_y(enemy, allow_jumpthrough: false)
+        jumpthrough_y = coll.get_floor_y(enemy, allow_jumpthrough: true)
+        if jumpthrough_y.nil? || (solid_y.nil? && jumpthrough_y >= room_height - 0x20)
+          # If moving it left or right didn't fix it, select a random floor position in the room.
+          # This code should never be run, it's not necessary for any known positions. It's just a failsafe.
+          random_floor_pos = coll.all_floor_positions.sample(random: rng)
+          enemy.x_pos, enemy.y_pos = random_floor_pos
         end
       end
     end
@@ -667,7 +687,9 @@ class RoomCollision
               :fs,
               :collision_layer,
               :collision_tileset,
-              :tiles
+              :tiles,
+              :room_width,
+              :room_height
   
   def initialize(room, fs)
     @room = room
@@ -681,6 +703,9 @@ class RoomCollision
     collision_layer.tiles.each do |tile|
       @tiles << collision_tileset.tiles[tile.index_on_tileset]
     end
+    
+    @room_width = room.width*SCREEN_WIDTH_IN_PIXELS
+    @room_height = room.height*SCREEN_HEIGHT_IN_PIXELS
   end
   
   def [](x, y)
@@ -694,9 +719,6 @@ class RoomCollision
   end
   
   def get_floor_y(entity, allow_jumpthrough: false)
-    room_width = room.width*SCREEN_WIDTH_IN_PIXELS
-    room_height = room.height*SCREEN_HEIGHT_IN_PIXELS
-    
     x = entity.x_pos
     chosen_y = nil
     (entity.y_pos..room_height-1).step(0x10) do |y|
@@ -714,5 +736,21 @@ class RoomCollision
     end
     
     return chosen_y
+  end
+  
+  def all_floor_positions
+    @all_floor_positions ||= begin
+      all_positions = []
+      
+      (0x10..room_height-1).step(0x10) do |y|
+        (0x10..room_width-0x11).step(0x10) do |x|
+          if self[x,y-0x10].is_blank && (self[x,y].is_solid? || self[x,y].is_jumpthrough_platform?)
+            all_positions << [x, y-0x10]
+          end
+        end
+      end
+      
+      all_positions
+    end
   end
 end
