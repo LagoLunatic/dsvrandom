@@ -177,6 +177,11 @@ module BossRandomizer
         # Balore has to be set as facing left OR right by the randomizer, he won't automatically face the direction the player entered from.
         return false
       end
+    when "Puppet Master"
+      # If Puppet Master is in a room less than 2 screens wide he can teleport the player out of bounds.
+      if boss_entity.room.width < 2
+        return false
+      end
     when "Zephyr"
       # If Zephyr spawns in a room that is 1 screen wide then either he or Soma will get stuck, regardless of what Zephyr's x pos is.
       if boss_entity.room.width < 2
