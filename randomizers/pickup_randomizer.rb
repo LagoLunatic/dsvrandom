@@ -115,6 +115,9 @@ module PickupRandomizer
     @locations_randomized_to_have_useful_pickups = []
     @rooms_that_already_have_an_event = []
     progression_pickups_placed = 0
+    total_progression_pickups = checker.all_progression_pickups.length
+    on_leftovers = false
+    
     game.each_room do |room|
       room.entities.each do |entity|
         if entity.is_special_object? && (0x5F..0x88).include?(entity.subtype)
@@ -124,7 +127,7 @@ module PickupRandomizer
         end
       end
     end
-    on_leftovers = false
+    
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
     while true
@@ -227,6 +230,8 @@ module PickupRandomizer
       
       new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       
+      possible_locations_to_choose_from = new_possible_locations.dup
+      
       if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
         # Place villagers anywhere that's accessible, with no weighting towards later areas.
         
@@ -243,7 +248,7 @@ module PickupRandomizer
         
         valid_accessible_locations += new_possible_locations
         
-        new_possible_locations = valid_accessible_locations
+        possible_locations_to_choose_from = valid_accessible_locations
       elsif new_possible_locations.empty?
         # No new locations, so select an old location.
         
@@ -280,19 +285,18 @@ module PickupRandomizer
           weighted_accessible_regions = valid_previous_accessible_regions.zip(ps).to_h
           previous_accessible_region = weighted_accessible_regions.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
           
-          new_possible_locations = previous_accessible_region
+          possible_locations_to_choose_from = previous_accessible_region
         else
           # Placing a main route progression pickup, just not one that immediately opens up new areas.
           # Always place in the most recent accessible region.
           
-          new_possible_locations = valid_previous_accessible_regions.last
+          possible_locations_to_choose_from = valid_previous_accessible_regions.last
         end
-      else
-        previous_accessible_locations << new_possible_locations
       end
       
-      #p "new_possible_locations: #{new_possible_locations}"
-      location = new_possible_locations.sample(random: rng)
+      previous_accessible_locations << new_possible_locations
+      
+      location = possible_locations_to_choose_from.sample(random: rng)
       @locations_randomized_to_have_useful_pickups << location
       
       if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
