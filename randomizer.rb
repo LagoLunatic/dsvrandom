@@ -536,6 +536,10 @@ class Randomizer
     if options[:reveal_breakable_walls]
       game.apply_armips_patch("#{GAME}_reveal_breakable_walls")
     end
+    
+    if options[:reveal_bestiary]
+      game.apply_armips_patch("#{GAME}_reveal_bestiary")
+    end
   end
   
   def inspect; to_s; end

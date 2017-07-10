@@ -466,6 +466,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="reveal_bestiary">
+            <property name="text">
+             <string>Reveal bestiary</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
