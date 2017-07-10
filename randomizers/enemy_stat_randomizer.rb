@@ -59,12 +59,16 @@ module EnemyStatRandomizer
       enemy_dna["EXP"] = (enemy_dna["EXP"]*named_rand_range_weighted(stat_mult_range_name)).round
       
       # Don't let some stats be 0.
-      enemy_dna["HP"]               = 1 if enemy_dna["HP"] < 1
-      enemy_dna["MP"]               = 1 if GAME == "dos" && enemy_dna["MP"] < 1
-      enemy_dna["SP"]               = 1 if GAME == "por" && enemy_dna["SP"] < 1
-      enemy_dna["AP"]               = 1 if GAME == "ooe" && enemy_dna["AP"] < 1
-      enemy_dna["EXP"]              = 1 if enemy_dna["EXP"] < 1
-      enemy_dna["Attack"]           = 1 if enemy_dna["Attack"] < 1
+      enemy_dna["HP"]     = 1 if enemy_dna["HP"] < 1
+      enemy_dna["MP"]     = 1 if GAME == "dos" && enemy_dna["MP"] < 1
+      enemy_dna["SP"]     = 1 if GAME == "por" && enemy_dna["SP"] < 1
+      enemy_dna["AP"]     = 1 if GAME == "ooe" && enemy_dna["AP"] < 1
+      enemy_dna["EXP"]    = 1 if enemy_dna["EXP"] < 1
+      enemy_dna["Attack"] = 1 if enemy_dna["Attack"] < 1
+      
+      # Don't let some stats be 5 digits long since they won't display properly in the bestiary.
+      enemy_dna["HP"]  = 9999 if enemy_dna["HP"] > 9999
+      enemy_dna["EXP"] = 9999 if enemy_dna["EXP"] > 9999
       
       enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
       
