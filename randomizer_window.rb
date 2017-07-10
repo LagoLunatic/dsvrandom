@@ -444,7 +444,16 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def open_about
-    @about_dialog = Qt::MessageBox::about(self, "DSVania Randomizer", "DSVania Randomizer Version #{DSVRANDOM_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/dsvrandom\n\nReport issues here:\nhttps://github.com/LagoLunatic/dsvrandom/issues")
+    @about_dialog = Qt::MessageBox.new
+    @about_dialog.setTextFormat(Qt::RichText)
+    @about_dialog.setWindowTitle("DSVania Randomizer")
+    text = "DSVania Randomizer Version #{DSVRANDOM_VERSION}<br><br>" + 
+      "Created by LagoLunatic<br><br>" + 
+      "Report issues here:<br><a href=\"https://github.com/LagoLunatic/dsvrandom/issues\">https://github.com/LagoLunatic/dsvrandom/issues</a><br><br>" +
+      "Source code:<br><a href=\"https://github.com/LagoLunatic/dsvrandom\">https://github.com/LagoLunatic/dsvrandom</a>"
+    @about_dialog.setText(text)
+    @about_dialog.windowIcon = self.windowIcon
+    @about_dialog.show()
   end
 end
 
