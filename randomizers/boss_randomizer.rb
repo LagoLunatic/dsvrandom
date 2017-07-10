@@ -322,6 +322,10 @@ module BossRandomizer
       end
       
       remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    when "Abaddon"
+      # Abaddon's locusts always appear on the top left screen, so make sure he's there as well.
+      boss_entity.x_pos = 0x80
+      boss_entity.y_pos = 0xB0
     else
       boss_entity.var_a = 1
     end
@@ -350,6 +354,8 @@ module BossRandomizer
     case new_boss.name
     when "Stella"
       boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
+    when "Brauner"
+      boss_entity.var_a = 0 # Boss rush Brauner, doesn't try to reload the room when he dies.
     when "Balore", "Gergoth", "Zephyr", "Aguni", "Abaddon"
       dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     end
@@ -364,8 +370,8 @@ module BossRandomizer
       elsif new_boss.name != "Giant Skeleton"
         boss_entity.room.entities.each do |entity|
           if entity.type == 2 && entity.subtype == 0x3E && entity.var_a == 1
-            # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
-            entity.var_a = 0
+            # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to remove them.
+            entity.type = 0
             entity.write_to_rom()
           end
         end
