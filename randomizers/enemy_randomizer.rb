@@ -446,19 +446,24 @@ module EnemyRandomizer
       enemy.var_a = (chance_a << 8) | enemy_id_a
       enemy.var_b = (chance_b << 8) | enemy_id_b
     when "White Dragon"
-      room_has_left_doors = !!enemy.room.doors.find{|door| door.direction == :left}
-      room_has_right_doors = !!enemy.room.doors.find{|door| door.direction == :right}
-      if room_has_left_doors && !room_has_right_doors
-        # On a right wall.
+      right_x = coll.get_right_wall_x(enemy)
+      left_x = coll.get_left_wall_x(enemy)
+      if right_x && left_x
+        if rng.rand <= 0.50
+          enemy.x_pos = right_x
+          enemy.var_a = 1
+        else
+          enemy.x_pos = left_x
+          enemy.var_a = 0
+        end
+      elsif right_x
+        enemy.x_pos = right_x
         enemy.var_a = 1
-        room_width = room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
-        enemy.x_pos = room_width - 0x10
-      elsif room_has_right_doors && !room_has_left_doors
-        # On a left wall.
+      elsif left_x
+        enemy.x_pos = left_x
         enemy.var_a = 0
-        enemy.x_pos = 0x10
       else
-        # Hard to know where to place this enemy if the room has both left and right doors.
+        # No walls to the left or right, don't place this enemy here.
         return :redo
       end
     when "Flying Humanoid"
@@ -736,6 +741,32 @@ class RoomCollision
     end
     
     return chosen_y
+  end
+  
+  def get_right_wall_x(entity)
+    y = entity.y_pos
+    chosen_x = nil
+    (entity.x_pos..room_width-1).step(0x10) do |x|
+      if self[x,y].is_solid?
+        chosen_x = x
+        break
+      end
+    end
+    
+    return chosen_x
+  end
+  
+  def get_left_wall_x(entity)
+    y = entity.y_pos
+    chosen_x = nil
+    (0..entity.x_pos-1).step(0x10) do |x|
+      if self[x,y].is_solid?
+        chosen_x = x
+        break
+      end
+    end
+    
+    return chosen_x
   end
   
   def all_floor_positions
