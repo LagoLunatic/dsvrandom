@@ -65,6 +65,13 @@ module BossRandomizer
     remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
     queued_dna_changes = Hash.new{|h, k| h[k] = {}}
     already_randomized_bosses = {}
+    if GAME == "dos"
+      @original_boss_seals = {}
+      (0..0x11).each do |boss_index|
+        seal_index = game.fs.read(MAGIC_SEAL_FOR_BOSS_LIST_START+boss_index*4, 4).unpack("V").first
+        @original_boss_seals[boss_index] = seal_index
+      end
+    end
     
     boss_entities.shuffle(random: rng).each do |boss_entity|
       old_boss_id = boss_entity.subtype
@@ -94,6 +101,7 @@ module BossRandomizer
         ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
       end
       if result == :skip
+        update_boss_doors(old_boss_id, new_boss_id, boss_entity)
         next
       end
       
@@ -110,18 +118,7 @@ module BossRandomizer
       already_randomized_bosses[old_boss_id] = new_boss_id
       already_randomized_bosses[new_boss_id] = old_boss_id
       
-      # Update the boss doors for the new boss
-      old_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[old_boss_id] || 0
-      new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
-      ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
-        room.entities.each do |entity|
-          if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE && entity.var_b == old_boss_door_var_b
-            entity.var_b = new_boss_door_var_b
-            
-            entity.write_to_rom()
-          end
-        end
-      end
+      update_boss_doors(old_boss_id, new_boss_id, boss_entity)
       
       # Give the new boss the old boss's soul so progression still works.
       queued_dna_changes[new_boss_id]["Soul"] = old_boss["Soul"]
@@ -397,5 +394,26 @@ module BossRandomizer
     
     julius_mode_final_boss = [menace_room_data, somacula_room_data].sample(random: rng)
     game.fs.write(0x0222BE14, julius_mode_final_boss)
+  end
+  
+  def update_boss_doors(old_boss_id, new_boss_id, boss_entity)
+    # Update the boss doors for the new boss
+    old_boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[old_boss_id] || 0
+    new_boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
+    ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
+      room.entities.each do |entity|
+        if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE && entity.var_b == old_boss_index
+          entity.var_b = new_boss_index
+          
+          entity.write_to_rom()
+        end
+      end
+    end
+    
+    if GAME == "dos"
+      # Make the boss door use the same seal as the boss that was originally in this position so progression isn't affected.
+      original_boss_door_seal = @original_boss_seals[old_boss_index]
+      game.fs.write(MAGIC_SEAL_FOR_BOSS_LIST_START+new_boss_index*4, [original_boss_door_seal].pack("V"))
+    end
   end
 end
