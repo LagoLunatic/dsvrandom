@@ -186,11 +186,6 @@ module BossRandomizer
       if boss_entity.room.width < 2
         return false
       end
-    when "Zephyr"
-      # If Zephyr spawns in a room that is 1 screen wide then either he or Soma will get stuck, regardless of what Zephyr's x pos is.
-      if boss_entity.room.width < 2
-        return false
-      end
     end
     
     if old_boss.name == "Rahab" && ["Malphas", "Dmitrii", "Dario", "Gergoth", "Zephyr", "Paranoia", "Abaddon"].include?(new_boss.name)
@@ -289,11 +284,17 @@ module BossRandomizer
       
       remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Zephyr"
-      # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
+      # Center him in the room.
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       
-      # Boss rush Zephyr.
-      boss_entity.var_a = 0
+      if boss_entity.room.width < 2
+        # Small room, so we need boss rush Zephyr. Normal Zephyr's intro cutscene doesn't work unless the room is 2 screens tall or more.
+        boss_entity.var_a = 0
+      else
+        # Normal Zephyr, with the cutscene.
+        boss_entity.var_a = 1
+        remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+      end
     when "Bat Company"
       remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Paranoia"
