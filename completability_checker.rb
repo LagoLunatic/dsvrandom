@@ -10,7 +10,9 @@ class CompletabilityChecker
               :villager_locations,
               :hidden_locations,
               :mirror_locations,
-              :no_glyph_locations
+              :no_soul_locations,
+              :no_glyph_locations,
+              :no_progression_locations
   
   def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
     @game = game
@@ -56,7 +58,9 @@ class CompletabilityChecker
     @villager_locations = []
     @hidden_locations = []
     @mirror_locations = []
+    @no_soul_locations = []
     @no_glyph_locations = []
+    @no_progression_locations = []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
@@ -73,23 +77,29 @@ class CompletabilityChecker
           @room_reqs[room_str][:entities][entity_index] = parsed_reqs
           
           entity_str = "#{room_str}_%02X" % entity_index
-          if applies_to.end_with?(" (Enemy)")
+          if applies_to.include?(" (Enemy)")
             @enemy_locations << entity_str
           end
-          if applies_to.end_with?(" (Event)")
+          if applies_to.include?(" (Event)")
             @event_locations << entity_str
           end
-          if applies_to.end_with?(" (Villager)")
+          if applies_to.include?(" (Villager)")
             @villager_locations << entity_str
           end
-          if applies_to.end_with?(" (Hidden)")
+          if applies_to.include?(" (Hidden)")
             @hidden_locations << entity_str
           end
-          if applies_to.end_with?(" (Mirror)")
+          if applies_to.include?(" (Mirror)")
             @mirror_locations << entity_str
           end
-          if applies_to.end_with?(" (No glyphs)")
+          if applies_to.include?(" (No souls)")
+            @no_soul_locations << entity_str
+          end
+          if applies_to.include?(" (No glyphs)")
             @no_glyph_locations << entity_str
+          end
+          if applies_to.include?(" (No progression)")
+            @no_progression_locations << entity_str
           end
         end
       end

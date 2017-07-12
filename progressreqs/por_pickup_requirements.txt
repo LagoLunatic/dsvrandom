@@ -786,13 +786,13 @@ Rooms:
 #Nest of Evil:
   09-00-1A:
     room: nestofevil
-    00 (Tome of Arms p1): 
+    00 (Tome of Arms p1) (No progression): 
   09-00-36:
     room: nestofevil
-    00 (Tome of Arms p2): 
+    00 (Tome of Arms p2) (No progression): 
   09-00-3D:
     room: bossdoppelganger
-    #03 (Doppelganger) (Enemy): 
+    #03 (Doppelganger) (Enemy) (No progression): 
   09-00-3E:
     room: bossdoppelganger
-    00 (Greatest Five): 
+    00 (Greatest Five) (No progression): 
