@@ -149,6 +149,8 @@ module PickupRandomizer
       
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
+      currently_useless_pickups = pickups_by_locations.select{|pickup, num_locations| num_locations == 0}
+      puts "Num useless pickups: #{currently_useless_pickups.size}"
       placing_currently_useless_pickup = false
       if pickups_by_usefulness.any?
         max_usefulness = pickups_by_usefulness.values.max
@@ -205,8 +207,12 @@ module PickupRandomizer
         break
       end
       
+      pickup_name = checker.defs.invert[pickup_global_id].to_s
+      puts "Trying to place #{pickup_name}"
+      
       possible_locations = checker.get_accessible_locations()
       possible_locations -= @locations_randomized_to_have_useful_pickups
+      puts "Total possible locations: #{possible_locations.size}"
       
       if !options[:randomize_boss_souls]
         # If randomize boss souls option is off, don't allow putting random things in these locations.
@@ -241,6 +247,18 @@ module PickupRandomizer
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
       new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
+      puts "New possible locations: #{new_possible_locations.size}"
+      
+      valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
+        possible_locations = previous_accessible_region.dup
+        possible_locations -= @locations_randomized_to_have_useful_pickups
+        
+        possible_locations = filter_locations_valid_for_pickup(possible_locations, pickup_global_id)
+        
+        possible_locations = nil if possible_locations.empty?
+        
+        possible_locations
+      end.compact
       
       possible_locations_to_choose_from = new_possible_locations.dup
       
@@ -263,17 +281,6 @@ module PickupRandomizer
         possible_locations_to_choose_from = valid_accessible_locations
       elsif new_possible_locations.empty?
         # No new locations, so select an old location.
-        
-        valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
-          possible_locations = previous_accessible_region.dup
-          possible_locations -= @locations_randomized_to_have_useful_pickups
-          
-          possible_locations = filter_locations_valid_for_pickup(possible_locations, pickup_global_id)
-          
-          possible_locations = nil if possible_locations.empty?
-          
-          possible_locations
-        end.compact
         
         if valid_previous_accessible_regions.empty?
           item_names = checker.current_items.map do |global_id|
@@ -303,6 +310,17 @@ module PickupRandomizer
           # Always place in the most recent accessible region.
           
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
+          puts "No new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"
+        end
+      elsif new_possible_locations.size <= 5 && valid_previous_accessible_regions.last.size >= 25
+        # There aren't many new locations unlocked by the last item we placed.
+        # But there are a lot of other locations unlocked by the one we placed before that.
+        # So we give it a chance to put it in one of those last spots, instead of the new spots.
+        # The chance is proportional to how few new locations there are. 1 = 50%, 2 = 40%, 3 = 30%, 4 = 20%, 5 = 10%.
+        chance = 0.10 + (5-new_possible_locations.size)*10
+        if rng.rand() <= chance
+          possible_locations_to_choose_from = valid_previous_accessible_regions.last
+          puts "Not many new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"
         end
       end
       
@@ -330,7 +348,7 @@ module PickupRandomizer
       is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
       spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str} (#{area_name})"
       spoiler_log.puts spoiler_str
-      #puts spoiler_str
+      puts spoiler_str
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
