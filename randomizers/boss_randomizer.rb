@@ -218,7 +218,7 @@ module BossRandomizer
     when "Gergoth"
       if GAME == "dos" && boss_entity.room.sector_index == 5
         # Condemned Tower. Replace the boss death flag checked by the floors of the tower so they check the new boss instead.
-        boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
+        boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id]
         if boss_index.nil?
           boss_index = 0
         end
@@ -233,7 +233,7 @@ module BossRandomizer
         # Normal Paranoia.
         
         # Mini Paranoia is hardcoded to disappear once Paranoia's boss death flag is set, so we need to switch him to use the new boss's boss death flag.
-        boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
+        boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id]
         if boss_index.nil?
           boss_index = 0
         end
@@ -399,8 +399,8 @@ module BossRandomizer
   
   def update_boss_doors(old_boss_id, new_boss_id, boss_entity)
     # Update the boss doors for the new boss
-    old_boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[old_boss_id] || 0
-    new_boss_index = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
+    old_boss_index = BOSS_ID_TO_BOSS_INDEX[old_boss_id] || 0
+    new_boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
     ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
       room.entities.each do |entity|
         if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE && entity.var_b == old_boss_index
