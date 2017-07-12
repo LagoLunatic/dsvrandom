@@ -140,6 +140,7 @@ module PickupRandomizer
       
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
+      placing_currently_useless_pickup = false
       if pickups_by_usefulness.any?
         max_usefulness = pickups_by_usefulness.values.max
         
@@ -188,6 +189,8 @@ module PickupRandomizer
         end
         
         pickup_global_id = valid_pickups.sample(random: rng)
+        
+        placing_currently_useless_pickup = true
       else
         # All progression pickups placed.
         break
@@ -232,8 +235,8 @@ module PickupRandomizer
       
       possible_locations_to_choose_from = new_possible_locations.dup
       
-      if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
-        # Place villagers anywhere that's accessible, with no weighting towards later areas.
+      if placing_currently_useless_pickup
+        # Place items that don't immediately open up new areas anywhere in the game, with no weighting towards later areas.
         
         valid_accessible_locations = previous_accessible_locations.map do |previous_accessible_region|
           possible_locations = previous_accessible_region.dup
