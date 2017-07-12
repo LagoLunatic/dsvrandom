@@ -30,6 +30,7 @@ Defs:
   sanctuary: 0x179
   cog: 0x4E
   puppet master: 0x151
+  speed up: 0x17A
   
   callswitch: change cube & call cube
   slide: lizard tail | frog | owl
@@ -47,6 +48,7 @@ Defs:
   medium height 2: double jump & shoulderjump | quad jump height
   quad jump height: quadjumpglitch | big height
   big height: owl | superjump
+  distance: speed up | big height
   
   entrance: call cube
   midentrance: entrance & callswitch | entrance & small height
@@ -497,7 +499,7 @@ Rooms:
     02 (Glamorous Pumps): 
   03-00-14:
     room: sandygrave
-    00 (Bwaka Knife): jumpglitch | medium height 2
+    00 (Bwaka Knife): jumpglitch | medium height 2 | distance & double jump
   03-00-16:
     room: sandygrave
     00 (Bahg Nahk): 
