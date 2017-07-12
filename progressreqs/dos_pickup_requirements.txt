@@ -223,7 +223,7 @@ Rooms:
 #Wizardry Lab:
   00-02-00:
     room: wizardry
-    00 (UMA News 4): cutallsuper | undervillage
+    00 (UMA News 4) (No souls): cutallsuper | undervillage
     01 (Scarf): 
   00-02-06:
     room: bossbalore
@@ -237,7 +237,7 @@ Rooms:
     01 (Money Chest): 
   00-02-10:
     room: wizardry & cutallsuper | hell & big height
-    00 (Aquarius): 
+    00 (Aquarius) (No souls): 
   00-02-12:
     room: wizardry & balore
     02 (Combat Knife): 
