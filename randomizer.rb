@@ -17,6 +17,7 @@ require_relative 'randomizers/starting_room_randomizer'
 require_relative 'randomizers/enemy_ai_randomizer'
 require_relative 'randomizers/starting_items_randomizer'
 require_relative 'randomizers/skill_sprites_randomizer'
+require_relative 'randomizers/enemy_anim_speed_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -34,6 +35,7 @@ class Randomizer
   include EnemyAIRandomizer
   include StartingItemsRandomizer
   include SkillSpriteRandomizer
+  include EnemyAnimSpeedRandomizer
   
   attr_reader :options,
               :seed,
@@ -435,6 +437,13 @@ class Randomizer
       yield [options_completed, "Randomizing wooden chests..."]
       reset_rng()
       randomize_wooden_chests()
+      options_completed += 1
+    end
+    
+    if options[:randomize_enemy_anim_speed]
+      yield [options_completed, "Randomizing enemy animation speed..."]
+      reset_rng()
+      randomize_enemy_anim_speeds()
       options_completed += 1
     end
     

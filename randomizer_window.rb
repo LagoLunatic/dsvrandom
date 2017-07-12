@@ -23,6 +23,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_enemy_ai
     randomize_enemy_stats
     randomize_skill_sprites
+    randomize_enemy_anim_speed
     
     enable_glitch_reqs
     bonus_starting_items

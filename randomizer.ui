@@ -325,6 +325,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_anim_speed">
+              <property name="text">
+               <string>Enemy Animation Speed</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -405,8 +412,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>418</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
