@@ -522,7 +522,7 @@ class Randomizer
       game.apply_armips_patch("dos_fix_luck")
     end
     
-    if GAME == "dos" && options[:unlock_boss_doors]
+    if GAME == "dos" && options[:unlock_boss_doors] || GAME == "dos" && options[:randomize_room_connections]
       game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
