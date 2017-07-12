@@ -20,6 +20,9 @@ module PickupRandomizer
     
     case GAME
     when "dos"
+      checker.add_item(0x43) # knife
+      checker.add_item(0x91) # casual clothes
+      
       checker.add_item(0x3D) # seal 1
       
       if options[:unlock_boss_doors]
@@ -29,6 +32,10 @@ module PickupRandomizer
         checker.add_item(0x41) # seal 5
       end
     when "por"
+      checker.add_item(0x61) # starting vampire killer
+      checker.add_item(0x6C) # encyclopedia
+      checker.add_item(0xAA) # casual clothes
+      
       checker.add_item(0x1AD) # call cube
       
       if options[:dont_randomize_change_cube]
@@ -56,8 +63,10 @@ module PickupRandomizer
       item_a.write_to_rom()
       item_b.write_to_rom()
     when "ooe"
+      checker.add_item(0xE6) # casual clothes
       checker.add_item(0x6F) # lizard tail
       checker.add_item(0x72) # glyph union
+      
       checker.add_item(0x1E) # torpor. the player will get enough of these as it is
       
       # Give the player the glyph sleeve in Ecclesia like in hard mode.

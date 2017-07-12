@@ -2,7 +2,6 @@
 NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
   [0x0, 0x37, 0x50, 0xE5, 0x100, 0x124, 0x139, 0x160] + # unequip dummy items (---)
   [0x161] + # unused vampire killer weapon
-  [0xE6] + # casual clothes
   (0x51..0x6E).to_a + # glyph unions
   (0xD7..0xE4).to_a + # no-damage medals
   [0xAE, 0xB6, 0xD6] # usable items with a hardcoded effect for quests
