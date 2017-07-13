@@ -1041,32 +1041,54 @@ module PickupRandomizer
         event.write_to_rom()
       end
     else
-      glyph_id_location = case event_entity.subtype
+      glyph_id_location, pickup_flag_read_location, pickup_flag_write_location, second_pickup_flag_read_location = case event_entity.subtype
       when 0x2F # Luminatio
-        0x022C4894
+        [0x022C4894, 0x022C483C, 0x022C4888]
       when 0x3B # Pneuma
-        0x022C28E8
+        [0x022C28E8, 0x022C2880, 0x022C28DC, 0x022C279C]
       when 0x44 # Lapiste
-        0x022C2CB0
+        [0x022C2CB0, 0x022C2C24, 0x022C2CA0]
       when 0x54 # Vol Umbra
-        0x022C2FBC
+        [0x022C2FBC, 0x022C2F70, 0x022C2FB4]
       when 0x4C # Vol Fulgur
-        0x022C2490
+        [0x022C2490, 0x022C2404, 0x022C2480]
       when 0x52 # Vol Ignis
-        0x0221F1A0
+        [0x0221F1A0, 0x0221F148, 0x0221F194]
       when 0x47 # Vol Grando
-        0x022C230C
+        [0x022C230C, 0x022C2584, 0x022C22FC]
       when 0x40 # Cubus
-        0x022C31DC
+        [0x022C31DC]
       when 0x53 # Morbus
-        0x022C2354
+        [0x022C2354, 0x022C2318, 0x022C2344]
       when 0x76 # Dominus Agony
-        0x022C25BC
+        [0x022C25BC]
       else
         return
       end
       
+      # What glyph is actually spawned.
       game.fs.write(glyph_id_location, [pickup_global_id+1].pack("C"))
+      
+      if pickup_flag_write_location
+        # The pickup flag set when you absorb the glyph.
+        pickup_flag = pickup_global_id+2
+        game.fs.write(pickup_flag_write_location, [pickup_flag].pack("C"))
+      end
+      
+      if pickup_flag_read_location
+        # The pickup flag read to decide whether you've completed this puzzle yet or not.
+        # This is determined by two lines of code:
+        
+        # The first loads the word in the bitfield containing the correct bit (0x20 bits in each word):
+        pickup_flag_word_offset = 0x40 + 4*(pickup_flag/0x20)
+        game.fs.write(pickup_flag_read_location, [pickup_flag_word_offset].pack("C"))
+        game.fs.write(second_pickup_flag_read_location, [pickup_flag_word_offset].pack("C")) if second_pickup_flag_read_location
+        
+        # The second does a tst on the exact bit within that word:
+        pickup_flag_bit_index = pickup_flag % 0x20
+        game.fs.replace_hardcoded_bit_constant(pickup_flag_read_location+4, pickup_flag_bit_index)
+        game.fs.replace_hardcoded_bit_constant(second_pickup_flag_read_location+4, pickup_flag_bit_index) if second_pickup_flag_read_location
+      end
     end
   end
 end
