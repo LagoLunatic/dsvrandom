@@ -445,9 +445,11 @@ module ItemSkillStatRandomizer
           skill["Max at once"] = named_rand_range_weighted(:skill_max_at_once_range)
         end
         
-        skill["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
         skill["Delay"] = named_rand_range_weighted(:glyph_attack_delay_range) unless progress_skill
       end
+      
+      iframes = named_rand_range_weighted(:weapon_iframes_range)
+      set_skill_iframes(skill, skill_global_id, iframes)
       
       
       if GAME == "ooe" && rng.rand() >= 0.40
@@ -555,5 +557,510 @@ module ItemSkillStatRandomizer
         skill.write_to_rom()
       end
     end
+  end
+  
+  def set_skill_iframes(skill, skill_global_id, iframes)
+    case GAME
+    when "dos"
+      dos_set_skill_iframes(skill, skill_global_id, iframes)
+    when "por"
+      por_set_skill_iframes(skill, skill_global_id, iframes)
+    when "ooe"
+      ooe_set_skill_iframes(skill, skill_global_id, iframes)
+    end
+  end
+  
+  def dos_set_skill_iframes(skill, skill_global_id, iframes)
+    skill_iframes_location = case skill_global_id
+    when 0xD2 # Skeleton
+      0x02207744
+    when 0xD3 # Zombie
+      0x02207F64
+    when 0xD4 # Axe Armor
+      0x0220C5D4
+    when 0xD5 # Student Witch
+      0x0220DF4C
+    when 0xD6 # Warg
+      0x0220A214
+    when 0xD7 # Bomber Armor
+      0x0220BD40
+    when 0xD8 # Amalaric Sniper
+      0x0220E3CC
+    when 0xD9 # Cave Troll
+      0x0220CDA4
+    when 0xDA # Waiter Skeleton
+      0x0220BB0C
+    when 0xDB # Slime
+      0x0220B628
+    when 0xDC # Yorick
+      0x022074F0
+    when 0xDD # Une
+      0x02206838
+    when 0xDE # Mandragora
+      0x0220ABE8
+    when 0xDF # Rycuda
+      0x02204750
+    when 0xE0 # Fleaman
+      0x0220A974
+    when 0xE1 # Ripper
+      # ???
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x0220A704, [iframes2].pack("C"))
+      
+      # ???
+      0x0220A72C
+    when 0xE2 # Guillotiner
+      # Head?
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x02203CAC, [iframes2].pack("C"))
+      
+      # Body?
+      0x02203B9C
+    when 0xE3 # Killer Clown
+      0x02206020
+    when 0xE4 # Malachi
+      0x02209C64
+    when 0xE5 # Disc Armor
+      0x0220B198
+    when 0xE6 # Great Axe Armor
+      0x0220A37C
+    when 0xE7 # Slaughterer
+      0x0220913C
+    when 0xE8 # Hell Boar
+      0x0220913C # same as slaughterer
+    when 0xE9 # Frozen Shade
+      0x02208BAC
+    when 0xEA # Merman
+      0x022087E8
+    when 0xEB # Larva
+      0x02203FD4
+    when 0xEC # Ukoback
+      0x02207120
+    when 0xED # Decarabia
+      0x02206B00
+    when 0xEE # Succubus
+      0x0220C924
+    when 0xEF # Slogra
+      0x0220652C
+    when 0xF0 # Erinys
+      0x02205CC0
+    when 0xF1 # Homunculus
+      0x02205998
+    when 0xF2 # Witch
+      0x02205604
+    when 0xF3 # Fish Head
+      0x0220546C
+    when 0xF4 # Mollusca
+      0x02204AA0
+    when 0xF5 # Dead Mate
+      0x02204418
+    when 0xF6 # Killer Fish
+      0x022037DC
+    when 0xF7 # Malacoda
+      0x02207AF4
+    when 0xF8 # Flame Demon
+      0x02209388
+    when 0xF9 # Aguni
+      0x02208244
+    when 0xFA # Abaddon
+      0x022097BC
+    when 0xFB # Hell Fire
+      # Need to change it to a normal constant mov, instead of copying an already used variable to r1.
+      game.fs.write(0x022035CC, [0xE3A01001].pack("V"))
+      
+      0x022035CC
+    when 0xFD # Holy Flame
+      0x02203138
+    when 0xFE # Blue Splash
+      0x02202C64
+    when 0xFF # Holy Lightning
+      0x02202738
+    when 0x100 # Cross
+      0x022021DC
+    when 0x101 # Holy Water
+      0x02201B38
+    when 0x102 # Grand Cross
+      0x02201438
+    when 0x105 # Black Panther
+      0x021E6980
+    when 0x106 # Armor Knight
+      0x021E492C
+    when 0x107 # Spin Devil
+      0x021DB510
+    when 0x108 # Skull Archer
+      0x021DEFB0
+    when 0x10A # Yeti
+      0x021E50B8
+    when 0x10B # Buer
+      0x021DC2B0
+    when 0x10C # Manticore
+      0x021DFC4C
+    when 0x10D # Mushussu
+      0x021DFC4C # Same as Manticore
+    when 0x10E # White Dragon
+      0x021DCE44
+    when 0x10F # Catoblepas
+      0x021DCE44 # Same as White Dragon
+    when 0x110 # Gorgon
+      0x021DCE44 # Same as White Dragon
+    when 0x111 # Persephone
+      0x021DB8A4
+    when 0x117 # Alura Une
+      0x021E111C
+    when 0x118 # Iron Golem
+      0x021E5EC8
+    when 0x119 # Bone Ark
+      0x021DE7D8
+    when 0x11A # Barbariccia
+      0x021E067C
+    when 0x11B # Valkyrie
+      0x021E067C # Same as Barbariccia
+    when 0x11C # Bat
+      0x021DC868
+    when 0x11D # Great Armor
+      0x021E4448
+    when 0x11E # Mini Devil
+      0x021E4024
+    when 0x11F # Harpy
+      0x021E387C
+    when 0x120 # Corpseweed
+      0x021E3124
+    when 0x121 # Quetzalcoatl
+      # Head
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x021E1BAC, [iframes2].pack("C"))
+      
+      # Body
+      0x021E1EF4
+    when 0x122 # Needles
+      0x021DD354
+    when 0x123 # Alastor
+      0x021DAE0C
+    when 0x124 # Gaibon
+      0x021DD868
+    when 0x125 # Gergoth
+      0x021DDE24
+    when 0x126 # Death
+      0x021DBB10
+    else
+      return
+    end
+    
+    game.fs.write(skill_iframes_location, [iframes].pack("C"))
+  end
+  
+  def por_set_skill_iframes(skill, skill_global_id, iframes)
+    if [0x156, 0x15A, 0x163, 0x164, 0x167].include?(skill_global_id)
+      # Not hardcoded.
+      skill["Var A"] = iframes
+      return
+    end
+    
+    skill_iframes_location = case skill_global_id
+    when 0x152 # Axe (Richter)
+      0x02212AE0
+    when 0x153 # Cross (Richter)
+      0x02212518
+    when 0x154 # Holy Water (Richter)
+      0x02211E68
+    when 0x155 # Grand Cross
+      0x02211404
+      0x022119EC
+    when 0x156 # Seiryu
+      # Not hardcoded
+      return
+    when 0x157 # Suzaku
+      0x0220B220
+    when 0x158 # Byakko
+      0x0220AFDC
+    when 0x159 # Genbu
+      0x0220D714 # doesn't matter?
+    when 0x15A # Knife
+      # Not hardcoded
+      return
+    when 0x15B # Axe
+      0x022110A8
+    when 0x15C # Cross
+      0x02210CB4
+    when 0x15D # Holy Water
+      0x02211E68 # same as richter's
+    when 0x15E # Bible
+      0x02210784
+    when 0x15F # Javelin
+      0x02210490
+    when 0x160 # Ricochet Rock
+      0x0220FF68
+    when 0x161 # Boomerang
+      0x0220F7E4
+    when 0x162 # Bwaka Knife
+      0x0220F4F0
+    when 0x163 # Shuriken
+      # Not hardcoded
+      return
+    when 0x164 # Yagyu Shuriken
+      # Not hardcoded
+      return
+    when 0x165 # Discus
+      0x0220B5AC
+    when 0x166 # Kunimitsu
+      0x0220EE38
+    when 0x167 # Kunai
+      # Not hardcoded
+      return
+    when 0x168 # Paper Airplane
+      0x0220E8A0
+    when 0x169 # Cream Pie
+      0x0220EB8C
+    when 0x16A # Crossbow
+      0x0220BAC0
+    when 0x16B # Dart
+      0x0220E444
+    when 0x16C # Grenade
+      0x0220DF10
+    when 0x16D # Steel Ball
+      0x0220DAB4
+    when 0x16E # Stonewall
+      0x0220D714 # doesn't matter? same as genbu
+    when 0x172 # Wrecking Ball
+      0x0220C9D0
+    when 0x173 # Rampage
+      0x0220C6A0
+    when 0x174 # Knee Strike
+      # Uses the player's iframes
+      return
+    when 0x175 # Aura Blast
+      0x0220C014
+    when 0x176 # Rocket Slash
+      0x0220C31C
+    when 0x177 # Toad Morph
+      0x021EEA88 # doesn't matter
+    when 0x179 # Sanctuary
+      0x021ED630
+    when 0x17A # Speed Up
+      0x021EDE74
+    when 0x17C # Eye for an Eye
+      0x021EBA20
+    when 0x17D # Clear Skies
+      0x021F1280
+    when 0x188 # Gale Force
+      0x021EC2CC
+    when 0x189 # Rock Riot
+      0x021EBE00
+    when 0x18A # Raging Fire
+      0x021EF984
+    when 0x18B # Ice Fang
+      0x021E9748
+    when 0x18C # Thunderbolt
+      0x021ED364
+    when 0x18D # Spirit of Light
+      0x021F019C
+    when 0x18E # Dark Rift
+      0x021EAE1C
+    when 0x18F # Tempest
+      0x021EA6CC
+    when 0x190 # Stone Circle
+      0x021ECEBC
+    when 0x191 # Ice Needle
+      0x021EC870
+    when 0x192 # Explosion
+      0x021F08F4
+    when 0x193 # Chain Lightning
+      0x021EFB2C
+    when 0x194 # Piercing Beam
+      0x021EA060
+    when 0x195 # Nightmare
+      0x021E9148
+    when 0x196 # Summon Medusa
+      0x021E8B9C
+    when 0x197 # Acidic Bubbles
+      0x021E876C
+    when 0x198 # Hex
+      0x021E82B0
+    when 0x199 # Salamander
+      # ???
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x021E79D0, [iframes2].pack("C"))
+      
+      # ???
+      0x021E7DA8
+    when 0x19A # Cocytus
+      0x021E9C00
+    when 0x19B # Thor's Bellow
+      0x021EB310
+    when 0x19C # Summon Crow
+      0x021E73D0
+    when 0x19D # Summon Ghost
+      # ???
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x021E73D0, [iframes2].pack("C"))
+      
+      # ???
+      0x021E6F4C
+    when 0x19E # Summon Skeleton
+      0x021E6C70
+    when 0x19F # Summon Gunman
+      0x021E68FC
+    when 0x1A0 # Summon Frog
+      0x021E640C
+    when 0x1A2 # Rush
+      0x021E26CC # ??? CHECK
+    when 0x1A3 # Holy Lightning
+      0x021E1FB0
+    when 0x1A4 # Axe Bomber
+      0x021E1668
+    when 0x1A5 # 1,000 Blades
+      0x021E0FE0
+    when 0x1A6 # Volcano
+      0x021E0B98
+    when 0x1A7 # Meteor
+      0x021E027C
+    when 0x1A8 # Grand Cruz
+      0x021DFF90
+    when 0x1A9 # Divine Storm
+      0x021DF5F8
+    when 0x1AA # Dark Gate
+      0x021DEC24
+    when 0x1AB # Greatest Five
+      0x021DE91C
+    else
+      return
+    end
+    
+    game.fs.write(skill_iframes_location, [iframes].pack("C"))
+  end
+  
+  def ooe_set_skill_iframes(skill, skill_global_id, iframes)
+    if skill["IFrames"]
+      skill["IFrames"] = iframes
+    end
+    
+    skill_iframes_location = case skill_global_id
+    when 0x19, 0x1A, 0x1B # Scutums
+      0x0207943C # useless
+    when 0x1C # Redire
+      0x020767B4
+    when 0x1D # Cubus
+      0x02078AC4
+    when 0x1E # Torpor
+      0x02079068
+    when 0x1F # Lapiste
+      0x0207142C
+    when 0x20 # Pneuma
+      0x02071EC4
+    when 0x21 # Ignis
+      0x02072318
+    when 0x22 # Vol Ignis
+      0x02072788
+    when 0x23 # Grando
+      0x02072B70
+    when 0x24 # Vol Grando
+      0x0207342C
+    when 0x25 # Fulgur
+      0x020742E8
+    when 0x26 # Vol Fulgur
+      0x02073F30
+    when 0x27 # Luminatio
+      0x0207483C
+    when 0x28 # Vol Luminatio
+      0x02074CD4
+    when 0x29 # Umbra
+      0x02075978
+    when 0x2A # Vol Umbra
+      0x02075248
+    when 0x2B # Morbus
+      0x020762DC
+    when 0x2C # Nitesco
+      0x02076DB8
+    when 0x2D # Acerbatus
+      0x020796E4
+    when 0x2E # Globus
+      0x0207A088
+    when 0x2F # Dextro Custos
+      0x02077328
+    when 0x30 # Sinestro Custos
+      0x02077328
+    when 0x31 # Dominus Hatred
+      # The first projectile you shoot up.
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x02077A08, [iframes2].pack("C"))
+      
+      # The rain of projectiles that comes down.
+      0X02077910
+    when 0x32 # Dominus Anger
+      0x02077F34
+    when 0x33 # Cat Tackle
+      0x02070AB0
+    when 0x34 # Cat Tail
+      0x02070E68
+    when 0x3B # Rapidus Fio
+      0x0207DCB0
+    when 0x47 # Fidelis Caries
+      0x020834A4
+    when 0x48 # Fidelis Alate
+      0x02082630
+    when 0x49 # Fidelis Polkir
+      0x0207EAC0
+    when 0x4A # Fidelis Noctua
+      0x02082A9C
+    when 0x4B # Fidelis Medusa
+      0x0207D554
+    when 0x4C # Fidelis Aranea
+      iframes += 30 # The game subtracts 15 iframes per level up, so we need to make sure it can't go below 0.
+      0x0207D744
+    when 0x4D # Fidelis Mortus
+      0x0207FE0C
+    when 0x4F # Agartha
+      0x02083918
+    when 0x55 # Pneuma union
+      0x020A0014
+    when 0x56 # Lapiste union
+      0x020A081C
+    when 0x57 # Ignis union
+      0x020A0E54
+    when 0x58 # Grando union
+      0x020A18B8
+    when 0x59 # Fulgur union
+      # ???
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x02073F30, [iframes2].pack("C"))
+      
+      # ???
+      0x02073FFC
+    when 0x5A # Fire+ice union
+      # Circling ice and fire parts
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x020A243C, [iframes2].pack("C"))
+      
+      # Center
+      0x020A25E4
+    when 0x5B # Light union
+      0x020A2AF4
+    when 0x5C # Dark union
+      0x020A372C
+    when 0x5D # Light+dark union
+      0x020A3DC8
+    when 0x66 # Nitesco union
+      0x020A5DF0
+    when 0x68 # Dominus union
+      0x020A7170
+    when 0x6A # Albus's optical shot
+      0x020A7E60
+    when 0x6C # Knife union
+      0x020A8748
+    when 0x6D # Confodere union
+      # This uses the iframes from the item data for the blade, but the petals have hardcoded iframes.
+      0x020A8F08
+    when 0x6E # Arcus union
+      # Single upwards arrow
+      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      game.fs.write(0x020A9458, [iframes2].pack("C"))
+      
+      # Rain of arrows
+      0x020A9268
+    else
+      return
+    end
+    
+    game.fs.write(skill_iframes_location, [iframes].pack("C"))
   end
 end
