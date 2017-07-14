@@ -370,7 +370,7 @@ class RandomizerWindow < Qt::Dialog
     end
     
     begin
-      randomizer = Randomizer.new(seed, game, options_hash, difficulty_settings_averages)
+      randomizer = Randomizer.new(seed, game, options_hash, @settings[:difficulty_level], difficulty_settings_averages)
     rescue StandardError => e
       Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
       return

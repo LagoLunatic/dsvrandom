@@ -114,7 +114,7 @@ class Randomizer
     }
   }
   
-  def initialize(seed, game, options, difficulty_settings_averages)
+  def initialize(seed, game, options, difficulty_level, difficulty_settings_averages)
     @seed = seed
     @game = game
     @options = options
@@ -145,6 +145,8 @@ class Randomizer
         @difficulty_settings[name] = average
       end
     end
+    @difficulty_level = difficulty_level
+    @user_given_difficulty_settings = difficulty_settings_averages
     
     load_randomizer_constants()
   end
@@ -232,16 +234,23 @@ class Randomizer
     options_completed = 0
     
     options_string = options.select{|k,v| v == true}.keys.join(", ")
+    if DIFFICULTY_LEVELS.keys.include?(@difficulty_level)
+      difficulty_settings_string = @difficulty_level
+    else
+      difficulty_settings_string = "Custom, settings:\n  " + @user_given_difficulty_settings.map{|k,v| "#{k}: #{v}"}.join("\n  ")
+    end
     
     FileUtils.mkdir_p("./logs")
     @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
     seed_log.puts "Seed: #{seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
     seed_log.puts "  Selected options: #{options_string}"
+    seed_log.puts "  Difficulty level: #{difficulty_settings_string}"
     seed_log.close()
     
     @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
     spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
     spoiler_log.puts "Selected options: #{options_string}"
+    spoiler_log.puts "Difficulty level: #{difficulty_settings_string}"
     
     @max_up_items = []
     if options[:randomize_item_stats]
