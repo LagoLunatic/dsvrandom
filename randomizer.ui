@@ -320,6 +320,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_17">
             <item>
              <widget class="QCheckBox" name="randomize_skill_sprites">
+              <property name="toolTip">
+               <string>Randomizes the graphics used by each skill.</string>
+              </property>
               <property name="text">
                <string>Skill Sprites</string>
               </property>
@@ -327,6 +330,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_enemy_anim_speed">
+              <property name="toolTip">
+               <string>Randomizes the speed at which each enemy's animations play at, which affects their attack speed.</string>
+              </property>
               <property name="text">
                <string>Enemy Animation Speed</string>
               </property>
@@ -412,8 +418,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>590</width>
+            <height>378</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">

@@ -25,6 +25,8 @@ Area Connections: Randomizes which areas connect to each other.
 Room Connections: Randomizes which rooms within an area connect to each other.
 Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies (extremely buggy).
+Skill Sprites: Randomizes the graphics used by each skill.
+Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.
 
 Every seed should be completable as long as you don't use the experimental options.
 If you think you've found a seed that's unwinnable, first check the spoiler log (located at /logs/spoiler_log.txt) to make sure you haven't missed something.
