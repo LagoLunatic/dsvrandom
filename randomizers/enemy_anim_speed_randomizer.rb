@@ -4,7 +4,11 @@ module EnemyAnimSpeedRandomizer
     game.enemy_dnas.each do |enemy_dna|
       speed_mult = rng.rand(0.33..3.0)
       
-      sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
+      begin
+        sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
+      rescue SpriteInfo::CreateCodeReadError
+        next
+      end
       sprite = sprite_info.sprite
       
       sprite.frame_delays.each do |frame_delay|
