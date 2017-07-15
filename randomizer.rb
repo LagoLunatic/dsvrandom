@@ -252,6 +252,37 @@ class Randomizer
     spoiler_log.puts "Selected options: #{options_string}"
     spoiler_log.puts "Difficulty level: #{difficulty_settings_string}"
     
+    if options[:randomize_area_connections]
+      yield [options_completed, "Connecting areas..."]
+      reset_rng()
+      randomize_transition_doors()
+      options_completed += 1
+    end
+    
+    if options[:randomize_room_connections]
+      yield [options_completed, "Connecting rooms..."]
+      reset_rng()
+      randomize_non_transition_doors()
+      options_completed += 1
+    end
+    
+    if options[:randomize_starting_room]
+      yield [options_completed, "Selecting starting room..."]
+      reset_rng()
+      game.fix_top_screen_on_new_game()
+      randomize_starting_room()
+      options_completed += 1
+    else
+      @starting_room = case GAME
+      when "dos"
+        game.areas[0].sectors[0].rooms[4]
+      when "por"
+        game.areas[0].sectors[0].rooms[0]
+      when "ooe"
+        game.areas[2].sectors[0].rooms[4]
+      end
+    end
+    
     @max_up_items = []
     if options[:randomize_item_stats]
       reset_rng()
@@ -353,37 +384,6 @@ class Randomizer
       reset_rng()
       randomize_bosses()
       options_completed += 1
-    end
-    
-    if options[:randomize_area_connections]
-      yield [options_completed, "Connecting areas..."]
-      reset_rng()
-      randomize_transition_doors()
-      options_completed += 1
-    end
-    
-    if options[:randomize_room_connections]
-      yield [options_completed, "Connecting rooms..."]
-      reset_rng()
-      randomize_non_transition_doors()
-      options_completed += 1
-    end
-    
-    if options[:randomize_starting_room]
-      yield [options_completed, "Selecting starting room..."]
-      reset_rng()
-      game.fix_top_screen_on_new_game()
-      randomize_starting_room()
-      options_completed += 1
-    else
-      @starting_room = case GAME
-      when "dos"
-        game.areas[0].sectors[0].rooms[4]
-      when "por"
-        game.areas[0].sectors[0].rooms[0]
-      when "ooe"
-        game.areas[2].sectors[0].rooms[4]
-      end
     end
     
     if options[:bonus_starting_items]
