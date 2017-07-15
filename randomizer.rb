@@ -302,7 +302,6 @@ class Randomizer
     if options[:randomize_starting_room]
       yield [options_completed, "Selecting starting room..."]
       reset_rng()
-      game.fix_top_screen_on_new_game()
       randomize_starting_room()
       options_completed += 1
     else

@@ -1,6 +1,8 @@
 
 module StartingRoomRandomizer
   def randomize_starting_room
+    game.fix_top_screen_on_new_game()
+    
     rooms = []
     game.each_room do |room|
       next if room.layers.length == 0
