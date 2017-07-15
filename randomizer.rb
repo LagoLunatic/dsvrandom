@@ -353,7 +353,7 @@ class Randomizer
       @unused_picked_up_flags = (0x7A..0x7F).to_a
     when "por"
       # We don't need spare pickup flags for the pickup randomizer in PoR, but we do need it for the starting item randomizer.
-      @unused_picked_up_flags = (0x177..0x17F).to_a
+      @unused_picked_up_flags = (0x16D..0x174).to_a + (0x177..0x17F).to_a
     when "ooe"
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
       # Flags 12F-149 are unused in the base game but still work, so use those.
