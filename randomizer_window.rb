@@ -32,10 +32,12 @@ class RandomizerWindow < Qt::Dialog
     unlock_all_modes
     reveal_breakable_walls
     reveal_bestiary
+    remove_area_names
     fix_first_ability_soul
-    no_touch_screen
     fix_luck
+    no_touch_screen
     unlock_boss_doors
+    remove_slot_machines
     fix_infinite_quest_rewards
     dont_randomize_change_cube
     open_world_map
@@ -119,7 +121,7 @@ class RandomizerWindow < Qt::Dialog
     
     update_settings()
     
-    self.resize(1, 1)
+    self.resize(640, 1)
     
     self.show()
   end

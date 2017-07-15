@@ -545,6 +545,17 @@ class Randomizer
     end
     
     if GAME == "dos" && options[:unlock_boss_doors] || GAME == "dos" && options[:randomize_room_connections]
+    if GAME == "dos" && options[:remove_slot_machines]
+      game.each_room do |room|
+        room.entities.each do |entity|
+          if entity.is_special_object? && entity.subtype == 0x26
+            entity.type = 0
+            entity.write_to_rom()
+          end
+        end
+      end
+    end
+    
       game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
@@ -570,6 +581,26 @@ class Randomizer
     
     if options[:reveal_bestiary]
       game.apply_armips_patch("#{GAME}_reveal_bestiary")
+    end
+    
+    if options[:remove_area_names]
+      area_name_subtype = case GAME
+      when "dos"
+        0x06
+      when "por"
+        0x79
+      when "ooe"
+        0x55
+      end
+      
+      game.each_room do |room|
+        room.entities.each do |entity|
+          if entity.is_special_object? && entity.subtype == area_name_subtype
+            entity.type = 0
+            entity.write_to_rom()
+          end
+        end
+      end
     end
   end
   

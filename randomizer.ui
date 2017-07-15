@@ -442,21 +442,18 @@
          <property name="title">
           <string>All Games</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_10">
-          <item>
-           <widget class="QCheckBox" name="name_unnamed_skills">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="reveal_breakable_walls">
             <property name="toolTip">
-             <string>Gives Julius/Yoko/Alucard/Arma Felix/Arma Chiroptera's skills names so they can be distinguished from one another.</string>
+             <string>Breakable walls will always blink as if you have Peeping Eye/Eye for Decay on.</string>
             </property>
             <property name="text">
-             <string>Name unnamed skills</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Reveal breakable walls</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QCheckBox" name="unlock_all_modes">
             <property name="toolTip">
              <string>Unlocks alternate modes that normally require you to beat the main game first.</string>
@@ -469,20 +466,33 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="reveal_breakable_walls">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="name_unnamed_skills">
             <property name="toolTip">
-             <string>Breakable walls will always blink as if you have Peeping Eye/Eye for Decay on.</string>
+             <string>Gives Julius/Yoko/Alucard/Arma Felix/Arma Chiroptera's skills names so they can be distinguished from one another.</string>
             </property>
             <property name="text">
-             <string>Reveal breakable walls</string>
+             <string>Name unnamed skills</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="0">
            <widget class="QCheckBox" name="reveal_bestiary">
             <property name="text">
              <string>Reveal bestiary</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="remove_area_names">
+            <property name="text">
+             <string>Remove area names</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -494,34 +504,15 @@
          <property name="title">
           <string>Dawn of Sorrow</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QCheckBox" name="fix_first_ability_soul">
-            <property name="toolTip">
-             <string>Fixes a bug where the first ability soul you get would enable multiple ability souls.</string>
-            </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="remove_slot_machines">
             <property name="text">
-             <string>Fix first ability soul bug</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Remove slot machines</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="fix_luck">
-            <property name="toolTip">
-             <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
-            </property>
-            <property name="text">
-             <string>Fix luck</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
+          <item row="0" column="2">
            <widget class="QCheckBox" name="no_touch_screen">
             <property name="toolTip">
              <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
@@ -534,13 +525,39 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="fix_first_ability_soul">
+            <property name="toolTip">
+             <string>Fixes a bug where the first ability soul you get would enable multiple ability souls.</string>
+            </property>
+            <property name="text">
+             <string>Fix first ability soul bug</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
            <widget class="QCheckBox" name="unlock_boss_doors">
             <property name="toolTip">
              <string>You don't need to own a certain magic seal to open boss doors.</string>
             </property>
             <property name="text">
              <string>Unlock boss doors</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="fix_luck">
+            <property name="toolTip">
+             <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
+            </property>
+            <property name="text">
+             <string>Fix luck</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -690,13 +707,6 @@
   <tabstop>enable_glitch_reqs</tabstop>
   <tabstop>bonus_starting_items</tabstop>
   <tabstop>scrollArea</tabstop>
-  <tabstop>name_unnamed_skills</tabstop>
-  <tabstop>unlock_all_modes</tabstop>
-  <tabstop>reveal_breakable_walls</tabstop>
-  <tabstop>fix_first_ability_soul</tabstop>
-  <tabstop>fix_luck</tabstop>
-  <tabstop>no_touch_screen</tabstop>
-  <tabstop>unlock_boss_doors</tabstop>
   <tabstop>fix_infinite_quest_rewards</tabstop>
   <tabstop>dont_randomize_change_cube</tabstop>
   <tabstop>open_world_map</tabstop>
