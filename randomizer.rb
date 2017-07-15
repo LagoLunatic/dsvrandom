@@ -577,7 +577,6 @@ class Randomizer
       game.apply_armips_patch("dos_fix_luck")
     end
     
-    if GAME == "dos" && options[:unlock_boss_doors] || GAME == "dos" && options[:randomize_room_connections]
     if GAME == "dos" && options[:remove_slot_machines]
       game.each_room do |room|
         room.entities.each do |entity|
@@ -589,7 +588,23 @@ class Randomizer
       end
     end
     
+    room_rando = options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+    
+    if GAME == "dos" && options[:unlock_boss_doors] || GAME == "dos" && room_rando
       game.apply_armips_patch("dos_skip_boss_door_seals")
+    end
+    
+    if GAME == "dos" && room_rando
+      # Remove the special code for the slide puzzle.
+      game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
+      game.each_room do |room|
+        room.entities.each do |entity|
+          if entity.is_special_object? && entity.subtype == 0x0D
+            entity.type = 0
+            entity.write_to_rom()
+          end
+        end
+      end
     end
     
     if GAME == "por" && options[:fix_infinite_quest_rewards]
