@@ -69,18 +69,18 @@ Defs:
   bosspuppet: puppetguesthouse & medium height & seal 3 | puppetguesthouse & medium height & hwarp
   towerguesthouse: garden & small | uppergarden | pinnacle
   uppertowerguesthouse: pinnacle | towerguesthouse & vwarp
-  bossparanoia: uppertowerguesthouse & axearmor & killer clown & ukoback
+  bossparanoia: uppertowerguesthouse & axearmor & killer clown & ukoback & seal 4 | uppertowerguesthouse & axearmor & killer clown & ukoback & hwarp
   
   wizardry: villagewatergate | garden | hell & big height
   lowerwizardry: hell & height & puppet master & skeleton ape & rahab | hell & height & bone ark & rahab | wizardry & cutallsuper
-  bossbalore: wizardry
+  bossbalore: wizardry & seal 1 | wizardry & hwarp
   
   chapel: garden | condemntower | hell & rahab
   bossdmitrii: chapel & seal 2 | chapel & hwarp
   bossmalphas: bossdmitrii & seal 2
   
   condemntower: chapel & cutallsuper | chapel & small | clocktower & hwarp
-  bossgergoth: condemntower & height
+  bossgergoth: condemntower & height & seal 3 | condemntower & height & hwarp
   aftergergoth: bossgergoth & big height | bossgergoth & malphas & flying armor | bossgergoth & puppet master & flying armor | bossgergoth & malphas & puppet master | bossgergoth & black panther
   
   hellintro: chapel & small | chapel & hwarp | hellcenter & rahab
@@ -101,7 +101,8 @@ Defs:
   bossdeath: mine & height & seal 5 | mine & height & hwarp
   
   abyss: bossdeath
-  bossabaddon: abyss & big height | abyss & medium height & hwarp
+  beforeabaddon: abyss & big height | abyss & medium height & hwarp
+  bossabaddon: beforeabaddon & seal 5 | beforeabaddon & axesuper
   
   beat game: bossabaddon
 
@@ -317,7 +318,7 @@ Rooms:
     02 (Anti-Venom): 
   00-04-13:
     room: bossdmitrii
-    00 (Hoop Earring): medium height & backdashjump
+    00 (Hoop Earring): medium height & backdashjump | big height | black panther | medium height & flying armor
   00-04-14:
     room: chapel
     00 (Potion): 
@@ -351,7 +352,7 @@ Rooms:
     02 (Death) (Enemy): 
 #Subterranean Hell:
   00-06-02:
-    room: hell & medium height
+    room: hell & medium height | hell & height & distance
     00 (Eversing): 
   00-06-04:
     room: hell
