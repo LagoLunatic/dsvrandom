@@ -346,7 +346,8 @@ module PickupRandomizer
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
       is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
-      spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str} (#{area_name})"
+      is_mirror_str = checker.mirror_locations.include?(location) ? " (mirror)" : ""
+      spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
       spoiler_log.puts spoiler_str
       puts spoiler_str
       
