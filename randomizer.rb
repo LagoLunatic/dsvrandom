@@ -482,7 +482,7 @@ class Randomizer
     end
     
     if options[:randomize_enemy_anim_speed]
-      yield [options_completed, "Randomizing enemy anim speed..."]
+      yield [options_completed, "Randomizing enemy speed..."]
       reset_rng()
       randomize_enemy_anim_speeds()
       options_completed += 1
