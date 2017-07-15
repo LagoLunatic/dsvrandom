@@ -468,6 +468,19 @@ class Randomizer
   end
   
   def apply_tweaks
+    # Adds the seed to the start a new game menu text.
+    game_start_text_id = case GAME
+    when "dos"
+      0x421
+    when "por"
+      0x5BC
+    when "ooe"
+      0x4C5
+    end
+    text = game.text_database.text_list[game_start_text_id]
+    text.decoded_string = "Starts a new game. Seed:\\n#{@seed}"
+    game.text_database.write_to_rom()
+    
     if GAME == "dos"
       # Modify that one pit in the Demon Guest House so the player can't get stuck in it without double jump.
       
