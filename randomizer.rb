@@ -101,7 +101,7 @@ class Randomizer
       :crush_or_union_dmg_range       => 38,
       :subweapon_sp_to_master_range   => 1500,
       :spell_charge_time_range        => 32,
-      :skill_mana_cost_range          => 30,
+      :skill_mana_cost_range          => 25,
       :crush_mana_cost_range          => 150,
       :union_heart_cost_range         => 20,
       :skill_max_at_once_range        => 2,
@@ -111,7 +111,40 @@ class Randomizer
       :enemy_num_weaknesses_range     => 2,
       :enemy_num_resistances_range    => 2,
       :boss_stat_mult_range           => 1.0,
-    }
+    },
+    "Normal" => {
+      :max_room_difficulty_mult       => 2.75,
+      :max_enemy_difficulty_mult      => 1.8,
+      :enemy_id_preservation_exponent => 3.5,
+      
+      :item_drop_chance_range         => 11,
+      :skill_drop_chance_range        => 6,
+      
+      :item_price_range               => 8000,
+      :weapon_attack_range            => 14,
+      :weapon_iframes_range           => 39,
+      :armor_defense_range            => 4,
+      :item_extra_stats_range         => -5,
+      :restorative_amount_range       => 150,
+      :heart_restorative_amount_range => 50,
+      :ap_increase_amount_range       => 1600,
+      
+      :skill_price_range              => 12000,
+      :skill_dmg_range                => 8.5,
+      :crush_or_union_dmg_range       => 33,
+      :subweapon_sp_to_master_range   => 1700,
+      :spell_charge_time_range        => 45,
+      :skill_mana_cost_range          => 30,
+      :crush_mana_cost_range          => 175,
+      :union_heart_cost_range         => 30,
+      :skill_max_at_once_range        => 1.5,
+      :glyph_attack_delay_range       => 8.5,
+      
+      :enemy_stat_mult_range          => 1.75,
+      :enemy_num_weaknesses_range     => 0.75,
+      :enemy_num_resistances_range    => 3.25,
+      :boss_stat_mult_range           => 1.12,
+    },
   }
   
   def initialize(seed, game, options, difficulty_level, difficulty_settings_averages)
