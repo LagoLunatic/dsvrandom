@@ -527,6 +527,13 @@ class Randomizer
       layer.write_to_rom()
     end
     
+    if GAME == "dos"
+      # Move the boss door to the left of Zephyr's room to the correct spot so it's not offscreen.
+      boss_door = game.areas[0].sectors[8].rooms[0xD].entities[1]
+      boss_door.x_pos = 0xF0
+      boss_door.write_to_rom()
+    end
+    
     if GAME == "ooe" && options[:open_world_map]
       game.apply_armips_patch("ooe_nonlinear")
       
