@@ -548,6 +548,11 @@ module EnemyRandomizer
         enemy.var_b = rng.rand(100..room_width) # Max horizontal distance in pixels from the spawner to spawn them
       end
     when "Skeleton Gunman"
+      if enemy.room.width > 3
+        # Skeleton Gunmen can shoot from offscreen, which can be unfair in wide rooms, and make the game impossible if they're in the train room.
+        return :redo
+      end
+      
       room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
       max_left_dist = enemy.x_pos - 0x10
       max_right_dist = room_width - enemy.x_pos - 0x10
