@@ -285,6 +285,10 @@ class Randomizer
     spoiler_log.puts "Selected options: #{options_string}"
     spoiler_log.puts "Difficulty level: #{difficulty_settings_string}"
     
+    if options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+      options[:unlock_boss_doors] = true
+    end
+    
     if options[:randomize_area_connections]
       yield [options_completed, "Connecting areas..."]
       reset_rng()
@@ -595,12 +599,11 @@ class Randomizer
       end
     end
     
-    room_rando = options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
-    
-    if GAME == "dos" && options[:unlock_boss_doors] || GAME == "dos" && room_rando
+    if GAME == "dos" && options[:unlock_boss_doors]
       game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
+    room_rando = options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
     if GAME == "dos" && room_rando
       # Remove the special code for the slide puzzle.
       game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
