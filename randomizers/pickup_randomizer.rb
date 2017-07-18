@@ -312,7 +312,7 @@ module PickupRandomizer
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
           puts "No new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"
         end
-      elsif new_possible_locations.size <= 5 && valid_previous_accessible_regions.last.size >= 25
+      elsif new_possible_locations.size <= 5 && valid_previous_accessible_regions.last && valid_previous_accessible_regions.last.size >= 25
         # There aren't many new locations unlocked by the last item we placed.
         # But there are a lot of other locations unlocked by the one we placed before that.
         # So we give it a chance to put it in one of those last spots, instead of the new spots.
