@@ -36,7 +36,7 @@ module PlayerRandomizer
           next if bit_name == "Horizontal flip"
           next if bit_name == "Is currently AI partner"
           
-          if ["Can slide", "Can use weapons", "Can up-pose", "Can absorb glyphs"].include?(bit_name)
+          if ["Can slide", "Can use weapons", "Can up-pose", "Can absorb glyphs", "Can superjump"].include?(bit_name)
             player[bitfield_attr_name][i] = true
             next
           end
