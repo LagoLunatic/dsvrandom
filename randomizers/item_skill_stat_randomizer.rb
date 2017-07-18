@@ -528,7 +528,8 @@ module ItemSkillStatRandomizer
       prev_tier_damage_types = nil
       family.each do |skill|
         skill["DMG multiplier"] = sorted_dmg_mults.shift
-        skill["IFrames"] = sorted_iframes.shift
+        iframes = sorted_iframes.shift
+        set_skill_iframes(skill, skill["Item ID"], iframes)
         skill["Delay"] = sorted_delays.shift
         skill["Max at once"] = sorted_max_at_onces.shift
         
