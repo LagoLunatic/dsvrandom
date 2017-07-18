@@ -52,6 +52,7 @@ module EnemyRandomizer
         "Invisible Man",
         "Quetzalcoatl",
         "Ukoback",
+        "White Dragon",
       ].include?(enemy_dna.name)
         true
       else
