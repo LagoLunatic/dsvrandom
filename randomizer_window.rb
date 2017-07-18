@@ -46,9 +46,9 @@ class RandomizerWindow < Qt::Dialog
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
     :enemy_difficulty_label         => "<b>Enemy Placement Difficulty</b>",
-    :max_room_difficulty_mult       => "Max Per-Room Difficulty Multiplier",
-    :max_enemy_difficulty_mult      => "Max Per-Enemy Difficulty Multiplier",
-    :enemy_id_preservation_exponent => "Enemy ID Preservation Weighting",
+    :max_room_difficulty_mult       => "Max Room Total Attack Multiplier",
+    :max_enemy_difficulty_mult      => "Max Enemy Attack Difference Multiplier",
+    :enemy_id_preservation_exponent => "Enemy ID Number Difference Weighting",
     
     :drop_chances_label             => "<b>Average Enemy Drop Chances</b>",
     :item_drop_chance_range         => "Item Drop Chance",
