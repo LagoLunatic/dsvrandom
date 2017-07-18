@@ -202,6 +202,8 @@ module ItemSkillStatRandomizer
         when "por"
           if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
             # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
+          elsif item["Equippable by"].value == 1 && progress_item
+            # Don't randomize Jonathan's glitch progress weapons (Cinquedia, Axe, etc) to be for Charlotte because Charlotte may not be accessible with "Don't randomize Change Cube".
           else
             # 1/8 chance to be a weapon for Charlotte, otherwise for Jonathan.
             item["Equippable by"].value = [1, 1, 1, 1, 1, 1, 1, 2].sample(random: rng)
@@ -378,6 +380,7 @@ module ItemSkillStatRandomizer
       
       if GAME == "por" && skill["Type"] == 0
         skills_that_must_be_used_by_original_player = [
+          "Puppet Master",
           "Stonewall",
           "Gnebu",
           "Wrecking Ball",
