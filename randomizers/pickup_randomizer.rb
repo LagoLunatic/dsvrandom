@@ -328,6 +328,9 @@ module PickupRandomizer
       
       location = possible_locations_to_choose_from.sample(random: rng)
       @locations_randomized_to_have_useful_pickups << location
+      if room_rando?
+        checker.set_current_location_by_entity(location)
+      end
       
       if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
         # Villager

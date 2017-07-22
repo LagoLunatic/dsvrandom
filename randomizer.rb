@@ -2,6 +2,7 @@
 require 'digest/md5'
 
 require_relative 'completability_checker'
+require_relative 'door_completability_checker'
 require_relative 'randomizers/pickup_randomizer'
 require_relative 'randomizers/enemy_randomizer'
 require_relative 'randomizers/drop_randomizer'
@@ -156,7 +157,11 @@ class Randomizer
       raise "No seed given"
     end
     
-    @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map], options[:randomize_villagers])
+    if room_rando?
+      @checker = DoorCompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map], options[:randomize_villagers])
+    else
+      @checker = CompletabilityChecker.new(game, options[:enable_glitch_reqs], options[:open_world_map], options[:randomize_villagers])
+    end
     
     @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(@int_seed)
@@ -263,6 +268,10 @@ class Randomizer
   #  return rand_range_weighted_low(range, low_weight: 2)
   #end
   
+  def room_rando?
+    options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+  end
+  
   def randomize
     options_completed = 0
     
@@ -285,7 +294,7 @@ class Randomizer
     spoiler_log.puts "Selected options: #{options_string}"
     spoiler_log.puts "Difficulty level: #{difficulty_settings_string}"
     
-    if options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+    if room_rando?
       options[:unlock_boss_doors] = true
     end
     
@@ -603,8 +612,7 @@ class Randomizer
       game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
-    room_rando = options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
-    if GAME == "dos" && room_rando
+    if GAME == "dos" && room_rando?
       # Remove the special code for the slide puzzle.
       game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
       game.each_room do |room|
