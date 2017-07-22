@@ -201,6 +201,14 @@ module BossRandomizer
   end
   
   def ooe_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    case new_boss.name
+    when "Blackmore"
+      # Blackmore needs a wide room.
+      if boss_entity.room.width < 2
+        return false
+      end
+    end
+    
     return true
   end
   
@@ -381,6 +389,10 @@ module BossRandomizer
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
       boss_entity.y_pos = 0xAF
+    when "Blackmore"
+      # Blackmore needs to be in this position or he becomes very aggressive and corners the player up against the wall.
+      boss_entity.x_pos = 0x100
+      boss_entity.y_pos = 0xA0
     end
   end
   
