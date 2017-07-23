@@ -580,7 +580,7 @@ module PickupRandomizer
   end
   
   def get_unplaced_non_progression_projectile_glyph
-    projectile_glyph_ids = (0x16..0x18).to_a + (0x1C..0x36).to_a
+    projectile_glyph_ids = (0x16..0x18).to_a + (0x1C..0x32).to_a + (0x34..0x36).to_a
     valid_skills = @unplaced_non_progression_pickups.select do |pickup_global_id|
       projectile_glyph_ids.include?(pickup_global_id)
     end
