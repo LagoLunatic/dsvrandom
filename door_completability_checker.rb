@@ -10,7 +10,8 @@ class DoorCompletabilityChecker
               :villager_locations,
               :hidden_locations,
               :mirror_locations,
-              :no_glyph_locations
+              :no_glyph_locations,
+              :inaccessible_doors
   
   def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
     @game = game
@@ -50,6 +51,8 @@ class DoorCompletabilityChecker
     if @enable_glitches
       @defs.merge!(@glitch_defs)
     end
+    
+    @inaccessible_doors = yaml["Inaccessible doors"]
     
     rooms = yaml["Rooms"]
     

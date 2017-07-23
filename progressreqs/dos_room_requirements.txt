@@ -56,6 +56,44 @@ Defs:
   backdashjump: true
   
   beat game: true # TODO
+Inaccessible doors:
+  - 00-00-04_002
+  - 00-00-04_004
+  - 00-00-19_000
+  - 00-00-19_002
+  
+  - 00-01-0A_002
+  - 00-01-0B_001
+  - 00-01-0C_000
+  - 00-01-0D_002
+  - 00-01-0E_000
+  - 00-01-10_002
+  - 00-01-11_000
+  - 00-01-11_001
+  - 00-01-12_001
+  - 00-01-12_002
+  - 00-01-13_001
+  - 00-01-13_002
+  - 00-01-14_001
+  - 00-01-15_002
+  - 00-01-16_000
+  - 00-01-17_002
+  - 00-01-18_001
+  - 00-01-19_000
+  
+  - 00-03-0D_001
+  - 00-03-0D_002
+  - 00-03-0D_005
+  - 00-03-24_000
+  - 00-03-24_002
+  - 00-03-24_003
+  
+  - 00-08-0E_003
+  - 00-08-0F_002
+  - 00-08-15_000
+  - 00-08-15_002
+  - 00-08-11_002
+  - 00-08-1C_002
 Rooms:
 #Dracula's Castle:
 #The Lost Village:
@@ -423,7 +461,7 @@ Rooms:
     001-002: 
     002-000: backdashjump
     002-001: 
-  00-01-0A: # TODO: sliding puzzle should not be randomized. not sure how we'll determine if it's accessible. TODOTODOTODO
+  00-01-0A: # sliding puzzle
     000-001: 
     000-002: false
     000-e01: 
@@ -457,31 +495,31 @@ Rooms:
     001-002: false
     002-000: false
     002-001: false
-  00-01-0E:
+  00-01-0E: # level design modified compared to the base game
     000-001: false
     000-002: false
     000-e01: false
     001-000: false
-    001-002: false
+    001-002: 
     001-e01: 
     002-000: false
-    002-001: false
-    002-e01: false
+    002-001: height
+    002-e01: height
     e01-000: false
     e01-001: 
-    e01-002: false
-  00-01-0F:
-    000-001: false
+    e01-002: 
+  00-01-0F: # level design modified compared to the base game
+    000-001: 
     000-002: 
     000-003: 
-    001-000: false
-    001-002: false
-    001-003: false
+    001-000: height
+    001-002: 
+    001-003: 
     002-000: height
-    002-001: false
+    002-001: 
     002-003: 
     003-000: height
-    003-001: false
+    003-001: height
     003-002: height
   00-01-10:
     000-001: 
@@ -495,7 +533,7 @@ Rooms:
     002-003: false
     003-000: height
     003-001: height
-    003-002: false
+    003-002: height
   00-01-11:
     000-001: false
     000-002: false
@@ -535,32 +573,32 @@ Rooms:
     003-000: height
     003-001: false
     003-002: false
-  00-01-14:
+  00-01-14: # level design modified compared to the base game
     000-001: false
-    000-002: false
+    000-002: 
     000-003: 
     001-000: false
     001-002: false
     001-003: false
-    002-000: false
+    002-000: height
     002-001: false
-    002-003: false
+    002-003: 
     003-000: height
     003-001: false
-    003-002: false
-  00-01-15:
-    000-001: false
+    003-002: height
+  00-01-15: # level design modified compared to the base game
+    000-001: 
     000-002: false
-    000-e01: false
-    001-000: false
+    000-e01: 
+    001-000: big height
     001-002: false
     001-e01: 
     002-000: false
     002-001: false
     002-e01: false
-    e01-000: 
+    e01-000: big height
     e01-001: 
-    e01-002: 
+    e01-002: false
   00-01-16:
     000-001: false
     000-002: false
@@ -582,12 +620,12 @@ Rooms:
     001-002: false
     002-000: height
     002-001: false
-  00-01-19: # this is missing a door at the bottom...
-    000-001: 
-    000-002: 
-    001-000: height
+  00-01-19: # level design modified compared to the base game
+    000-001: false
+    000-002: false
+    001-000: false
     001-002: 
-    002-000: height
+    002-000: false
     002-001: 
   00-01-1A:
     000-e02: 
@@ -1012,7 +1050,7 @@ Rooms:
   00-02-1B:
     000-001: 
     001-000: 
-  00-02-1C: # TODO DONT REMOVE WATER FROM THESE ROOMS
+  00-02-1C:
     000-001: rahab
     000-e00: rahab
     000-e01: rahab

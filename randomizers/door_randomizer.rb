@@ -95,6 +95,14 @@ module DoorRandomizer
           
           remaining_doors = get_valid_doors(subsector_rooms, sector)
           
+          #if sector.sector_index == 1
+          #  remaining_doors.values.flatten.each do |door|
+          #    puts "  #{door.door_str}"
+          #  end
+          #  puts "num doors: #{remaining_doors.values.flatten.size}"
+          #  gets
+          #end
+          
           all_rooms = remaining_doors.values.flatten.map{|door| door.room}.uniq
           if all_rooms.empty?
             # No doors in this sector
@@ -107,10 +115,10 @@ module DoorRandomizer
           
           while true
             debug = false
-            #debug = (area.area_index == 0 && sector.sector_index == 2)
-            debug = current_room.room_metadata_ram_pointer == 0x020A84A8
+            debug = (area.area_index == 0 && sector.sector_index == 1)
+            #debug = current_room.room_metadata_ram_pointer == 0x020A84A8
             
-            puts "on room %08X" % current_room.room_metadata_ram_pointer if debug
+            puts "on room #{current_room.room_str}" if debug
             
             unvisited_rooms.delete(current_room)
             
@@ -131,6 +139,8 @@ module DoorRandomizer
             end
             remaining_doors[inside_door.direction].delete(inside_door)
             
+            puts "inside door chosen: #{inside_door.door_str}" if debug
+            
             inside_door_opposite_direction = case inside_door.direction
             when :left
               :right
@@ -143,6 +153,7 @@ module DoorRandomizer
             end
             
             inaccessible_remaining_matching_doors = remaining_doors[inside_door_opposite_direction] - accessible_remaining_doors
+            #puts "REMAINING: #{remaining_doors[inside_door_opposite_direction].map{|x| "  #{x.door_str}\n"}}"
             
             inaccessible_remaining_matching_doors_with_other_exits = inaccessible_remaining_matching_doors.select do |door|
               door.room.doors.length > 1 && unvisited_rooms.include?(door.room)
@@ -237,11 +248,11 @@ module DoorRandomizer
             queued_door_changes[new_dest_door]["dest_y"] = inside_door.destination_door.dest_y
             
             if debug
-              puts "inside_door: %08X" % inside_door.door_ram_pointer
+              puts "inside_door: #{inside_door.door_str}"
               #puts "old_outside_door: %08X" % old_outside_door.door_ram_pointer
               #puts "inside_door_to_swap_with: %08X" % inside_door_to_swap_with.door_ram_pointer
-              puts "new_outside_door: %08X" % new_dest_door.door_ram_pointer
-              puts "dest room: %08X" % new_dest_door.room.room_metadata_ram_pointer
+              puts "new_outside_door: #{new_dest_door.door_str}"
+              puts "dest room: #{new_dest_door.room.room_str}"
               puts
               #break
             end
@@ -299,6 +310,7 @@ module DoorRandomizer
       
       room.doors.each do |door|
         next if @transition_rooms.include?(door.destination_door.room)
+        next if checker.inaccessible_doors.include?(door.door_str)
         
         map_tile_x_pos = room.room_xpos_on_map
         map_tile_y_pos = room.room_ypos_on_map

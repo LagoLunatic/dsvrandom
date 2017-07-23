@@ -298,6 +298,15 @@ class Randomizer
       options[:unlock_boss_doors] = true
     end
     
+    apply_pre_randomization_tweaks()
+    
+    if options[:randomize_bosses]
+      yield [options_completed, "Shuffling bosses..."]
+      reset_rng()
+      randomize_bosses()
+      options_completed += 1
+    end
+    
     if options[:randomize_area_connections]
       yield [options_completed, "Connecting areas..."]
       reset_rng()
@@ -425,13 +434,6 @@ class Randomizer
       options_completed += 7
     end
     
-    if options[:randomize_bosses]
-      yield [options_completed, "Shuffling bosses..."]
-      reset_rng()
-      randomize_bosses()
-      options_completed += 1
-    end
-    
     if options[:bonus_starting_items]
       yield [options_completed, "Placing starting items..."]
       reset_rng()
@@ -511,6 +513,37 @@ class Randomizer
     spoiler_log.puts
     spoiler_log.puts
     spoiler_log.close()
+  end
+  
+  def apply_pre_randomization_tweaks
+    if GAME == "dos" && room_rando?
+      # Remove the special code for the slide puzzle.
+      game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
+      
+      # Next we remove the walls on certain rooms so the dead end rooms are accessible and fix a couple other things in the level design.
+      tiled = TMXInterface.new
+      [0xE, 0xF, 0x14, 0x15, 0x19].each do |room_index|
+        # 5 room: Remove floor and move the item off where the floor used to be.
+        # 6 room: Remove left wall.
+        # 11 room: Remove right wall.
+        # 12 room: Remove ceiling.
+        # Empty room: Add floor so the player can't fall out of bounds.
+        
+        room = game.areas[0].sectors[1].rooms[room_index]
+        filename = "./dsvrandom/roomedits/dos_room_rando_00-01-%02X.tmx" % room_index
+        tiled.read(filename, room)
+      end
+      
+      # Now remove the wall entities in each room and the control panel entity.
+      game.each_room do |room|
+        room.entities.each do |entity|
+          if entity.is_special_object? && [0x0C, 0x0D].include?(entity.subtype)
+            entity.type = 0
+            entity.write_to_rom()
+          end
+        end
+      end
+    end
   end
   
   def apply_tweaks
@@ -610,19 +643,6 @@ class Randomizer
     
     if GAME == "dos" && options[:unlock_boss_doors]
       game.apply_armips_patch("dos_skip_boss_door_seals")
-    end
-    
-    if GAME == "dos" && room_rando?
-      # Remove the special code for the slide puzzle.
-      game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
-      game.each_room do |room|
-        room.entities.each do |entity|
-          if entity.is_special_object? && [0x0C, 0x0D].include?(entity.subtype)
-            entity.type = 0
-            entity.write_to_rom()
-          end
-        end
-      end
     end
     
     if GAME == "por" && options[:fix_infinite_quest_rewards]

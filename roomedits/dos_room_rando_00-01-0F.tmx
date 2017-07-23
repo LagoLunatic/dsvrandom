@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="16" tileheight="16" nextobjectid="1">
+ <properties>
+  <property name="map_x" value="0C"/>
+  <property name="map_y" value="11"/>
+ </properties>
+ <tileset firstgid="1" name="022F79D0-022F89CC_020A2738-00_020A27EC" tilewidth="16" tileheight="16" tilecount="1024" columns="16">
+  <image source="Tilesets/022F79D0-022F89CC_020A2738-00_020A27EC" width="256" height="1024"/>
+ </tileset>
+ <layer name="layer 020A27BC" width="16" height="12">
+  <properties>
+   <property name="collision_tileset" value="022F89CC"/>
+   <property name="colors_per_palette" value="10"/>
+   <property name="layer_height" value="01"/>
+   <property name="layer_width" value="01"/>
+   <property name="main_gfx_page_index" value="00"/>
+   <property name="scroll_mode" value="01"/>
+   <property name="tileset" value="022F79D0"/>
+   <property name="z_index" value="1B"/>
+  </properties>
+  <data encoding="csv">
+1,1,1,1,1,1,7,8,7,8,1,1,1,1,1,1,
+1,1,1,1,1,1,23,24,23,24,1,1,1,1,1,1,
+1,1,39,40,39,40,39,40,39,40,39,40,39,40,1,1,
+1,1,55,56,55,56,55,56,55,56,55,56,55,56,1,1,
+11,12,71,72,71,72,71,72,71,72,71,72,71,72,9,10,
+27,28,87,88,87,88,87,88,87,88,87,88,87,88,25,26,
+43,44,103,104,103,104,103,104,103,104,103,104,103,104,41,42,
+59,60,119,120,119,120,119,120,119,120,119,120,119,120,57,58,
+1,1,137,138,135,136,137,138,135,136,137,138,135,136,1,1,
+1,1,153,154,151,152,153,154,151,152,153,154,151,152,1,1,
+1,1,1,1,1,1,169,170,167,168,1,1,1,1,1,1,
+1,1,1,1,1,1,6,6,6,6,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="layer 020A27AC" width="16" height="12">
+  <properties>
+   <property name="collision_tileset" value="022F89CC"/>
+   <property name="colors_per_palette" value="10"/>
+   <property name="layer_height" value="01"/>
+   <property name="layer_width" value="01"/>
+   <property name="main_gfx_page_index" value="00"/>
+   <property name="scroll_mode" value="01"/>
+   <property name="tileset" value="022F79D0"/>
+   <property name="z_index" value="16"/>
+  </properties>
+  <data encoding="csv">
+17,18,19,20,21,22,1,1,1,1,2147483670,2147483669,2147483668,2147483667,2147483666,2147483665,
+33,34,35,36,37,38,1,1,1,1,2147483686,2147483685,2147483684,2147483683,2147483682,2147483681,
+49,50,1,1,1,1,1,1,1,1,1,1,1,1,2147483698,2147483697,
+65,66,1,1,1,1,51,52,2147483700,2147483699,216,217,218,1,2147483714,2147483713,
+1,1,210,211,212,213,214,68,2147483716,231,232,233,234,235,1,1,
+1,1,226,227,228,229,230,1,1,247,248,249,250,251,1,1,
+1,1,242,243,244,245,246,1,1,263,264,265,266,267,1,1,
+1,1,258,259,260,261,262,1,1,1,1,1,1,1,1,1,
+2147483734,2147483733,1,1,1,1,51,52,2147483700,2147483699,1,1,1,1,85,86,
+1073741873,1073741874,1,1,1,1,1,68,2147483716,1,1,1,1,1,3221225522,3221225521,
+2147483766,2147483765,2147483764,2147483763,2147483762,2147483761,1,1,1,1,113,114,115,116,117,118,
+2147483782,2147483781,1073741843,1073741844,1073741845,1073741846,1,1,1,1,3221225494,3221225493,3221225492,3221225491,133,134
+</data>
+ </layer>
+ <objectgroup color="#800080" name="Doors">
+  <object id="1" x="0" y="-192" width="256" height="192">
+   <properties>
+    <property name="dest_x" value="0000"/>
+    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_y" value="0000"/>
+    <property name="dest_y_unused" value="0000"/>
+    <property name="destination_room" value="020A22F8"/>
+    <property name="door_ram_pointer" value="020A276C"/>
+   </properties>
+  </object>
+  <object id="2" x="-256" y="0" width="256" height="192">
+   <properties>
+    <property name="dest_x" value="0000"/>
+    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_y" value="0000"/>
+    <property name="dest_y_unused" value="0000"/>
+    <property name="destination_room" value="020A2634"/>
+    <property name="door_ram_pointer" value="020A277C"/>
+   </properties>
+  </object>
+  <object id="3" x="256" y="0" width="256" height="192">
+   <properties>
+    <property name="dest_x" value="0000"/>
+    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_y" value="0000"/>
+    <property name="dest_y_unused" value="0000"/>
+    <property name="destination_room" value="020A286C"/>
+    <property name="door_ram_pointer" value="020A278C"/>
+   </properties>
+  </object>
+  <object id="4" x="0" y="192" width="256" height="192">
+   <properties>
+    <property name="dest_x" value="0000"/>
+    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_y" value="0000"/>
+    <property name="dest_y_unused" value="0000"/>
+    <property name="destination_room" value="020A2BB8"/>
+    <property name="door_ram_pointer" value="020A279C"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Entities">
+  <object id="1" x="0" y="0">
+   <properties>
+    <property name="05" value="00"/>
+    <property name="06 (type)" value="02"/>
+    <property name="07 (subtype)" value="0D"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0006"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="020A5828"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
