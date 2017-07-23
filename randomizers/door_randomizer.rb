@@ -374,8 +374,10 @@ module DoorRandomizer
       end
     end
     
-    drawbridge_room_waterlevel = game.areas[0].sectors[0].rooms[0x15].entities[4]
-    drawbridge_room_waterlevel.type = 0
-    drawbridge_room_waterlevel.write_to_rom()
+    if GAME == "dos"
+      drawbridge_room_waterlevel = game.areas[0].sectors[0].rooms[0x15].entities[4]
+      drawbridge_room_waterlevel.type = 0
+      drawbridge_room_waterlevel.write_to_rom()
+    end
   end
 end
