@@ -280,10 +280,19 @@ module BossRandomizer
       boss_entity.x_pos = 0x100
       boss_entity.y_pos = 0x60
       
-      boss_entity.var_a = 0
+      if old_boss.name == "Puppet Master"
+        # Regular Puppet Master.
+        boss_entity.var_a = 1
+      else
+        # Boss rush Puppet Master.
+        boss_entity.var_a = 0
+      end
     when "Gergoth"
-      unless old_boss_id == new_boss_id
-        # Set Gergoth to boss rush mode, unless he's in his tower.
+      if old_boss_id == new_boss_id && GAME == "dos"
+        # Normal Gergoth since he's in his tower.
+        boss_entity.var_a = 1
+      else
+        # Set Gergoth to boss rush mode.
         boss_entity.var_a = 0
       end
     when "Zephyr"
