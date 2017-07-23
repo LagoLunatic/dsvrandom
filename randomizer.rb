@@ -617,7 +617,7 @@ class Randomizer
       game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
       game.each_room do |room|
         room.entities.each do |entity|
-          if entity.is_special_object? && entity.subtype == 0x0D
+          if entity.is_special_object? && [0x0C, 0x0D].include?(entity.subtype)
             entity.type = 0
             entity.write_to_rom()
           end
