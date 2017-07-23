@@ -40,24 +40,23 @@ module EnemyRandomizer
       end
     end
     @resource_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
+    resource_intensive_enemy_names = [
+      "Forneus",
+      "Spin Devil",
+      "Stolas",
+      "Necromancer",
+      "Mollusca",
+      "Giant Slug",
+      "Invisible Man",
+      "Quetzalcoatl",
+      "Ukoback",
+      "White Dragon",
+      "Bone Pillar",
+      "Fish Head",
+    ]
     @resource_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
-      if [
-        "Forneus",
-        "Spin Devil",
-        "Stolas",
-        "Necromancer",
-        "Mollusca",
-        "Giant Slug",
-        "Invisible Man",
-        "Quetzalcoatl",
-        "Ukoback",
-        "White Dragon",
-      ].include?(enemy_dna.name)
-        true
-      else
-        false
-      end
+      resource_intensive_enemy_names.include?(enemy_dna.name)
     end
     
     @assets_for_each_special_object = {}
