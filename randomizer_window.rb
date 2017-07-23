@@ -412,8 +412,8 @@ class RandomizerWindow < Qt::Dialog
         write_to_rom(game)
       end
     end
-  rescue NDSFileSystem::InvalidFileError => e
-    Qt::MessageBox.warning(self, "Unrecognized game", "Specified ROM is not recognized.")
+  rescue NDSFileSystem::InvalidFileError, Game::InvalidFileError => e
+    Qt::MessageBox.warning(self, "Unrecognized game", "Specified ROM is not recognized.\nOnly the US versions are supported.")
     return
   end
   
