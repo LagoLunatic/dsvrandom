@@ -65,7 +65,7 @@ module DoorRandomizer
     # Remove breakable walls and similar things that prevent you from going in certain doors.
     remove_door_blockers()
     
-    transition_rooms = game.get_transition_rooms()
+    @transition_rooms = game.get_transition_rooms()
     
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
@@ -76,78 +76,24 @@ module DoorRandomizer
         # This separates certains sectors into multiple parts like the first sector of PoR.
         subsectors = get_subsectors(sector)
         
+        # TODO: for each subsector, count the number of up/down connections vs the number of left/right connections.
+        # then prioritize doing the rarer ones first when possible.
+        # also, guarantee that ALL rooms in a subsector connect to each other somehow.
         subsectors.each_with_index do |subsector_rooms, i|
           if GAME == "por" && area.area_index == 0 && sector.sector_index == 0 && i == 0
             # Don't randomize first subsector in PoR.
             next
           end
           
-          remaining_doors = {
-            left: [],
-            up: [],
-            right: [],
-            down: []
-          }
-          
-          map = game.get_map(sector.area_index, sector.sector_index)
-          
-          subsector_rooms.each do |room|
-            next if transition_rooms.include?(room)
-            
-            room.doors.each do |door|
-              next if transition_rooms.include?(door.destination_door.room)
-              
-              map_tile_x_pos = room.room_xpos_on_map
-              map_tile_y_pos = room.room_ypos_on_map
-              
-              if door.x_pos == 0xFF
-                # Do nothing
-              elsif door.x_pos >= room.main_layer_width
-                map_tile_x_pos += room.main_layer_width - 1
-              else
-                map_tile_x_pos += door.x_pos
-              end
-              if door.y_pos == 0xFF
-                # Do nothing
-              elsif door.y_pos >= room.main_layer_height
-                map_tile_y_pos += room.main_layer_height - 1
-              else
-                map_tile_y_pos += door.y_pos
-              end
-              
-              map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos &&  tile.y_pos == map_tile_y_pos}
-              
-              if map_tile.nil?
-                # Door that's not on the map, just an unused door.
-                next
-              end
-              
-              # If the door is shown on the map as a wall, skip it.
-              # Those are leftover doors not intended to be used, and are inaccessible (except with warp glitches).
-              case door.direction
-              when :left
-                next if map_tile.left_wall
-              when :right
-                next if map_tile.right_wall
-                if GAME == "dos" || GAME == "aos"
-                  # Right walls in DoS are handled as the left wall of the tile to the right.
-                  right_map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos+1 &&  tile.y_pos == map_tile_y_pos}
-                  next if right_map_tile.left_wall
-                end
-              when :up
-                next if map_tile.top_wall
-              when :down
-                next if map_tile.bottom_wall
-                if GAME == "dos" || GAME == "aos"
-                  # Bottom walls in DoS are handled as the top wall of the tile below.
-                  below_map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos &&  tile.y_pos == map_tile_y_pos+1}
-                  next if below_map_tile.top_wall
-                end
-              end
-              
-              remaining_doors[door.direction] << door
+          if sector.sector_index == 2
+            puts "On subsector: #{i}"
+            puts "Subsector rooms:"
+            subsector_rooms.each do |room|
+              puts "  %08X" % room.room_metadata_ram_pointer
             end
           end
+          
+          remaining_doors = get_valid_doors(subsector_rooms, sector)
           
           all_rooms = remaining_doors.values.flatten.map{|door| door.room}.uniq
           if all_rooms.empty?
@@ -160,9 +106,12 @@ module DoorRandomizer
           current_room = unvisited_rooms.sample(random: rng)
           
           while true
-            if area.area_index == 0 && sector.sector_index == 2
-              puts "on room %08X" % current_room.room_metadata_ram_pointer
-            end
+            debug = false
+            #debug = (area.area_index == 0 && sector.sector_index == 2)
+            debug = current_room.room_metadata_ram_pointer == 0x020A84A8
+            
+            puts "on room %08X" % current_room.room_metadata_ram_pointer if debug
+            
             unvisited_rooms.delete(current_room)
             
             accessible_remaining_doors += remaining_doors.values.flatten.select{|door| door.room == current_room}
@@ -173,7 +122,13 @@ module DoorRandomizer
               break
             end
             
-            inside_door = accessible_remaining_doors.sample(random: rng)
+            accessible_remaining_updown_doors = accessible_remaining_doors.select{|door| [:up, :down].include?(door.direction)}
+            if accessible_remaining_updown_doors.any?
+              # Always prioritize doing up and down doors first.
+              inside_door = accessible_remaining_updown_doors.sample(random: rng)
+            else
+              inside_door = accessible_remaining_doors.sample(random: rng)
+            end
             remaining_doors[inside_door.direction].delete(inside_door)
             
             inside_door_opposite_direction = case inside_door.direction
@@ -201,22 +156,33 @@ module DoorRandomizer
               end
             end
             
+            # TODO: prioritize even higher a type 0 where it there's a room with an area exit.
             if inaccessible_remaining_matching_doors_with_other_direction_exits.any?
               # There are doors we can swap with that allow more progress, and also allow going in a new direction (up/down vs left/right).
               possible_dest_doors = inaccessible_remaining_matching_doors_with_other_direction_exits
+              
+              puts "TYPE 1" if debug
             elsif inaccessible_remaining_matching_doors_with_other_exits.any?
               # There are doors we can swap with that allow more progress.
               possible_dest_doors = inaccessible_remaining_matching_doors_with_other_exits
+              
+              puts "TYPE 2" if debug
             elsif inaccessible_remaining_matching_doors.any?
               # There are doors we can swap with that will allow you to reach one new room which is a dead end.
               possible_dest_doors = inaccessible_remaining_matching_doors
+              
+              puts "TYPE 3" if debug
             elsif remaining_doors[inside_door_opposite_direction].any?
               # This door direction doesn't have any more matching doors left to swap with that will result in progress.
               # So just pick any matching door.
               possible_dest_doors = remaining_doors[inside_door_opposite_direction]
+              
+              puts "TYPE 4" if debug
             else
               # This door direction doesn't have any matching doors left.
               # Don't do anything to this door.
+              
+              puts "TYPE 5" if debug
               
               #puts "#{inside_door.direction} empty"
               #
@@ -226,6 +192,8 @@ module DoorRandomizer
               #current_room = accessible_rooms.sample(random: rng)
               #p accessible_remaining_doors.size
               #gets
+              
+              raise "not all rooms in this subsector are connected! %02X-%02X" % [area.area_index, sector.sector_index]
               
               current_room = unvisited_rooms.sample(random: rng)
               #p "3 #{current_room}"
@@ -268,7 +236,7 @@ module DoorRandomizer
             queued_door_changes[new_dest_door]["dest_x"] = inside_door.destination_door.dest_x
             queued_door_changes[new_dest_door]["dest_y"] = inside_door.destination_door.dest_y
             
-            if area.area_index == 0 && sector.sector_index == 2
+            if debug
               puts "inside_door: %08X" % inside_door.door_ram_pointer
               #puts "old_outside_door: %08X" % old_outside_door.door_ram_pointer
               #puts "inside_door_to_swap_with: %08X" % inside_door_to_swap_with.door_ram_pointer
@@ -316,10 +284,81 @@ module DoorRandomizer
     return subsectors
   end
   
+  def get_valid_doors(rooms, sector)
+    remaining_doors = {
+      left: [],
+      up: [],
+      right: [],
+      down: []
+    }
+    
+    map = game.get_map(sector.area_index, sector.sector_index)
+    
+    rooms.each do |room|
+      next if @transition_rooms.include?(room)
+      
+      room.doors.each do |door|
+        next if @transition_rooms.include?(door.destination_door.room)
+        
+        map_tile_x_pos = room.room_xpos_on_map
+        map_tile_y_pos = room.room_ypos_on_map
+        
+        if door.x_pos == 0xFF
+          # Do nothing
+        elsif door.x_pos >= room.main_layer_width
+          map_tile_x_pos += room.main_layer_width - 1
+        else
+          map_tile_x_pos += door.x_pos
+        end
+        if door.y_pos == 0xFF
+          # Do nothing
+        elsif door.y_pos >= room.main_layer_height
+          map_tile_y_pos += room.main_layer_height - 1
+        else
+          map_tile_y_pos += door.y_pos
+        end
+        
+        map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos &&  tile.y_pos == map_tile_y_pos}
+        
+        if map_tile.nil?
+          # Door that's not on the map, just an unused door.
+          next
+        end
+        
+        # If the door is shown on the map as a wall, skip it.
+        # Those are leftover doors not intended to be used, and are inaccessible (except with warp glitches).
+        case door.direction
+        when :left
+          next if map_tile.left_wall
+        when :right
+          next if map_tile.right_wall
+          if GAME == "dos" || GAME == "aos"
+            # Right walls in DoS are handled as the left wall of the tile to the right.
+            right_map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos+1 &&  tile.y_pos == map_tile_y_pos}
+            next if right_map_tile.left_wall
+          end
+        when :up
+          next if map_tile.top_wall
+        when :down
+          next if map_tile.bottom_wall
+          if GAME == "dos" || GAME == "aos"
+            # Bottom walls in DoS are handled as the top wall of the tile below.
+            below_map_tile = map.tiles.find{|tile| tile.x_pos == map_tile_x_pos &&  tile.y_pos == map_tile_y_pos+1}
+            next if below_map_tile.top_wall
+          end
+        end
+        
+        remaining_doors[door.direction] << door
+      end
+    end
+    
+    return remaining_doors
+  end
+  
   def remove_door_blockers
     obj_subtypes_to_remove = case GAME
     when "dos"
-      [0x43, 0x44, 0x46, 0x57, 0x1E, 0x2B, 0x26, 0x2A, 0x29, 0x45, 0x27, 0x24, 0x02, 0x37, 0x04, 0x05]
+      [0x43, 0x44, 0x46, 0x57, 0x1E, 0x2B, 0x26, 0x2A, 0x29, 0x45, 0x27, 0x24, 0x37, 0x04, 0x05]
     when "por"
       [0x37, 0x30, 0x3B, 0x89]
     when "ooe"
@@ -334,5 +373,9 @@ module DoorRandomizer
         end
       end
     end
+    
+    drawbridge_room_waterlevel = game.areas[0].sectors[0].rooms[0x15].entities[4]
+    drawbridge_room_waterlevel.type = 0
+    drawbridge_room_waterlevel.write_to_rom()
   end
 end
