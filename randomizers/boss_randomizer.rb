@@ -10,15 +10,12 @@ module BossRandomizer
       boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
     end
     
+    remove_boss_cutscenes()
+    
     if GAME == "dos"
       # Turn the throne room Dario entity into Aguni so the boss randomizer logic works.
       throne_room_dario = game.areas[0].sectors[9].rooms[1].entities[6]
       throne_room_dario.subtype = 0x70
-      
-      # Remove the throne room event because it doesn't work without Dario.
-      throne_room_event = game.areas[0].sectors[9].rooms[1].entities[2]
-      throne_room_event.type = 0
-      throne_room_event.write_to_rom()
     end
     
     # Determine unique boss rooms.
@@ -289,8 +286,6 @@ module BossRandomizer
         # Set Gergoth to boss rush mode, unless he's in his tower.
         boss_entity.var_a = 0
       end
-      
-      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Zephyr"
       # Center him in the room.
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
@@ -301,10 +296,9 @@ module BossRandomizer
       else
         # Normal Zephyr, with the cutscene.
         boss_entity.var_a = 1
-        remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
       end
     when "Bat Company"
-      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+      
     when "Paranoia"
       # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
       # This combination of x and y seems to be one of the least buggy.
@@ -312,8 +306,6 @@ module BossRandomizer
       boss_entity.y_pos = 0x80
       
       boss_entity.var_a = 2
-      
-      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
@@ -326,25 +318,12 @@ module BossRandomizer
           entity.write_to_rom()
         end
       end
-      
-      remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     when "Abaddon"
       # Abaddon's locusts always appear on the top left screen, so make sure he's there as well.
       boss_entity.x_pos = 0x80
       boss_entity.y_pos = 0xB0
     else
       boss_entity.var_a = 1
-    end
-  end
-  
-  def remove_flying_armor_event(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    if GAME == "dos" && boss_entity.room.room_index == 0xB && boss_entity.room.sector_index == 0
-      # If certain bosses are placed in Flying Armor's room the game will softlock when you kill the boss.
-      # This is because of the event with Yoko in Flying Armor's room, so remove the event.
-      
-      event = boss_entity.room.entities[6]
-      event.type = 0
-      event.write_to_rom()
     end
   end
   
@@ -427,6 +406,34 @@ module BossRandomizer
       # Make the boss door use the same seal as the boss that was originally in this position so progression isn't affected.
       original_boss_door_seal = @original_boss_seals[old_boss_index]
       game.fs.write(MAGIC_SEAL_FOR_BOSS_LIST_START+new_boss_index*4, [original_boss_door_seal].pack("V"))
+    end
+  end
+  
+  def remove_boss_cutscenes
+    # Boss cutscenes usually don't work without the original boss.
+    
+    obj_subtypes_to_remove = case GAME
+    when "dos"
+      [0x61, 0x63, 0x64, 0x69]
+    when "por"
+      []
+    when "ooe"
+      []
+    end
+    
+    game.each_room do |room|
+      room.entities.each do |entity|
+        if entity.is_special_object? && obj_subtypes_to_remove.include?(entity.subtype)
+          entity.type = 0
+          entity.write_to_rom()
+        end
+      end
+    end
+    
+    if GAME == "dos"
+      dmitriis_malachi = game.areas[0].sectors[4].rooms[0x10].entities[6]
+      dmitriis_malachi.type = 0
+      dmitriis_malachi.write_to_rom()
     end
   end
 end
