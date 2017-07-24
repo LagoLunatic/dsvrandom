@@ -414,7 +414,6 @@ module PickupRandomizer
         end
         
         random_pickup_type = weighted_pickup_types.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
-        all_pickup_types << random_pickup_type
         
         case random_pickup_type
         when :money

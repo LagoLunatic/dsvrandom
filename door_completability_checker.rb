@@ -199,7 +199,7 @@ class DoorCompletabilityChecker
         door_reqs = room_req[:doors] #TODO entities??
         
         door_reqs.each do |path_begin, path_ends|
-          path_ends.each do |path_end|
+          path_ends.each do |path_end, path_reqs|
             if path_end =~ /^e(\h\h)$/
               entity_index = $1
               entity_str = "#{room_str}_#{entity_index}"
