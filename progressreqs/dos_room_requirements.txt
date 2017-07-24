@@ -776,13 +776,13 @@ Rooms:
     002-001: medium height
     002-003: 
     002-004: 
-    003-000: height
+    003-000: height | distance
     003-001: medium height
-    003-002: height
+    003-002: height | distance
     003-004: 
-    004-000: height
+    004-000: height | distance
     004-001: medium height
-    004-002: height
+    004-002: height | distance
     004-003: 
   00-01-1E:
     000-001: 
@@ -2176,7 +2176,7 @@ Rooms:
     002-e01: height
     002-e02: height
     003-000: big height
-    003-001: big height
+    003-001: big height | malphas & black panther
     003-002: big height
     003-004: 
     003-005: 
@@ -2184,7 +2184,7 @@ Rooms:
     003-e01: height
     003-e02: 
     004-000: big height
-    004-001: big height
+    004-001: big height | malphas & black panther
     004-002: big height
     004-003: height
     004-005: 
@@ -2192,7 +2192,7 @@ Rooms:
     004-e01: height
     004-e02: height
     005-000: big height
-    005-001: big height
+    005-001: big height | malphas & black panther
     005-002: big height
     005-003: height
     005-004: 
@@ -2200,19 +2200,19 @@ Rooms:
     005-e01: height
     005-e02: height
     e00-000: big height
-    e00-001: big height
+    e00-001: big height | malphas & black panther
     e00-002: big height
     e00-003: 
     e00-004: 
     e00-005: 
     e01-000: big height
-    e01-001: big height
+    e01-001: big height | malphas & black panther
     e01-002: big height
     e01-003: 
     e01-004: 
     e01-005: 
     e02-000: big height
-    e02-001: big height
+    e02-001: big height | malphas & black panther
     e02-002: big height
     e02-003: 
     e02-004: 
