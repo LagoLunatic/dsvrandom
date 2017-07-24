@@ -882,17 +882,14 @@ module PickupRandomizer
         else
           puzzle_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32, 0x46, 0x4E]
           if puzzle_glyph_ids.include?(pickup_global_id)
-            # We need to make the glyphs that are part of a puzzle be free glyphs with a picked up flag.
-            # We can't make these be glyph statues, because glyph statues use glyph_id+2 as the flag.
-            # The puzzles are hardcoded to use the original glyph from that puzzle's glyph_id+2.
-            # Since we can't easily changed the puzzle's hardcoded flag, we instead need to make sure that same flag is never used by anything else, namely a glyph statue with one of those puzzle glyphs inside it.
+            # Free glyph
             entity.type = 4
             entity.subtype = 2
             entity.var_a = picked_up_flag
             @used_picked_up_flags << picked_up_flag
             entity.var_b = pickup_global_id + 1
           else
-            # 50% chance for a glyph statue
+            # Glyph statue
             entity.type = 2
             entity.subtype = 2
             entity.var_a = 0

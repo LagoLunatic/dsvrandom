@@ -56,6 +56,49 @@ Defs:
   backdashjump: true
   
   beat game: true # TODO
+Enemy locations:
+  - 00-00-0B_02
+  - 00-01-06_01
+  - 00-01-1C_00
+  - 00-02-06_00
+  - 00-04-0F_01
+  - 00-04-10_05
+  - 00-05-07_00
+  - 00-05-1B_02
+  - 00-06-16_03
+  - 00-07-0E_00
+  - 00-08-14_00
+  - 00-09-01_06
+  - 00-0B-13_00
+Event locations:
+  - 00-01-37_00
+Mirror locations:
+  - 00-00-13_06
+  - 00-01-1A_03
+  - 00-01-20_06
+  - 00-02-12_03
+  - 00-04-11_03
+  - 00-07-05_04
+  - 00-08-1A_03
+No soul locations:
+  - 00-02-00_00
+  - 00-02-10_00
+Allowed starter items:
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - malphas
+  - hippogryph
+  - hippogryph
+  - hippogryph
+  - bat company
+  - bat form
 Inaccessible doors:
   - 00-00-04_002
   - 00-00-04_004
@@ -179,7 +222,11 @@ Rooms:
     e07-001: 
   00-00-0B:
     000-001: 
+    000-e02: 
     001-000: 
+    001-e02: 
+    e02-000: 
+    e02-001: 
   00-00-0C:
     000-001: 
     000-002: 
@@ -448,6 +495,9 @@ Rooms:
   00-01-05:
     000-e00: 
     e00-000: 
+  00-01-06:
+    000-e01:
+    e01-000: 
   00-01-07:
     000-e00: 
     e00-000: 
@@ -637,7 +687,11 @@ Rooms:
     001-000: 
   00-01-1C:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   00-01-1D:
     000-001: medium height
     000-002: 
@@ -852,7 +906,11 @@ Rooms:
     e00-000: 
   00-01-37:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   00-01-38:
     000-e00: 
     e00-000: 
@@ -913,6 +971,9 @@ Rooms:
   00-02-05:
     000-001: 
     001-000: 
+  00-02-06:
+    000-e00: 
+    e00-000: 
   00-02-07:
     000-001: 
     000-002: 
@@ -1485,9 +1546,16 @@ Rooms:
   00-04-0E:
     000-001: 
     001-000: 
+  00-04-0F:
+    000-e01: 
+    e01-000: 
   00-04-10:
     000-001: 
+    000-e05: 
     001-000: 
+    001-e05: 
+    e05-000: 
+    e05-001: 
   00-04-11:
     000-e02: 
     000-e03: paranoia
@@ -1627,6 +1695,7 @@ Rooms:
     000-00D: big height
     000-00E: 
     000-00F: 
+    000-e00: 
     001-000: big height
     001-002: big height
     001-003: big height
@@ -1642,6 +1711,7 @@ Rooms:
     001-00D: big height
     001-00E: 
     001-00F: 
+    001-e00: 
     002-000: false
     002-001: false
     002-003: 
@@ -1657,6 +1727,7 @@ Rooms:
     002-00D: false
     002-00E: false
     002-00F: false
+    002-e00: false
     003-000: false
     003-001: false
     003-002: 
@@ -1672,6 +1743,7 @@ Rooms:
     003-00D: false
     003-00E: false
     003-00F: false
+    003-e00: false
     004-000: false
     004-001: false
     004-002: false
@@ -1687,6 +1759,7 @@ Rooms:
     004-00D: false
     004-00E: false
     004-00F: false
+    004-e00: false
     005-000: false
     005-001: false
     005-002: false
@@ -1702,6 +1775,7 @@ Rooms:
     005-00D: false
     005-00E: false
     005-00F: false
+    005-e00: false
     006-000: false
     006-001: false
     006-002: false
@@ -1717,6 +1791,7 @@ Rooms:
     006-00D: false
     006-00E: false
     006-00F: false
+    006-e00: false
     007-000: false
     007-001: false
     007-002: false
@@ -1732,6 +1807,7 @@ Rooms:
     007-00D: false
     007-00E: false
     007-00F: false
+    007-e00: false
     008-000: false
     008-001: false
     008-002: false
@@ -1747,6 +1823,7 @@ Rooms:
     008-00D: false
     008-00E: false
     008-00F: false
+    008-e00: false
     009-000: false
     009-001: false
     009-002: false
@@ -1762,6 +1839,7 @@ Rooms:
     009-00D: false
     009-00E: false
     009-00F: false
+    009-e00: false
     00A-000: false
     00A-001: false
     00A-002: false
@@ -1777,6 +1855,7 @@ Rooms:
     00A-00D: false
     00A-00E: false
     00A-00F: false
+    00A-e00: false
     00B-000: false
     00B-001: false
     00B-002: false
@@ -1792,6 +1871,7 @@ Rooms:
     00B-00D: false
     00B-00E: false
     00B-00F: false
+    00B-e00: false
     00C-000: false
     00C-001: false
     00C-002: false
@@ -1807,6 +1887,7 @@ Rooms:
     00C-00D: 
     00C-00E: false
     00C-00F: false
+    00C-e00: false
     00D-000: false
     00D-001: false
     00D-002: false
@@ -1822,6 +1903,7 @@ Rooms:
     00D-00C: 
     00D-00E: false
     00D-00F: false
+    00D-e00: false
     00E-000: false
     00E-001: false
     00E-002: false
@@ -1837,6 +1919,7 @@ Rooms:
     00E-00C: false
     00E-00D: false
     00E-00F: 
+    00E-e00: false
     00F-000: false
     00F-001: false
     00F-002: false
@@ -1852,6 +1935,23 @@ Rooms:
     00F-00C: false
     00F-00D: false
     00F-00E: 
+    00F-e00: false
+    e00-000: 
+    e00-001: 
+    e00-002: false
+    e00-003: false
+    e00-004: false
+    e00-005: false
+    e00-006: false
+    e00-007: false
+    e00-008: false
+    e00-009: false
+    e00-00A: false
+    e00-00B: false
+    e00-00C: false
+    e00-00D: false
+    e00-00E: false
+    e00-00F: false
   00-05-08:
     000-001: 
     000-002: 
@@ -1940,7 +2040,11 @@ Rooms:
     001-000: 
   00-05-1B:
     000-001: 
+    000-e02: 
     001-000: 
+    001-e02: 
+    e02-000: 
+    e02-001: 
   00-05-20:
     000-001: 
     001-000: 
@@ -2145,10 +2249,16 @@ Rooms:
   00-06-16:
     000-001: 
     000-002: false
+    000-e03: 
     001-000: 
     001-002: false
+    001-e03: 
     002-000: false
     002-001: false
+    002-e03: false
+    e03-000: 
+    e03-001: 
+    e03-002: false
   00-06-17:
     000-001: rahab
     000-e00: rahab
@@ -2271,6 +2381,9 @@ Rooms:
   00-07-0D:
     000-001: seal 4
     001-000: 
+  00-07-0E:
+    000-e00: 
+    e00-000: 
 #Cursed Clock Tower:
   00-08-00:
     000-e00: 
@@ -2379,7 +2492,11 @@ Rooms:
     001-000: 
   00-08-14:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   00-08-15:
     000-001: false
     000-002: false
@@ -2467,7 +2584,11 @@ Rooms:
     e00-000: seal 4
   00-09-01: # aguni room
     000-001: 
+    000-e06: 
     001-000: 
+    001-e06: 
+    e06-000: 
+    e06-001: 
   00-09-02:
     000-e00: 
     000-e01: 
@@ -2734,7 +2855,11 @@ Rooms:
     002-001: height & seal 5
   00-0B-13:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   00-0B-14:
     000-001: 
     001-000: 

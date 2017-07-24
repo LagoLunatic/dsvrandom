@@ -11,6 +11,7 @@ class DoorCompletabilityChecker
               :hidden_locations,
               :mirror_locations,
               :no_glyph_locations,
+              :no_progression_locations,
               :inaccessible_doors
   
   def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
@@ -56,14 +57,14 @@ class DoorCompletabilityChecker
     
     rooms = yaml["Rooms"]
     
-    @enemy_locations = []
-    @event_locations = []
-    @villager_locations = []
-    @hidden_locations = []
-    @mirror_locations = []
-    @no_soul_locations = []
-    @no_glyph_locations = []
-    @no_progression_locations = []
+    @enemy_locations = yaml["Enemy locations"] || []
+    @event_locations = yaml["Event locations"] || []
+    @villager_locations = yaml["Villager locations"] || []
+    @hidden_locations = yaml["Hidden locations"] || []
+    @mirror_locations = yaml["Mirror locations"] || []
+    @no_soul_locations = yaml["No soul locations"] || []
+    @no_glyph_locations = yaml["No glyph locations"] || []
+    @no_progression_locations = yaml["No progression locations"] || []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
