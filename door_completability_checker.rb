@@ -70,6 +70,8 @@ class DoorCompletabilityChecker
     
     @final_room_str = yaml["Final room"]
     
+    @subrooms = yaml["Subrooms"]
+    
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
       @room_reqs[room_str][:doors] = {}
@@ -95,6 +97,41 @@ class DoorCompletabilityChecker
         end
       end
     end
+  end
+  
+  def convert_rooms_to_subrooms(rooms)
+    subrooms = []
+    
+    rooms.each do |room|
+      this_rooms_subrooms = @subrooms[room.room_str]
+      if this_rooms_subrooms.nil?
+        subrooms << room
+        next
+      end
+      
+      this_rooms_subrooms.each_with_index do |list_of_doors_and_entities, subroom_index|
+        subroom = RoomRandoSubroom.new(room, subroom_index)
+        subrooms << subroom
+        
+        subroom_doors = []
+        list_of_doors_and_entities.each do |door_or_ent_str|
+          if door_or_ent_str =~ /^e/
+            next
+          end
+          if door_or_ent_str.is_a?(String)
+            door_index = door_or_ent_str.to_i(16)
+          else
+            door_index = door_or_ent_str
+          end
+          door = room.doors[door_index]
+          subroom_doors << RoomRandoDoor.new(door, subroom)
+        end
+        
+        subroom.set_subroom_doors(subroom_doors)
+      end
+    end
+    
+    return subrooms
   end
   
   def parse_reqs(reqs)

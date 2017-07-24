@@ -85,13 +85,15 @@ module DoorRandomizer
             next
           end
           
-          if sector.sector_index == 2
-            puts "On subsector: #{i}"
-            puts "Subsector rooms:"
-            subsector_rooms.each do |room|
-              puts "  %08X" % room.room_metadata_ram_pointer
-            end
-          end
+          subsector_rooms = checker.convert_rooms_to_subrooms(subsector_rooms)
+          
+          #if sector.sector_index == 2
+          #  puts "On subsector: #{i}"
+          #  puts "Subsector rooms:"
+          #  subsector_rooms.each do |room|
+          #    puts "  %08X" % room.room_metadata_ram_pointer
+          #  end
+          #end
           
           remaining_doors = get_valid_doors(subsector_rooms, sector)
           
@@ -115,8 +117,8 @@ module DoorRandomizer
           
           while true
             debug = false
-            debug = (area.area_index == 0 && sector.sector_index == 1)
-            #debug = current_room.room_metadata_ram_pointer == 0x020A84A8
+            debug = (area.area_index == 0 && sector.sector_index == 9)
+            debug = true
             
             puts "on room #{current_room.room_str}" if debug
             
@@ -207,11 +209,9 @@ module DoorRandomizer
               raise "not all rooms in this subsector are connected! %02X-%02X" % [area.area_index, sector.sector_index]
               
               current_room = unvisited_rooms.sample(random: rng)
-              #p "3 #{current_room}"
               
               if current_room.nil?
                 current_room = all_rooms.sample(random: rng)
-                #p "2 #{current_room}"
               end
               
               if remaining_doors.values.flatten.empty?
@@ -221,19 +221,10 @@ module DoorRandomizer
               next
             end
             
-            #inside_door_to_swap_with = possible_swap_doors.sample(random: rng)
-            #remaining_doors[inside_door_to_swap_with.direction].delete(inside_door_to_swap_with)
-            
-            #old_outside_door = inside_door.destination_door
-            #remaining_doors[old_outside_door.direction].delete(old_outside_door)
-            
-            #new_outside_door = inside_door_to_swap_with.destination_door
-            #remaining_doors[new_outside_door.direction].delete(new_outside_door)
             new_dest_door = possible_dest_doors.sample(random: rng)
             remaining_doors[new_dest_door.direction].delete(new_dest_door)
             
             current_room = new_dest_door.room
-            #p "1 #{current_room}"
             
             if queued_door_changes[inside_door].any? || queued_door_changes[new_dest_door].any?
               raise "Changed a door twice"
@@ -392,4 +383,36 @@ module DoorRandomizer
       drawbridge_room_waterlevel.write_to_rom()
     end
   end
+end
+
+class RoomRandoDoor < Door
+  def initialize(door, subroom)
+    attrs = %w(fs game door_ram_pointer destination_room_metadata_ram_pointer x_pos y_pos dest_x_unused dest_y_unused dest_x dest_y unknown)
+    
+    attrs.each do |attr_name|
+      instance_variable_set("@#{attr_name}", door.instance_variable_get("@#{attr_name}"))
+    end
+    
+    @room = subroom
+  end
+end
+
+class RoomRandoSubroom < Room
+  def initialize(room, subroom_index)
+    attrs = %w(area_index sector_index room_index room_xpos_on_map room_ypos_on_map layers room_metadata_ram_pointer sector)
+    
+    attrs.each do |attr_name|
+      instance_variable_set("@#{attr_name}", room.instance_variable_get("@#{attr_name}"))
+    end
+    
+    @subroom_index = subroom_index
+  end
+  
+  def set_subroom_doors(subroom_doors)
+    @doors = subroom_doors
+  end
+  
+  #def room_str
+  #  "#{super}-SUB%02X" % @subroom_index
+  #end
 end
