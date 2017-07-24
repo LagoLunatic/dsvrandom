@@ -53,6 +53,7 @@ module EnemyRandomizer
       "White Dragon",
       "Bone Pillar",
       "Fish Head",
+      "Bone Ark",
     ]
     @resource_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
