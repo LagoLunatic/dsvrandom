@@ -78,6 +78,13 @@ class Randomizer
     :enemy_num_weaknesses_range     => 0..8,
     :enemy_num_resistances_range    => 0..8,
     :boss_stat_mult_range           => 0.75..1.25,
+    
+    :item_placement_weight          => 0.1..100,
+    :soul_candle_placement_weight   => 0.1..100,
+    :por_skill_placement_weight     => 0.1..100,
+    :glyph_placement_weight         => 0.1..100,
+    :max_up_placement_weight        => 0.1..100,
+    :money_placement_weight         => 0.1..100,
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
@@ -112,6 +119,13 @@ class Randomizer
       :enemy_num_weaknesses_range     => 2,
       :enemy_num_resistances_range    => 2,
       :boss_stat_mult_range           => 1.0,
+    
+      :item_placement_weight          => 55,
+      :soul_candle_placement_weight   => 8,
+      :por_skill_placement_weight     => 25,
+      :glyph_placement_weight         => 25,
+      :max_up_placement_weight        => 18,
+      :money_placement_weight         => 2,
     },
     "Normal" => {
       :max_room_difficulty_mult       => 2.75,
@@ -145,6 +159,13 @@ class Randomizer
       :enemy_num_weaknesses_range     => 0.75,
       :enemy_num_resistances_range    => 3.25,
       :boss_stat_mult_range           => 1.12,
+    
+      :item_placement_weight          => 55,
+      :soul_candle_placement_weight   => 8,
+      :por_skill_placement_weight     => 25,
+      :glyph_placement_weight         => 25,
+      :max_up_placement_weight        => 18,
+      :money_placement_weight         => 2,
     },
   }
   

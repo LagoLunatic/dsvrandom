@@ -81,6 +81,14 @@ class RandomizerWindow < Qt::Dialog
     :enemy_num_weaknesses_range     => "Common Enemy # of Weaknesses",
     :enemy_num_resistances_range    => "Common Enemy # of Resistances",
     :boss_stat_mult_range           => "Boss Stat Multiplier",
+    
+    :pickup_placement_weight_label  => "<b>Proportions of Pickup Types</b>",
+    :item_placement_weight          => "Item Placement Weight",
+    :soul_candle_placement_weight   => "Soul Candle Placement Weight (DoS)",
+    :por_skill_placement_weight     => "Skill Placement Weight (PoR)",
+    :glyph_placement_weight         => "Glyph Placement Weight (OoE)",
+    :max_up_placement_weight        => "Max Up Placement Weight",
+    :money_placement_weight         => "Money Placement Weight",
   }
   
   slots "update_settings()"

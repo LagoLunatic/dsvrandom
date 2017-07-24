@@ -381,16 +381,49 @@ module PickupRandomizer
       elsif GAME == "dos" && checker.mirror_locations.include?(location)
         # Soul candles shouldn't be placed in mirrors, as they will appear even outside the mirror.
         pickup_global_id = get_unplaced_non_progression_item()
-      elsif GAME == "ooe"
+      elsif GAME == "dos" && !chaos_ring_placed
+        pickup_global_id = 0xCD
+        chaos_ring_placed = true
+      elsif GAME == "por" && !chaos_ring_placed
+        pickup_global_id = 0x12C
+        chaos_ring_placed = true
+      else
         # Pickup
-        case rng.rand
-        when 0.00..0.02 # 2% chance to be money
+        
+        # Select the type of pickup weighed by difficulty options.
+        weights = {
+          money: @difficulty_settings[:money_placement_weight],
+          item: @difficulty_settings[:item_placement_weight],
+        }
+        if GAME == "por" || GAME == "ooe"
+          weights[:max_up] = @difficulty_settings[:max_up_placement_weight]
+        end
+        case GAME
+        when "dos"
+          weights[:skill] = @difficulty_settings[:soul_candle_placement_weight]
+        when "por"
+          weights[:skill] = @difficulty_settings[:por_skill_placement_weight]
+        when "ooe"
+          weights[:skill] = @difficulty_settings[:glyph_placement_weight]
+        end
+        
+        weighted_pickup_types = {}
+        weights_sum = weights.values.reduce(:+)
+        weights.each do |type, weight|
+          weighted_pickup_types[type] = weight.to_f / weights_sum
+        end
+        
+        random_pickup_type = weighted_pickup_types.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
+        all_pickup_types << random_pickup_type
+        
+        case random_pickup_type
+        when :money
           pickup_global_id = :money
-        when 0.02..0.20 # 18% chance to be a max up
+        when :max_up
           pickup_global_id = @max_up_items.sample(random: rng)
-        when 0.20..0.45 # 25% chance to be a skill
+        when :skill
           pickup_global_id = get_unplaced_non_progression_skill()
-        when 0.45..1.00 # 55% chance to be an item
+        when :item
           if checker.hidden_locations.include?(location)
             # Don't let relics be inside breakable walls in OoE.
             # This is because they need to be inside a chest, and chests can't be hidden.
@@ -398,34 +431,6 @@ module PickupRandomizer
           else
             pickup_global_id = get_unplaced_non_progression_item()
           end
-        end
-      elsif GAME == "dos" && !chaos_ring_placed
-        pickup_global_id = 0xCD
-        chaos_ring_placed = true
-      elsif GAME == "por" && !chaos_ring_placed
-        pickup_global_id = 0x12C
-        chaos_ring_placed = true
-      elsif GAME == "por"
-        # Pickup
-        case rng.rand
-        when 0.00..0.02 # 2% chance to be money
-          pickup_global_id = :money
-        when 0.02..0.20 # 18% chance to be a max up
-          pickup_global_id = @max_up_items.sample(random: rng)
-        when 0.20..0.45 # 25% chance to be a skill
-          pickup_global_id = get_unplaced_non_progression_skill()
-        when 0.45..1.00 # 55% chance to be an item
-          pickup_global_id = get_unplaced_non_progression_item()
-        end
-      else # DoS
-        # Pickup
-        case rng.rand
-        when 0.00..0.02 # 2% chance to be money
-          pickup_global_id = :money
-        when 0.02..0.15 # 13% chance to be a skill
-          pickup_global_id = get_unplaced_non_progression_skill()
-        when 0.15..1.00 # 85% chance to be an item
-          pickup_global_id = get_unplaced_non_progression_item()
         end
       end
       
