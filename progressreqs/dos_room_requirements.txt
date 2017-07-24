@@ -54,8 +54,7 @@ Defs:
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
   backdashjump: true
-  
-  beat game: true # TODO
+Final room: 00-0B-1F
 Enemy locations:
   - 00-00-0B_02
   - 00-01-06_01
@@ -99,6 +98,8 @@ Allowed starter items:
   - hippogryph
   - bat company
   - bat form
+Warp connections:
+  00-05-27_000: 00-0B-00_000
 Inaccessible doors:
   - 00-00-04_002
   - 00-00-04_004

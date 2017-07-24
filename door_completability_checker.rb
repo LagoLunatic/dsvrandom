@@ -66,6 +66,10 @@ class DoorCompletabilityChecker
     @no_glyph_locations = yaml["No glyph locations"] || []
     @no_progression_locations = yaml["No progression locations"] || []
     
+    @warp_connections = yaml["Warp connections"]
+    
+    @final_room_str = yaml["Final room"]
+    
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
       @room_reqs[room_str][:doors] = {}
@@ -116,7 +120,7 @@ class DoorCompletabilityChecker
   end
   
   def game_beatable?
-    check_reqs([[:beat_game]])
+    return get_accessible_rooms().include?(@final_room_str)
   end
   
   def check_reqs(reqs)
@@ -213,7 +217,7 @@ class DoorCompletabilityChecker
     end
   end
   
-  def get_accessible_locations # TODO UNTESTED
+  def get_accessible_locations_and_rooms
     accessible_locations = []
     
     accessible_doors = []
@@ -246,6 +250,14 @@ class DoorCompletabilityChecker
       next if checked_doors.include?(door_str)
       checked_doors << door_str
       
+      if @warp_connections[door_str]
+        connected_door_str = @warp_connections[door_str]
+        accessible_doors << connected_door_str
+        connected_door = game.door_by_str(connected_door_str)
+        destination_door_str = connected_door.destination_door.door_str
+        accessible_doors << destination_door_str
+      end
+      
       door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h|e\h\h)$/
       room_str = $1
       door_or_ent_index = $2
@@ -255,17 +267,11 @@ class DoorCompletabilityChecker
         door_index = door_or_ent_index.to_i(16)
       end
       room = game.room_by_str(room_str)
-      #puts "ON ROOM: #{room_str}"
       
       if @room_reqs[room_str].nil?
         next
       end
       
-      #p room_str
-      #p @room_reqs[room_str]
-      #p @room_reqs[room_str][:doors]
-      #p door_index
-      #p @room_reqs[room_str][:doors][door_index]
       if door_index
         possible_path_ends = @room_reqs[room_str][:doors][door_index]
       else
@@ -281,7 +287,6 @@ class DoorCompletabilityChecker
           else
             # Door
             door_index = path_end.to_i(16)
-            #puts "ON DOOR: #{door_index}"
             door = room.doors[door_index]
             dest_door = door.destination_door
             dest_room = dest_door.room
@@ -293,7 +298,17 @@ class DoorCompletabilityChecker
       end
     end
     
-    return accessible_locations
+    accessible_rooms = accessible_doors.map{|door_str| door_str[0,8]}.uniq
+    
+    return [accessible_locations, accessible_rooms]
+  end
+  
+  def get_accessible_locations
+    get_accessible_locations_and_rooms().first
+  end
+  
+  def get_accessible_rooms
+    get_accessible_locations_and_rooms().last
   end
   
   def all_progression_pickups
