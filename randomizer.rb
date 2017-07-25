@@ -564,6 +564,11 @@ class Randomizer
           end
         end
       end
+      
+      # Modify the level design of the drawbridge room so you can go up and down even when the drawbridge is closed.
+      filename = "./dsvrandom/roomedits/dos_room_rando_00-00-15.tmx"
+      room = game.areas[0].sectors[0].rooms[0x15]
+      tiled.read(filename, room)
     end
   end
   
