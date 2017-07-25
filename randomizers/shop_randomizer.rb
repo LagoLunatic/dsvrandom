@@ -23,6 +23,10 @@ module ShopRandomizer
     
     available_shop_item_ids.shuffle!(random: rng)
     
+    available_arm_shifted_immediate_shop_item_ids = available_shop_item_ids.select do |item_id|
+      game.fs.check_integer_can_be_an_arm_shifted_immediate?(item_id)
+    end
+    
     game.shop_item_pools.each_with_index do |pool, pool_index|
       pool.item_ids.length.times do |i|
         if GAME == "por" && pool_index == 0 && i == 0
@@ -33,9 +37,17 @@ module ShopRandomizer
           pool.item_ids[i] = 0x4B+1 # Castle map 1 for the first quest
           available_shop_item_ids.delete(0x4B)
           next
+        elsif pool.slot_is_arm_shifted_immediate?(i)
+          # This is a hardcoded slot that must be an arm shifted immediate.
+          item_id = available_arm_shifted_immediate_shop_item_ids.pop()
+          pool.item_ids[i] = item_id + 1
+          available_shop_item_ids.delete(item_id)
+          next
         end
         
-        pool.item_ids[i] = available_shop_item_ids.pop() + 1
+        item_id = available_shop_item_ids.pop()
+        pool.item_ids[i] = item_id + 1
+        available_arm_shifted_immediate_shop_item_ids.delete(item_id)
       end
       
       pool.write_to_rom()
