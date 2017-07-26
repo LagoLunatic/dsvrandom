@@ -24,7 +24,7 @@ module ShopRandomizer
     available_shop_item_ids.shuffle!(random: rng)
     
     available_arm_shifted_immediate_shop_item_ids = available_shop_item_ids.select do |item_id|
-      game.fs.check_integer_can_be_an_arm_shifted_immediate?(item_id)
+      game.fs.check_integer_can_be_an_arm_shifted_immediate?(item_id+1)
     end
     
     game.shop_item_pools.each_with_index do |pool, pool_index|
