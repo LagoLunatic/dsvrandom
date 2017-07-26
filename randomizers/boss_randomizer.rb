@@ -199,6 +199,11 @@ module BossRandomizer
   
   def ooe_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case new_boss.name
+    when "Maneater"
+      # Maneater needs a wide room or his boss orb will be stuck inside the wall.
+      if boss_entity.room.width < 2
+        return false
+      end
     when "Blackmore"
       # Blackmore needs a wide room.
       if boss_entity.room.width < 2
