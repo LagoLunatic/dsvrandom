@@ -378,6 +378,13 @@ module BossRandomizer
     end
     
     case new_boss.name
+    when "Giant Skeleton"
+      boss_entity.var_a = 1 # Boss version of the Giant Skeleton
+      boss_entity.var_b = 0 # Faces the player when they enter the room.
+      
+      # The boss version of the Giant Skeleton doesn't wake up until the searchlight is on him, but there's no searchlight in other boss rooms.
+      # So we modify the line of code that checks if he should wake up to use the code for the common enemy Giant Skeleton instead.
+      game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
     when "Wallman"
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
