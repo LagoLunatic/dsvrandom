@@ -383,6 +383,171 @@ module DoorRandomizer
       drawbridge_room_waterlevel.write_to_rom()
     end
   end
+  
+  def update_room_positions_on_maps
+    unvisited_rooms = []
+    game.each_room do |room|
+      next if (0xA..0x10).include?(room.sector_index)
+      unvisited_rooms << room
+    end
+    current_room = unvisited_rooms.first
+    (unvisited_rooms-[current_room]).each do |room|
+      room.room_xpos_on_map = 0
+      room.room_ypos_on_map = 0
+    end
+    rooms_to_do = [current_room]
+    done_rooms = []
+    while true
+      unvisited_rooms.delete(current_room)
+      rooms_to_do.delete(current_room)
+      
+      curr_x = current_room.room_xpos_on_map
+      curr_y = current_room.room_ypos_on_map
+      
+      room_doors = current_room.doors.reject do |door|
+        checker.inaccessible_doors.include?(door.door_str)
+      end
+      room_doors.uniq!{|door| door.destination_door.room}
+      room_doors.each do |door|
+        dest_door = door.destination_door
+        dest_room = dest_door.room
+        
+        door_x = door.x_pos
+        door_x = -1 if door_x == 0xFF
+        door_y = door.y_pos
+        door_y = -1 if door_y == 0xFF
+        dest_door_x = dest_door.x_pos
+        dest_door_x = -1 if dest_door_x == 0xFF
+        dest_door_y = dest_door.y_pos
+        dest_door_y = -1 if dest_door_y == 0xFF
+        
+        new_x = curr_x + door_x - dest_door_x
+        new_y = curr_y + door_y - dest_door_y
+        case door.direction
+        when :left
+          new_x += 1
+        when :right
+          new_x -= 1
+        when :up
+          new_y += 1
+        when :down
+          new_y -= 1
+        end
+        dest_room.room_xpos_on_map = new_x
+        dest_room.room_ypos_on_map = new_y
+        
+        rooms_to_do << dest_room
+      end
+      
+      current_room.write_to_rom()
+      done_rooms << current_room
+      
+      puts current_room.room_str
+      if !unvisited_rooms.find{|x| x.room_str == "00-01-00"}
+        puts "!!!"
+      end
+      
+      rooms_to_do = rooms_to_do.uniq & unvisited_rooms
+      break if rooms_to_do.empty?
+      current_room = rooms_to_do.first
+    end
+    puts "undone rooms: #{unvisited_rooms.size}"
+    unvisited_rooms.each_with_index do |room, i|
+      room.room_xpos_on_map = 0#i
+      room.room_ypos_on_map = 0
+      puts "  #{room.room_str}"
+    end
+    
+    min_x = done_rooms.map{|room| room.room_xpos_on_map}.min
+    if min_x < 1
+      offset = 1 - min_x
+      done_rooms.each do |room|
+        room.room_xpos_on_map += offset
+        room.room_xpos_on_map = room.room_xpos_on_map % 64 # TODO
+        room.write_to_rom()
+      end
+    end
+    min_y = done_rooms.map{|room| room.room_ypos_on_map}.min
+    if min_y < 1
+      offset = 1 - min_y
+      done_rooms.each do |room|
+        room.room_ypos_on_map += offset
+        room.room_ypos_on_map = room.room_ypos_on_map % 0x30 # TODO
+        room.write_to_rom()
+      end
+    end
+    
+    #regenerate_map()
+    #gets
+  end
+  
+  def regenerate_map
+    map = game.get_map(0, 0)
+    area = game.areas[0]
+    map.tiles.each do |tile|
+      tile.is_blank = true
+      
+      tile.is_save = false
+      tile.is_warp = false
+      
+      tile.top_secret = false
+      tile.top_door = false
+      tile.top_wall = false
+      tile.left_secret = false
+      tile.left_door = false
+      tile.left_wall = false
+      
+      tile.sector_index = nil
+      tile.room_index = nil
+    end
+    map.tiles.each do |tile|
+      x, y = tile.x_pos, tile.y_pos
+      sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
+      
+      left_tile = map.tiles.find{|t| t.x_pos == x-1 && t.y_pos == y}
+      top_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y-1}
+      #tile.top_secret = false
+      #tile.top_door = false
+      #tile.top_wall = false
+      #tile.left_secret = false
+      #tile.left_door = false
+      #tile.left_wall = false
+      if left_tile && (left_tile.sector_index != sector_index || left_tile.room_index != room_index)
+        tile.left_wall = true
+      end
+      if top_tile && (top_tile.sector_index != sector_index || top_tile.room_index != room_index)
+        tile.top_wall = true
+      end
+      
+      if sector_index
+        room = area.sectors[sector_index].rooms[room_index]
+        
+        tile.is_blank = false
+        
+        tile.is_save = room.entities.any?{|e| e.is_special_object? && e.subtype == 0x30}
+        tile.is_warp = room.entities.any?{|e| e.is_special_object? && e.subtype == 0x31}
+        
+        tile.sector_index = sector_index
+        tile.room_index = room_index
+        
+        room_doors = room.doors.reject do |door|
+          checker.inaccessible_doors.include?(door.door_str)
+        end
+        tile_y_offset_in_room = tile.y_pos - room.room_ypos_on_map
+        if tile.left_wall && room_doors.find{|door| door.direction == :left && door.y_pos == tile_y_offset_in_room}
+          tile.left_door = true
+          tile.left_wall = false
+        end
+        tile_x_offset_in_room = tile.x_pos - room.room_xpos_on_map
+        if tile.top_wall && room_doors.find{|door| door.direction == :up && door.x_pos == tile_x_offset_in_room}
+          tile.top_door = true
+          tile.top_wall = false
+        end
+      end
+    end
+    map.write_to_rom()
+    Renderer.new(game.fs).render_map(map, scale=3).save("maptest.png")
+  end
 end
 
 class RoomRandoDoor < Door
