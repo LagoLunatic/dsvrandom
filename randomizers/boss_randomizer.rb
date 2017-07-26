@@ -119,6 +119,11 @@ module BossRandomizer
       
       # Give the new boss the old boss's soul so progression still works.
       queued_dna_changes[new_boss_id]["Soul"] = old_boss["Soul"]
+      if old_boss["Soul"] == 0xFF
+        # Some bosses such as Flying Armor won't open the boss doors until the player gets their soul drop.
+        # So we have to make sure no bosses have no soul drop (FF).
+        queued_dna_changes[new_boss_id]["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+      end
       
       # Make the new boss have the stats of the old boss so it fits in at this point in the game.
       queued_dna_changes[new_boss_id]["HP"]               = old_boss["HP"]
