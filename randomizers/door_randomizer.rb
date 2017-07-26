@@ -549,35 +549,3 @@ module DoorRandomizer
     Renderer.new(game.fs).render_map(map, scale=3).save("maptest.png")
   end
 end
-
-class RoomRandoDoor < Door
-  def initialize(door, subroom)
-    attrs = %w(fs game door_ram_pointer destination_room_metadata_ram_pointer x_pos y_pos dest_x_unused dest_y_unused dest_x dest_y unknown)
-    
-    attrs.each do |attr_name|
-      instance_variable_set("@#{attr_name}", door.instance_variable_get("@#{attr_name}"))
-    end
-    
-    @room = subroom
-  end
-end
-
-class RoomRandoSubroom < Room
-  def initialize(room, subroom_index)
-    attrs = %w(area_index sector_index room_index room_xpos_on_map room_ypos_on_map layers room_metadata_ram_pointer sector)
-    
-    attrs.each do |attr_name|
-      instance_variable_set("@#{attr_name}", room.instance_variable_get("@#{attr_name}"))
-    end
-    
-    @subroom_index = subroom_index
-  end
-  
-  def set_subroom_doors(subroom_doors)
-    @doors = subroom_doors
-  end
-  
-  #def room_str
-  #  "#{super}-SUB%02X" % @subroom_index
-  #end
-end
