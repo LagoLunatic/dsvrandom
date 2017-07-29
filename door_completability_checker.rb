@@ -490,7 +490,15 @@ class RoomRandoDoor < Door
       instance_variable_set("@#{attr_name}", door.instance_variable_get("@#{attr_name}"))
     end
     
+    @original_door = door
+    
     @room = subroom
+  end
+  
+  def write_to_rom()
+    super
+    # Need to reload the original door so it can be referenced by the completability checking logic.
+    @original_door.read_from_rom(door_ram_pointer)
   end
 end
 
