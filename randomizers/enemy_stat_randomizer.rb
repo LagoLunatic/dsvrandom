@@ -102,8 +102,8 @@ module EnemyStatRandomizer
         num_resists = named_rand_range_weighted(:enemy_num_resistances_range)
       end
       
-      weakness_names = all_non_status_elements.sample(num_weaknesses)
-      resist_names = all_non_status_elements.sample(num_resists)
+      weakness_names = all_non_status_elements.sample(num_weaknesses, random: rng)
+      resist_names = all_non_status_elements.sample(num_resists, random: rng)
       
       [
         "Weaknesses",

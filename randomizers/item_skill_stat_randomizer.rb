@@ -3,7 +3,7 @@ module ItemSkillStatRandomizer
   def get_n_damage_types(all_damage_types, possible_n_values)
     known_damage_type_names = all_damage_types.select{|name| name !~ /\d$/}
     num_damage_types = possible_n_values.sample(random: rng)
-    damage_types_to_set = known_damage_type_names.sample(num_damage_types)
+    damage_types_to_set = known_damage_type_names.sample(num_damage_types, random: rng)
     damage_types_to_set
   end
   
