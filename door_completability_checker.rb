@@ -254,7 +254,7 @@ class DoorCompletabilityChecker
     end
   end
   
-  def get_accessible_locations_and_rooms
+  def get_accessible_locations_doors_and_rooms
     accessible_locations = []
     
     accessible_doors = []
@@ -337,15 +337,19 @@ class DoorCompletabilityChecker
     
     accessible_rooms = accessible_doors.map{|door_str| door_str[0,8]}.uniq
     
-    return [accessible_locations, accessible_rooms]
+    return [accessible_locations, accessible_doors, accessible_rooms]
   end
   
   def get_accessible_locations
-    get_accessible_locations_and_rooms().first
+    get_accessible_locations_doors_and_rooms()[0]
+  end
+  
+  def get_accessible_doors
+    get_accessible_locations_doors_and_rooms()[1]
   end
   
   def get_accessible_rooms
-    get_accessible_locations_and_rooms().last
+    get_accessible_locations_doors_and_rooms()[2]
   end
   
   def all_progression_pickups
