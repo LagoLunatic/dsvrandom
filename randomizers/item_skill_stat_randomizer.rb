@@ -406,8 +406,8 @@ module ItemSkillStatRandomizer
         # Set either the sub or spell bit in the damage types bitfield to let enemies know what this is now.
         is_spell = skill["??? bitfield"][2]
         is_sub = !is_spell
-        skill["Effects"][25] = is_sub
-        skill["Effects"][26] = is_spell
+        skill["Effects"][25] = is_sub   # "Is a subweapon" bit
+        skill["Effects"][26] = is_spell # "Is a spell" bit
       end
       
       case GAME
