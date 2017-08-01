@@ -420,6 +420,16 @@ module EnemyRandomizer
         return :redo
       end
       enemy.y_pos = y
+      
+      room_has_left_doors = !!enemy.room.doors.find{|door| door.direction == :left}
+      room_has_right_doors = !!enemy.room.doors.find{|door| door.direction == :right}
+      if room_has_left_doors
+        enemy.x_pos = [enemy.x_pos, 0x20].max
+      end
+      if room_has_right_doors
+        room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
+        enemy.x_pos = [enemy.x_pos, room_width-0x20].min
+      end
     when "Malachi"
       enemy.var_a = 0
     when "Medusa Head"
