@@ -277,8 +277,8 @@ module PickupRandomizer
       
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
-      new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
-      puts "New possible locations: #{new_possible_locations.size}"
+      filtered_new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
+      puts "Filtered new possible locations: #{filtered_new_possible_locations.size}"
       
       valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
         possible_locations = previous_accessible_region.dup
@@ -291,7 +291,7 @@ module PickupRandomizer
         possible_locations
       end.compact
       
-      possible_locations_to_choose_from = new_possible_locations.dup
+      possible_locations_to_choose_from = filtered_new_possible_locations.dup
       
       if placing_currently_useless_pickup
         # Place items that don't immediately open up new areas anywhere in the game, with no weighting towards later areas.
@@ -307,10 +307,10 @@ module PickupRandomizer
           possible_locations
         end.compact.flatten
         
-        valid_accessible_locations += new_possible_locations
+        valid_accessible_locations += filtered_new_possible_locations
         
         possible_locations_to_choose_from = valid_accessible_locations
-      elsif new_possible_locations.empty?
+      elsif filtered_new_possible_locations.empty?
         # No new locations, so select an old location.
         
         if valid_previous_accessible_regions.empty?
@@ -343,12 +343,12 @@ module PickupRandomizer
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
           puts "No new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"
         end
-      elsif new_possible_locations.size <= 5 && valid_previous_accessible_regions.last && valid_previous_accessible_regions.last.size >= 25
+      elsif filtered_new_possible_locations.size <= 5 && valid_previous_accessible_regions.last && valid_previous_accessible_regions.last.size >= 15
         # There aren't many new locations unlocked by the last item we placed.
         # But there are a lot of other locations unlocked by the one we placed before that.
         # So we give it a chance to put it in one of those last spots, instead of the new spots.
-        # The chance is proportional to how few new locations there are. 1 = 50%, 2 = 40%, 3 = 30%, 4 = 20%, 5 = 10%.
-        chance = 0.10 + (5-new_possible_locations.size)*10
+        # The chance is proportional to how few new locations there are. 1 = 70%, 2 = 60%, 3 = 50%, 4 = 40%, 5 = 30%.
+        chance = 0.30 + (5-filtered_new_possible_locations.size)*10
         if rng.rand() <= chance
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
           puts "Not many new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"

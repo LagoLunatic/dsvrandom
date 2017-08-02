@@ -15,11 +15,19 @@ Defs:
   dominus hatred: 0x31
   dominus anger: 0x32
   dominus agony: 0x4E
+  cat tackle glyph: 0x33
+  arma felix: 0x42
+  moonwalkers: 0x125
+  mercury boots: 0x126
+  winged boots: 0x127
   
   medium height: double jump | big height
   big height: volaticus | redire
   distance: rapidus fio | redire
   redire: redire glyph & magnes
+  cat tackle: cat tackle glyph | arma felix
+  small distance: cat tackle | moonwalkers | mercury boots | winged boots | distance
+  medium distance: moonwalkers & cat tackle | winged boots & cat tackle | distance
   
   ecclesia: true
   
@@ -50,7 +58,7 @@ Defs:
   tymeo: kaliduslower | nonlinear
   tymeomid: tymeo & magnes | tymeo & big height # to get past the spike room
   villagerlaura: villagerlaura
-  tymeoeast: tymeomid & medium height | tymeomid & distance
+  tymeoeast: tymeomid & medium height | tymeomid & medium distance
   villagermarcel: villagermarcel
   
   mistyroad: tymeomid | nonlinear
@@ -76,7 +84,7 @@ Defs:
   argilaswamp: oblivionridge | nonlinear
   
   mysterymanor: argilaswamp | nonlinear
-  mysterymanormid: mysterymanor & medium height | mysterymanor & distance
+  mysterymanormid: mysterymanor & medium height | mysterymanor & small distance
   bossalbus: mysterymanormid
   
   allvillagers: villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
@@ -226,7 +234,7 @@ Rooms:
     room: mechtowerupper
     00 (Death Ring): 
   00-06-1C:
-    room: mechtower & magnes | mechtower & volaticus | mechtower & distance
+    room: mechtower & magnes | mechtower & volaticus | mechtower & distance | mechtower & winged boots
     01 (Morbus) (Event): false # don't place progression pickups here. you need fulgur or vol fulgur to get here, but I don't want fulgur/vol fulgur to be considered progression pickups.
   00-07-02:
     room: mechtower
@@ -538,7 +546,7 @@ Rooms:
 #Misty Forest Road:
   0F-00-02:
     room: mistyroad
-    01 (Rue): distance | big height
+    01 (Rue): distance | big height | double jump & cat tackle | double jump & mercury boots | double jump & winged boots
   0F-00-04:
     room: mistyroad & paries
     00 (Melio Arcus): 
@@ -547,7 +555,7 @@ Rooms:
   0F-00-05:
     room: mistyroad
     00 (Vol Macir): 
-    02 (Sage): distance | big height | magnes
+    02 (Sage): distance | big height | magnes | double jump & cat tackle | double jump & mercury boots | double jump & winged boots
 #Oblivion Ridge:
   10-00-00:
     room: oblivionridge
@@ -555,10 +563,10 @@ Rooms:
   10-01-01:
     room: oblivionridge
     02 (Diamond) (Hidden): 
-    03 (Chamomile): distance | big height
+    03 (Chamomile): distance | big height | double jump & cat tackle | double jump & mercury boots | double jump & winged boots
   10-01-03:
     room: oblivionridge
-    01 (Sapiens Fio): distance | big height
+    01 (Sapiens Fio): distance | big height | double jump & cat tackle | double jump & mercury boots | double jump & winged boots
 #Skeleton Cave:
   11-00-03:
     room: skelecave
