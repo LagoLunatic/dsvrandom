@@ -5,6 +5,7 @@ class CompletabilityChecker
   attr_reader :game,
               :current_items,
               :defs,
+              :preferences,
               :enemy_locations,
               :event_locations,
               :villager_locations,
@@ -51,6 +52,14 @@ class CompletabilityChecker
     
     if @enable_glitches
       @defs.merge!(@glitch_defs)
+    end
+    
+    @preferences = {}
+    if yaml["Preferences"]
+      yaml["Preferences"].each do |pickup_name, weight|
+        pickup_id = @defs[pickup_name.strip.tr(" ", "_").to_sym]
+        @preferences[pickup_id] = weight
+      end
     end
     
     rooms = yaml["Rooms"]

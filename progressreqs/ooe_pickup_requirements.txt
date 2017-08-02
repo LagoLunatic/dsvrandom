@@ -1,4 +1,10 @@
 
+Preferences:
+  cat tackle glyph: 0.1
+  arma felix: 0.1
+  moonwalkers: 0.1
+  mercury boots: 0.1
+  winged boots: 0.1
 Glitch defs:
   # none
 Defs:

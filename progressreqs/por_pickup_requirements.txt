@@ -1,4 +1,6 @@
 
+Preferences:
+  # none
 Glitch defs:
   katar: 0x78
   cinquedia: 0x79

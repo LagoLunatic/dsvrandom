@@ -1,4 +1,6 @@
 
+Preferences:
+  # none
 Glitch defs:
   cutall: 0x46
   cinquedia: 0x47
