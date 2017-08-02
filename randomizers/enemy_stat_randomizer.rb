@@ -121,6 +121,13 @@ module EnemyStatRandomizer
           elsif is_boss
             # Don't randomize boss status effect weaknesses.
             next
+          elsif GAME == "por" && bitfield_attr_name == "Resistances" && [25, 26].include?(i)
+            # Deflect subweapons/Deflect spells bits.
+            if rng.rand() <= 0.10
+              enemy_dna[bitfield_attr_name][i] = true
+            else
+              enemy_dna[bitfield_attr_name][i] = false
+            end
           else
             # Status effects for common enemies.
             if GAME == "dos" || bitfield_attr_name == "Weaknesses" # Don't set status effect resists in PoR/OoE since they do nothing anyway.
