@@ -432,7 +432,35 @@ module ItemSkillStatRandomizer
             else
               mastered_bonus_max_at_once = rand_range_weighted(1..6)
               skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
-              skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
+              
+              nonoffensive_skills = [
+                "Puppet Master",
+                "Gnebu",
+                "Stonewall",
+                "Offensive Form",
+                "Defensive Form",
+                "Taunt",
+                "Toad Morph",
+                "Owl Morph",
+                "Sanctuary",
+                "Berserker",
+                "Clear Skies",
+                "Time Stop",
+                "Heal",
+                "Cure Poison",
+                "Cure Curse",
+                "STR Boost",
+                "CON Boost",
+                "INT Boost",
+                "MIND Boost",
+                "LUCK Boost",
+                "ALL Boost",
+              ]
+              if nonoffensive_skills.include?(skill.name)
+                skill_extra_data["SP to Master"] = 0
+              else
+                skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
+              end
             end
           end
           
