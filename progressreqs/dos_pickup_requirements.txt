@@ -318,7 +318,7 @@ Rooms:
     02 (Anti-Venom): 
   00-04-13:
     room: bossdmitrii
-    00 (Hoop Earring): medium height & backdashjump | big height | black panther | medium height & flying armor
+    00 (Hoop Earring) (No souls): medium height & backdashjump | big height | black panther | medium height & flying armor
   00-04-14:
     room: chapel
     00 (Potion): 

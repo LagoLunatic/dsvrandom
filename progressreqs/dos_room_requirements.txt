@@ -1,5 +1,4 @@
 
-# TODO: add separate lists up here for mirror locations, boss locations, etc so it doesn't clutter up the lists below.
 # TODO: money chests
 Glitch defs:
   cutall: 0x46
@@ -82,6 +81,7 @@ Mirror locations:
 No soul locations:
   - 00-02-00_00
   - 00-02-10_00
+  - 00-04-13_00
 Allowed starter items:
   - malphas
   - malphas
@@ -1381,9 +1381,9 @@ Rooms:
     005-002: false
     005-003: false
     005-004: false
-  00-03-0E:
-    000-001: 
-    001-000: 
+  00-03-0E: # doppelganger event
+    000-001: mina talisman & seal 5
+    001-000: mina talisman & seal 5
   00-03-0F:
     000-001: rahab
     001-000: rahab
@@ -2057,7 +2057,7 @@ Rooms:
     e02-002: 
   00-05-0C:
     000-001: # TODO the sealed darkness gate
-    001-000: false
+    001-000: #false
   00-05-0E:
     000-001: 
     001-000: 

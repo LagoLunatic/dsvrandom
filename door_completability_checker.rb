@@ -158,6 +158,7 @@ class DoorCompletabilityChecker
   
   def game_beatable?
     return get_accessible_rooms().include?(@final_room_str)
+    @debug_doors = false
   end
   
   def check_reqs(reqs)
