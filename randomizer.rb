@@ -47,13 +47,6 @@ class Randomizer
               :checker
   
   DIFFICULTY_RANGES = {
-    :max_room_difficulty_mult       => 1.0..5.0,
-    :max_enemy_difficulty_mult      => 1.0..5.0,
-    :enemy_id_preservation_exponent => 0.0..5.0,
-    
-    :item_drop_chance_range         => 1..25,
-    :skill_drop_chance_range        => 1..15,
-    
     :item_price_range               => 100..25000,
     :weapon_attack_range            => 0..150,
     :weapon_iframes_range           => 4..55,
@@ -74,10 +67,8 @@ class Randomizer
     :skill_max_at_once_range        => 1..8,
     :glyph_attack_delay_range       => 1..20,
     
-    :enemy_stat_mult_range          => 0.5..2.5,
-    :enemy_num_weaknesses_range     => 0..8,
-    :enemy_num_resistances_range    => 0..8,
-    :boss_stat_mult_range           => 0.75..1.25,
+    :item_drop_chance_range         => 1..25,
+    :skill_drop_chance_range        => 1..15,
     
     :item_placement_weight          => 0.1..100,
     :soul_candle_placement_weight   => 0.1..100,
@@ -85,16 +76,18 @@ class Randomizer
     :glyph_placement_weight         => 0.1..100,
     :max_up_placement_weight        => 0.1..100,
     :money_placement_weight         => 0.1..100,
+    
+    :max_room_difficulty_mult       => 1.0..5.0,
+    :max_enemy_difficulty_mult      => 1.0..5.0,
+    :enemy_id_preservation_exponent => 0.0..5.0,
+    
+    :enemy_stat_mult_range          => 0.5..2.5,
+    :enemy_num_weaknesses_range     => 0..8,
+    :enemy_num_resistances_range    => 0..8,
+    :boss_stat_mult_range           => 0.75..1.25,
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
-      :max_room_difficulty_mult       => 2.0,
-      :max_enemy_difficulty_mult      => 1.3,
-      :enemy_id_preservation_exponent => 3.0,
-      
-      :item_drop_chance_range         => 13,
-      :skill_drop_chance_range        => 8,
-      
       :item_price_range               => 2500,
       :weapon_attack_range            => 30,
       :weapon_iframes_range           => 30,
@@ -115,26 +108,26 @@ class Randomizer
       :skill_max_at_once_range        => 2,
       :glyph_attack_delay_range       => 7,
     
-      :enemy_stat_mult_range          => 1.0,
-      :enemy_num_weaknesses_range     => 2,
-      :enemy_num_resistances_range    => 2,
-      :boss_stat_mult_range           => 1.0,
-    
+      :item_drop_chance_range         => 13,
+      :skill_drop_chance_range        => 8,
+      
       :item_placement_weight          => 55,
       :soul_candle_placement_weight   => 8,
       :por_skill_placement_weight     => 25,
       :glyph_placement_weight         => 25,
       :max_up_placement_weight        => 18,
       :money_placement_weight         => 2,
+      
+      :max_room_difficulty_mult       => 2.0,
+      :max_enemy_difficulty_mult      => 1.3,
+      :enemy_id_preservation_exponent => 3.0,
+    
+      :enemy_stat_mult_range          => 1.0,
+      :enemy_num_weaknesses_range     => 2,
+      :enemy_num_resistances_range    => 2,
+      :boss_stat_mult_range           => 1.0,
     },
     "Normal" => {
-      :max_room_difficulty_mult       => 2.75,
-      :max_enemy_difficulty_mult      => 1.8,
-      :enemy_id_preservation_exponent => 3.5,
-      
-      :item_drop_chance_range         => 11,
-      :skill_drop_chance_range        => 6,
-      
       :item_price_range               => 5000,
       :weapon_attack_range            => 14,
       :weapon_iframes_range           => 39,
@@ -155,17 +148,24 @@ class Randomizer
       :skill_max_at_once_range        => 1.5,
       :glyph_attack_delay_range       => 8.5,
       
-      :enemy_stat_mult_range          => 1.75,
-      :enemy_num_weaknesses_range     => 0.75,
-      :enemy_num_resistances_range    => 3.25,
-      :boss_stat_mult_range           => 1.12,
-    
+      :item_drop_chance_range         => 11,
+      :skill_drop_chance_range        => 6,
+      
       :item_placement_weight          => 55,
       :soul_candle_placement_weight   => 8,
       :por_skill_placement_weight     => 25,
       :glyph_placement_weight         => 25,
       :max_up_placement_weight        => 18,
       :money_placement_weight         => 2,
+      
+      :max_room_difficulty_mult       => 2.75,
+      :max_enemy_difficulty_mult      => 1.8,
+      :enemy_id_preservation_exponent => 3.5,
+      
+      :enemy_stat_mult_range          => 1.75,
+      :enemy_num_weaknesses_range     => 0.75,
+      :enemy_num_resistances_range    => 3.25,
+      :boss_stat_mult_range           => 1.12,
     },
   }
   

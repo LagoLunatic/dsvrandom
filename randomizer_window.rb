@@ -46,15 +46,6 @@ class RandomizerWindow < Qt::Dialog
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
-    :enemy_difficulty_label         => "<b>Enemy Placement Difficulty</b>",
-    :max_room_difficulty_mult       => "Max Room Total Attack Multiplier",
-    :max_enemy_difficulty_mult      => "Max Enemy Attack Difference Multiplier",
-    :enemy_id_preservation_exponent => "Enemy ID Number Difference Weighting",
-    
-    :drop_chances_label             => "<b>Average Enemy Drop Chances</b>",
-    :item_drop_chance_range         => "Item Drop Chance",
-    :skill_drop_chance_range        => "Soul/Glyph Drop Chance",
-    
     :item_stat_label                => "<b>Average Item Stats</b>",
     :item_price_range               => "Item Price",
     :weapon_attack_range            => "Weapon ATK",
@@ -77,11 +68,9 @@ class RandomizerWindow < Qt::Dialog
     :skill_max_at_once_range        => "Skill Max-on-screen",
     :glyph_attack_delay_range       => "Glyph Attack Delay",
     
-    :enemy_stat_label               => "<b>Average Enemy Stats</b>",
-    :enemy_stat_mult_range          => "Common Enemy Stat Multiplier",
-    :enemy_num_weaknesses_range     => "Common Enemy # of Weaknesses",
-    :enemy_num_resistances_range    => "Common Enemy # of Resistances",
-    :boss_stat_mult_range           => "Boss Stat Multiplier",
+    :drop_chances_label             => "<b>Average Enemy Drop Chances</b>",
+    :item_drop_chance_range         => "Item Drop Chance",
+    :skill_drop_chance_range        => "Soul/Glyph Drop Chance",
     
     :pickup_placement_weight_label  => "<b>Proportions of Pickup Types</b>",
     :item_placement_weight          => "Item Placement Weight",
@@ -90,6 +79,17 @@ class RandomizerWindow < Qt::Dialog
     :glyph_placement_weight         => "Glyph Placement Weight (OoE)",
     :max_up_placement_weight        => "Max Up Placement Weight",
     :money_placement_weight         => "Money Placement Weight",
+    
+    :enemy_difficulty_label         => "<b>Enemy Placement Difficulty</b>",
+    :max_room_difficulty_mult       => "Max Room Total Attack Multiplier",
+    :max_enemy_difficulty_mult      => "Max Enemy Attack Difference Multiplier",
+    :enemy_id_preservation_exponent => "Enemy ID Number Difference Weighting",
+    
+    :enemy_stat_label               => "<b>Average Enemy Stats</b>",
+    :enemy_stat_mult_range          => "Common Enemy Stat Multiplier",
+    :enemy_num_weaknesses_range     => "Common Enemy # of Weaknesses",
+    :enemy_num_resistances_range    => "Common Enemy # of Resistances",
+    :boss_stat_mult_range           => "Boss Stat Multiplier",
   }
   
   slots "update_settings()"
