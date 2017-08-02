@@ -672,6 +672,9 @@ module EnemyRandomizer
       enemy.var_b = 0x78
     when "Winged Guard"
       enemy.var_a = rng.rand(1..5) # Max at once
+    when "Winged Skeleton"
+      enemy.var_a = rng.rand(40..80) # Minimum delay between spawns
+      enemy.var_b = rng.rand(40..80) # Random range to add to delay between spawns
     when "Altair"
       if rng.rand <= 0.40 # 40% chance to carry fleamen
         enemy.var_a = 0
