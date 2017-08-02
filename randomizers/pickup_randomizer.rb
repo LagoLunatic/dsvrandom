@@ -15,6 +15,22 @@ module PickupRandomizer
   }
   RANDOMIZABLE_VILLAGER_NAMES = VILLAGER_NAME_TO_EVENT_FLAG.keys
   
+  PORTRAIT_NAME_TO_DATA = {
+    :portraitcityofhaze => {subtype: 0x1A, var_a: 1, var_b: 0x1A},
+    :portraitsandygrave => {subtype: 0x1A, var_a: 3, var_b: 0},
+    :portraitnationoffools => {subtype: 0x1A, var_a: 5, var_b: 0x21},
+    :portraitforestofdoom => {subtype: 0x1A, var_a: 7, var_b: 0},
+    :portraitdarkacademy => {subtype: 0x76, var_a: 8, var_b: 0x46},
+    :portraitburntparadise => {subtype: 0x76, var_a: 6, var_b: 0x20},
+    :portraitforgottencity => {subtype: 0x76, var_a: 4, var_b: 0},
+    :portrait13thstreet => {subtype: 0x76, var_a: 2, var_b: 7},
+    :portraitnestofevil => {subtype: 0x86, var_a: 9, var_b: 0},
+  }
+  PORTRAIT_NAMES = PORTRAIT_NAME_TO_DATA.keys
+  PORTRAIT_VAR_A_TO_NAME = PORTRAIT_NAME_TO_DATA.map do |name, data|
+    [data[:var_a], name]
+  end.to_h
+  
   def randomize_pickups_completably(&block)
     spoiler_log.puts "Randomizing pickups:"
     
@@ -244,6 +260,21 @@ module PickupRandomizer
         next if accessible_unused_villager_locations.length > 0
       end
       
+      if !options[:randomize_portraits] && GAME == "por"
+        # If randomize portraits option is off, don't allow putting random things in these locations.
+        accessible_unused_portrait_locations = possible_locations & checker.portrait_locations
+        accessible_unused_portrait_locations.each do |location|
+          possible_locations.delete(location)
+          @locations_randomized_to_have_useful_pickups << location
+          
+          # Also, give the player this portrait so the checker takes this into account.
+          portrait_name = get_portrait_name_by_entity_location(location)
+          checker.add_item(portrait_name)
+        end
+        
+        next if accessible_unused_portrait_locations.length > 0
+      end
+      
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
       new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
@@ -335,6 +366,9 @@ module PickupRandomizer
       if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
         # Villager
         pickup_str = "villager #{pickup_global_id}"
+      elsif PORTRAIT_NAMES.include?(pickup_global_id)
+        # Portrait
+        pickup_str = "portrait #{pickup_global_id}"
       else
         pickup_name = checker.defs.invert[pickup_global_id].to_s
         pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
@@ -487,6 +521,28 @@ module PickupRandomizer
       locations.select! do |location|
         room_str = location[0,8]
         !@rooms_that_already_have_an_event.include?(room_str)
+      end
+    end
+    if PORTRAIT_NAMES.include?(pickup_global_id)
+      # Don't put portraits in certain rooms that, when you return to this room via the return portrait, would put you out of bounds.
+      bad_portrait_rooms = [
+        "03-00-05",
+        "03-00-06",
+        "03-00-07",
+        "03-00-08",
+        "03-00-09",
+        "03-00-0A",
+        "04-00-05",
+        "04-00-06",
+        "04-00-07",
+        "04-00-08",
+        "04-00-09",
+        "04-00-0A",
+      ]
+      
+      locations.select! do |location|
+        room_str = location[0,8]
+        !bad_portrait_rooms.include?(room_str)
       end
     end
     if GAME == "ooe" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
@@ -661,6 +717,49 @@ module PickupRandomizer
         original_cat.type = 0
         original_cat.write_to_rom()
       end
+    elsif PORTRAIT_NAMES.include?(pickup_global_id)
+      # Portrait
+      
+      if GAME != "por"
+        raise "Tried to place portrait in #{GAME}"
+      end
+      
+      portrait_data = PORTRAIT_NAME_TO_DATA[pickup_global_id]
+      entity.type = 2
+      entity.subtype = portrait_data[:subtype]
+      entity.var_a = portrait_data[:var_a]
+      entity.var_b = portrait_data[:var_b]
+      
+      entity.write_to_rom()
+      
+      dest_area_index = entity.var_a
+      dest_sector_index = (entity.var_b & 0x3C0) >> 6
+      dest_room_index = entity.var_b & 0x3F
+      dest_room = game.areas[dest_area_index].sectors[dest_sector_index].rooms[dest_room_index]
+      dest_portrait = dest_room.entities.find{|entity| [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)}
+      
+      curr_area_index = entity.room.area_index
+      curr_sector_index = entity.room.sector_index
+      curr_room_index = entity.room.room_index
+      dest_portrait.var_a = curr_area_index
+      dest_portrait.var_b = ((curr_sector_index & 0xF) << 6) | (curr_room_index & 0x3F)
+      dest_portrait.subtype = case curr_area_index
+      when 1, 3, 5, 7 # City of Haze, Sandy Grave, Nation of Fools, or Forest of Doom.
+        0x1A
+      when 2, 4, 6, 8 # 13th Street, Forgotten City, Burnt Paradise, or Dark Academy.
+        0x76
+      when 0, 9 # Dracula's Castle or Nest of Evil.
+        if [2, 4, 6, 8].include?(dest_area_index)
+          # Use the alt portrait frame when returning to Dracula's Castle from 13th Street, Forgotten City, Burnt Paradise, or Dark Academy.
+          0x87
+        else
+          0x86
+        end
+      else
+        puts "Unknown area to portrait into: %02X" % curr_area_index
+      end
+      
+      dest_portrait.write_to_rom()
     elsif entity.type == 1
       # Boss
       
@@ -943,6 +1042,17 @@ module PickupRandomizer
       return villager_name
     else
       raise "Not a villager: #{location}"
+    end
+  end
+  
+  def get_portrait_name_by_entity_location(location)
+    entity = get_entity_by_location_str(location)
+    
+    if GAME == "por" && entity.type == 2 && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
+      portrait_name = PORTRAIT_VAR_A_TO_NAME[entity.var_a]
+      return portrait_name
+    else
+      raise "Not a portrait: #{location}"
     end
   end
   

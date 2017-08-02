@@ -12,13 +12,15 @@ class CompletabilityChecker
               :mirror_locations,
               :no_soul_locations,
               :no_glyph_locations,
-              :no_progression_locations
+              :no_progression_locations,
+              :portrait_locations
   
-  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
+  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers, por_randomize_portraits)
     @game = game
     @enable_glitches = enable_glitches
     @ooe_nonlinear = ooe_nonlinear
     @ooe_randomize_villagers = ooe_randomize_villagers
+    @por_randomize_portraits = por_randomize_portraits
     
     load_room_reqs()
     @current_items = []
@@ -61,6 +63,7 @@ class CompletabilityChecker
     @no_soul_locations = []
     @no_glyph_locations = []
     @no_progression_locations = []
+    @portrait_locations = []
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
@@ -101,6 +104,9 @@ class CompletabilityChecker
           if applies_to.include?(" (No progression)")
             @no_progression_locations << entity_str
           end
+          if applies_to.include?(" (Portrait)")
+            @portrait_locations << entity_str
+          end
         end
       end
     end
@@ -114,6 +120,8 @@ class CompletabilityChecker
     elsif reqs == false
       return false
     elsif PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(reqs.to_sym)
+      return reqs.to_sym
+    elsif PickupRandomizer::PORTRAIT_NAMES.include?(reqs.to_sym)
       return reqs.to_sym
     end
     
@@ -160,6 +168,10 @@ class CompletabilityChecker
         has_villager = @current_items.include?(@defs[req])
         @cached_checked_reqs[@defs[req]] = has_villager
         return has_villager
+      elsif PickupRandomizer::PORTRAIT_NAMES.include?(@defs[req])
+        has_access_to_portrait = @current_items.include?(@defs[req])
+        @cached_checked_reqs[@defs[req]] = has_access_to_portrait
+        return has_access_to_portrait
       elsif @defs[req] == true
         return true
       elsif @defs[req] == false
@@ -246,6 +258,9 @@ class CompletabilityChecker
       end
       if GAME == "ooe" && @ooe_randomize_villagers
         pickups += PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES
+      end
+      if GAME == "por" && @por_randomize_portraits
+        pickups += PickupRandomizer::PORTRAIT_NAMES
       end
       
       pickups

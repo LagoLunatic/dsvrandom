@@ -57,7 +57,8 @@ Defs:
   
   wind: midentrance
   
-  cityofhaze: midentrance & slide
+  cityofhaze: portraitcityofhaze
+  portraitcityofhaze: portraitcityofhaze
   midcityofhaze: cityofhaze & call cube & change cube
   endcityofhaze: bossdullahan
   bossdullahan: midcityofhaze  
@@ -68,14 +69,17 @@ Defs:
   greatstairway: lowergreatstairway & medium height | upperentrance
   uppergreatstairway: greatstairway & medium height
   
-  sandygrave: bosskeremet & medium height | greatstairway
+  sandygrave: portraitsandygrave
+  portraitsandygrave: portraitsandygrave
   sandygravemidlevel: sandygrave & medium height
   bossastarte: sandygravemidlevel
   
-  nationoffools: uppergreatstairway
+  nationoffools: portraitnationoffools
+  portraitnationoffools: portraitnationoffools
   bosslegion: nationoffools
   
-  forestofdoom: towerofdeathwaterwheel & bossstella & wind
+  forestofdoom: portraitforestofdoom & bossstella & wind
+  portraitforestofdoom: portraitforestofdoom
   forestofdoomcenter: forestofdoom & height
   forestofdoomeast: forestofdoomcenter & medium height
   bossdagon: forestofdoomeast
@@ -94,22 +98,27 @@ Defs:
   
   studiopaintingroom: bosssisters & purify
   
-  13thstreet: studiopaintingroom & bossmummy
+  13thstreet: portrait13thstreet & bossmummy
+  portrait13thstreet: portrait13thstreet
   13thstreetaftertrain: 13thstreet & partnerpush & strength cube | 13thstreet & telesuper
   bosswerewolf: 13thstreetaftertrain
   
-  forgottencity: studiopaintingroom
+  forgottencity: portraitforgottencity
+  portraitforgottencity: portraitforgottencity
   innerforgottencity: forgottencity & medium height
   bossmummy: innerforgottencity
   
-  burntparadise: studiopaintingroom & bosscreature
+  burntparadise: portraitburntparadise & bosscreature
+  portraitburntparadise: portraitburntparadise
   bossmedusa: burntparadise
   
-  darkacademy: studiopaintingroom
+  darkacademy: portraitdarkacademy
+  portraitdarkacademy: portraitdarkacademy
   middarkacademy: darkacademy & big height
   bosscreature: middarkacademy
   
-  nestofevil: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
+  nestofevil: portraitnestofevil
+  portraitnestofevil: portraitnestofevil
   bossdoppelganger: nestofevil
   
   lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
@@ -126,6 +135,9 @@ Rooms:
     #01 (Change Cube): # Don't randomize change cube
     #02 (Call Cube): # Don't randomize call cube
     03 (ALL Boost): quad jump height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
+  00-00-05:
+    room: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
+    00 (Nest of Evil) (Portrait): 
   00-00-08:
     room: entrance & height
     01 (Spear): 
@@ -135,6 +147,9 @@ Rooms:
   00-00-0D:
     room: bossbehemoth
     00 (Combat Knife): 
+  00-01-00:
+    room: midentrance & slide
+    00 (City of Haze) (Portrait): 
   00-01-02:
     room: midentrance
     00 (Book of Spirits): 
@@ -222,10 +237,13 @@ Rooms:
     00 (Stone of Flight): 
     01 (Partisan): greatstairway | medium height
   00-04-0D:
-    room: greatstairway
+    room: greatstairway # TODO: should these have "bosskeremet & medium height"?
     07 (Nun's Habit): 
     08 (Iron Leggings): 
     09 (Bathrobe) (Hidden): 
+  00-04-12:
+    room: bosskeremet & medium height | greatstairway
+    00 (Sandy Grave) (Portrait): 
   00-05-02:
     room: greatstairway
     0F (HP Max up): 
@@ -239,6 +257,9 @@ Rooms:
     11 (Potion): medium height
     12 (Poncho): medium height
     13 (Tome of Arms 2): 
+  00-06-01:
+    room: uppergreatstairway
+    00 (Nation of Fools) (Portrait): 
   00-06-03:
     room: upperentrance & medium height | greatstairway & medium height
     00 (Nun's Robes): 
@@ -291,6 +312,9 @@ Rooms:
   00-08-00:
     room: towerofdeathwaterwheel
     00 (Taunt): 
+  00-08-01:
+    room: towerofdeathwaterwheel
+    02 (Forest of Doom) (Portrait): 
   00-08-02:
     room: towerofdeathwaterwheel
     00 (Halberd): 
@@ -321,6 +345,12 @@ Rooms:
   00-0A-13:
     room: masterkeep
     03 (HP Max up): slide | small height # only needed to escape
+  00-0B-00:
+    room: studiopaintingroom
+    01 (Forgotten City) (Portrait): 
+    02 (13th Street) (Portrait): 
+    03 (Burnt Paradise) (Portrait): 
+    04 (Dark Academy) (Portrait): 
   00-0B-01:
     room: bosssisters
     #0E (Sisters) (Enemy): 

@@ -233,6 +233,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_portraits">
+              <property name="toolTip">
+               <string>Randomizes where portraits are located (PoR only).</string>
+              </property>
+              <property name="text">
+               <string>Portraits</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -418,8 +428,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>378</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">

@@ -14,6 +14,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_wooden_chests
     randomize_villagers
     randomize_weapon_synths
+    randomize_portraits
     
     randomize_players
     randomize_bosses
