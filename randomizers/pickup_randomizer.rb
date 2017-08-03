@@ -570,6 +570,7 @@ module PickupRandomizer
         "04-00-08",
         "04-00-09",
         "04-00-0A",
+        "00-05-02", # This great stairway room doesn't put you out of bounds, but does let you sequence break the button lock.
       ]
       
       locations.select! do |location|
