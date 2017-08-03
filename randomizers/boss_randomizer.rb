@@ -298,7 +298,10 @@ module BossRandomizer
         boss_entity.var_a = 0
       end
     when "Gergoth"
-      if old_boss_id == new_boss_id && GAME == "dos"
+      if room_rando?
+        # Need to use boss rush Gergoth in room rando so he doesn't break the floor.
+        boss_entity.var_a = 0
+      elsif old_boss_id == new_boss_id && GAME == "dos"
         # Normal Gergoth since he's in his tower.
         boss_entity.var_a = 1
       else

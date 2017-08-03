@@ -569,6 +569,13 @@ class Randomizer
       filename = "./dsvrandom/roomedits/dos_room_rando_00-00-15.tmx"
       room = game.areas[0].sectors[0].rooms[0x15]
       tiled.read(filename, room)
+      
+      # Use boss rush Gergoth in room rando so he doesn't break the floor.
+      gergoth = game.entity_by_str("00-05-07_00")
+      gergoth.var_a = 0
+      gergoth.write_to_rom()
+      # And modify the code of the floors to not care if Gergoth's boss death flag is set, and just always be in place.
+      game.fs.write(0x0219EF40, [0xE3A00000].pack("V"))
     end
   end
   
