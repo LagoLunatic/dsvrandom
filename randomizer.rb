@@ -375,6 +375,7 @@ class Randomizer
       when "ooe"
         possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
         possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
+        possible_max_up_ids -= [0xD2] # VIP card given to you by Jacob and put directly into your inventory.
         3.times do
           max_up_id = possible_max_up_ids.sample(random: rng)
           possible_max_up_ids.delete(max_up_id)
