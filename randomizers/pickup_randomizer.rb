@@ -133,6 +133,34 @@ module PickupRandomizer
       end
       raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
     end
+    
+    if GAME == "por" && options[:randomize_portraits]
+      # Remove the extra portraits at the end of 13th Street, Forgotten City, Burnt Paradise, and Dark Academy.
+      # (The one return portrait back to where you entered this portrait from is not removed, and is updated elsewhere in the code.)
+      [
+        "02-02-16_01",
+        "02-02-16_03",
+        "02-02-16_04",
+        "04-01-07_02",
+        "04-01-07_03",
+        "04-01-07_04",
+        "06-00-06_01",
+        "06-00-06_02",
+        "06-00-06_04",
+        "08-00-08_01",
+        "08-00-08_02",
+        "08-00-08_03",
+      ].each do |entity_str|
+        portrait = game.entity_by_str(entity_str)
+        portrait.type = 0
+        portrait.write_to_rom()
+      end
+      
+      # Remove the cutscene where Charlotte stops you from entering the Forest of Doom portrait until you've talked to Wind about Stella's Locket.
+      forest_cutscene = game.entity_by_str("00-08-01_03")
+      forest_cutscene.type = 0
+      forest_cutscene.write_to_rom()
+    end
   end
   
   def place_progression_pickups(&block)
@@ -736,34 +764,52 @@ module PickupRandomizer
       
       entity.write_to_rom()
       
+      
+      curr_area_index = entity.room.area_index
+      curr_sector_index = entity.room.sector_index
+      curr_room_index = entity.room.room_index
+      
+      # Update the return portrait.
       dest_area_index = entity.var_a
       dest_sector_index = (entity.var_b & 0x3C0) >> 6
       dest_room_index = entity.var_b & 0x3F
       dest_room = game.areas[dest_area_index].sectors[dest_sector_index].rooms[dest_room_index]
       dest_portrait = dest_room.entities.find{|entity| [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)}
+      return_portraits = [dest_portrait]
       
-      curr_area_index = entity.room.area_index
-      curr_sector_index = entity.room.sector_index
-      curr_room_index = entity.room.room_index
-      dest_portrait.var_a = curr_area_index
-      dest_portrait.var_b = ((curr_sector_index & 0xF) << 6) | (curr_room_index & 0x3F)
-      dest_portrait.subtype = case curr_area_index
-      when 1, 3, 5, 7 # City of Haze, Sandy Grave, Nation of Fools, or Forest of Doom.
-        0x1A
-      when 2, 4, 6, 8 # 13th Street, Forgotten City, Burnt Paradise, or Dark Academy.
-        0x76
-      when 0, 9 # Dracula's Castle or Nest of Evil.
-        if [2, 4, 6, 8].include?(dest_area_index)
-          # Use the alt portrait frame when returning to Dracula's Castle from 13th Street, Forgotten City, Burnt Paradise, or Dark Academy.
-          0x87
-        else
-          0x86
-        end
-      else
-        puts "Unknown area to portrait into: %02X" % curr_area_index
+      # Also update the bonus return portrait at the end of some areas.
+      case dest_area_index
+      when 2 # 13th Street
+        return_portraits << game.entity_by_str("02-02-16_02")
+      when 4 # Forgotten City
+        return_portraits << game.entity_by_str("04-01-07_01")
+      when 6 # Burnt Paradise
+        return_portraits << game.entity_by_str("06-00-06_03")
+      when 8 # Dark Academy
+        return_portraits << game.entity_by_str("08-00-08_04")
       end
       
-      dest_portrait.write_to_rom()
+      return_portraits.each do |return_portrait|
+        return_portrait.var_a = curr_area_index
+        return_portrait.var_b = ((curr_sector_index & 0xF) << 6) | (curr_room_index & 0x3F)
+        return_portrait.subtype = case curr_area_index
+        when 1, 3, 5, 7 # City of Haze, Sandy Grave, Nation of Fools, or Forest of Doom.
+          0x1A
+        when 2, 4, 6, 8 # 13th Street, Forgotten City, Burnt Paradise, or Dark Academy.
+          0x76
+        when 0, 9 # Dracula's Castle or Nest of Evil.
+          if [2, 4, 6, 8].include?(dest_area_index)
+            # Use the alt portrait frame when returning to Dracula's Castle from 13th Street, Forgotten City, Burnt Paradise, or Dark Academy.
+            0x87
+          else
+            0x86
+          end
+        else
+          puts "Unknown area to portrait into: %02X" % curr_area_index
+        end
+        
+        return_portrait.write_to_rom()
+      end
     elsif entity.type == 1
       # Boss
       
