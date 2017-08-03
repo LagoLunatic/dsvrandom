@@ -303,6 +303,11 @@ module DoorRandomizer
         next if @transition_rooms.include?(door.destination_door.room)
         next if checker.inaccessible_doors.include?(door.door_str)
         
+        if GAME == "dos" && ["00-01-1C_001", "00-01-20_000"].include?(door.door_str)
+          # Don't randomize the door connecting Paranoia and Mini-Paranoia.
+          next
+        end
+        
         map_tile_x_pos = room.room_xpos_on_map
         map_tile_y_pos = room.room_ypos_on_map
         
