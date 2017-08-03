@@ -576,6 +576,18 @@ class Randomizer
       gergoth.write_to_rom()
       # And modify the code of the floors to not care if Gergoth's boss death flag is set, and just always be in place.
       game.fs.write(0x0219EF40, [0xE3A00000].pack("V"))
+      
+      # Remove the darkness seal in Condemned Tower along with the related events.
+      # TODO: Should actually keep this in and just keep track of it in the logic somehow.
+      [
+        "00-05-0C_00",
+        "00-05-0C_01",
+        "00-05-0C_03",
+      ].each do |entity_str|
+        entity = game.entity_by_str("00-05-07_00")
+        gergoth.type = 0
+        gergoth.write_to_rom()
+      end
     end
   end
   

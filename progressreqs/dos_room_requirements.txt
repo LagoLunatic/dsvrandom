@@ -1750,38 +1750,38 @@ Rooms:
     001-e02: big height
     e02-000: 
     e02-001: 
-  00-05-07: # TODO gergoth tower room, it kinda gets messed up when gergoth is dead since all the floors are different...
-    000-001: big height
-    000-002: big height
-    000-003: big height
-    000-004: big height
-    000-005: big height
-    000-006: big height
-    000-007: big height
-    000-008: big height
-    000-009: big height
-    000-00A: big height
-    000-00B: big height
-    000-00C: big height
-    000-00D: big height
-    000-00E: 
-    000-00F: 
+  00-05-07:
+    000-001: 
+    000-002: false
+    000-003: false
+    000-004: false
+    000-005: false
+    000-006: false
+    000-007: false
+    000-008: false
+    000-009: false
+    000-00A: false
+    000-00B: false
+    000-00C: false
+    000-00D: false
+    000-00E: false
+    000-00F: false
     000-e00: 
-    001-000: big height
-    001-002: big height
-    001-003: big height
-    001-004: big height
-    001-005: big height
-    001-006: big height
-    001-007: big height
-    001-008: big height
-    001-009: big height
-    001-00A: big height
-    001-00B: big height
-    001-00C: big height
-    001-00D: big height
-    001-00E: 
-    001-00F: 
+    001-000: 
+    001-002: false
+    001-003: false
+    001-004: false
+    001-005: false
+    001-006: false
+    001-007: false
+    001-008: false
+    001-009: false
+    001-00A: false
+    001-00B: false
+    001-00C: false
+    001-00D: false
+    001-00E: false
+    001-00F: false
     001-e00: 
     002-000: false
     002-001: false
