@@ -585,8 +585,8 @@ class Randomizer
         "00-05-0C_03",
       ].each do |entity_str|
         entity = game.entity_by_str("00-05-07_00")
-        gergoth.type = 0
-        gergoth.write_to_rom()
+        entity.type = 0
+        entity.write_to_rom()
       end
     end
   end
