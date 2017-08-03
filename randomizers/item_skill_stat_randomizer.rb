@@ -51,6 +51,12 @@ module ItemSkillStatRandomizer
           if progress_item
             # Always make progression items unusable so the player can't accidentally eat one and softlock themself.
             possible_types = [4]
+          elsif GAME == "por" && item.name == "Magical Ticket"
+            # Always make magical tickets have the magical ticket type. Otherwise they will still act as magical tickets, but the description will be misleading.
+            possible_types = [5]
+          elsif GAME == "por" && item.name.start_with?("Record ")
+            # Always make records have the record type. Otherwise they will still act as records, but the description will be misleading.
+            possible_types = [5]
           end
           
           if @max_up_items[0] == item["Item ID"]
