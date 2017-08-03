@@ -42,12 +42,14 @@ Defs:
   frog: toad morph & canusespells
   owl: owl morph & canusespells
   small: frog | owl | puppet master
+  small free move: frog | owl
   purify: sanctuary & canusespells
   
   small height: puppet master | height
-  height: shoulderjump | medium height
+  height: shoulderjump | height 2
+  height 2: shoulderjump & puppet master | medium height
   medium height: double jump | jumpglitch | quad jump height
-  medium height 2: double jump & shoulderjump | quad jump height
+  medium height 2: double jump & shoulderjump | double jump & puppet master | quad jump height
   quad jump height: quadjumpglitch | big height
   big height: owl | superjump
   distance: speed up | big height
@@ -68,12 +70,12 @@ Defs:
   
   lowergreatstairway: buriedchamber # you can get here quicker without going through buried chamber with the suspend glitch, but that doesn't require any fewer items.
   bosskeremet: lowergreatstairway
-  greatstairway: lowergreatstairway & medium height | upperentrance
-  uppergreatstairway: greatstairway & medium height
+  greatstairway: lowergreatstairway & height 2 | upperentrance
+  uppergreatstairway: greatstairway & height 2
   
   sandygrave: portraitsandygrave
   portraitsandygrave: portraitsandygrave
-  sandygravemidlevel: sandygrave & medium height
+  sandygravemidlevel: sandygrave & height 2
   bossastarte: sandygravemidlevel
   
   nationoffools: portraitnationoffools
@@ -83,19 +85,19 @@ Defs:
   forestofdoom: portraitforestofdoom & bossstella & wind
   portraitforestofdoom: portraitforestofdoom
   forestofdoomcenter: forestofdoom & height
-  forestofdoomeast: forestofdoomcenter & medium height
+  forestofdoomeast: forestofdoomcenter & height 2
   bossdagon: forestofdoomeast
   
   towerofdeathstart: greatstairway & partnerpush & strength cube | towerofdeathelevator
   bossstella: towerofdeathstart
   towerofdeatheast: towerofdeathstart & small | bossdeath
-  towerofdeatheastupper: towerofdeatheast & medium height
+  towerofdeatheastupper: towerofdeatheast & height 2
   towerofdeathwaterwheel: bossstella & cog & call cube & change cube | uppergreatstairway & small | towerofdeathelevator
   towerofdeathelevator: bossdeath | towerofdeathwaterwheel
   bossdeath: towerofdeatheastupper | towerofdeathelevator & big height
   
   masterkeep: bossdeath
-  midmasterkeep: masterkeep & medium height
+  midmasterkeep: masterkeep & height 2
   bosssisters: midmasterkeep
   
   studiopaintingroom: bosssisters & purify
@@ -107,12 +109,12 @@ Defs:
   
   forgottencity: portraitforgottencity
   portraitforgottencity: portraitforgottencity
-  innerforgottencity: forgottencity & medium height
+  innerforgottencity: forgottencity & height 2
   bossmummy: innerforgottencity
   
   burntparadise: portraitburntparadise & bosscreature
   portraitburntparadise: portraitburntparadise
-  bossmedusa: burntparadise
+  bossmedusa: burntparadise & big height
   
   darkacademy: portraitdarkacademy
   portraitdarkacademy: portraitdarkacademy
@@ -139,7 +141,7 @@ Rooms:
     03 (ALL Boost): quad jump height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
   00-00-05:
     room: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
-    00 (Nest of Evil) (Portrait): 
+    00 (Nest of Evil) (Portrait) (No progression): 
   00-00-08:
     room: entrance & height
     01 (Spear): 
@@ -182,7 +184,7 @@ Rooms:
     room: upperentrance
     00 (MP Max up): 
   00-01-12:
-    room: upperentrance & partnerpush & strength cube & medium height | quad jump height
+    room: upperentrance & partnerpush & strength cube & height 2 | quad jump height
     00 (Nebula): 
   00-01-17:
     room: upperentrance
@@ -237,44 +239,44 @@ Rooms:
   00-04-0B:
     room: lowergreatstairway
     00 (Stone of Flight): 
-    01 (Partisan): greatstairway | medium height
+    01 (Partisan): greatstairway | height 2
   00-04-0D:
-    room: greatstairway # TODO: should these have "bosskeremet & medium height"?
+    room: greatstairway
     07 (Nun's Habit): 
     08 (Iron Leggings): 
     09 (Bathrobe) (Hidden): 
   00-04-12:
-    room: bosskeremet & medium height | greatstairway
+    room: greatstairway
     00 (Sandy Grave) (Portrait): 
   00-05-02:
     room: greatstairway
     0F (HP Max up): 
-    10 (Jade Corset): medium height
-    11 (Uncurse Potion): medium height
-    12 (Monocle): medium height
+    10 (Jade Corset): puppet master | medium height
+    11 (Uncurse Potion): puppet master | medium height # to get this with puppet master you need to first get the e12 item, then fall off the platform and throw puppet master onto this platform.
+    12 (Monocle): puppet master | medium height
   00-05-04:
     room: greatstairway
     0F (STR Boost): small height
-    10 (Tonic): medium height
-    11 (Potion): medium height
-    12 (Poncho): medium height
+    10 (Tonic): puppet master | medium height
+    11 (Potion): puppet master | medium height
+    12 (Poncho): puppet master | medium height
     13 (Tome of Arms 2): 
   00-06-01:
     room: uppergreatstairway
     00 (Nation of Fools) (Portrait): 
   00-06-03:
-    room: upperentrance & medium height | greatstairway & medium height
+    room: uppergreatstairway & height
     00 (Nun's Robes): 
     01 (MP Max up): 
   00-06-05:
     room: upperentrance | greatstairway
     00 (Whip Knuckles): quad jump height
-    01 (Iron Plate): medium height
+    01 (Iron Plate): small height
   00-06-09:
-    room: upperentrance & medium height | greatstairway & medium height
+    room: uppergreatstairway
     00 (Sequined Dress): 
   00-06-0C:
-    room: upperentrance & medium height | greatstairway & medium height | towerofdeathwaterwheel
+    room: uppergreatstairway | towerofdeathwaterwheel
     01 (Money): small
     02 (Money): small
 #Tower of Death:
@@ -300,14 +302,14 @@ Rooms:
     05 (MP Max up) (Hidden): 
   00-07-0C:
     room: towerofdeatheast
-    00 (HP Max up): medium height
-    01 (Thunderbolt): medium height
+    00 (HP Max up): height 2
+    01 (Thunderbolt): height 2
   00-07-0D:
-    room: towerofdeathelevator & medium height
+    room: towerofdeathelevator & height 2
     00 (HP Max up): 
   00-07-10:
     room: towerofdeathstart
-    00 (Tempest): # doesn't require anything to reach, but you can't get out without medium height 2. but you can just suspend to get out, so no req.
+    00 (Tempest): # doesn't require anything to reach, but you can't get out without double jump and shoulder jump. but you can just suspend to get out, so no req.
   00-07-16:
     room: towerofdeathstart
     00 (Tasty Meat) (Hidden): 
@@ -333,7 +335,7 @@ Rooms:
     01 (Robe Decollete): 
   00-09-03:
     room: throneroom
-    00 (HP Max up): medium height
+    00 (HP Max up): height 2
     01 (MP Max up): quad jump height
     02 (Money): quad jump height
     03 (Foie Gras) (Hidden): quad jump height
@@ -480,13 +482,13 @@ Rooms:
     00 (Samurai Leggngs): 
   02-02-01:
     room: 13thstreetaftertrain
-    00 (Money): medium height
-    01 (Mille-feuille): medium height
+    00 (Money): height
+    01 (Mille-feuille): height
   02-02-03:
     room: 13thstreetaftertrain
     02 (HP Max up): 
   02-02-08:
-    room: 13thstreetaftertrain & medium height & small
+    room: 13thstreetaftertrain & height 2 & small
     00 (Wedding Dress): 
   02-02-09:
     room: 13thstreetaftertrain
@@ -533,7 +535,7 @@ Rooms:
     room: sandygrave
     00 (Bwaka Knife): jumpglitch | medium height 2 | distance & double jump
   03-00-16:
-    room: sandygrave
+    room: sandygrave & height
     00 (Bahg Nahk): 
   03-00-18:
     room: sandygrave
@@ -553,12 +555,12 @@ Rooms:
     01 (Diamond Brooch): 
   03-01-18:
     room: sandygrave
-    00 (1,000 Blades): medium height
+    00 (1,000 Blades): height 2
     01 (Money): 
-    0D (Money Chest): medium height
+    0D (Money Chest): height 2
   03-01-1B:
     room: sandygrave
-    00 (High Potion): medium height
+    00 (High Potion): height 2
   03-01-1C:
     room: sandygrave
     00 (Sanctuary): small
@@ -584,10 +586,10 @@ Rooms:
     00 (Curry): small height # small height needed to get out of the pit with the item in it
   04-00-13:
     room: forgottencity
-    00 (Super Potion): medium height
+    00 (Super Potion): height 2
   04-00-14:
     room: innerforgottencity
-    00 (Money): 
+    00 (Money): jumpglitch | medium height 2 | distance & double jump
   04-01-03:
     room: innerforgottencity
     00 (HP Max up): big height
@@ -607,7 +609,7 @@ Rooms:
   04-01-15:
     room: forgottencity
     00 (Book of Death): quad jump height
-    01 (Meteor): small
+    01 (Meteor): small free move
   04-01-18:
     room: innerforgottencity
     00 (Venus Brooch): 
@@ -616,78 +618,78 @@ Rooms:
   04-01-22:
     room: forgottencity
     00 (Platinum Corset): 
-#Nation of Fools: # you need medium height to even get into the nation of fools portrait
+#Nation of Fools:
   05-00-01:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (MP Max up): 
   05-00-08:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Volcano): 
   05-00-0B:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Touch & Pop): 
   05-00-0F:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Money): 
   05-00-10:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Tonic): 
   05-00-13:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (MP Max up): 
   05-00-14:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (HP Max up): 
   05-00-1A:
-    room: nationoffools
+    room: nationoffools & puppet master | nationoffools & medium height
     00 (Money): 
   05-00-27:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Moon Brooch): 
   05-00-2B:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (HP Max up): 
   05-01-00:
-    room: nationoffools
+    room: nationoffools & height 2
     02 (Holy Veil): small
   05-01-02:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (High Tonic): 
     01 (Caviar) (Hidden): 
     02 (Spiked Boots): 
   05-01-06:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (High Potion): 
   05-01-07:
-    room: nationoffools
+    room: nationoffools & puppet master | nationoffools & medium height
     06 (Silk Hat): 
     07 (Dancer's Blouse): 
   05-01-0D:
-    room: nationoffools
+    room: nationoffools & height 2
     06 (Grenade): 
   05-01-0E:
-    room: nationoffools
+    room: nationoffools & medium height 2
     06 (Battle Jacket): 
   05-01-13:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Corn Soup): 
   05-01-14:
-    room: nationoffools
+    room: nationoffools & height 2
     05 (Rotten Durian): 
   05-02-04:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Critical Art): 
   05-02-0A:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Spaghetti): 
   05-02-0B:
-    room: nationoffools
+    room: nationoffools & height 2
     00 (Pasta Carbonara): 
   05-02-0C:
-    room: nationoffools
+    room: nationoffools & height 2
     01 (Cog): bosslegion
     #02 (Legion) (Enemy): bosslegion
-#Burnt Paradise: # you need big height to get into burnt paradise (because dark academy is a requirement)
+#Burnt Paradise:
   06-00-01:
     room: bossmedusa
     00 (Jet Black Whip): 
@@ -695,51 +697,51 @@ Rooms:
     room: bossmedusa
     #03 (Medusa) (Enemy): 
   06-00-08:
-    room: burntparadise
+    room: burntparadise & big height
     04 (Truffle) (Hidden): 
   06-00-0E:
-    room: burntparadise
+    room: burntparadise & big height
     00 (MP Max up): 
   06-00-14:
-    room: burntparadise
+    room: burntparadise & height # need height to get back out
     03 (HP Max up): 
   06-00-27:
-    room: burntparadise
+    room: burntparadise & height 2 # need height 2 to get back out
     02 (HP Max up): 
   06-00-2B:
-    room: burntparadise
+    room: burntparadise & big height
     00 (MP Max up): 
   06-01-00:
-    room: burntparadise
-    00 (Super Tonic): 
+    room: burntparadise & big height
+    00 (Super Tonic): small
   06-01-01:
-    room: burntparadise
-    00 (Ice Cream): small
+    room: burntparadise & big height
+    00 (Ice Cream): 
   06-01-02:
-    room: burntparadise
+    room: burntparadise & big height
     07 (Engagement Ring): 
   06-01-06:
-    room: burntparadise
+    room: burntparadise & small height # need small height to get back out
     06 (Cure Poison): 
   06-01-07:
-    room: burntparadise
+    room: burntparadise & small height # need small height to get back out
     09 (Bakatwa): 
     0A (Gold Leggings): 
   06-01-08:
-    room: burntparadise
+    room: burntparadise & small height # need small height to get back out
     08 (Artemis Shoes): 
   06-01-0D:
-    room: burntparadise
+    room: burntparadise & height 2
     02 (Great Axe): 
     03 (Spoiled Milk): 
   06-01-0E:
-    room: burntparadise
+    room: burntparadise & medium height 2
     00 (Tinned Spinach): 
   06-01-13:
-    room: burntparadise
+    room: burntparadise & big height
     09 (Tome of Arms 3): 
   06-01-14:
-    room: burntparadise
+    room: burntparadise & big height
     00 (Financier): 
 #Forest of Doom:
   07-00-0B:
