@@ -249,6 +249,12 @@ module ItemSkillStatRandomizer
             item["Swing Modifiers"][i] = true
           end
           
+          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
+            # This bit must be set for throwing weapons to throw correctly.
+            # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
+            item["Swing Modifiers"][i] = [true, true, true, true, true, true, true, true, true, false].sample(random: rng)
+          end
+          
           if bit_name == "Player can move"
             player_can_move = item["Swing Modifiers"][i]
           end
