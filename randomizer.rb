@@ -391,21 +391,22 @@ class Randomizer
       end
     end
     
+    @used_pickup_flags = []
+    
     # Specifies which pickup flags weren't used in the original game in case we need new ones for something.
     case GAME
     when "dos"
       # For DoS we sometimes need pickup flags for when a soul candle gets randomized into something that's not a soul candle.
-      # Flags 7A-7F are unused in the base game but still work, so use those.
-      @unused_picked_up_flags = (0x7A..0x7F).to_a
+      @unused_pickup_flags = (1..0x7F).to_a
     when "por"
       # We don't need spare pickup flags for the pickup randomizer in PoR, but we do need it for the starting item randomizer.
-      @unused_picked_up_flags = (0x16D..0x174).to_a + (0x177..0x17F).to_a
+      @unused_pickup_flags = (1..0x17F).to_a
+      use_pickup_flag(2) # Call Cube isn't randomized
     when "ooe"
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
       # Flags 12F-149 are unused in the base game but still work, so use those.
-      @unused_picked_up_flags = (0x12F..0x149).to_a
+      @unused_pickup_flags = (0x71..0x15F).to_a
     end
-    @used_picked_up_flags = []
     
     options_completed += 2
     

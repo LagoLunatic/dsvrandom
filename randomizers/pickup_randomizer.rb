@@ -70,12 +70,14 @@ module PickupRandomizer
       
       # Room in Sandy Grave that has two overlapping Charm Necklaces.
       # We don't want these to overlap as the player could easily think it's just one item and not see the one beneath it.
-      # Move one a bit to the left and the other a bit to the right. Also give one a different picked up flag.
+      # Move one a bit to the left and the other a bit to the right. Also give one a different pickup flag.
       item_a = game.areas[3].sectors[0].rooms[0x13].entities[0]
       item_b = game.areas[3].sectors[0].rooms[0x13].entities[1]
       item_a.x_pos = 0x120
       item_b.x_pos = 0x140
-      item_b.var_a = @unused_picked_up_flags.pop()
+      pickup_flag = get_unused_pickup_flag()
+      item_b.var_a = pickup_flag
+      use_pickup_flag(pickup_flag)
       item_a.write_to_rom()
       item_b.write_to_rom()
     when "ooe"
@@ -92,7 +94,9 @@ module PickupRandomizer
       entity_hider.write_to_rom()
       # But we also need to give the chest a unique flag, because it shares the flag with the one from Minera in normal mode.
       sleeve_chest = game.areas[2].sectors[0].rooms[4].entities[7]
-      sleeve_chest.var_b = @unused_picked_up_flags.pop()
+      pickup_flag = get_unused_pickup_flag()
+      sleeve_chest.var_b = pickup_flag
+      use_pickup_flag(pickup_flag)
       sleeve_chest.write_to_rom()
       # We also make sure the chest in Minera appears even on hard mode.
       entity_hider = game.areas[8].sectors[2].rooms[7].entities[1]
@@ -111,12 +115,14 @@ module PickupRandomizer
       
       # Room in the Final Approach that has two overlapping chests both containing diamonds.
       # We don't want these to overlap as the player could easily think it's just one item and not see the one beneath it.
-      # Move one a bit to the left and the other a bit to the right. Also give one a different picked up flag.
+      # Move one a bit to the left and the other a bit to the right. Also give one a different pickup flag.
       chest_a = game.areas[0].sectors[0xA].rooms[0xB].entities[1]
       chest_b = game.areas[0].sectors[0xA].rooms[0xB].entities[2]
       chest_a.x_pos = 0xE0
       chest_b.x_pos = 0x130
-      chest_b.var_b = @unused_picked_up_flags.pop()
+      pickup_flag = get_unused_pickup_flag()
+      chest_b.var_b = pickup_flag
+      use_pickup_flag(pickup_flag)
       chest_a.write_to_rom()
       chest_b.write_to_rom()
     end
@@ -838,17 +844,7 @@ module PickupRandomizer
       
       enemy_dna.write_to_rom()
     elsif GAME == "dos" || GAME == "por"
-      if entity.is_pickup?
-        picked_up_flag = entity.var_a
-      end
-      
-      if picked_up_flag.nil? || @used_picked_up_flags.include?(picked_up_flag)
-        picked_up_flag = @unused_picked_up_flags.pop()
-        
-        if picked_up_flag.nil?
-          raise "No picked up flag for this item, this error shouldn't happen"
-        end
-      end
+      pickup_flag = get_unused_pickup_flag_for_entity(entity)
       
       if pickup_global_id == :money
         if entity.is_hidden_pickup? || rng.rand <= 0.80 # 80% chance to be a money bag
@@ -858,8 +854,8 @@ module PickupRandomizer
             entity.type = 4
           end
           entity.subtype = 1
-          entity.var_a = picked_up_flag
-          @used_picked_up_flags << picked_up_flag
+          entity.var_a = pickup_flag
+          use_pickup_flag(pickup_flag)
           entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         else # 20% chance to be a money chest
           entity.type = 2
@@ -870,8 +866,8 @@ module PickupRandomizer
             entity.var_a = [0xE, 0xF, 0x12].sample(random: rng)
           end
           
-          # We didn't use the picked up flag, so put it back
-          @unused_picked_up_flags << picked_up_flag
+          # We didn't use the pickup flag, so put it back
+          @unused_pickup_flags << pickup_flag
         end
         
         entity.write_to_rom()
@@ -882,8 +878,8 @@ module PickupRandomizer
       if GAME == "dos" && pickup_global_id == 0xCD # Chaos Ring
         entity.type = 2
         entity.subtype = 0x4C # All-souls-owned item
-        entity.var_a = picked_up_flag
-        @used_picked_up_flags << picked_up_flag
+        entity.var_a = pickup_flag
+        use_pickup_flag(pickup_flag)
         entity.var_b = pickup_global_id + 1
         
         entity.write_to_rom()
@@ -891,8 +887,8 @@ module PickupRandomizer
       elsif GAME == "por" && pickup_global_id == 0x12C # Magus Ring
         entity.type = 6 # All-quests-complete item
         entity.subtype = 7
-        entity.var_a = picked_up_flag
-        @used_picked_up_flags << picked_up_flag
+        entity.var_a = pickup_flag
+        use_pickup_flag(pickup_flag)
         entity.var_b = 6
         
         entity.write_to_rom()
@@ -910,16 +906,16 @@ module PickupRandomizer
           entity.var_a = 0
           entity.var_b = item_index
           
-          # We didn't use the picked up flag, so put it back
-          @unused_picked_up_flags << picked_up_flag
+          # We didn't use the pickup flag, so put it back
+          @unused_pickup_flags << pickup_flag
         when "por"
           # Skill
           unless entity.is_hidden_pickup?
             entity.type = 4
           end
           entity.subtype = item_type
-          entity.var_a = picked_up_flag
-          @used_picked_up_flags << picked_up_flag
+          entity.var_a = pickup_flag
+          use_pickup_flag(pickup_flag)
           entity.var_b = item_index
         end
       else
@@ -928,32 +924,14 @@ module PickupRandomizer
           entity.type = 4
         end
         entity.subtype = item_type
-        entity.var_a = picked_up_flag
-        @used_picked_up_flags << picked_up_flag
+        entity.var_a = pickup_flag
+        use_pickup_flag(pickup_flag)
         entity.var_b = item_index
       end
       
       entity.write_to_rom()
     elsif GAME == "ooe"
-      if entity.is_item_chest?
-        picked_up_flag = entity.var_b
-      elsif entity.is_pickup?
-        picked_up_flag = entity.var_a
-      end
-      
-      if (0..0x51).include?(picked_up_flag)
-        # In OoE, these picked up flags are used by glyph statues automatically and we can't control those.
-        # Therefore we need to reassign pickups that were free glyphs in the original game a new pickup flag, so it doesn't conflict with where those glyphs (Rapidus Fio and Volaticus) got moved to when randomized.
-        picked_up_flag = nil
-      end
-      
-      if picked_up_flag.nil? || @used_picked_up_flags.include?(picked_up_flag)
-        picked_up_flag = @unused_picked_up_flags.pop()
-        
-        if picked_up_flag.nil?
-          raise "No picked up flag for this item, this error shouldn't happen"
-        end
-      end
+      pickup_flag = get_unused_pickup_flag_for_entity(entity)
       
       if entity.is_glyph? && !entity.is_hidden_pickup?
         entity.y_pos += 0x20
@@ -966,8 +944,8 @@ module PickupRandomizer
           entity.type = 4
         end
         entity.subtype = 1
-        entity.var_a = picked_up_flag
-        @used_picked_up_flags << picked_up_flag
+        entity.var_a = pickup_flag
+        use_pickup_flag(pickup_flag)
         entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
         
         entity.write_to_rom()
@@ -979,8 +957,8 @@ module PickupRandomizer
         entity.type = 2
         entity.subtype = 0x16
         entity.var_a = pickup_global_id + 1
-        entity.var_b = picked_up_flag
-        @used_picked_up_flags << picked_up_flag
+        entity.var_b = pickup_flag
+        use_pickup_flag(pickup_flag)
         
         entity.write_to_rom()
         return
@@ -991,8 +969,8 @@ module PickupRandomizer
         if entity.is_hidden_pickup?
           entity.type = 7
           entity.subtype = 0xFF
-          entity.var_a = picked_up_flag
-          @used_picked_up_flags << picked_up_flag
+          entity.var_a = pickup_flag
+          use_pickup_flag(pickup_flag)
           entity.var_b = pickup_global_id + 1
         else
           case rng.rand
@@ -1001,22 +979,22 @@ module PickupRandomizer
             entity.type = 2
             entity.subtype = 0x16
             entity.var_a = pickup_global_id + 1
-            entity.var_b = picked_up_flag
-            @used_picked_up_flags << picked_up_flag
+            entity.var_b = pickup_flag
+            use_pickup_flag(pickup_flag)
           when 0.70..0.95
             # 15% chance for an item on the ground
             entity.type = 4
             entity.subtype = 0xFF
-            entity.var_a = picked_up_flag
-            @used_picked_up_flags << picked_up_flag
+            entity.var_a = pickup_flag
+            use_pickup_flag(pickup_flag)
             entity.var_b = pickup_global_id + 1
           else
             # 5% chance for a hidden blue chest
             entity.type = 2
             entity.subtype = 0x17
             entity.var_a = pickup_global_id + 1
-            entity.var_b = picked_up_flag
-            @used_picked_up_flags << picked_up_flag
+            entity.var_b = pickup_flag
+            use_pickup_flag(pickup_flag)
           end
         end
       else
@@ -1025,8 +1003,8 @@ module PickupRandomizer
         if entity.is_hidden_pickup?
           entity.type = 7
           entity.subtype = 2
-          entity.var_a = picked_up_flag
-          @used_picked_up_flags << picked_up_flag
+          entity.var_a = pickup_flag
+          use_pickup_flag(pickup_flag)
           entity.var_b = pickup_global_id + 1
         else
           puzzle_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32, 0x46, 0x4E]
@@ -1034,8 +1012,8 @@ module PickupRandomizer
             # Free glyph
             entity.type = 4
             entity.subtype = 2
-            entity.var_a = picked_up_flag
-            @used_picked_up_flags << picked_up_flag
+            entity.var_a = pickup_flag
+            use_pickup_flag(pickup_flag)
             entity.var_b = pickup_global_id + 1
           else
             # Glyph statue
@@ -1044,8 +1022,8 @@ module PickupRandomizer
             entity.var_a = 0
             entity.var_b = pickup_global_id + 1
             
-            # We didn't use the picked up flag, so put it back
-            @unused_picked_up_flags << picked_up_flag
+            # We didn't use the pickup flag, so put it back
+            @unused_pickup_flags << pickup_flag
           end
         end
       end
@@ -1056,6 +1034,45 @@ module PickupRandomizer
       
       entity.write_to_rom()
     end
+  end
+  
+  def get_unused_pickup_flag_for_entity(entity)
+    if entity.is_item_chest?
+      pickup_flag = entity.var_b
+    elsif entity.is_pickup?
+      pickup_flag = entity.var_a
+    end
+    
+    if GAME == "ooe" && (0..0x51).include?(pickup_flag)
+      # In OoE, these pickup flags are used by glyph statues automatically and we can't control those.
+      # Therefore we need to reassign pickups that were free glyphs in the original game a new pickup flag, so it doesn't conflict with where those glyphs (Rapidus Fio and Volaticus) got moved to when randomized.
+      pickup_flag = nil
+    end
+    
+    if pickup_flag.nil? || @used_pickup_flags.include?(pickup_flag)
+      pickup_flag = @unused_pickup_flags.pop()
+      
+      if pickup_flag.nil?
+        raise "No pickup flag for this item, this error shouldn't happen"
+      end
+    end
+    
+    return pickup_flag
+  end
+  
+  def get_unused_pickup_flag()
+    pickup_flag = @unused_pickup_flags.pop()
+    
+    if pickup_flag.nil?
+      raise "No pickup flag for this item, this error shouldn't happen"
+    end
+    
+    return pickup_flag
+  end
+  
+  def use_pickup_flag(pickup_flag)
+    @used_pickup_flags << pickup_flag
+    @unused_pickup_flags -= @used_pickup_flags
   end
   
   def get_entity_skill_drop_by_entity_location(location)
@@ -1168,13 +1185,11 @@ module PickupRandomizer
       # Get rid of the event, turn it into a normal free glyph
       # We can't keep the event because it automatically equips Magnes even if the glyph it gives is not Magnes.
       # Changing what it equips would just make the event not work right, so we may as well remove it.
-      picked_up_flag = @unused_picked_up_flags.pop()
-      if picked_up_flag.nil?
-        raise "No picked up flag for this item, this error shouldn't happen"
-      end
+      pickup_flag = get_unused_pickup_flag()
       event_entity.type = 4
       event_entity.subtype = 2
-      event_entity.var_a = picked_up_flag
+      event_entity.var_a = pickup_flag
+      use_pickup_flag(pickup_flag)
       event_entity.var_b = pickup_global_id + 1
       event_entity.x_pos = 0x80
       event_entity.y_pos = 0x2B0
@@ -1188,13 +1203,11 @@ module PickupRandomizer
     elsif event_entity.subtype == 0x81 # Cerberus
       # Get rid of the event, turn it into a normal free glyph
       # We can't keep the event because it has special programming to always spawn them in order even if you get to the locations out of order.
-      picked_up_flag = @unused_picked_up_flags.pop()
-      if picked_up_flag.nil?
-        raise "No picked up flag for this item, this error shouldn't happen"
-      end
+      pickup_flag = get_unused_pickup_flag()
       event_entity.type = 4
       event_entity.subtype = 2
-      event_entity.var_a = picked_up_flag
+      event_entity.var_a = pickup_flag
+      use_pickup_flag(pickup_flag)
       event_entity.var_b = pickup_global_id + 1
       event_entity.x_pos = 0x80
       event_entity.y_pos = 0x60
