@@ -259,6 +259,8 @@ module DoorRandomizer
       
       door.write_to_rom()
     end
+    
+    update_doppelganger_event_boss_doors()
   end
   
   def get_subsectors(sector)
@@ -386,6 +388,44 @@ module DoorRandomizer
       drawbridge_room_waterlevel = game.areas[0].sectors[0].rooms[0x15].entities[4]
       drawbridge_room_waterlevel.type = 0
       drawbridge_room_waterlevel.write_to_rom()
+    end
+  end
+  
+  def update_doppelganger_event_boss_doors
+    return unless GAME == "dos"
+    
+    game.each_room do |room|
+      room.entities.each do |entity|
+        if entity.is_boss_door? && entity.var_a == 0
+          # Boss door outside a boss room. Remove it.
+          entity.type = 0
+          entity.write_to_rom()
+        end
+      end
+    end
+    
+    
+    inside_door_strs = [
+      "00-03-0E_000",
+      "00-03-0E_001",
+    ]
+    inside_door_strs.each do |door_str|
+      door = game.door_by_str(door_str)
+      #next if door.direction == :up || door.direction == :down
+      
+      dest_room = door.destination_door.room
+      new_boss_door = Entity.new(dest_room, game.fs)
+      new_boss_door.x_pos = door.dest_x
+      new_boss_door.y_pos = door.dest_y + 0x80
+      if door.direction == :left
+        new_boss_door.x_pos += 0xF0
+      end
+      new_boss_door.type = 2
+      new_boss_door.subtype = BOSS_DOOR_SUBTYPE
+      new_boss_door.var_a = 0
+      new_boss_door.var_b = 0xE
+      dest_room.entities << new_boss_door
+      dest_room.write_entities_to_rom()
     end
   end
   
