@@ -267,7 +267,7 @@ class RandomizerWindow < Qt::Dialog
       slider.minimum = option_value_range.begin
       slider.maximum = option_value_range.end
       
-      slider.pageStep = 1
+      slider.pageStep = ((option_value_range.end - option_value_range.begin) / 100.0).ceil * 100
       slider.orientation = Qt::Horizontal
       connect(slider, SIGNAL("valueChanged(int)"), self, SLOT("difficulty_slider_value_changed(int)"))
       form_layout.setWidget(i, Qt::FormLayout::FieldRole, slider)
