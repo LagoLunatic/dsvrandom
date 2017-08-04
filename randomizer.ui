@@ -491,6 +491,9 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="reveal_bestiary">
+            <property name="toolTip">
+             <string>All enemies will appear in the bestiary, even before you kill them once.</string>
+            </property>
             <property name="text">
              <string>Reveal bestiary</string>
             </property>
@@ -498,6 +501,9 @@
           </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="remove_area_names">
+            <property name="toolTip">
+             <string>Removes the area names that appear on screen when you first enter an area.</string>
+            </property>
             <property name="text">
              <string>Remove area names</string>
             </property>
@@ -517,6 +523,9 @@
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="1" column="1">
            <widget class="QCheckBox" name="remove_slot_machines">
+            <property name="toolTip">
+             <string>Removes golden slot machines that require specific amounts of gold to open.</string>
+            </property>
             <property name="text">
              <string>Remove slot machines</string>
             </property>
