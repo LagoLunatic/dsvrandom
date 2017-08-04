@@ -406,18 +406,24 @@ class RandomizerWindow < Qt::Dialog
         end
       rescue StandardError => e
         Qt.execute_in_main_thread do
-          @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
-          @progress_dialog.hide()
-          @progress_dialog = nil
+          if @progress_dialog
+            @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+            @progress_dialog.hide()
+            @progress_dialog = nil
+          end
+          
           Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
         end
         return
       end
       
       Qt.execute_in_main_thread do
-        @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
-        @progress_dialog.hide()
-        @progress_dialog = nil
+        if @progress_dialog
+          @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+          @progress_dialog.hide()
+          @progress_dialog = nil
+        end
+        
         write_to_rom(game)
       end
     end
@@ -449,8 +455,11 @@ class RandomizerWindow < Qt::Dialog
       end
       
       Qt.execute_in_main_thread do
-        @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
-        @progress_dialog = nil
+        if @progress_dialog
+          @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+          @progress_dialog = nil
+        end
+        
         Qt::MessageBox.information(self, "Done", "Randomization complete.\n\nOutput ROM:\n#{output_rom_filename}\n\nIf you get stuck, check the FAQ\nin the readme, and the progression\nspoiler log here: /logs/spoiler_log.txt")
       end
     end
