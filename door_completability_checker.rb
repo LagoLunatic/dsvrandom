@@ -6,14 +6,16 @@ class DoorCompletabilityChecker
               :current_items,
               :defs,
               :preferences,
+              :inaccessible_doors,
               :enemy_locations,
               :event_locations,
               :villager_locations,
               :hidden_locations,
               :mirror_locations,
+              :no_soul_locations,
               :no_glyph_locations,
               :no_progression_locations,
-              :inaccessible_doors
+              :portrait_locations
   
   def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers)
     @game = game
@@ -74,6 +76,7 @@ class DoorCompletabilityChecker
     @no_soul_locations = yaml["No soul locations"] || []
     @no_glyph_locations = yaml["No glyph locations"] || []
     @no_progression_locations = yaml["No progression locations"] || []
+    @portrait_locations = yaml["Portrait locations"] || []
     
     @warp_connections = yaml["Warp connections"]
     
