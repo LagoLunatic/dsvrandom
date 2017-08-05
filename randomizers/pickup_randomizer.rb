@@ -529,12 +529,18 @@ module PickupRandomizer
       locations -= checker.enemy_locations
     end
     
+    # Don't let progression items be in certain problematic locations. (This function is only called for progression items.)
+    locations -= checker.no_progression_locations
+    
     if GAME == "dos" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you souls in DoS.
       locations -= checker.event_locations
       
       # Don't let soul candles be inside mirrors. They don't get hidden, and are accessible without Paranoia.
       locations -= checker.mirror_locations
+      
+      # Don't let souls be inside specific locations that can be broken without reaching them.
+      locations -= checker.no_soul_locations
     end
     if GAME == "ooe" && ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you items in OoE.

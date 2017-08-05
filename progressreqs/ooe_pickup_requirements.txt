@@ -241,7 +241,7 @@ Rooms:
     00 (Death Ring): 
   00-06-1C:
     room: mechtower & magnes | mechtower & volaticus | mechtower & distance | mechtower & winged boots
-    01 (Morbus) (Event): false # don't place progression pickups here. you need fulgur or vol fulgur to get here, but I don't want fulgur/vol fulgur to be considered progression pickups.
+    01 (Morbus) (Event) (No progression): # don't place progression pickups here. you need fulgur or vol fulgur to get here, but I don't want fulgur/vol fulgur to be considered progression pickups.
   00-07-02:
     room: mechtower
     00 (Vis Fio): 
@@ -601,7 +601,7 @@ Rooms:
     01 (HP Max up): 
   12-00-08:
     room: monasterymid
-    00 (Cubus) (Event): false # don't place progression pickups here, too many things can solve this block puzzle
+    00 (Cubus) (Event) (No progression): # don't place progression pickups here, too many things can solve this block puzzle
   12-00-09:
     room: monasterymid
     00 (Culter): 
