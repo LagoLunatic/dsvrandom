@@ -8,7 +8,9 @@ class RandomizerWindow < Qt::Dialog
     randomize_enemies
     randomize_enemy_drops
     randomize_boss_souls
-    randomize_item_stats
+    randomize_equipment_stats
+    randomize_weapon_behavior
+    randomize_consumable_behavior
     randomize_skill_stats
     randomize_shop
     randomize_wooden_chests

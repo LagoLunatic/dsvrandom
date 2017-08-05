@@ -1,6 +1,8 @@
 
 module ShopRandomizer
   def randomize_shop
+    randomize_item_prices()
+    
     available_shop_item_ids = all_non_progression_pickups.select do |item_id|
       next unless ITEM_GLOBAL_ID_RANGE.include?(item_id)
       item = game.items[item_id]
@@ -51,6 +53,23 @@ module ShopRandomizer
       end
       
       pool.write_to_rom()
+    end
+  end
+  
+  def randomize_item_prices
+    (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
+      item = game.items[item_global_id]
+      
+      progress_item = checker.all_progression_pickups.include?(item_global_id)
+      
+      if progress_item
+        # Always make progression items be worth 0 gold so they can't be sold on accident.
+        item["Price"] = 0
+      elsif item.name == "CASTLE MAP 1" && GAME == "por"
+        # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
+      else
+        item["Price"] = named_rand_range_weighted(:item_price_range)/100*100
+      end
     end
   end
 end

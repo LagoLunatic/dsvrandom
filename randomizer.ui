@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>581</height>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -152,12 +152,36 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_11">
             <item>
-             <widget class="QCheckBox" name="randomize_item_stats">
+             <widget class="QCheckBox" name="randomize_equipment_stats">
               <property name="toolTip">
-               <string>Randomizes item stats and how weapons behave.</string>
+               <string>Randomizes weapon and armor stats.</string>
               </property>
               <property name="text">
-               <string>Item Stats/Behavior</string>
+               <string>Equipment Stats</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_weapon_behavior">
+              <property name="toolTip">
+               <string>Randomizes how weapons behave.</string>
+              </property>
+              <property name="text">
+               <string>Weapon Behavior</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QCheckBox" name="randomize_consumable_behavior">
+              <property name="toolTip">
+               <string>Randomizes what consumables do and how powerful they are.</string>
+              </property>
+              <property name="text">
+               <string>Consumable Behavior</string>
               </property>
              </widget>
             </item>
@@ -178,7 +202,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_shop">
               <property name="toolTip">
-               <string>Randomizes what items are for sale in the shop.</string>
+               <string>Randomizes what items are for sale in the shop as well as item prices.</string>
               </property>
               <property name="text">
                <string>Shop Items</string>
@@ -428,8 +452,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>590</width>
+            <height>407</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -706,13 +730,16 @@
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
-  <tabstop>randomize_item_stats</tabstop>
+  <tabstop>randomize_equipment_stats</tabstop>
+  <tabstop>randomize_weapon_behavior</tabstop>
+  <tabstop>randomize_consumable_behavior</tabstop>
   <tabstop>randomize_skill_stats</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
+  <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_area_connections</tabstop>
@@ -720,6 +747,7 @@
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_skill_sprites</tabstop>
+  <tabstop>randomize_enemy_anim_speed</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>

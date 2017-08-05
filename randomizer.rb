@@ -359,7 +359,7 @@ class Randomizer
     end
     
     @max_up_items = []
-    if options[:randomize_item_stats]
+    if options[:randomize_consumable_behavior]
       reset_rng()
       case GAME
       when "por"
@@ -479,10 +479,24 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_item_stats]
-      yield [options_completed, "Randomizing item stats..."]
+    if options[:randomize_equipment_stats]
+      yield [options_completed, "Randomizing equipment stats..."]
       reset_rng()
-      randomize_item_stats()
+      randomize_equipment_stats()
+      options_completed += 1
+    end
+    
+    if options[:randomize_weapon_behavior]
+      yield [options_completed, "Randomizing weapons..."]
+      reset_rng()
+      randomize_weapon_behavior()
+      options_completed += 1
+    end
+    
+    if options[:randomize_consumable_behavior]
+      yield [options_completed, "Randomizing consumables..."]
+      reset_rng()
+      randomize_consumable_behavior()
       options_completed += 1
     end
     

@@ -7,7 +7,7 @@ module ItemSkillStatRandomizer
     damage_types_to_set
   end
   
-  def randomize_item_stats
+  def randomize_equipment_stats
     (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
       item = game.items[item_global_id]
       
@@ -24,19 +24,222 @@ module ItemSkillStatRandomizer
         next if item["Item ID"] == 0x61 # starting Vampire Killer
       end
       
-      if progress_item
-        # Always make progression items be worth 0 gold so they can't be sold on accident.
-        item["Price"] = 0
-      elsif item.name == "CASTLE MAP 1" && GAME == "por"
-        # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
-      else
-        item["Price"] = named_rand_range_weighted(:item_price_range)/100*100
+      if item.item_type_name == "Weapons"
+        item["Attack"] = named_rand_range_weighted(:weapon_attack_range)
+        
+        extra_stats = ["Defense", "Strength", "Constitution", "Intelligence", "Luck"]
+        extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
+        total_num_extra_stats = extra_stats.length
+        
+        num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
+        extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
+          item[stat_name] = named_rand_range_weighted(:item_extra_stats_range)
+          if item[stat_name] < 0 && stat_name == "Defense"
+            # Defense is unsigned
+            item[stat_name] = 0
+          end
+        end
+        
+        item.write_to_rom()
+      elsif ["Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"].include?(item.item_type_name)
+        item["Defense"] = named_rand_range_weighted(:armor_defense_range)
+        
+        extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
+        extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
+        total_num_extra_stats = extra_stats.length
+        
+        num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
+        extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
+          item[stat_name] = named_rand_range_weighted(:item_extra_stats_range)
+          if item[stat_name] < 0 && stat_name == "Attack"
+            # Attack is unsigned
+            item[stat_name] = 0
+          end
+        end
+        
+        unless item.name == "Casual Clothes"
+          item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
+        end
+        
+        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Resistances"], [0, 0, 0, 0, 0, 0, 1])
+        item["Resistances"].names.each_with_index do |bit_name, i|
+          if damage_types_to_set.include?(bit_name)
+            item["Resistances"][i] = true
+          else
+            item["Resistances"][i] = false
+          end
+        end
+        
+        item.write_to_rom()
+      end
+    end
+  end
+  
+  def randomize_weapon_behavior
+    (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
+      item = game.items[item_global_id]
+      
+      progress_item = checker.all_progression_pickups.include?(item_global_id)
+      
+      # Don't randomize unequip/starting items.
+      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
+        next
+      end
+      case GAME
+      when "dos"
+        next if item.name == "Knife"
+      when "por"
+        next if item["Item ID"] == 0x61 # starting Vampire Killer
       end
       
-      description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+      if item.item_type_name == "Weapons"
+        item["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
+        
+        case GAME
+        when "dos"
+          unless [9, 0xA, 0xB].include?(item["Swing Anim"])
+            # Only randomize swing anim if it wasn't originally a throwing/firing weapon.
+            # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
+            item["Swing Anim"] = rng.rand(0..0xC)
+          end
+          item["Super Anim"] = rng.rand(0..0xE) unless progress_item
+        when "por"
+          if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
+            # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
+          elsif item["Equippable by"].value == 1 && progress_item
+            # Don't randomize Jonathan's glitch progress weapons (Cinquedia, Axe, etc) to be for Charlotte because Charlotte may not be accessible with "Don't randomize Change Cube".
+          else
+            # 1/8 chance to be a weapon for Charlotte, otherwise for Jonathan.
+            item["Equippable by"].value = [1, 1, 1, 1, 1, 1, 1, 2].sample(random: rng)
+          end
+          
+          if item["Equippable by"].value == 1
+            # Jonathan swing anims.
+            item["Swing Anim"] = rng.rand(0..8)
+          else
+            # Charlotte swing anim.
+            item["Swing Anim"] = 9
+          end
+          
+          unless progress_item
+            palette = item["Crit type/Palette"] & 0xC0
+            crit_type = rng.rand(0..0x13)
+            item["Crit type/Palette"] = palette | crit_type
+          end
+          
+          if item.name == "Heaven's Sword" || item.name == "Tori"
+            item["Special Effect"] = [1, 5, 6, 7].sample(random: rng)
+          elsif rng.rand <= 0.50 # 50% chance to have a special effect
+            item["Special Effect"] = rng.rand(1..7)
+          else
+            item["Special Effect"] = 0
+          end
+        end
+        
+        player_can_move = nil
+        item["Swing Modifiers"].names.each_with_index do |bit_name, i|
+          next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
+          
+          item["Swing Modifiers"][i] = [true, false, false, false].sample(random: rng)
+          
+          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
+            # This bit must be set for throwing weapons in DoS or they won't appear.
+            item["Swing Modifiers"][i] = true
+          end
+          
+          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
+            # This bit must be set for throwing weapons to throw correctly.
+            # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
+            item["Swing Modifiers"][i] = [true, true, true, true, true, true, true, true, true, false].sample(random: rng)
+          end
+          
+          if bit_name == "Player can move"
+            player_can_move = item["Swing Modifiers"][i]
+          end
+          
+          if bit_name == "No interrupt on anim end" && player_can_move
+            # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
+            item["Swing Modifiers"][i] = true
+          end
+        end
+        
+        
+        if rng.rand() >= 0.30
+          # Increase the chance of a pure physical weapon.
+          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 2, 3])
+        else
+          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
+        end
+        
+        if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+          # 10% chance to add a status effect.
+          damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
+        end
+        
+        # Add extra bits.
+        damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+        
+        item["Effects"].names.each_with_index do |bit_name, i|
+          if damage_types_to_set.include?(bit_name)
+            item["Effects"][i] = true
+          else
+            item["Effects"][i] = false
+          end
+          
+          if bit_name == "Cures vampirism & kills undead" && item["Effects"][i] == true
+            # Don't give this weapon the spell bit if it has the cures vampirism bit because we don't want it to cure the sisters.
+            item["Effects"][26] = false # Spell
+          end
+        end
+        
+        if item["Special Effect"] == 6
+          # Illusion fist effect overrides damage types bitfield.
+          # Therefore we set the damage types bitfield to match so it at least displays the correct values.
+          item["Effects"].value = 4 # Slash
+        end
+        
+        if item["Special Effect"] == 5
+          # The Heaven Sword "throw the weapon in front of you" effect only uses the first frame of the weapon's sprite.
+          # If the first frame has no hitbox the weapon won't be able to hit enemies.
+          # So we reorder the frames so that one with a hitbox is first.
+          weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
+          sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
+          possible_frames = sprite.frames.select{|frame| frame.hitboxes.any?}
+          if possible_frames.any?
+            # Select the first frame with a hitbox.
+            frame = possible_frames.first
+            # Move that frame to the front.
+            sprite.frames.delete(frame)
+            sprite.frames.unshift(frame)
+            sprite.write_to_rom()
+          end
+        end
+        
+        item.write_to_rom()
+      end
+    end
+  end
+  
+  def randomize_consumable_behavior
+    (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
+      item = game.items[item_global_id]
       
-      case item.item_type_name
-      when "Consumables"
+      progress_item = checker.all_progression_pickups.include?(item_global_id)
+      
+      # Don't randomize unequip/starting items.
+      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
+        next
+      end
+      case GAME
+      when "dos"
+        next if item.name == "Knife"
+      when "por"
+        next if item["Item ID"] == 0x61 # starting Vampire Killer
+      end
+      
+      if item.item_type_name == "Consumables"
+        description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+        
         case GAME
         when "dos", "por"
           possible_types = (0..0x8).to_a
@@ -179,174 +382,9 @@ module ItemSkillStatRandomizer
             description.decoded_string = "Increases your #{ap_type}\\nattribute points by #{item["Var A"]}."
           end
         end
-      when "Weapons"
-        item["Attack"] = named_rand_range_weighted(:weapon_attack_range)
         
-        extra_stats = ["Defense", "Strength", "Constitution", "Intelligence", "Luck"]
-        extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
-        total_num_extra_stats = extra_stats.length
-        
-        num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
-        extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
-          item[stat_name] = named_rand_range_weighted(:item_extra_stats_range)
-          if item[stat_name] < 0 && stat_name == "Defense"
-            # Defense is unsigned
-            item[stat_name] = 0
-          end
-        end
-        
-        item["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
-        
-        case GAME
-        when "dos"
-          unless [9, 0xA, 0xB].include?(item["Swing Anim"])
-            # Only randomize swing anim if it wasn't originally a throwing/firing weapon.
-            # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
-            item["Swing Anim"] = rng.rand(0..0xC)
-          end
-          item["Super Anim"] = rng.rand(0..0xE) unless progress_item
-        when "por"
-          if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
-            # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
-          elsif item["Equippable by"].value == 1 && progress_item
-            # Don't randomize Jonathan's glitch progress weapons (Cinquedia, Axe, etc) to be for Charlotte because Charlotte may not be accessible with "Don't randomize Change Cube".
-          else
-            # 1/8 chance to be a weapon for Charlotte, otherwise for Jonathan.
-            item["Equippable by"].value = [1, 1, 1, 1, 1, 1, 1, 2].sample(random: rng)
-          end
-          
-          if item["Equippable by"].value == 1
-            # Jonathan swing anims.
-            item["Swing Anim"] = rng.rand(0..8)
-          else
-            # Charlotte swing anim.
-            item["Swing Anim"] = 9
-          end
-          
-          unless progress_item
-            palette = item["Crit type/Palette"] & 0xC0
-            crit_type = rng.rand(0..0x13)
-            item["Crit type/Palette"] = palette | crit_type
-          end
-          
-          if item.name == "Heaven's Sword" || item.name == "Tori"
-            item["Special Effect"] = [1, 5, 6, 7].sample(random: rng)
-          elsif rng.rand <= 0.50 # 50% chance to have a special effect
-            item["Special Effect"] = rng.rand(1..7)
-          else
-            item["Special Effect"] = 0
-          end
-        end
-        
-        player_can_move = nil
-        item["Swing Modifiers"].names.each_with_index do |bit_name, i|
-          next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
-          
-          item["Swing Modifiers"][i] = [true, false, false, false].sample(random: rng)
-          
-          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
-            # This bit must be set for throwing weapons in DoS or they won't appear.
-            item["Swing Modifiers"][i] = true
-          end
-          
-          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
-            # This bit must be set for throwing weapons to throw correctly.
-            # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
-            item["Swing Modifiers"][i] = [true, true, true, true, true, true, true, true, true, false].sample(random: rng)
-          end
-          
-          if bit_name == "Player can move"
-            player_can_move = item["Swing Modifiers"][i]
-          end
-          
-          if bit_name == "No interrupt on anim end" && player_can_move
-            # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
-            item["Swing Modifiers"][i] = true
-          end
-        end
-        
-        
-        if rng.rand() >= 0.30
-          # Increase the chance of a pure physical weapon.
-          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 2, 3])
-        else
-          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
-        end
-        
-        if damage_types_to_set.length < 4 && rng.rand() <= 0.10
-          # 10% chance to add a status effect.
-          damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
-        end
-        
-        # Add extra bits.
-        damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
-        
-        item["Effects"].names.each_with_index do |bit_name, i|
-          if damage_types_to_set.include?(bit_name)
-            item["Effects"][i] = true
-          else
-            item["Effects"][i] = false
-          end
-          
-          if bit_name == "Cures vampirism & kills undead" && item["Effects"][i] == true
-            # Don't give this weapon the spell bit if it has the cures vampirism bit because we don't want it to cure the sisters.
-            item["Effects"][26] = false # Spell
-          end
-        end
-        
-        if item["Special Effect"] == 6
-          # Illusion fist effect overrides damage types bitfield.
-          # Therefore we set the damage types bitfield to match so it at least displays the correct values.
-          item["Effects"].value = 4 # Slash
-        end
-        
-        if item["Special Effect"] == 5
-          # The Heaven Sword "throw the weapon in front of you" effect only uses the first frame of the weapon's sprite.
-          # If the first frame has no hitbox the weapon won't be able to hit enemies.
-          # So we reorder the frames so that one with a hitbox is first.
-          weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
-          sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
-          possible_frames = sprite.frames.select{|frame| frame.hitboxes.any?}
-          if possible_frames.any?
-            # Select the first frame with a hitbox.
-            frame = possible_frames.first
-            # Move that frame to the front.
-            sprite.frames.delete(frame)
-            sprite.frames.unshift(frame)
-            sprite.write_to_rom()
-          end
-        end
-      when "Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"
-        item["Defense"] = named_rand_range_weighted(:armor_defense_range)
-        
-        extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
-        extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
-        total_num_extra_stats = extra_stats.length
-        
-        num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
-        extra_stats.sample(num_extra_stats_for_this_item, random: rng).each do |stat_name|
-          item[stat_name] = named_rand_range_weighted(:item_extra_stats_range)
-          if item[stat_name] < 0 && stat_name == "Attack"
-            # Attack is unsigned
-            item[stat_name] = 0
-          end
-        end
-        
-        unless item.name == "Casual Clothes"
-          item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
-        end
-        
-        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Resistances"], [0, 0, 0, 0, 0, 0, 1])
-        item["Resistances"].names.each_with_index do |bit_name, i|
-          if damage_types_to_set.include?(bit_name)
-            item["Resistances"][i] = true
-          else
-            item["Resistances"][i] = false
-          end
-        end
+        item.write_to_rom()
       end
-      
-      item.write_to_rom()
     end
     
     game.text_database.write_to_rom()
