@@ -539,7 +539,7 @@ module PickupRandomizer
       # Don't let soul candles be inside mirrors. They don't get hidden, and are accessible without Paranoia.
       locations -= checker.mirror_locations
       
-      # Don't let souls be inside specific locations that can be broken without reaching them.
+      # Don't let soul candles be inside specific locations that can be broken without reaching them.
       locations -= checker.no_soul_locations
     end
     if GAME == "ooe" && ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
