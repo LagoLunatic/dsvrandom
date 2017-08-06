@@ -60,6 +60,7 @@ Defs:
   bossbehemoth: entrance & height
   
   wind: midentrance
+  vincent: midentrance
   
   cityofhaze: portraitcityofhaze
   portraitcityofhaze: portraitcityofhaze

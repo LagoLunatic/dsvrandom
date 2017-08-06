@@ -81,22 +81,6 @@ No soul locations:
   - 00-02-00_00
   - 00-02-10_00
   - 00-04-13_00
-Allowed starter items:
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - malphas
-  - hippogryph
-  - hippogryph
-  - hippogryph
-  - bat company
-  - bat form
 Warp connections:
   00-05-27_000: 00-0B-00_000
 Subrooms:

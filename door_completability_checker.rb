@@ -78,11 +78,11 @@ class DoorCompletabilityChecker
     @no_progression_locations = yaml["No progression locations"] || []
     @portrait_locations = yaml["Portrait locations"] || []
     
-    @warp_connections = yaml["Warp connections"]
+    @warp_connections = yaml["Warp connections"] || {}
     
     @final_room_str = yaml["Final room"]
     
-    @subrooms = yaml["Subrooms"]
+    @subrooms = yaml["Subrooms"] || {}
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}
