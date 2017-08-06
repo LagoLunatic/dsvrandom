@@ -252,12 +252,22 @@ module DoorRandomizer
       end
     end
     
+    doors_to_line_up = []
+    
     queued_door_changes.each do |door, changes|
       changes.each do |attribute_name, new_value|
         door.send("#{attribute_name}=", new_value)
       end
       
+      unless doors_to_line_up.include?(door.destination_door)
+        doors_to_line_up << door
+      end
+      
       door.write_to_rom()
+    end
+    
+    doors_to_line_up.each do |door|
+      line_up_door(door)
     end
     
     update_doppelganger_event_boss_doors()
@@ -426,6 +436,68 @@ module DoorRandomizer
       new_boss_door.var_b = 0xE
       dest_room.entities << new_boss_door
       dest_room.write_entities_to_rom()
+    end
+  end
+  
+  def line_up_door(door)
+    # Sometimes two doors don't line up perfectly. For example if the opening is at the bottom of one room but the middle of the other.
+    # We change the dest_x/dest_y of these so they line up correctly.
+    
+    dest_door = door.destination_door
+    dest_room = dest_door.room
+    
+    case door.direction
+    when :left
+      left_door = door
+      right_door = dest_door
+    when :right
+      right_door = door
+      left_door = dest_door
+    end
+    
+    case door.direction
+    when :left, :right
+      left_coll = RoomCollision.new(left_door.room, game.fs)
+      x = 0
+      y_start = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
+      left_tiles = []
+      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
+        left_tiles << left_coll[x*0x10,y*0x10]
+      end
+      
+      right_coll = RoomCollision.new(right_door.room, game.fs)
+      x = right_door.x_pos*SCREEN_WIDTH_IN_TILES - 1
+      y_start = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
+      right_tiles = []
+      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
+        right_tiles << right_coll[x*0x10,y*0x10]
+      end
+      
+      chunks = left_tiles.chunk{|tile| tile.is_blank}
+      gaps = chunks.select{|is_blank, tiles| is_blank}
+      tiles_in_biggest_gap = gaps.max_by{|is_blank, tiles| tiles.length}[1]
+      left_first_tile_i = left_tiles.index(tiles_in_biggest_gap.first)
+      left_last_tile_i = left_tiles.index(tiles_in_biggest_gap.last)
+      left_gap_size = tiles_in_biggest_gap.size
+      
+      chunks = right_tiles.chunk{|tile| tile.is_blank}
+      gaps = chunks.select{|is_blank, tiles| is_blank}
+      tiles_in_biggest_gap = gaps.max_by{|is_blank, tiles| tiles.length}[1]
+      right_first_tile_i = right_tiles.index(tiles_in_biggest_gap.first)
+      right_last_tile_i = right_tiles.index(tiles_in_biggest_gap.last)
+      right_gap_size = tiles_in_biggest_gap.size
+      
+      unless left_last_tile_i == right_last_tile_i
+        left_door_dest_y_offset = (right_last_tile_i - left_last_tile_i) * 0x10
+        right_door_dest_y_offset = (left_last_tile_i - right_last_tile_i) * 0x10
+        
+        # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
+        left_door.dest_y_unused += left_door_dest_y_offset
+        left_door.write_to_rom()
+        
+        right_door.dest_y_unused += right_door_dest_y_offset
+        right_door.write_to_rom()
+      end
     end
   end
   
