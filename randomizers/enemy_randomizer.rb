@@ -604,6 +604,21 @@ module EnemyRandomizer
       end
     when "Larva"
       enemy.var_b = rng.rand(0..0xF) # Bitfield of which of the 4 directions the larva can move in
+    when "Persephone"
+      enemy.var_a = rng.rand(0..2) # How she behaves (normal, vacuum, already in the middle of vacuuming)
+    when "Skeleton Flail"
+      room_has_left_doors = !!enemy.room.doors.find{|door| door.direction == :left}
+      room_has_right_doors = !!enemy.room.doors.find{|door| door.direction == :right}
+      if room_has_left_doors && !room_has_right_doors
+        enemy.var_a = 1
+      elsif room_has_right_doors && !room_has_left_doors
+        enemy.var_a = 2
+      else
+        enemy.var_a = 0
+      end
+      
+      # TODO: var B is num steps to take. try to detect collision and prevent him from walking off edges or walking into walls.
+      enemy.var_b = rng.rand(0..6)
     end
   end
   

@@ -450,7 +450,7 @@ module ItemSkillStatRandomizer
         unless skills_that_must_be_used_by_original_player.include?(skill.name)
           # Randomize whether this skill is usable by Jonathan or Charlotte.
           # Except for the above listed skills, since the wrong character can't actually use them.
-          skill["??? bitfield"][2] = [true, false].sample(random: rng)
+          skill["??? bitfield"][2] = [true, false].sample(random: rng) # Is spell
         end
         
         # Set either the sub or spell bit in the damage types bitfield to let enemies know what this is now.
