@@ -462,7 +462,7 @@ module DoorRandomizer
       y_start = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
       left_tiles = []
       (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
-        left_tiles << left_coll[x*0x10,y*0x10]
+        left_tiles << left_coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
       end
       
       right_coll = RoomCollision.new(right_door.room, game.fs)
@@ -470,7 +470,7 @@ module DoorRandomizer
       y_start = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
       right_tiles = []
       (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
-        right_tiles << right_coll[x*0x10,y*0x10]
+        right_tiles << right_coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
       end
       
       chunks = left_tiles.chunk{|tile| tile.is_blank}
