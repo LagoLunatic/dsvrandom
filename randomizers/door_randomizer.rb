@@ -501,6 +501,176 @@ module DoorRandomizer
     end
   end
   
+  def randomize_doors_no_overlap
+    map_width = 64
+    map_height = 47
+    map_spots = Array.new(map_width) { Array.new(map_height) }
+    
+    all_rooms = []
+    game.each_room do |room|
+      next if room.layers.empty?
+      next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
+      if GAME == "dos" && (0xA..0x10).include?(room.sector_index)
+        next
+      end
+      
+      all_rooms << room
+      
+      # Move the rooms off the edge of the map before they're placed so they don't interfere.
+      room.room_xpos_on_map = map_width
+      room.room_ypos_on_map = map_height
+      room.write_to_rom()
+    end
+    
+    all_rooms.shuffle!(random: rng)
+    skipped_rooms = []
+    
+    all_rooms.each_with_index do |room, i|
+      if i == 0
+        # Starting room
+        valid_spots = [[20, 20]]
+      else
+        valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height)
+      end
+      
+      #if room.room_str == "00-00-17"
+      #  puts "!!! #{valid_spots.size}"
+      #end
+      
+      if valid_spots.empty?
+        print 'X'
+        if skipped_rooms.include?(room)
+          # Already skipped this room once. Don't give it a third chance.
+          next
+        else
+          skipped_rooms << room
+          # Give the room another try at the end.
+          all_rooms << room
+          next
+        end
+      end
+      
+      print '.'
+      
+      chosen_spot = valid_spots.sample(random: rng)
+      room_x = chosen_spot[0]
+      room_y = chosen_spot[1]
+      room.room_xpos_on_map = room_x
+      room.room_ypos_on_map = room_y
+      room.write_to_rom()
+      (room_x..room_x+room.width-1).each do |tile_x|
+        (room_y..room_y+room.height-1).each do |tile_y|
+          map_spots[tile_x][tile_y] = room
+        end
+      end
+      
+      #regenerate_map()
+    end
+  end
+  
+  def get_valid_positions_for_room(room, map_spots, map_width, map_height)
+    valid_spots = []
+    
+    (map_width-room.width+1).times do |room_x|
+      (map_height-room.height+1).times do |room_y|
+        debug = false
+        if room_x == 0x22 && room_y == 0x14 && room.room_str == "00-03-20"
+          debug = true
+        end
+        
+        # Don't place rooms right on the edge of the map
+        next if room_x == 0
+        next if room_y == 0
+        next if room_x + room.width - 1 == map_width - 1
+        next if room_y + room.height - 1 == map_height - 1
+        
+        spot_is_free = true
+        
+        (room_x..room_x+room.width-1).each do |tile_x|
+          (room_y..room_y+room.height-1).each do |tile_y|
+            if !map_spots[tile_x][tile_y].nil?
+              # Spot occupied, don't place another room overlapping it.
+              spot_is_free = false
+            end
+          end
+        end
+        
+        next unless spot_is_free
+        
+        spot_is_connected = false
+        
+        room.width.times do |x_in_room|
+          room.height.times do |y_in_room|
+            tile_x = room_x + x_in_room
+            tile_y = room_y + y_in_room
+            
+            left_door = room.doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
+            if left_door && tile_x > 0 && map_spots[tile_x-1][tile_y]
+              dest_room = map_spots[tile_x-1][tile_y]
+              y_in_dest_room = tile_y - dest_room.room_ypos_on_map
+              right_dest_door = dest_room.doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+              if right_dest_door
+                spot_is_connected = true
+                puts "connected to the left: #{dest_room.room_str}" if debug
+                break
+              end
+            end
+            
+            right_door = room.doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
+            if right_door && tile_x < map_width-1 && map_spots[tile_x+1][tile_y]
+              dest_room = map_spots[tile_x+1][tile_y]
+              y_in_dest_room = tile_y - dest_room.room_ypos_on_map
+              left_dest_door = dest_room.doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+              if left_dest_door
+                spot_is_connected = true
+                puts "connected to the right: #{dest_room.room_str}" if debug
+                break
+              end
+            end
+            
+            up_door = room.doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
+            if up_door && tile_y > 0 && map_spots[tile_x][tile_y-1]
+              dest_room = map_spots[tile_x][tile_y-1]
+              x_in_dest_room = tile_x - dest_room.room_xpos_on_map
+              down_dest_door = dest_room.doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+              if down_dest_door
+                spot_is_connected = true
+                puts "connected up: #{dest_room.room_str}" if debug
+                break
+              end
+            end
+            
+            down_door = room.doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
+            if down_door && tile_y < map_height-1 && map_spots[tile_x][tile_y+1]
+              dest_room = map_spots[tile_x][tile_y+1]
+              x_in_dest_room = tile_x - dest_room.room_xpos_on_map
+              up_dest_door = dest_room.doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+              if up_dest_door
+                spot_is_connected = true
+                puts "connected down: #{dest_room.room_str}" if debug
+                break
+              end
+            end
+            
+            #if (tile_x < map_width-1 && map_spots[tile_x+1][tile_y]) ||
+            #   (tile_x > 0 && map_spots[tile_x-1][tile_y]) ||
+            #   (tile_y < map_height-1 && map_spots[tile_x][tile_y+1]) ||
+            #   (tile_y > 0 && map_spots[tile_x][tile_y-1])
+            #  # Spot is connected to another room, allow placing a room here.
+            #  spot_is_connected = true
+            #end
+          end
+        end
+        
+        next unless spot_is_connected
+        
+        valid_spots << [room_x, room_y]
+      end
+    end
+    
+    return valid_spots
+  end
+  
   def update_room_positions_on_maps
     unvisited_rooms = []
     game.each_room do |room|
@@ -634,6 +804,31 @@ module DoorRandomizer
       end
       if top_tile && (top_tile.sector_index != sector_index || top_tile.room_index != room_index)
         tile.top_wall = true
+      end
+      
+      if left_tile && left_tile.sector_index && (left_tile.sector_index != sector_index || left_tile.room_index != room_index)
+        left_room = game.areas[0].sectors[left_tile.sector_index].rooms[left_tile.room_index]
+        y_in_dest_room = y - left_room.room_ypos_on_map
+        room_doors = left_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+        if right_door
+          tile.left_wall = false
+          tile.left_door = true
+        else
+          tile.left_wall = true
+        end
+      end
+      if top_tile && top_tile.sector_index && (top_tile.sector_index != sector_index || top_tile.room_index != room_index)
+        top_room = game.areas[0].sectors[top_tile.sector_index].rooms[top_tile.room_index]
+        x_in_dest_room = x - top_room.room_xpos_on_map
+        room_doors = top_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+        if down_door
+          tile.top_wall = false
+          tile.top_door = true
+        else
+          tile.top_wall = true
+        end
       end
       
       if sector_index
