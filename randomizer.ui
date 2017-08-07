@@ -607,6 +607,19 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="add_magical_tickets">
+            <property name="toolTip">
+             <string>Implements a new magical ticket item that functions like it does in PoR and OoE.</string>
+            </property>
+            <property name="text">
+             <string>Add Magical Tickets</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -731,15 +744,11 @@
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
   <tabstop>randomize_equipment_stats</tabstop>
-  <tabstop>randomize_weapon_behavior</tabstop>
-  <tabstop>randomize_consumable_behavior</tabstop>
-  <tabstop>randomize_skill_stats</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
-  <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_area_connections</tabstop>
@@ -747,7 +756,6 @@
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_skill_sprites</tabstop>
-  <tabstop>randomize_enemy_anim_speed</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>

@@ -44,7 +44,8 @@ class Randomizer
               :seed_log,
               :spoiler_log,
               :game,
-              :checker
+              :checker,
+              :renderer
   
   DIFFICULTY_RANGES = {
     :item_price_range               => 100..25000,
@@ -173,6 +174,7 @@ class Randomizer
     @seed = seed
     @game = game
     @options = options
+    @renderer = Renderer.new(game.fs)
     
     if seed.nil? || seed.empty?
       raise "No seed given"
@@ -317,6 +319,7 @@ class Randomizer
     
     if room_rando?
       options[:unlock_boss_doors] = true
+      options[:add_magical_tickets] = true
     end
     
     apply_pre_randomization_tweaks()
@@ -750,6 +753,66 @@ class Randomizer
         end
       end
     end
+    
+    if options[:add_magical_tickets] && GAME == "dos"
+      dos_implement_magical_tickets()
+    end
+    
+    if room_rando?
+      room_rando_give_infinite_magical_tickets()
+    end
+  end
+  
+  def dos_implement_magical_tickets
+    # Codes magical tickets in DoS, replacing Castle Map 0.
+    
+    if !game.fs.has_free_space_overlay?
+      game.add_new_overlay()
+    end
+    game.apply_armips_patch("dos_magical_ticket")
+    
+    item = game.items[0x2B] # Castle Map 0
+    
+    name = game.text_database.text_list[TEXT_REGIONS["Item Names"].begin + item["Item ID"]]
+    desc = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+    name.decoded_string = "Magical Ticket"
+    desc.decoded_string = "An old pass that returns\\nyou to the Lost Village."
+    game.text_database.write_to_rom()
+    
+    gfx_file = game.fs.files_by_path["/sc/f_item2.dat"]
+    palette_pointer = 0x022C4684
+    palette_index = 2
+    gfx = GfxWrapper.new(gfx_file[:asset_pointer], game.fs)
+    palette = renderer.generate_palettes(palette_pointer, 16)[palette_index]
+    image = renderer.render_gfx_1_dimensional_mode(gfx, palette)
+    magical_ticket_sprites = ChunkyPNG::Image.from_file("./dsvrandom/assets/dos_magical_ticket.png")
+    image.compose!(magical_ticket_sprites, 32, 0)
+    renderer.save_gfx_page_1_dimensional_mode(image, gfx, palette_pointer, 16, palette_index)
+    
+    item["Icon"] = 0x0282
+    
+    item["Type"] = 5 # Invalid type which will hit the "else" clause of the switch statement and go to our magical ticket code.
+    item.write_to_rom()
+  end
+  
+  def room_rando_give_infinite_magical_tickets
+    # Give the player a magical ticket to start the game with, and make magical tickets not be consumed when used.
+    
+    game.apply_armips_patch("#{GAME}_infinite_magical_tickets")
+    
+    # Also set the magical ticket's price to 0 so it can't be sold.
+    case GAME
+    when "dos"
+      item = game.items[0x2B]
+    when "por"
+      item = game.items[0x45]
+    when "ooe"
+      item = game.items[0x7C]
+    end
+    
+    item["Price"] = 0
+    
+    item.write_to_rom()
   end
   
   def inspect; to_s; end

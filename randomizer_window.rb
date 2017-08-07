@@ -41,6 +41,7 @@ class RandomizerWindow < Qt::Dialog
     no_touch_screen
     unlock_boss_doors
     remove_slot_machines
+    add_magical_tickets
     fix_infinite_quest_rewards
     dont_randomize_change_cube
     open_world_map
