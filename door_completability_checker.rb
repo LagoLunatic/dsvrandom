@@ -7,6 +7,7 @@ class DoorCompletabilityChecker
               :defs,
               :preferences,
               :inaccessible_doors,
+              :progress_important_rooms,
               :enemy_locations,
               :event_locations,
               :villager_locations,
@@ -25,6 +26,7 @@ class DoorCompletabilityChecker
     
     load_room_reqs()
     @current_items = []
+    @starting_location = "00-00-01_000"
     @current_room = "00-00-01"
     @current_location_in_room = "000"
     @debug = false
@@ -57,6 +59,11 @@ class DoorCompletabilityChecker
     end
     
     @inaccessible_doors = yaml["Inaccessible doors"]
+    
+    @progress_important_rooms = yaml["Progress important rooms"]
+    @progress_important_rooms.map! do |room_str|
+      game.room_by_str(room_str)
+    end
     
     @preferences = {}
     if yaml["Preferences"]
@@ -147,7 +154,7 @@ class DoorCompletabilityChecker
   end
   
   def add_inaccessible_door(door)
-    puts "Adding inaccessible door: #{door.door_str}"
+    #puts "Adding inaccessible door: #{door.door_str}"
     @inaccessible_doors << door.door_str
   end
   
@@ -280,6 +287,7 @@ class DoorCompletabilityChecker
     
     current_door_str = "#{@current_room}_#{@current_location_in_room}"
     accessible_doors << current_door_str
+    accessible_doors << @starting_location # Play can always use a magical ticket to access their starting location.
     
     if @current_location_in_room =~ /^e(\h\h)/
       # At an entity

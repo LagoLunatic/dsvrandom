@@ -83,6 +83,10 @@ No soul locations:
   - 00-04-13_00
 Warp connections:
   00-05-27_000: 00-0B-00_000
+Progress important rooms:
+  - 00-03-0E # doppelganger event that requires mina's talisman
+  - 00-05-27 # warp to abyss
+  - 00-0B-1F # warp to menace
 Subrooms:
   00-01-26:
     -

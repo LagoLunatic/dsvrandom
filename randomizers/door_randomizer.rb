@@ -640,15 +640,23 @@ module DoorRandomizer
   end
   
   def select_next_room_to_place(rooms)
-    rooms_with_multiple_doors = rooms.select do |room|
+    rooms_by_num_doors = rooms.group_by do |room|
       room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-      room_doors.size >= 2
+      room_doors.size
     end
+    
+    rooms_with_several_doors = rooms_by_num_doors.select{|num_doors, rooms| num_doors >= 3}
+    
+    progress_important_rooms = rooms & checker.progress_important_rooms
     
     transition_rooms = rooms & @transition_rooms
     
-    if rooms_with_multiple_doors.any?
-      rooms_to_choose_from = rooms_with_multiple_doors
+    if rooms_with_several_doors.any?
+      max_num_doors = rooms_by_num_doors.keys.max
+      rooms_with_max_doors = rooms_by_num_doors[max_num_doors]
+      rooms_to_choose_from = rooms_with_max_doors
+    elsif progress_important_rooms.any?
+      rooms_to_choose_from = progress_important_rooms
     elsif transition_rooms.any?
       rooms_to_choose_from = transition_rooms
     else

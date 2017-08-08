@@ -339,7 +339,7 @@ class Randomizer
     else
       @starting_room = case GAME
       when "dos"
-        game.areas[0].sectors[0].rooms[4]
+        game.areas[0].sectors[0].rooms[1]
       when "por"
         game.areas[0].sectors[0].rooms[0]
       when "ooe"
