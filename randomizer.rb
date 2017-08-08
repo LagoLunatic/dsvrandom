@@ -292,7 +292,7 @@ class Randomizer
   #end
   
   def room_rando?
-    options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+    options[:randomize_rooms_map_friendly] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
   end
   
   def randomize
@@ -347,18 +347,26 @@ class Randomizer
       end
     end
     
-    if options[:randomize_area_connections]
-      yield [options_completed, "Connecting areas..."]
+    if options[:randomize_rooms_map_friendly]
+      yield [options_completed, "Generating map..."]
       reset_rng()
-      randomize_transition_doors()
+      randomize_doors_no_overlap()
+      regenerate_map()
       options_completed += 1
-    end
-    
-    if options[:randomize_room_connections]
-      yield [options_completed, "Connecting rooms..."]
-      reset_rng()
-      randomize_non_transition_doors()
-      options_completed += 1
+    else
+      if options[:randomize_area_connections]
+        yield [options_completed, "Connecting areas..."]
+        reset_rng()
+        randomize_transition_doors()
+        options_completed += 1
+      end
+      
+      if options[:randomize_room_connections]
+        yield [options_completed, "Connecting rooms..."]
+        reset_rng()
+        randomize_non_transition_doors()
+        options_completed += 1
+      end
     end
     
     @max_up_items = []

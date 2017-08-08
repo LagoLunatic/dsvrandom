@@ -27,6 +27,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_enemy_stats
     randomize_skill_sprites
     randomize_enemy_anim_speed
+    randomize_rooms_map_friendly
     
     enable_glitch_reqs
     bonus_starting_items
@@ -243,6 +244,23 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_area_connections.enabled = true
       @ui.randomize_room_connections.enabled = true
       @ui.randomize_starting_room.enabled = true
+    end
+    
+    if @settings[:randomize_rooms_map_friendly]
+      @ui.randomize_area_connections.checked = false
+      @ui.randomize_area_connections.enabled = false
+      @ui.randomize_room_connections.checked = false
+      @ui.randomize_room_connections.enabled = false
+    else
+      @ui.randomize_area_connections.enabled = true
+      @ui.randomize_room_connections.enabled = true
+    end
+    
+    if @settings[:randomize_area_connections] || @settings[:randomize_room_connections]
+      @ui.randomize_rooms_map_friendly.checked = false
+      @ui.randomize_rooms_map_friendly.enabled = false
+    else
+      @ui.randomize_rooms_map_friendly.enabled = true
     end
     
     @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>610</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -310,7 +310,7 @@
                <string>Randomizes which areas connect to each other.</string>
               </property>
               <property name="text">
-               <string>Area Connections</string>
+               <string>Area Connections (Not map-friendly)</string>
               </property>
              </widget>
             </item>
@@ -320,7 +320,7 @@
                <string>Randomizes which rooms within an area connect to each other.</string>
               </property>
               <property name="text">
-               <string>Room Connections</string>
+               <string>Room Connections (Not map-friendly)</string>
               </property>
              </widget>
             </item>
@@ -369,6 +369,17 @@
               </property>
               <property name="text">
                <string>Enemy Animation Speed</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <item>
+             <widget class="QCheckBox" name="randomize_rooms_map_friendly">
+              <property name="text">
+               <string>Rooms and Areas (Map-friendly)</string>
               </property>
              </widget>
             </item>
@@ -452,8 +463,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>407</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -744,11 +755,15 @@
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
   <tabstop>randomize_equipment_stats</tabstop>
+  <tabstop>randomize_weapon_behavior</tabstop>
+  <tabstop>randomize_consumable_behavior</tabstop>
+  <tabstop>randomize_skill_stats</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
+  <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_area_connections</tabstop>
@@ -756,6 +771,8 @@
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_skill_sprites</tabstop>
+  <tabstop>randomize_enemy_anim_speed</tabstop>
+  <tabstop>randomize_rooms_map_friendly</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>
