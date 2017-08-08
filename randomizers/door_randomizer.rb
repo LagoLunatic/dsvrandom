@@ -587,6 +587,8 @@ module DoorRandomizer
             valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
           end
           
+          #p valid_spots.size if sector.sector_index == 5 && valid_spots.size > 0
+          
           if valid_spots.empty?
             if failed_room_counts[room] > 2
               # Already skipped this room a lot. Don't give it any more chances.
@@ -624,16 +626,16 @@ module DoorRandomizer
             end
           end
           
-          doors_accessible_in_this_room = chosen_spot[2]
+          door_strs_accessible_in_this_room = chosen_spot[2]
           subrooms_in_room = checker.subrooms_doors_only[room.room_str]
           if subrooms_in_room
             subrooms_in_room.each do |door_indexes_in_subroom|
-              doors_in_subroom = door_indexes_in_subroom.map{|door_index| room.doors[door_index.to_i]}
-              #p [door_indexes_in_subroom, doors_in_subroom.map{|x| x.door_str}]
-              if (doors_in_subroom & doors_accessible_in_this_room).empty?
+              door_strs_in_subroom = door_indexes_in_subroom.map{|door_index| "#{room.room_str}_%03X" % door_index}
+              p "SUBROOM: #{door_strs_in_subroom}"
+              if (door_strs_in_subroom & door_strs_accessible_in_this_room).empty?
                 # None of the doors in this subroom are connected on the map yet. So mark all the doors in this subroom as being inaccessible.
-                unreachable_subroom_doors += doors_in_subroom
-                #puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
+                unreachable_subroom_doors += door_strs_in_subroom
+                puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
                 # TODO: what about if we gain access to this subroom via a room placed later in the logic?
               end
             end
@@ -912,7 +914,8 @@ module DoorRandomizer
               dest_room = map_spots[tile_x-1][tile_y]
               if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
                 y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                #p unreachable_subroom_doors.map{|x| x.door_str} if room.sector_index == 5
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
                 if right_dest_door
                   adjacent_rooms << dest_room
@@ -928,7 +931,7 @@ module DoorRandomizer
               dest_room = map_spots[tile_x+1][tile_y]
               if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
                 y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
                 if left_dest_door
                   adjacent_rooms << dest_room
@@ -944,7 +947,7 @@ module DoorRandomizer
               dest_room = map_spots[tile_x][tile_y-1]
               if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
                 x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
                 if down_dest_door
                   adjacent_rooms << dest_room
@@ -959,7 +962,7 @@ module DoorRandomizer
               dest_room = map_spots[tile_x][tile_y+1]
               if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
                 x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
                 if up_dest_door
                   adjacent_rooms << dest_room
@@ -992,7 +995,9 @@ module DoorRandomizer
         
         next if adjacent_rooms.empty?
         
-        valid_spots << [room_x, room_y, inside_doors_connecting_to_adjacent_rooms]
+        inside_door_strs_connecting_to_adjacent_rooms = inside_doors_connecting_to_adjacent_rooms.map{|door| door.door_str}
+        
+        valid_spots << [room_x, room_y, inside_door_strs_connecting_to_adjacent_rooms]
       end
     end
     
