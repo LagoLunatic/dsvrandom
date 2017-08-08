@@ -502,69 +502,131 @@ module DoorRandomizer
   end
   
   def randomize_doors_no_overlap
+    # Remove breakable walls and similar things that prevent you from going in certain doors.
+    remove_door_blockers()
+    
     map_width = 64
     map_height = 47
     map_spots = Array.new(map_width) { Array.new(map_height) }
+    @transition_rooms = game.get_transition_rooms()
+    unplaced_transition_rooms = game.get_transition_rooms()
+    placed_transition_rooms = []
     
-    all_rooms = []
     game.each_room do |room|
-      next if room.layers.empty?
-      next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
-      if GAME == "dos" && (0xA..0x10).include?(room.sector_index)
-        next
-      end
-      
-      all_rooms << room
-      
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
       room.room_xpos_on_map = map_width
       room.room_ypos_on_map = map_height
       room.write_to_rom()
     end
     
-    all_rooms.shuffle!(random: rng)
-    skipped_rooms = []
-    
-    all_rooms.each_with_index do |room, i|
-      if i == 0
-        # Starting room
-        valid_spots = [[20, 20]]
-      else
-        valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height)
-      end
-      
-      #if room.room_str == "00-00-17"
-      #  puts "!!! #{valid_spots.size}"
-      #end
-      
-      if valid_spots.empty?
-        print 'X'
-        if skipped_rooms.include?(room)
-          # Already skipped this room once. Don't give it a third chance.
-          next
+    game.areas.each do |area|
+      area.sectors.each do |sector|
+        next if GAME == "dos" && (0xA..0x10).include?(sector.sector_index)
+        
+        sector_rooms = []
+        sector.rooms.each do |room|
+          next if room.layers.empty?
+          next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
+          next if @transition_rooms.include?(room)
+          
+          sector_rooms << room
+        end
+        
+        if sector.sector_index == 0
+          first_sector_room = @starting_room
         else
-          skipped_rooms << room
-          # Give the room another try at the end.
-          all_rooms << room
-          next
+          #break
+          open_transition_rooms = placed_transition_rooms.select do |room|
+            x = room.room_xpos_on_map
+            y = room.room_ypos_on_map
+            if x > 0 && map_spots[x-1][y].nil?
+              true
+            elsif x < map_width-1 && map_spots[x+1][y].nil?
+              true
+            else
+              false
+            end
+          end
+          
+          if open_transition_rooms.empty?
+            puts "no transition room to use as a base!"
+            break
+          end
+          
+          first_sector_room = open_transition_rooms.sample(random: rng)
+        end
+        failed_room_counts = Hash.new(0)
+        sector_rooms.shuffle!(random: rng)
+        transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2)
+        #sector_rooms += transition_rooms_in_this_sector
+        
+        on_first_sector_room = true
+        placing_transition_rooms = false
+        while true
+          if on_first_sector_room
+            room = first_sector_room
+            on_first_sector_room = false
+          else
+            p "sector_rooms: #{sector_rooms.size}"
+            p "sector_rooms transitions: #{(sector_rooms & @transition_rooms).size}"
+            if sector_rooms.empty?
+              if !placing_transition_rooms
+                puts "ON TRANSITION"
+                placing_transition_rooms = true
+                sector_rooms += transition_rooms_in_this_sector
+              else
+                break
+              end
+            end
+            #break if sector_rooms.empty?
+            room = sector_rooms.shift()
+          end
+          sector_rooms.delete(room)
+          
+          if room == @starting_room
+            valid_spots = [[20, 20]]
+          elsif placing_transition_rooms
+            limit_connections_to_sector = sector.sector_index
+            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector)
+          else
+            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height)
+          end
+          
+          if valid_spots.empty?
+            print 'X'
+            if failed_room_counts[room] > 2
+              # Already skipped this room a lot. Don't give it any more chances.
+              next
+            else
+              failed_room_counts[room] += 1
+              # Give the room another try eventually.
+              sector_rooms << room
+              next
+            end
+          end
+          
+          print '.'
+          
+          if unplaced_transition_rooms.include?(room)
+            unplaced_transition_rooms.delete(room)
+            placed_transition_rooms << room
+          end
+          
+          chosen_spot = valid_spots.sample(random: rng)
+          room_x = chosen_spot[0]
+          room_y = chosen_spot[1]
+          room.room_xpos_on_map = room_x
+          room.room_ypos_on_map = room_y
+          room.write_to_rom()
+          (room_x..room_x+room.width-1).each do |tile_x|
+            (room_y..room_y+room.height-1).each do |tile_y|
+              map_spots[tile_x][tile_y] = room
+            end
+          end
+          
+          #regenerate_map()
         end
       end
-      
-      print '.'
-      
-      chosen_spot = valid_spots.sample(random: rng)
-      room_x = chosen_spot[0]
-      room_y = chosen_spot[1]
-      room.room_xpos_on_map = room_x
-      room.room_ypos_on_map = room_y
-      room.write_to_rom()
-      (room_x..room_x+room.width-1).each do |tile_x|
-        (room_y..room_y+room.height-1).each do |tile_y|
-          map_spots[tile_x][tile_y] = room
-        end
-      end
-      
-      #regenerate_map()
     end
     
     connect_doors_based_on_map(map_spots, map_width, map_height)
@@ -752,7 +814,7 @@ module DoorRandomizer
     end
   end
   
-  def get_valid_positions_for_room(room, map_spots, map_width, map_height)
+  def get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector=nil)
     valid_spots = []
     
     (map_width-room.width+1).times do |room_x|
@@ -780,8 +842,8 @@ module DoorRandomizer
         end
         
         next unless spot_is_free
-        
-        spot_is_connected = false
+            
+        adjacent_rooms = []
         
         room.width.times do |x_in_room|
           room.height.times do |y_in_room|
@@ -796,7 +858,7 @@ module DoorRandomizer
               dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
               right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
               if right_dest_door
-                spot_is_connected = true
+                adjacent_rooms << dest_room
                 puts "connected to the left: #{dest_room.room_str}" if debug
                 break
               end
@@ -809,7 +871,7 @@ module DoorRandomizer
               dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
               left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
               if left_dest_door
-                spot_is_connected = true
+                adjacent_rooms << dest_room
                 puts "connected to the right: #{dest_room.room_str}" if debug
                 break
               end
@@ -822,7 +884,7 @@ module DoorRandomizer
               dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
               down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
               if down_dest_door
-                spot_is_connected = true
+                adjacent_rooms << dest_room
                 puts "connected up: #{dest_room.room_str}" if debug
                 break
               end
@@ -835,7 +897,7 @@ module DoorRandomizer
               dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
               up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
               if up_dest_door
-                spot_is_connected = true
+                adjacent_rooms << dest_room
                 puts "connected down: #{dest_room.room_str}" if debug
                 break
               end
@@ -851,7 +913,22 @@ module DoorRandomizer
           end
         end
         
-        next unless spot_is_connected
+        next if adjacent_rooms.empty?
+        
+        #if adjacent_rooms.include?(transition_rooms_in_this_sector)
+        #  # Don't allow placing rooms connected to the transition rooms that are meant to connect this sector to later sectors.
+        #  next
+        #end
+        
+        if limit_connections_to_sector && !adjacent_rooms.all?{|room| room.sector_index == limit_connections_to_sector}
+          next
+        end
+        
+        connectable_adjacent_rooms = adjacent_rooms.select do |dest_room|
+          dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+        end
+        
+        next if connectable_adjacent_rooms.empty?
         
         valid_spots << [room_x, room_y]
       end

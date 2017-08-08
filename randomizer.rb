@@ -331,20 +331,6 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_area_connections]
-      yield [options_completed, "Connecting areas..."]
-      reset_rng()
-      randomize_transition_doors()
-      options_completed += 1
-    end
-    
-    if options[:randomize_room_connections]
-      yield [options_completed, "Connecting rooms..."]
-      reset_rng()
-      randomize_non_transition_doors()
-      options_completed += 1
-    end
-    
     if options[:randomize_starting_room]
       yield [options_completed, "Selecting starting room..."]
       reset_rng()
@@ -359,6 +345,20 @@ class Randomizer
       when "ooe"
         game.areas[2].sectors[0].rooms[4]
       end
+    end
+    
+    if options[:randomize_area_connections]
+      yield [options_completed, "Connecting areas..."]
+      reset_rng()
+      randomize_transition_doors()
+      options_completed += 1
+    end
+    
+    if options[:randomize_room_connections]
+      yield [options_completed, "Connecting rooms..."]
+      reset_rng()
+      randomize_non_transition_doors()
+      options_completed += 1
     end
     
     @max_up_items = []
