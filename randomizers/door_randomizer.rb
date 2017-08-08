@@ -566,6 +566,190 @@ module DoorRandomizer
       
       #regenerate_map()
     end
+    
+    connect_doors_based_on_map(map_spots, map_width, map_height)
+  end
+  
+  def connect_doors_based_on_map(map_spots, map_width, map_height)
+    done_doors = []
+    queued_door_changes = Hash.new{|h, k| h[k] = {}}
+    
+    map_spots.each_with_index do |col, x|
+      col.each_with_index do |room, y|
+        next if room.nil?
+        
+        x_in_room = x - room.room_xpos_on_map
+        y_in_room = y - room.room_ypos_on_map
+        room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        
+        if x_in_room == 0
+          left_door = room_doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
+        end
+        if x_in_room == room.width - 1
+          right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
+        end
+        if y_in_room == 0
+          up_door = room_doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
+        end
+        if y_in_room == room.height - 1
+          down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
+        end
+        
+        if left_door && !done_doors.include?(left_door)
+          done_doors << left_door
+          
+          if x > 0 && map_spots[x-1][y]
+            dest_room = map_spots[x-1][y]
+            y_in_dest_room = y - dest_room.room_ypos_on_map
+            dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+            right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+          end
+          
+          if right_dest_door
+            # Connect these two doors that are touching on the map.
+            done_doors << right_dest_door
+            
+            queued_door_changes[left_door]["destination_room_metadata_ram_pointer"] = right_dest_door.room.room_metadata_ram_pointer
+            queued_door_changes[left_door]["dest_x"] = (right_dest_door.x_pos-1) * SCREEN_WIDTH_IN_PIXELS
+            queued_door_changes[left_door]["dest_y"] = right_dest_door.y_pos * SCREEN_HEIGHT_IN_PIXELS
+            
+            queued_door_changes[right_dest_door]["destination_room_metadata_ram_pointer"] = left_door.room.room_metadata_ram_pointer
+            queued_door_changes[right_dest_door]["dest_x"] = 0
+            queued_door_changes[right_dest_door]["dest_y"] = left_door.y_pos * SCREEN_HEIGHT_IN_PIXELS
+            
+            left_door.write_to_rom()
+            right_dest_door.write_to_rom()
+          else
+            # No matching door. Block this door off.
+            left_door.destination_room_metadata_ram_pointer = 0
+            left_door.x_pos = room.width + 1
+            left_door.y_pos = room.height + 1
+            left_door.write_to_rom()
+            checker.add_inaccessible_door(left_door)
+          end
+        end
+        
+        if right_door && !done_doors.include?(right_door)
+          done_doors << right_door
+          
+          if x < map_width-1 && map_spots[x+1][y]
+            dest_room = map_spots[x+1][y]
+            y_in_dest_room = y - dest_room.room_ypos_on_map
+            dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+            left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+          end
+          
+          if left_dest_door
+            # Connect these two doors that are touching on the map.
+            done_doors << left_dest_door
+            
+            queued_door_changes[right_door]["destination_room_metadata_ram_pointer"] = left_dest_door.room.room_metadata_ram_pointer
+            queued_door_changes[right_door]["dest_x"] = 0
+            queued_door_changes[right_door]["dest_y"] = left_dest_door.y_pos * SCREEN_HEIGHT_IN_PIXELS
+            
+            queued_door_changes[left_dest_door]["destination_room_metadata_ram_pointer"] = right_door.room.room_metadata_ram_pointer
+            queued_door_changes[left_dest_door]["dest_x"] = (right_door.x_pos-1) * SCREEN_WIDTH_IN_PIXELS
+            queued_door_changes[left_dest_door]["dest_y"] = right_door.y_pos * SCREEN_HEIGHT_IN_PIXELS
+            
+            right_door.write_to_rom()
+            left_dest_door.write_to_rom()
+          else
+            # No matching door. Block this door off.
+            right_door.destination_room_metadata_ram_pointer = 0
+            right_door.x_pos = room.width + 1
+            right_door.y_pos = room.height + 1
+            right_door.write_to_rom()
+            checker.add_inaccessible_door(right_door)
+          end
+        end
+        
+        if up_door && !done_doors.include?(up_door)
+          done_doors << up_door
+          
+          if y > 0 && map_spots[x][y-1]
+            dest_room = map_spots[x][y-1]
+            x_in_dest_room = x - dest_room.room_xpos_on_map
+            dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+            down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+          end
+          
+          if down_dest_door
+            # Connect these two doors that are touching on the map.
+            done_doors << down_dest_door
+            
+            queued_door_changes[up_door]["destination_room_metadata_ram_pointer"] = down_dest_door.room.room_metadata_ram_pointer
+            queued_door_changes[up_door]["dest_x"] = down_dest_door.x_pos * SCREEN_WIDTH_IN_PIXELS
+            queued_door_changes[up_door]["dest_y"] = (down_dest_door.y_pos-1) * SCREEN_HEIGHT_IN_PIXELS
+            
+            queued_door_changes[down_dest_door]["destination_room_metadata_ram_pointer"] = up_door.room.room_metadata_ram_pointer
+            queued_door_changes[down_dest_door]["dest_x"] = up_door.x_pos * SCREEN_WIDTH_IN_PIXELS
+            queued_door_changes[down_dest_door]["dest_y"] = 0
+            
+            up_door.write_to_rom()
+            down_dest_door.write_to_rom()
+          else
+            # No matching door. Block this door off.
+            up_door.destination_room_metadata_ram_pointer = 0
+            up_door.x_pos = room.width + 1
+            up_door.y_pos = room.height + 1
+            up_door.write_to_rom()
+            checker.add_inaccessible_door(up_door)
+          end
+        end
+        
+        if down_door && !done_doors.include?(down_door)
+          done_doors << down_door
+          
+          if y < map_height-1 && map_spots[x][y+1]
+            dest_room = map_spots[x][y+1]
+            x_in_dest_room = x - dest_room.room_xpos_on_map
+            dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+            up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+          end
+          
+          if up_dest_door
+            # Connect these two doors that are touching on the map.
+            done_doors << up_dest_door
+            
+            queued_door_changes[down_door]["destination_room_metadata_ram_pointer"] = up_dest_door.room.room_metadata_ram_pointer
+            queued_door_changes[down_door]["dest_x"] = up_dest_door.x_pos * SCREEN_WIDTH_IN_PIXELS
+            queued_door_changes[down_door]["dest_y"] = 0
+            
+            queued_door_changes[up_dest_door]["destination_room_metadata_ram_pointer"] = down_door.room.room_metadata_ram_pointer
+            queued_door_changes[up_dest_door]["dest_x"] = down_door.x_pos * SCREEN_WIDTH_IN_PIXELS
+            queued_door_changes[up_dest_door]["dest_y"] = (down_door.y_pos-1) * SCREEN_HEIGHT_IN_PIXELS
+            
+            down_door.write_to_rom()
+            up_dest_door.write_to_rom()
+          else
+            # No matching door. Block this door off.
+            down_door.destination_room_metadata_ram_pointer = 0
+            down_door.x_pos = room.width + 1
+            down_door.y_pos = room.height + 1
+            down_door.write_to_rom()
+            checker.add_inaccessible_door(down_door)
+          end
+        end
+      end
+    end
+    
+    doors_to_line_up = []
+    
+    queued_door_changes.each do |door, changes|
+      changes.each do |attribute_name, new_value|
+        door.send("#{attribute_name}=", new_value)
+      end
+      
+      unless doors_to_line_up.include?(door.destination_door)
+        doors_to_line_up << door
+      end
+      
+      door.write_to_rom()
+    end
+    
+    doors_to_line_up.each do |door|
+      line_up_door(door)
+    end
   end
   
   def get_valid_positions_for_room(room, map_spots, map_width, map_height)
@@ -603,12 +787,14 @@ module DoorRandomizer
           room.height.times do |y_in_room|
             tile_x = room_x + x_in_room
             tile_y = room_y + y_in_room
+            room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
             
-            left_door = room.doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
+            left_door = room_doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
             if left_door && tile_x > 0 && map_spots[tile_x-1][tile_y]
               dest_room = map_spots[tile_x-1][tile_y]
               y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-              right_dest_door = dest_room.doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+              right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
               if right_dest_door
                 spot_is_connected = true
                 puts "connected to the left: #{dest_room.room_str}" if debug
@@ -616,11 +802,12 @@ module DoorRandomizer
               end
             end
             
-            right_door = room.doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
+            right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
             if right_door && tile_x < map_width-1 && map_spots[tile_x+1][tile_y]
               dest_room = map_spots[tile_x+1][tile_y]
               y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-              left_dest_door = dest_room.doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+              left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
               if left_dest_door
                 spot_is_connected = true
                 puts "connected to the right: #{dest_room.room_str}" if debug
@@ -628,11 +815,12 @@ module DoorRandomizer
               end
             end
             
-            up_door = room.doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
+            up_door = room_doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
             if up_door && tile_y > 0 && map_spots[tile_x][tile_y-1]
               dest_room = map_spots[tile_x][tile_y-1]
               x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-              down_dest_door = dest_room.doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+              down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
               if down_dest_door
                 spot_is_connected = true
                 puts "connected up: #{dest_room.room_str}" if debug
@@ -640,11 +828,12 @@ module DoorRandomizer
               end
             end
             
-            down_door = room.doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
+            down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
             if down_door && tile_y < map_height-1 && map_spots[tile_x][tile_y+1]
               dest_room = map_spots[tile_x][tile_y+1]
               x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-              up_dest_door = dest_room.doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+              up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
               if up_dest_door
                 spot_is_connected = true
                 puts "connected down: #{dest_room.room_str}" if debug

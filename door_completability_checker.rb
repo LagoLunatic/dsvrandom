@@ -146,6 +146,11 @@ class DoorCompletabilityChecker
     return subrooms
   end
   
+  def add_inaccessible_door(door)
+    puts "Adding inaccessible door: #{door.door_str}"
+    @inaccessible_doors << door.door_str
+  end
+  
   def parse_reqs(reqs)
     if reqs.is_a?(Integer) || reqs.nil?
       return reqs
@@ -338,6 +343,7 @@ class DoorCompletabilityChecker
             # Door
             door_index = path_end.to_i(16)
             door = room.doors[door_index]
+            next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
             dest_door = door.destination_door
             dest_room = dest_door.room
             dest_door_index = dest_room.doors.index(dest_door)
