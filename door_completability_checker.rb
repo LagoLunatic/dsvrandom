@@ -8,6 +8,7 @@ class DoorCompletabilityChecker
               :preferences,
               :inaccessible_doors,
               :progress_important_rooms,
+              :subrooms_doors_only,
               :enemy_locations,
               :event_locations,
               :villager_locations,
@@ -90,6 +91,28 @@ class DoorCompletabilityChecker
     @final_room_str = yaml["Final room"]
     
     @subrooms = yaml["Subrooms"] || {}
+    @subrooms_doors_only = {}
+    @subrooms.each do |room_str, this_rooms_subrooms|
+      @subrooms_doors_only[room_str] = []
+      
+      this_rooms_subrooms.each do |list_of_doors_and_entities|
+        subroom_doors = []
+        
+        list_of_doors_and_entities.each do |door_or_ent_str|
+          if door_or_ent_str =~ /^e/
+            next
+          end
+          if door_or_ent_str.is_a?(String)
+            door_index = door_or_ent_str.to_i(16)
+          else
+            door_index = door_or_ent_str
+          end
+          subroom_doors << door_index
+        end
+        
+        @subrooms_doors_only[room_str] << subroom_doors
+      end
+    end
     
     rooms.each do |room_str, yaml_reqs|
       @room_reqs[room_str] ||= {}

@@ -511,6 +511,7 @@ module DoorRandomizer
     @transition_rooms = game.get_transition_rooms()
     unplaced_transition_rooms = game.get_transition_rooms()
     placed_transition_rooms = []
+    unreachable_subroom_doors = []
     
     game.each_room do |room|
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
@@ -581,9 +582,9 @@ module DoorRandomizer
           if room == @starting_room
             valid_spots = [[20, 20]]
           elsif @transition_rooms.include?(room)
-            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: sector.sector_index, transition_room_to_allow_connecting_to: transition_room_to_start_sector)
+            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: sector.sector_index, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
           else
-            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, transition_room_to_allow_connecting_to: transition_room_to_start_sector)
+            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
           end
           
           if valid_spots.empty?
@@ -620,6 +621,21 @@ module DoorRandomizer
           (room_x..room_x+room.width-1).each do |tile_x|
             (room_y..room_y+room.height-1).each do |tile_y|
               map_spots[tile_x][tile_y] = room
+            end
+          end
+          
+          doors_accessible_in_this_room = chosen_spot[2]
+          subrooms_in_room = checker.subrooms_doors_only[room.room_str]
+          if subrooms_in_room
+            subrooms_in_room.each do |door_indexes_in_subroom|
+              doors_in_subroom = door_indexes_in_subroom.map{|door_index| room.doors[door_index.to_i]}
+              #p [door_indexes_in_subroom, doors_in_subroom.map{|x| x.door_str}]
+              if (doors_in_subroom & doors_accessible_in_this_room).empty?
+                # None of the doors in this subroom are connected on the map yet. So mark all the doors in this subroom as being inaccessible.
+                unreachable_subroom_doors += doors_in_subroom
+                #puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
+                # TODO: what about if we gain access to this subroom via a room placed later in the logic?
+              end
             end
           end
           
@@ -668,6 +684,8 @@ module DoorRandomizer
   end
   
   def connect_doors_based_on_map(map_spots, map_width, map_height)
+    # TODO: don't connect doors from different sectors that just happen to overlap
+    
     done_doors = []
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
@@ -849,7 +867,7 @@ module DoorRandomizer
     end
   end
   
-  def get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: nil, transition_room_to_allow_connecting_to: nil)
+  def get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: nil, transition_room_to_allow_connecting_to: nil, unreachable_subroom_doors: [])
     valid_spots = []
     transition_rooms_not_allowed_to_connect_to = @transition_rooms - [transition_room_to_allow_connecting_to]
     
@@ -881,6 +899,7 @@ module DoorRandomizer
             
         adjacent_rooms = []
         leftright_adjacent_rooms = []
+        inside_doors_connecting_to_adjacent_rooms = []
         
         room.width.times do |x_in_room|
           room.height.times do |y_in_room|
@@ -891,54 +910,62 @@ module DoorRandomizer
             left_door = room_doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
             if left_door && tile_x > 0 && map_spots[tile_x-1][tile_y]
               dest_room = map_spots[tile_x-1][tile_y]
-              y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-              right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
-              if right_dest_door && (dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room))
-                adjacent_rooms << dest_room
-                leftright_adjacent_rooms << dest_room
-                puts "connected to the left: #{dest_room.room_str}" if debug
-                break
+              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+                y_in_dest_room = tile_y - dest_room.room_ypos_on_map
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+                if right_dest_door
+                  adjacent_rooms << dest_room
+                  leftright_adjacent_rooms << dest_room
+                  inside_doors_connecting_to_adjacent_rooms << left_door
+                  #puts "connected to the left: #{dest_room.room_str}" if debug
+                end
               end
             end
             
             right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
             if right_door && tile_x < map_width-1 && map_spots[tile_x+1][tile_y]
               dest_room = map_spots[tile_x+1][tile_y]
-              y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-              left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
-              if left_dest_door && (dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room))
-                adjacent_rooms << dest_room
-                leftright_adjacent_rooms << dest_room
-                puts "connected to the right: #{dest_room.room_str}" if debug
-                break
+              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+                y_in_dest_room = tile_y - dest_room.room_ypos_on_map
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+                if left_dest_door
+                  adjacent_rooms << dest_room
+                  leftright_adjacent_rooms << dest_room
+                  inside_doors_connecting_to_adjacent_rooms << right_door
+                  #puts "connected to the right: #{dest_room.room_str}" if debug
+                end
               end
             end
             
             up_door = room_doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
             if up_door && tile_y > 0 && map_spots[tile_x][tile_y-1]
               dest_room = map_spots[tile_x][tile_y-1]
-              x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-              down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
-              if down_dest_door && (dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room))
-                adjacent_rooms << dest_room
-                puts "connected up: #{dest_room.room_str}" if debug
-                break
+              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+                x_in_dest_room = tile_x - dest_room.room_xpos_on_map
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+                if down_dest_door
+                  adjacent_rooms << dest_room
+                  inside_doors_connecting_to_adjacent_rooms << up_door
+                  #puts "connected up: #{dest_room.room_str}" if debug
+                end
               end
             end
             
             down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
             if down_door && tile_y < map_height-1 && map_spots[tile_x][tile_y+1]
               dest_room = map_spots[tile_x][tile_y+1]
-              x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-              dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-              up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
-              if up_dest_door && (dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room))
-                adjacent_rooms << dest_room
-                puts "connected down: #{dest_room.room_str}" if debug
-                break
+              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+                x_in_dest_room = tile_x - dest_room.room_xpos_on_map
+                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door)}
+                up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+                if up_dest_door
+                  adjacent_rooms << dest_room
+                  inside_doors_connecting_to_adjacent_rooms << down_door
+                  #puts "connected down: #{dest_room.room_str}" if debug
+                end
               end
             end
             
@@ -952,23 +979,20 @@ module DoorRandomizer
           end
         end
         
-        next if adjacent_rooms.empty?
-        
         if (leftright_adjacent_rooms & transition_rooms_not_allowed_to_connect_to).any?
           # Don't allow placing rooms next to transition rooms (only left/right), except for the one at the start of the sector we use as a base.
           next
         end
         
         if limit_connections_to_sector && !@transition_rooms.include?(room)
-          any_connectable_adjacent_rooms_in_same_sector = adjacent_rooms.any? do |adjacent_room|
+          adjacent_rooms.select! do |adjacent_room|
             adjacent_room.sector_index == limit_connections_to_sector || adjacent_room == transition_room_to_allow_connecting_to
-          end
-          if !any_connectable_adjacent_rooms_in_same_sector
-            next
           end
         end
         
-        valid_spots << [room_x, room_y]
+        next if adjacent_rooms.empty?
+        
+        valid_spots << [room_x, room_y, inside_doors_connecting_to_adjacent_rooms]
       end
     end
     
