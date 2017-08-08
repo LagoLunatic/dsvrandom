@@ -501,7 +501,7 @@ module DoorRandomizer
     end
   end
   
-  def randomize_doors_no_overlap
+  def randomize_doors_no_overlap(&block)
     # Remove breakable walls and similar things that prevent you from going in certain doors.
     remove_door_blockers()
     
@@ -519,6 +519,9 @@ module DoorRandomizer
       room.room_ypos_on_map = map_height
       room.write_to_rom()
     end
+    
+    sectors_done = 0
+    total_sectors = 10
     
     game.areas.each do |area|
       area.sectors.each do |sector|
@@ -648,6 +651,10 @@ module DoorRandomizer
           
           #regenerate_map()
         end
+        
+        sectors_done += 1
+        percent_done = sectors_done.to_f / total_sectors
+        yield percent_done
         
         puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
         puts "Successfully placed transition rooms: #{num_placed_transition_rooms}"
@@ -1191,6 +1198,7 @@ module DoorRandomizer
       end
     end
     map.write_to_rom()
-    Renderer.new(game.fs).render_map(map, scale=3, hardcoded_transition_rooms=@transition_rooms).save("maptest.png")
+    
+    renderer.render_map(map, scale=3, hardcoded_transition_rooms=@transition_rooms).save("./logs/maptest.png")
   end
 end
