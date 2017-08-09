@@ -807,10 +807,34 @@ class Randomizer
   
   def room_rando_give_infinite_magical_tickets
     # Give the player a magical ticket to start the game with, and make magical tickets not be consumed when used.
-    
     game.apply_armips_patch("#{GAME}_infinite_magical_tickets")
     
-    # Also set the magical ticket's price to 0 so it can't be sold.
+    # Then change the magical ticket code to bring you to the starting room instead of the shop/village.
+    area_index = @starting_room.area_index
+    sector_index = @starting_room.sector_index
+    room_index = @starting_room.room_index
+    case GAME
+    when "dos"
+      game.fs.write(0x023E0114, [sector_index].pack("C"))
+      game.fs.write(0x023E0118, [room_index].pack("C"))
+      # 0x023E011C is x pos
+      # 0x023E0120 is x pos
+    when "por"
+      game.fs.write(0x0203A280, [0xE3A00000].pack("V")) # Change mov to constant mov instead of register mov
+      game.fs.write(0x0203A280, [area_index].pack("C"))
+      game.fs.write(0x0203A290, [sector_index].pack("C"))
+      game.fs.write(0x0203A294, [room_index].pack("C"))
+      # 0x0203A298 is x pos
+      # 0x0203A284 is y pos
+    when "ooe"
+      game.fs.write(0x02037B08, [0xE3A01001].pack("V")) # Change mov to constant mov instead of register mov
+      game.fs.write(0x02037B00, [area_index].pack("C"))
+      game.fs.write(0x02037B08, [sector_index].pack("C"))
+      game.fs.write(0x02037B0C, [room_index].pack("C"))
+      # 0x02037B10 is x pos
+      # 0x02037B04 is y pos
+    end
+    
     case GAME
     when "dos"
       item = game.items[0x2B]
@@ -820,6 +844,19 @@ class Randomizer
       item = game.items[0x7C]
     end
     
+    # Change the description to reflect that it returns you to your starting room instead of the shop/village.
+    desc = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+    case GAME
+    when "dos"
+      desc.decoded_string = "An old pass that returns\\nyou to your starting room."
+    when "por"
+      desc.decoded_string = "An enchanted ticket that returns\\nyou to your starting room."
+    when "ooe"
+      desc.decoded_string = "A one-way pass to return\\nto your starting room immediately."
+    end
+    game.text_database.write_to_rom()
+    
+    # Also set the magical ticket's price to 0 so it can't be sold.
     item["Price"] = 0
     
     item.write_to_rom()
