@@ -523,6 +523,8 @@ module DoorRandomizer
     sectors_done = 0
     total_sectors = 10
     
+    maps_rendered = 0
+    
     game.areas.each do |area|
       area.sectors.each do |sector|
         next if GAME == "dos" && (0xA..0x10).include?(sector.sector_index)
@@ -539,6 +541,8 @@ module DoorRandomizer
         end
         
         if sector.sector_index != 0
+          #break
+          
           open_transition_rooms = placed_transition_rooms.select do |room|
             x = room.room_xpos_on_map
             y = room.room_ypos_on_map
@@ -615,6 +619,7 @@ module DoorRandomizer
           end
           
           chosen_spot = valid_spots.sample(random: rng)
+          
           #if @transition_rooms.include?(room)
           #  puts "PLACING TRANSITION #{room.room_str}. in unplaced_transition_rooms?: #{unplaced_transition_rooms.include?(room)} chosen spot: #{chosen_spot.inspect}, valid spots: #{valid_spots.inspect}"
           #end
@@ -634,11 +639,12 @@ module DoorRandomizer
           if subrooms_in_room
             subrooms_in_room.each do |door_indexes_in_subroom|
               door_strs_in_subroom = door_indexes_in_subroom.map{|door_index| "#{room.room_str}_%03X" % door_index}
-              p "SUBROOM: #{door_strs_in_subroom}"
+              #p "SUBROOM: #{door_strs_in_subroom}"
               if (door_strs_in_subroom & door_strs_accessible_in_this_room).empty?
                 # None of the doors in this subroom are connected on the map yet. So mark all the doors in this subroom as being inaccessible.
                 unreachable_subroom_doors += door_strs_in_subroom
-                puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
+                #puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
+                
                 # TODO: what about if we gain access to this subroom via a room placed later in the logic?
               end
             end
@@ -649,7 +655,8 @@ module DoorRandomizer
           #  gets
           #end
           
-          #regenerate_map()
+          #regenerate_map(maps_rendered)
+          #maps_rendered += 1
         end
         
         sectors_done += 1
@@ -702,6 +709,14 @@ module DoorRandomizer
       col.each_with_index do |room, y|
         next if room.nil?
         
+        # Choose the solid tile to use to block off doors we remove.
+        room.sector.load_necessary_overlay()
+        coll_layer = room.layers.first
+        coll_tileset = CollisionTileset.new(coll_layer.collision_tileset_pointer, game.fs)
+        solid_tile = coll_tileset.tiles.find{|tile| tile.is_solid?}
+        solid_tile_index_on_tileset = coll_tileset.tiles.index(solid_tile)
+        coll = RoomCollision.new(room, game.fs)
+        
         x_in_room = x - room.room_xpos_on_map
         y_in_room = y - room.room_ypos_on_map
         room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
@@ -745,6 +760,16 @@ module DoorRandomizer
             right_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
+            tile_x = 0
+            tile_start_y = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
+            (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
+            end
+            coll_layer.write_to_rom()
+            
             left_door.destination_room_metadata_ram_pointer = 0
             left_door.x_pos = room.width + 1
             left_door.y_pos = room.height + 1
@@ -779,6 +804,21 @@ module DoorRandomizer
             left_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
+            if room.room_str == "00-02-21"
+              puts right_door.door_str
+              p left_dest_door
+              p [x,y]
+            end
+            tile_x = room.width*SCREEN_WIDTH_IN_TILES-1
+            tile_start_y = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
+            (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
+            end
+            coll_layer.write_to_rom()
+            
             right_door.destination_room_metadata_ram_pointer = 0
             right_door.x_pos = room.width + 1
             right_door.y_pos = room.height + 1
@@ -813,6 +853,16 @@ module DoorRandomizer
             down_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
+            tile_y = 0
+            tile_start_x = up_door.x_pos*SCREEN_WIDTH_IN_TILES
+            (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
+            end
+            coll_layer.write_to_rom()
+            
             up_door.destination_room_metadata_ram_pointer = 0
             up_door.x_pos = room.width + 1
             up_door.y_pos = room.height + 1
@@ -847,6 +897,16 @@ module DoorRandomizer
             up_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
+            tile_y = room.height*SCREEN_HEIGHT_IN_TILES-1
+            tile_start_x = down_door.x_pos*SCREEN_WIDTH_IN_TILES
+            (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
+            end
+            coll_layer.write_to_rom()
+            
             down_door.destination_room_metadata_ram_pointer = 0
             down_door.x_pos = room.width + 1
             down_door.y_pos = room.height + 1
@@ -907,7 +967,6 @@ module DoorRandomizer
         next unless spot_is_free
             
         adjacent_rooms = []
-        leftright_adjacent_rooms = []
         inside_doors_connecting_to_adjacent_rooms = []
         
         room.width.times do |x_in_room|
@@ -924,9 +983,8 @@ module DoorRandomizer
                 #p unreachable_subroom_doors.map{|x| x.door_str} if room.sector_index == 5
                 dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
-                if right_dest_door
+                if right_dest_door && !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
                   adjacent_rooms << dest_room
-                  leftright_adjacent_rooms << dest_room
                   inside_doors_connecting_to_adjacent_rooms << left_door
                   #puts "connected to the left: #{dest_room.room_str}" if debug
                 end
@@ -940,9 +998,8 @@ module DoorRandomizer
                 y_in_dest_room = tile_y - dest_room.room_ypos_on_map
                 dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
-                if left_dest_door
+                if left_dest_door && !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
                   adjacent_rooms << dest_room
-                  leftright_adjacent_rooms << dest_room
                   inside_doors_connecting_to_adjacent_rooms << right_door
                   #puts "connected to the right: #{dest_room.room_str}" if debug
                 end
@@ -987,11 +1044,6 @@ module DoorRandomizer
             #  spot_is_connected = true
             #end
           end
-        end
-        
-        if (leftright_adjacent_rooms & transition_rooms_not_allowed_to_connect_to).any?
-          # Don't allow placing rooms next to transition rooms (only left/right), except for the one at the start of the sector we use as a base.
-          next
         end
         
         if limit_connections_to_sector && !@transition_rooms.include?(room)
@@ -1108,7 +1160,7 @@ module DoorRandomizer
     #gets
   end
   
-  def regenerate_map
+  def regenerate_map(filename_num=nil)
     map = game.get_map(0, 0)
     area = game.areas[0]
     map.tiles.each do |tile|
@@ -1199,6 +1251,10 @@ module DoorRandomizer
     end
     map.write_to_rom()
     
-    renderer.render_map(map, scale=3, hardcoded_transition_rooms=@transition_rooms).save("./logs/maptest.png")
+    filename = "./logs/maptest.png"
+    if filename_num
+      filename = "./logs/maptest #{filename_num}.png"
+    end
+    renderer.render_map(map, scale=3, hardcoded_transition_rooms=@transition_rooms).save(filename)
   end
 end
