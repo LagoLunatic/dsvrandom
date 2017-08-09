@@ -833,6 +833,12 @@ class Randomizer
       game.fs.write(0x02037B0C, [room_index].pack("C"))
       # 0x02037B10 is x pos
       # 0x02037B04 is y pos
+      
+      if area_index != 1
+        # Starting room is not in Wygol, so make the magical ticket change to the normal map screen, instead of the Wygol map screen.
+        game.fs.write(0x02037B38, [0x05].pack("C"))
+        game.fs.write(0x02037B4C, [0x05].pack("C"))
+      end
     end
     
     case GAME
