@@ -600,12 +600,13 @@ class Randomizer
       room = game.areas[0].sectors[0].rooms[0x15]
       tiled.read(filename, room)
       
-      # Use boss rush Gergoth in room rando so he doesn't break the floor.
-      gergoth = game.entity_by_str("00-05-07_00")
-      gergoth.var_a = 0
-      gergoth.write_to_rom()
+      # Change regular Gergoth's code to act like boss rush Gergoth and not break the floor.
+      # (We can't just use boss rush Gergoth himself because he wakes up whenever you're in the room, even if you're in a lower part of the tower.)
+      game.fs.load_overlay(36)
+      game.fs.write(0x02303AB4, [0xE3A01000].pack("V")) # mov r1, 0h
+      game.fs.write(0x02306D70, [0xE3A00000].pack("V")) # mov r0, 0h
       # And modify the code of the floors to not care if Gergoth's boss death flag is set, and just always be in place.
-      game.fs.write(0x0219EF40, [0xE3A00000].pack("V"))
+      game.fs.write(0x0219EF40, [0xE3A00000].pack("V")) # mov r0, 0h
       
       # Remove the darkness seal in Condemned Tower along with the related events.
       # TODO: Should actually keep this in and just keep track of it in the logic somehow.
