@@ -24,8 +24,13 @@ module StartingItemsRandomizer
       entity.y_pos = 0x60
       
       case GAME
+      when "dos"
+        if room.room_str == "00-00-01"
+          # Move the entities over a little so they're not behind Soma after the intro cutscene.
+          entity.x_pos = 0x160
+        end
       when "por"
-        if @starting_room == game.areas[0].sectors[0].rooms[0]
+        if room.room_str == "00-00-00"
           # Don't interfere with the intro cutscene or the game will crash.
           entity.x_pos = 0x160
         end
@@ -41,6 +46,14 @@ module StartingItemsRandomizer
       
       location = "#{room_str}_%02X" % (room.entities.length-1)
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
+    end
+    
+    if GAME == "dos" && room.room_str == "00-00-01"
+      # The normal starting room has an entity hider to hide a yeti.
+      # We need to move the hider and the yeti to the end of the entity list so they don't hide the starting items too.
+      removed_entities = room.entities.slice!(0xB..0xC)
+      room.entities += removed_entities
+      room.write_entities_to_rom()
     end
   end
 end
