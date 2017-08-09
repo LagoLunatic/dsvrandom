@@ -17,7 +17,7 @@ module StartingItemsRandomizer
     @coll = RoomCollision.new(room, game.fs)
     room_str = "%02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index]
     starting_pickups.each do |pickup_global_id|
-      puts "%03X" % pickup_global_id
+      #puts "%03X" % pickup_global_id
       entity = Entity.new(room, room.fs)
       
       entity.x_pos = 0x80 - 0x10
