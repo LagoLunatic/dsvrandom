@@ -499,173 +499,205 @@ module DoorRandomizer
   end
   
   def randomize_doors_no_overlap(&block)
-    # Remove breakable walls and similar things that prevent you from going in certain doors.
-    remove_door_blockers()
-    
-    map_width = 64
-    map_height = 47
-    map_spots = Array.new(map_width) { Array.new(map_height) }
     @transition_rooms = game.get_transition_rooms()
+    
+    maps_rendered = 0
+    
+    castle_rooms = []
+    abyss_rooms = []
+    game.each_room do |room|
+      case room.sector_index
+      when 0..9
+        castle_rooms << room
+      when 0xA..0xB
+        abyss_rooms << room
+      end
+    end
+    
+    randomize_doors_no_overlap_for_area(castle_rooms, 64, 47, @starting_room)
+    randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00"))
+  end
+  
+  def randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room)
+    map_spots = Array.new(map_width) { Array.new(map_height) }
     unplaced_transition_rooms = game.get_transition_rooms()
     placed_transition_rooms = []
     unreachable_subroom_doors = []
     
-    game.each_room do |room|
+    sectors_done = 0
+    total_sectors = 10
+    
+    area_rooms.each do |room|
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
       room.room_xpos_on_map = map_width
       room.room_ypos_on_map = map_height
       room.write_to_rom()
     end
     
-    sectors_done = 0
-    total_sectors = 10
+    sectors_for_area = area_rooms.group_by{|room| room.sector_index}
     
-    maps_rendered = 0
-    
-    game.areas.each do |area|
-      area.sectors.each do |sector|
-        next if GAME == "dos" && (0xA..0x10).include?(sector.sector_index)
-        
-        puts "ON SECTOR: #{sector.sector_index}"
-        
-        sector_rooms = []
-        sector.rooms.each do |room|
-          next if room.layers.empty?
-          next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
-          next if @transition_rooms.include?(room)
-          
-          sector_rooms << room
+    if GAME == "dos" && sectors_for_area[0xA]
+      # Menace. Don't try to connect this room since it has no doors, just place it first at a totally random position.
+      room = sectors_for_area[0xA].first
+      room_x = 7
+      room_y = 10
+      room.room_xpos_on_map = room_x
+      room.room_ypos_on_map = room_y
+      room.write_to_rom()
+      (room_x..room_x+room.width-1).each do |tile_x|
+        (room_y..room_y+room.height-1).each do |tile_y|
+          map_spots[tile_x][tile_y] = room
         end
-        
-        if sector.sector_index != 0
-          #break
-          
-          open_transition_rooms = placed_transition_rooms.select do |room|
-            x = room.room_xpos_on_map
-            y = room.room_ypos_on_map
-            if x > 0 && map_spots[x-1][y].nil?
-              true
-            elsif x < map_width-1 && map_spots[x+1][y].nil?
-              true
-            else
-              false
-            end
-          end
-          
-          if open_transition_rooms.empty?
-            puts "no transition room to use as a base!"
-            break
-          end
-          
-          transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
-        end
-        failed_room_counts = Hash.new(0)
-        transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
-        puts "Total sector rooms available to place: #{sector_rooms.size}"
-        puts "Transition rooms to place: #{transition_rooms_in_this_sector.size}"
-        #puts "Which non-transition rooms to place: #{sector_rooms.map{|x| x.room_str}.join(", ")}"
-        #puts "Which transition rooms to place: #{transition_rooms_in_this_sector.map{|x| x.room_str}.join(", ")}"
-        sector_rooms += transition_rooms_in_this_sector
-        
-        num_placed_non_transition_rooms = 0
-        num_placed_transition_rooms = 0
-        on_starting_room = (sector.sector_index == 0)
-        while true
-          if on_starting_room
-            on_starting_room = false
-            room = @starting_room
-          else
-            #p "sector_rooms: #{sector_rooms.size}"
-            #p "sector_rooms transitions: #{(sector_rooms & @transition_rooms).size}"
-            break if sector_rooms.empty?
-            
-            room = select_next_room_to_place(sector_rooms)
-          end
-          sector_rooms.delete(room)
-          
-          if room == @starting_room
-            valid_spots = [[20, 20]]
-          elsif @transition_rooms.include?(room)
-            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: sector.sector_index, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
-          else
-            valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
-          end
-          
-          #p valid_spots.size if sector.sector_index == 5 && valid_spots.size > 0
-          
-          if valid_spots.empty?
-            if failed_room_counts[room] > 2
-              # Already skipped this room a lot. Don't give it any more chances.
-              #print 'X'
-              next
-            else
-              failed_room_counts[room] += 1
-              # Give the room another try eventually.
-              #print 'x'
-              sector_rooms << room
-              next
-            end
-          end
-          
-          if unplaced_transition_rooms.include?(room)
-            unplaced_transition_rooms.delete(room)
-            placed_transition_rooms << room
-            num_placed_transition_rooms += 1
-          else
-            num_placed_non_transition_rooms += 1
-          end
-          
-          chosen_spot = valid_spots.sample(random: rng)
-          
-          #if @transition_rooms.include?(room)
-          #  puts "PLACING TRANSITION #{room.room_str}. in unplaced_transition_rooms?: #{unplaced_transition_rooms.include?(room)} chosen spot: #{chosen_spot.inspect}, valid spots: #{valid_spots.inspect}"
-          #end
-          room_x = chosen_spot[0]
-          room_y = chosen_spot[1]
-          room.room_xpos_on_map = room_x
-          room.room_ypos_on_map = room_y
-          room.write_to_rom()
-          (room_x..room_x+room.width-1).each do |tile_x|
-            (room_y..room_y+room.height-1).each do |tile_y|
-              map_spots[tile_x][tile_y] = room
-            end
-          end
-          
-          door_strs_accessible_in_this_room = chosen_spot[2]
-          subrooms_in_room = checker.subrooms_doors_only[room.room_str]
-          if subrooms_in_room
-            subrooms_in_room.each do |door_indexes_in_subroom|
-              door_strs_in_subroom = door_indexes_in_subroom.map{|door_index| "#{room.room_str}_%03X" % door_index}
-              #p "SUBROOM: #{door_strs_in_subroom}"
-              if (door_strs_in_subroom & door_strs_accessible_in_this_room).empty?
-                # None of the doors in this subroom are connected on the map yet. So mark all the doors in this subroom as being inaccessible.
-                unreachable_subroom_doors += door_strs_in_subroom
-                #puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
-                
-                # TODO: what about if we gain access to this subroom via a room placed later in the logic?
-              end
-            end
-          end
-          
-          #if @transition_rooms.include?(room)
-          #  regenerate_map()
-          #  gets
-          #end
-          
-          #regenerate_map(maps_rendered)
-          #maps_rendered += 1
-        end
-        
-        sectors_done += 1
-        percent_done = sectors_done.to_f / total_sectors
-        yield percent_done
-        
-        puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
-        puts "Successfully placed transition rooms: #{num_placed_transition_rooms}"
       end
+      
+      sectors_for_area.delete(0xA)
+    end
+    
+    sectors_for_area.each do |sector_index, sector_rooms|
+      randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
+    
+      sectors_done += 1
+      percent_done = sectors_done.to_f / total_sectors
+      #yield percent_done
     end
     
     connect_doors_based_on_map(map_spots, map_width, map_height)
+  end
+  
+  def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
+    puts "ON SECTOR: #{sector_index}"
+    
+    sector_rooms.select! do |room|
+      next if room.layers.empty?
+      next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
+      next if @transition_rooms.include?(room)
+      
+      true
+    end
+    
+    if sector_index != area_starting_room.sector_index
+      #return
+      
+      open_transition_rooms = placed_transition_rooms.select do |room|
+        x = room.room_xpos_on_map
+        y = room.room_ypos_on_map
+        if x > 0 && map_spots[x-1][y].nil?
+          true
+        elsif x < map_width-1 && map_spots[x+1][y].nil?
+          true
+        else
+          false
+        end
+      end
+      
+      if open_transition_rooms.empty?
+        puts "no transition room to use as a base!"
+        return
+      end
+      
+      transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
+    end
+    failed_room_counts = Hash.new(0)
+    transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
+    puts "Total sector rooms available to place: #{sector_rooms.size}"
+    puts "Transition rooms to place: #{transition_rooms_in_this_sector.size}"
+    #puts "Which non-transition rooms to place: #{sector_rooms.map{|x| x.room_str}.join(", ")}"
+    #puts "Which transition rooms to place: #{transition_rooms_in_this_sector.map{|x| x.room_str}.join(", ")}"
+    sector_rooms += transition_rooms_in_this_sector
+    
+    num_placed_non_transition_rooms = 0
+    num_placed_transition_rooms = 0
+    on_starting_room = (sector_index == 0)
+    while true
+      if on_starting_room
+        on_starting_room = false
+        room = area_starting_room
+      else
+        #p "sector_rooms: #{sector_rooms.size}"
+        #p "sector_rooms transitions: #{(sector_rooms & @transition_rooms).size}"
+        break if sector_rooms.empty?
+        
+        room = select_next_room_to_place(sector_rooms)
+      end
+      sector_rooms.delete(room)
+      
+      if room == area_starting_room
+        start_x = rng.rand(5..map_width-5)
+        start_y = rng.rand(5..map_height-5)
+        valid_spots = [[start_x, start_y]]
+      elsif @transition_rooms.include?(room)
+        valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: sector_index, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
+      else
+        valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
+      end
+      
+      #p valid_spots.size if sector_index == 5 && valid_spots.size > 0
+      
+      if valid_spots.empty?
+        if failed_room_counts[room] > 2
+          # Already skipped this room a lot. Don't give it any more chances.
+          #print 'X'
+          next
+        else
+          failed_room_counts[room] += 1
+          # Give the room another try eventually.
+          #print 'x'
+          sector_rooms << room
+          next
+        end
+      end
+      
+      if unplaced_transition_rooms.include?(room)
+        unplaced_transition_rooms.delete(room)
+        placed_transition_rooms << room
+        num_placed_transition_rooms += 1
+      else
+        num_placed_non_transition_rooms += 1
+      end
+      
+      chosen_spot = valid_spots.sample(random: rng)
+      
+      #if @transition_rooms.include?(room)
+      #  puts "PLACING TRANSITION #{room.room_str}. in unplaced_transition_rooms?: #{unplaced_transition_rooms.include?(room)} chosen spot: #{chosen_spot.inspect}, valid spots: #{valid_spots.inspect}"
+      #end
+      room_x = chosen_spot[0]
+      room_y = chosen_spot[1]
+      room.room_xpos_on_map = room_x
+      room.room_ypos_on_map = room_y
+      room.write_to_rom()
+      (room_x..room_x+room.width-1).each do |tile_x|
+        (room_y..room_y+room.height-1).each do |tile_y|
+          map_spots[tile_x][tile_y] = room
+        end
+      end
+      
+      door_strs_accessible_in_this_room = chosen_spot[2]
+      subrooms_in_room = checker.subrooms_doors_only[room.room_str]
+      if subrooms_in_room
+        subrooms_in_room.each do |door_indexes_in_subroom|
+          door_strs_in_subroom = door_indexes_in_subroom.map{|door_index| "#{room.room_str}_%03X" % door_index}
+          #p "SUBROOM: #{door_strs_in_subroom}"
+          if (door_strs_in_subroom & door_strs_accessible_in_this_room).empty?
+            # None of the doors in this subroom are connected on the map yet. So mark all the doors in this subroom as being inaccessible.
+            unreachable_subroom_doors += door_strs_in_subroom
+            #puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
+            
+            # TODO: what about if we gain access to this subroom via a room placed later in the logic?
+          end
+        end
+      end
+      
+      #if @transition_rooms.include?(room)
+      #  regenerate_map()
+      #  gets
+      #end
+      
+      #regenerate_map(maps_rendered)
+      #maps_rendered += 1
+    end
+    
+    puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
+    puts "Successfully placed transition rooms: #{num_placed_transition_rooms}"
   end
   
   def select_next_room_to_place(rooms)
@@ -1157,9 +1189,17 @@ module DoorRandomizer
     #gets
   end
   
-  def regenerate_map(filename_num=nil)
-    map = game.get_map(0, 0)
-    area = game.areas[0]
+  def regenerate_all_maps
+    if GAME == "dos"
+      regenerate_map(0, 0)
+      regenerate_map(0, 0xB)
+    end
+  end
+  
+  def regenerate_map(area_index, sector_index, filename_num=nil)
+    map = game.get_map(area_index, sector_index)
+    area = game.areas[area_index]
+    
     map.tiles.each do |tile|
       tile.is_blank = true
       
@@ -1178,16 +1218,10 @@ module DoorRandomizer
     end
     map.tiles.each do |tile|
       x, y = tile.x_pos, tile.y_pos
-      sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
+      sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y, map.is_abyss)
       
       left_tile = map.tiles.find{|t| t.x_pos == x-1 && t.y_pos == y}
       top_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y-1}
-      #tile.top_secret = false
-      #tile.top_door = false
-      #tile.top_wall = false
-      #tile.left_secret = false
-      #tile.left_door = false
-      #tile.left_wall = false
       if left_tile && (left_tile.sector_index != sector_index || left_tile.room_index != room_index)
         tile.left_wall = true
       end

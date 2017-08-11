@@ -375,7 +375,7 @@ class Randomizer
       randomize_doors_no_overlap() do |percent|
         yield [options_completed+percent*30, "Generating map..."]
       end
-      regenerate_map()
+      regenerate_all_maps()
       options_completed += 30
     else
       if options[:randomize_area_connections]
