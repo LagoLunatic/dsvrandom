@@ -771,6 +771,23 @@ class Randomizer
       game.fs.write(0x02079014, [0xE1A00000].pack("V"))
     end
     
+    if GAME == "por" && options[:randomize_portraits]
+      game.areas.each do |area|
+        map = game.get_map(area.area_index, 0)
+        map.tiles.each do |tile|
+          room = game.areas[area.area_index].sectors[tile.sector_index].rooms[tile.room_index]
+          tile_x_off = (tile.x_pos - room.room_xpos_on_map) * SCREEN_WIDTH_IN_PIXELS
+          tile_y_off = (tile.y_pos - room.room_ypos_on_map) * SCREEN_HEIGHT_IN_PIXELS
+          tile.is_entrance = room.entities.find do |e|
+            e.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(e.subtype) &&
+              (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
+              (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
+          end
+        end
+        map.write_to_rom()
+      end
+    end
+    
     if GAME == "ooe" && options[:always_dowsing]
       game.apply_armips_patch("ooe_always_dowsing")
     end
