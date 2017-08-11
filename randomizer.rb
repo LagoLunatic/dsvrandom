@@ -352,6 +352,11 @@ class Randomizer
       checker.set_starting_room(@starting_room)
     end
     
+    if room_rando?
+      # Remove breakable walls and similar things that prevent you from going in certain doors.
+      remove_door_blockers()
+    end
+    
     if options[:randomize_rooms_map_friendly]
       yield [options_completed, "Generating map..."]
       reset_rng()

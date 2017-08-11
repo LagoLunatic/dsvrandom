@@ -62,9 +62,6 @@ module DoorRandomizer
     # We make sure every room in an area is accessible. This is to prevent infinite loops of a small number of rooms that connect to each other with no way to progress.
     # Loop through each room. search for remaining rooms that have a matching door. But the room we find must also have remaining doors in it besides the one we swap with so it's not a dead end, or a loop. If there are no rooms that meet those conditions, then we go with the more lax condition of just having a matching door, allowing dead ends.
     
-    # Remove breakable walls and similar things that prevent you from going in certain doors.
-    remove_door_blockers()
-    
     @transition_rooms = game.get_transition_rooms()
     
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
