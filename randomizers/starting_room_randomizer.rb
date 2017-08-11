@@ -11,6 +11,16 @@ module StartingRoomRandomizer
       next if room.area.name.include?("Boss Rush")
       next if room.sector.name.include?("Boss Rush")
       
+      next if room.area.name == "Nest of Evil"
+      next if room.sector.name == "The Throne Room"
+      next if room.sector.name == "Master's Keep" && room.sector_index == 0xC # Cutscene where Dracula dies
+      
+      next if room.area.name == "Training Chamber"
+      next if room.area.name == "Large Cavern"
+      next if room.sector.name == "Final Approach"
+      
+      next if room.entities.find{|e| e.is_boss?}
+      
       if options[:bonus_starting_items]
         # These sectors have the largest sector overlay in their respective game.
         # Adding new items (for the starting items) is not possible currently, so don't allow these to be the starting area.
