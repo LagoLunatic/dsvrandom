@@ -778,6 +778,11 @@ module PickupRandomizer
       entity.var_a = portrait_data[:var_a]
       entity.var_b = portrait_data[:var_b]
       
+      # Move the portrait to a short distance above the closest floor so it looks good and is enterable.
+      coll = RoomCollision.new(entity.room, game.fs)
+      floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
+      entity.y_pos = floor_y - 0x50
+      
       entity.write_to_rom()
       
       
