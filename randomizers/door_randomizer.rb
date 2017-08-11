@@ -534,6 +534,9 @@ module DoorRandomizer
       room.write_to_rom()
     end
     
+    # Don't let the rooms touch the very bottom of the map screen.
+    map_height = [45, map_height].min
+    
     sectors_for_area = area_rooms.group_by{|room| room.sector_index}
     
     if GAME == "dos" && sectors_for_area[0xA]
