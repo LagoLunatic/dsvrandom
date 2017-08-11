@@ -61,6 +61,8 @@ Event locations:
   # none
 Warp connections:
   # TODO
+Progress important rooms:
+  - 00-09-01 # Final boss fight
 Subrooms:
   # TODO
 Inaccessible doors:
