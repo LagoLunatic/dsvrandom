@@ -764,6 +764,13 @@ class Randomizer
       game.apply_armips_patch("por_fix_infinite_quest_rewards")
     end
     
+    if GAME == "por" && options[:randomize_portraits]
+      # This is the line of code that the 13 Street and Burnt Paradise portraits use to create the flames to show that you can't enter them yet.
+      # But the flame sprites are part of special object 5F, so creating the flames without the proper sprites loaded causes a crash on no$gba and probably real hardware.
+      # We nop out this line to get rid of the flames, but the portraits still block you from entering them early even without the flames.
+      game.fs.write(0x02079014, [0xE1A00000].pack("V"))
+    end
+    
     if GAME == "ooe" && options[:always_dowsing]
       game.apply_armips_patch("ooe_always_dowsing")
     end
