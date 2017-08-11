@@ -37,10 +37,6 @@ Defs:
   seal 5: 0x41
   tower key: 0x39
   mina talisman: 0xC6
-  axearmor: 0xD4
-  killer clown: 0xE3
-  ukoback: 0xEC
-  skeleton: 0xD2
   skeleton ape: 0x134
   bone ark: 0x119
   
@@ -835,8 +831,8 @@ Rooms:
     e00-000: 
     e00-001: false
   00-01-27:
-    000-001: axearmor & killer clown & ukoback
-    001-000: axearmor & killer clown & ukoback
+    000-001: red wall soul 1 & red wall soul 2 & red wall soul 3
+    001-000: red wall soul 1 & red wall soul 2 & red wall soul 3
   00-01-28:
     000-001: small
     001-000: small
@@ -1516,7 +1512,7 @@ Rooms:
     e08-005: 
 #The Dark Chapel:
   00-04-00:
-    000-e00: skeleton
+    000-e00: red wall soul 0
     e00-000: 
   00-04-01:
     000-001: 

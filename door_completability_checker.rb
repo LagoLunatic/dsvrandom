@@ -442,6 +442,13 @@ class DoorCompletabilityChecker
     @current_items << new_item_global_id
   end
   
+  def set_red_wall_souls(red_wall_souls)
+    @defs[:red_wall_soul_0] = red_wall_souls[0]
+    @defs[:red_wall_soul_1] = red_wall_souls[1]
+    @defs[:red_wall_soul_2] = red_wall_souls[2]
+    @defs[:red_wall_soul_3] = red_wall_souls[3]
+  end
+  
   def set_current_location_by_entity(entity_str)
     entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h)$/
     @current_room = $1

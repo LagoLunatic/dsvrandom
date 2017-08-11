@@ -19,6 +19,7 @@ require_relative 'randomizers/enemy_ai_randomizer'
 require_relative 'randomizers/starting_items_randomizer'
 require_relative 'randomizers/skill_sprites_randomizer'
 require_relative 'randomizers/enemy_anim_speed_randomizer'
+require_relative 'randomizers/red_wall_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -37,6 +38,7 @@ class Randomizer
   include StartingItemsRandomizer
   include SkillSpriteRandomizer
   include EnemyAnimSpeedRandomizer
+  include RedWallRandomizer
   
   attr_reader :options,
               :seed,
@@ -402,6 +404,23 @@ class Randomizer
       when "ooe"
         @max_up_items = [0x7F, 0x80, 0x81]
       end
+    end
+    
+    @red_wall_souls = []
+    if GAME == "dos"
+      if options[:randomize_red_walls]
+        randomize_red_walls()
+      else
+        @red_wall_souls = [
+          0xD2, # skeleton
+          0xD4, # axe armor
+          0xE3, # killer clown
+          0xEC, # ukoback
+        ]
+      end
+      
+      # Tell the completability checker logic what souls are for what red walls on this seed.
+      checker.set_red_wall_souls(@red_wall_souls)
     end
     
     @used_pickup_flags = []

@@ -17,6 +17,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_villagers
     randomize_weapon_synths
     randomize_portraits
+    randomize_red_walls
     
     randomize_players
     randomize_bosses
@@ -232,6 +233,8 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_boss_souls.enabled = false
       @ui.randomize_villagers.checked = false
       @ui.randomize_villagers.enabled = false
+      @ui.randomize_red_walls.checked = false
+      @ui.randomize_red_walls.enabled = false
       @ui.randomize_area_connections.checked = false
       @ui.randomize_area_connections.enabled = false
       @ui.randomize_room_connections.checked = false
@@ -243,6 +246,7 @@ class RandomizerWindow < Qt::Dialog
     else
       @ui.randomize_boss_souls.enabled = true
       @ui.randomize_villagers.enabled = true
+      @ui.randomize_red_walls.enabled = true
       @ui.randomize_area_connections.enabled = true
       @ui.randomize_room_connections.enabled = true
       @ui.randomize_starting_room.enabled = true

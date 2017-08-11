@@ -39,10 +39,6 @@ Defs:
   seal 5: 0x41
   tower key: 0x39
   mina talisman: 0xC6
-  axearmor: 0xD4
-  killer clown: 0xE3
-  ukoback: 0xEC
-  skeleton: 0xD2
   skeleton ape: 0x134
   bone ark: 0x119
   
@@ -71,7 +67,7 @@ Defs:
   bosspuppet: puppetguesthouse & medium height & seal 3 | puppetguesthouse & medium height & hwarp
   towerguesthouse: garden & small | uppergarden | pinnacle
   uppertowerguesthouse: pinnacle | towerguesthouse & vwarp
-  bossparanoia: uppertowerguesthouse & axearmor & killer clown & ukoback & seal 4 | uppertowerguesthouse & axearmor & killer clown & ukoback & hwarp
+  bossparanoia: uppertowerguesthouse & red wall soul 1 & red wall soul 2 & red wall soul 3 & seal 4 | uppertowerguesthouse & red wall soul 1 & red wall soul 2 & red wall soul 3 & hwarp
   
   wizardry: villagewatergate | garden | hell & big height
   lowerwizardry: hell & height & puppet master & skeleton ape & rahab | hell & height & bone ark & rahab | wizardry & cutallsuper
@@ -291,7 +287,7 @@ Rooms:
 #The Dark Chapel:
   00-04-00:
     room: chapel
-    00 (Halberd): skeleton
+    00 (Halberd): red wall soul 0
   00-04-01:
     room: chapel
     00 (Power Belt): height

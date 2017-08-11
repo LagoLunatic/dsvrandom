@@ -301,6 +301,13 @@ class CompletabilityChecker
     @current_items << new_item_global_id
   end
   
+  def set_red_wall_souls(red_wall_souls)
+    @defs[:red_wall_soul_0] = red_wall_souls[0]
+    @defs[:red_wall_soul_1] = red_wall_souls[1]
+    @defs[:red_wall_soul_2] = red_wall_souls[2]
+    @defs[:red_wall_soul_3] = red_wall_souls[3]
+  end
+  
   def generate_empty_item_requirements_file
     File.open("./dsvrandom/#{GAME}_pickup_requirements.txt", "w+") do |f|
       prev_area_name = nil
