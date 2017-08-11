@@ -1194,6 +1194,18 @@ module DoorRandomizer
   
   def regenerate_all_maps
     if GAME == "dos"
+      # Fix warps.
+      map = game.get_map(0, 0)
+      map.warp_rooms.each do |warp|
+        next if warp.sector_index == 0xB # Abyss
+        
+        sector_rooms = game.areas[0].sectors[warp.sector_index].rooms
+        room = sector_rooms.find{|room| room.entities.any?{|e| e.is_special_object? && e.subtype == 0x31}}
+        warp.x_pos_in_tiles = room.room_xpos_on_map
+        warp.y_pos_in_tiles = room.room_ypos_on_map
+      end
+      map.write_to_rom()
+      
       regenerate_map(0, 0)
       regenerate_map(0, 0xB)
     end
