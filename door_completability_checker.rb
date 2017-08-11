@@ -27,9 +27,6 @@ class DoorCompletabilityChecker
     
     load_room_reqs()
     @current_items = []
-    @starting_location = "00-00-01_000"
-    @current_room = "00-00-01"
-    @current_location_in_room = "000"
     @debug = false
   end
   
@@ -310,7 +307,7 @@ class DoorCompletabilityChecker
     
     current_door_str = "#{@current_room}_#{@current_location_in_room}"
     accessible_doors << current_door_str
-    accessible_doors << @starting_location # Play can always use a magical ticket to access their starting location.
+    accessible_doors << @starting_location # Player can always use a magical ticket to access their starting location.
     
     if @current_location_in_room =~ /^e(\h\h)/
       # At an entity
@@ -440,6 +437,12 @@ class DoorCompletabilityChecker
   
   def add_item(new_item_global_id)
     @current_items << new_item_global_id
+  end
+  
+  def set_starting_room(starting_room)
+    @starting_location = "#{starting_room.room_str}_000"
+    @current_room = starting_room.room_str
+    @current_location_in_room = "000"
   end
   
   def set_red_wall_souls(red_wall_souls)

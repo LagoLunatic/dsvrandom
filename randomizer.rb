@@ -348,6 +348,9 @@ class Randomizer
         game.areas[2].sectors[0].rooms[4]
       end
     end
+    if room_rando?
+      checker.set_starting_room(@starting_room)
+    end
     
     if options[:randomize_rooms_map_friendly]
       yield [options_completed, "Generating map..."]
