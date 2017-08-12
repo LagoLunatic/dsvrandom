@@ -247,10 +247,7 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_boss_souls.enabled = true
       @ui.randomize_villagers.enabled = true
       @ui.randomize_red_walls.enabled = true
-      @ui.randomize_area_connections.enabled = true
-      @ui.randomize_room_connections.enabled = true
       @ui.randomize_starting_room.enabled = true
-      @ui.randomize_rooms_map_friendly.enabled = true
     end
     
     if @settings[:randomize_rooms_map_friendly]
@@ -258,15 +255,19 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_area_connections.enabled = false
       @ui.randomize_room_connections.checked = false
       @ui.randomize_room_connections.enabled = false
-    else
-      @ui.randomize_area_connections.enabled = true
-      @ui.randomize_room_connections.enabled = true
     end
     
     if @settings[:randomize_area_connections] || @settings[:randomize_room_connections]
       @ui.randomize_rooms_map_friendly.checked = false
       @ui.randomize_rooms_map_friendly.enabled = false
-    else
+    end
+    
+    if @settings[:randomize_pickups] && !@settings[:randomize_rooms_map_friendly]
+      @ui.randomize_area_connections.enabled = true
+      @ui.randomize_room_connections.enabled = true
+    end
+    
+    if @settings[:randomize_pickups] && !@settings[:randomize_area_connections] && !@settings[:randomize_room_connections]
       @ui.randomize_rooms_map_friendly.enabled = true
     end
     
