@@ -514,7 +514,7 @@ module DoorRandomizer
       end
     end
     
-    randomize_doors_no_overlap_for_area(castle_rooms, 64, 47, @starting_room)
+    randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, @starting_room)
     randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00"))
   end
   
@@ -529,13 +529,10 @@ module DoorRandomizer
     
     area_rooms.each do |room|
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
-      room.room_xpos_on_map = map_width
-      room.room_ypos_on_map = map_height
+      room.room_xpos_on_map = 63
+      room.room_ypos_on_map = 47
       room.write_to_rom()
     end
-    
-    # Don't let the rooms touch the very bottom of the map screen.
-    map_height = [45, map_height].min
     
     sectors_for_area = area_rooms.group_by{|room| room.sector_index}
     
