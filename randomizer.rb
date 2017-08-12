@@ -659,6 +659,20 @@ class Randomizer
         entity.write_to_rom()
       end
     end
+    
+    if options[:add_magical_tickets] && GAME == "dos"
+      dos_implement_magical_tickets()
+    end
+    
+    # Add a free space overlay so we can add entities as much as we want.
+    if !game.fs.has_free_space_overlay?
+      game.add_new_overlay()
+    end
+    # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used (e.g. for the DoS magic ticket patch).
+    new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
+    new_overlay_file = game.fs.files_by_path[new_overlay_path]
+    new_overlay_size = new_overlay_file[:size]
+    game.fs.mark_space_unused(new_overlay_path, new_overlay_size, NEW_OVERLAY_FREE_SPACE_SIZE-new_overlay_size)
   end
   
   def apply_tweaks
@@ -826,10 +840,6 @@ class Randomizer
           end
         end
       end
-    end
-    
-    if options[:add_magical_tickets] && GAME == "dos"
-      dos_implement_magical_tickets()
     end
     
     if room_rando?
