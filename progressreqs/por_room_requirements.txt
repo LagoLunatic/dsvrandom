@@ -69,6 +69,8 @@ Portrait locations:
   - 00-0B-00_02
   - 00-0B-00_03
   - 00-0B-00_04
+No progression locations:
+  # TODO
 Warp connections:
   # TODO
 Progress important rooms:

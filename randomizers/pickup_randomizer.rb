@@ -354,7 +354,7 @@ module PickupRandomizer
         if valid_previous_accessible_regions.empty?
           item_names = checker.current_items.map do |global_id|
             checker.defs.invert[global_id]
-          end
+          end.compact
           raise "Bug: Failed to find any spots to place pickup.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
         end
         
@@ -394,6 +394,13 @@ module PickupRandomizer
       end
       
       previous_accessible_locations << new_possible_locations
+      
+      if possible_locations_to_choose_from.empty?
+        item_names = checker.current_items.map do |global_id|
+          checker.defs.invert[global_id]
+        end.compact
+        raise "Bug: Failed to find any spots to place pickup.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
+      end
       
       location = possible_locations_to_choose_from.sample(random: rng)
       @locations_randomized_to_have_useful_pickups << location

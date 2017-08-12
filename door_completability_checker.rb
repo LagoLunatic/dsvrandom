@@ -57,7 +57,7 @@ class DoorCompletabilityChecker
       @defs.merge!(@glitch_defs)
     end
     
-    @inaccessible_doors = yaml["Inaccessible doors"]
+    @inaccessible_doors = yaml["Inaccessible doors"] || {}
     
     @progress_important_rooms = yaml["Progress important rooms"]
     @progress_important_rooms.map! do |room_str|
@@ -473,7 +473,7 @@ class DoorCompletabilityChecker
       prev_area_name = nil
       prev_sector_name = nil
       game.each_room do |room|
-        pickups = room.entities.select{|e| e.is_pickup? || e.is_item_chest? || e.is_money_chest? || e.is_glyph_statue?}
+        pickups = room.entities.select{|e| e.is_pickup? || e.is_item_chest? || e.is_money_chest? || e.is_glyph_statue? || e.is_villager?}
         doors = room.doors
         next if (pickups + doors).length < 2
         
@@ -552,6 +552,32 @@ class DoorCompletabilityChecker
     end
     if pickup.is_money_chest?
       return "Money Chest"
+    end
+    if pickup.is_villager?
+      return case pickup.var_a
+      when 0x2A
+        "Jacob"
+      when 0x2D
+        "Abram"
+      when 0x3C
+        "Aeon"
+      when 0x38
+        "Eugen"
+      when 0x4F
+        "Monica"
+      when 0x32
+        "Laura"
+      when 0x40
+        "Marcel"
+      when 0x47
+        "Serge"
+      when 0x4B
+        "Anna"
+      when 0x57
+        "Daniela"
+      when 0x53
+        "Irina"
+      end
     end
   end
 end
