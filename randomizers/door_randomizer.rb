@@ -267,7 +267,7 @@ module DoorRandomizer
       line_up_door(door)
     end
     
-    update_doppelganger_event_boss_doors()
+    replace_outer_boss_doors()
   end
   
   def get_subsectors(sector)
@@ -398,8 +398,11 @@ module DoorRandomizer
     end
   end
   
-  def update_doppelganger_event_boss_doors
-    return unless GAME == "dos"
+  def replace_outer_boss_doors
+    boss_rooms = []
+    if GAME == "dos"
+      boss_rooms << game.room_by_str("00-03-0E") # Doppelganger event room
+    end
     
     game.each_room do |room|
       room.entities.each do |entity|
@@ -408,31 +411,47 @@ module DoorRandomizer
           entity.type = 0
           entity.write_to_rom()
         end
+        
+        if entity.is_boss_door? && entity.var_a != 0
+          boss_rooms << room
+        end
       end
     end
     
     
-    inside_door_strs = [
-      "00-03-0E_000",
-      "00-03-0E_001",
-    ]
-    inside_door_strs.each do |door_str|
-      door = game.door_by_str(door_str)
-      #next if door.direction == :up || door.direction == :down
-      
-      dest_room = door.destination_door.room
-      new_boss_door = Entity.new(dest_room, game.fs)
-      new_boss_door.x_pos = door.dest_x
-      new_boss_door.y_pos = door.dest_y + 0x80
-      if door.direction == :left
-        new_boss_door.x_pos += 0xF0
+    boss_rooms.uniq.each do |boss_room|
+      if boss_room.room_str == "00-03-0E"
+        # Doppelganger event room
+        boss_index = 0xE
+      else
+        boss_index = boss_room.entities.find{|e| e.is_boss_door?}.var_b
       end
-      new_boss_door.type = 2
-      new_boss_door.subtype = BOSS_DOOR_SUBTYPE
-      new_boss_door.var_a = 0
-      new_boss_door.var_b = 0xE
-      dest_room.entities << new_boss_door
-      dest_room.write_entities_to_rom()
+      
+      doors = boss_room.doors
+      if GAME == "dos" && boss_index == 7 # Gergoth
+        doors = doors[0..1] # Only do the top two doors in the tower.
+      end
+      
+      doors.each do |door|
+        next unless [:left, :right].include?(door.direction)
+        
+        dest_room = door.destination_door.room
+        new_boss_door = Entity.new(dest_room, game.fs)
+        
+        new_boss_door.x_pos = door.dest_x
+        new_boss_door.y_pos = door.dest_y + 0x80
+        if door.direction == :left
+          new_boss_door.x_pos += 0xF0
+        end
+        
+        new_boss_door.type = 2
+        new_boss_door.subtype = BOSS_DOOR_SUBTYPE
+        new_boss_door.var_a = 0
+        new_boss_door.var_b = boss_index
+        
+        dest_room.entities << new_boss_door
+        dest_room.write_entities_to_rom()
+      end
     end
   end
   
