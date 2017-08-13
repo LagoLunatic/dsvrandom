@@ -38,7 +38,7 @@ module RedWallRandomizer
     end
     enemy_id = game.enemy_dnas.index(enemy_dna)
     
-    sprite_info = EnemyDNA.new(enemy_id, game.fs).extract_gfx_and_palette_and_sprite_from_init_ai
+    sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
     best_frame = BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id]
     if best_frame.nil? || best_frame == -1
       best_frame = 0

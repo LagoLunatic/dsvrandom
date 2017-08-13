@@ -490,7 +490,7 @@ class Randomizer
     
     @original_enemy_dnas = []
     ENEMY_IDS.each do |enemy_id|
-      enemy_dna = EnemyDNA.new(enemy_id, game.fs)
+      enemy_dna = EnemyDNA.new(enemy_id, game)
       @original_enemy_dnas << enemy_dna
     end
     
