@@ -865,10 +865,19 @@ module PickupRandomizer
       
       enemy_dna.write_to_rom()
     elsif GAME == "dos" || GAME == "por"
-      pickup_flag = get_unused_pickup_flag_for_entity(entity)
+      if GAME == "por" && location == "05-02-0C_01"
+        # Cog's location. We always make this location use pickup flag 0x10 since Legion is hardcoded to check that flag, not whether you own the cog.
+        pickup_flag = 0x10
+        is_cog = true
+      else
+        pickup_flag = get_unused_pickup_flag_for_entity(entity)
+      end
       
       if pickup_global_id == :money
-        if entity.is_hidden_pickup? || rng.rand <= 0.80 # 80% chance to be a money bag
+        if entity.is_hidden_pickup? || is_cog || rng.rand <= 0.80
+          # 80% chance to be a money bag
+          # Hidden pickups have to be a bag since chests can't be hidden in a wall.
+          # The cog location has to be a bag since chests can't have a pickup flag so they wouldn't be able to activate legion.
           if entity.is_hidden_pickup?
             entity.type = 7
           else
@@ -878,7 +887,8 @@ module PickupRandomizer
           entity.var_a = pickup_flag
           use_pickup_flag(pickup_flag)
           entity.var_b = rng.rand(4..6) # 500G, 1000G, 2000G
-        else # 20% chance to be a money chest
+        else
+          # 20% chance to be a money chest
           entity.type = 2
           entity.subtype = 1
           if GAME == "dos"

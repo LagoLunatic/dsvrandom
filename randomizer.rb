@@ -454,6 +454,7 @@ class Randomizer
       # We don't need spare pickup flags for the pickup randomizer in PoR, but we do need it for the starting item randomizer.
       @unused_pickup_flags = (1..0x17F).to_a
       use_pickup_flag(2) # Call Cube isn't randomized
+      use_pickup_flag(0x10) # Cog's pickup flag, Legion specifically checks this flag, not whether you own the cog.
     when "ooe"
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
       # Flags 12F-149 are unused in the base game but still work, so use those.
