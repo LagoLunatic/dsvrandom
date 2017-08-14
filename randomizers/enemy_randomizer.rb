@@ -10,6 +10,14 @@ module EnemyRandomizer
     end
     overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
     
+    if COMMON_SPRITE[:gfx_files]
+      common_sprite_gfx_files = COMMON_SPRITE[:gfx_files]
+    elsif COMMON_SPRITE[:gfx_wrapper]
+      common_sprite_gfx_files = SpriteInfo.unpack_gfx_pointer_list(COMMON_SPRITE[:gfx_wrapper], game.fs)
+    else
+      raise "Could not parse common sprite constant"
+    end
+    
     @assets_for_each_enemy = {}
     @skeletally_animated_enemy_ids = []
     ENEMY_IDS.each do |enemy_id|
@@ -70,14 +78,14 @@ module EnemyRandomizer
       begin
         special_object = game.special_objects[special_object_id]
         sprite_info = special_object.extract_gfx_and_palette_and_sprite_from_create_code
-        if sprite_info.gfx_file_pointers == COMMON_SPRITE[:gfx_files]
+        if sprite_info.gfx_file_pointers == common_sprite_gfx_files
           # Don't count the common sprite.
           @assets_for_each_special_object[special_object_id] = []
         else
           @assets_for_each_special_object[special_object_id] = sprite_info.gfx_file_pointers
         end
       rescue StandardError => e
-        puts "Error getting sprite info for object id %02X" % special_object_id
+        puts "Error getting sprite info for object id %02X: #{e.message}" % special_object_id
         @assets_for_each_special_object[special_object_id] = []
       end
     end
