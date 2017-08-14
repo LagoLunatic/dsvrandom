@@ -803,6 +803,13 @@ class Randomizer
       end
     end
     
+    if GAME == "por"
+      # Fix a bug in the base game where you have a couple seconds after picking up the cog where you can use a magical ticket to skip fighting Legion.
+      # To do this we make Legion's horizontal boss doors turn on global flag 2 (in the middle of a boss fight, prevents magical ticket use) as soon as you enter the room, in the same line that it was turning on global flag 1.
+      game.fs.load_overlay(98)
+      game.fs.write(0x022E88E4, [3].pack("C"))
+    end
+    
     if GAME == "ooe" && options[:always_dowsing]
       game.apply_armips_patch("ooe_always_dowsing")
     end
