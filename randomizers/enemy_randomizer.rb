@@ -231,7 +231,7 @@ module EnemyRandomizer
     end
   end
   
-  def randomize_enemy(enemy)
+  def randomize_enemy(enemy, failed_enemies_for_this_spot = [])
     if GAME == "dos" && enemy.room.sector_index == 4 && enemy.room.room_index == 0x10 && enemy.subtype == 0x3A
       # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
       return
@@ -241,22 +241,33 @@ module EnemyRandomizer
       return
     end
     
-    if @assets_needed_for_room.size >= MAX_ASSETS_PER_ROOM && @enemy_pool_for_room.any?
+    if @assets_needed_for_room.size >= MAX_ASSETS_PER_ROOM
       # There's a limit to how many different GFX files can be loaded at once before things start getting very buggy.
       # Once there's too many, just select from enemies already in the room.
       
-      random_enemy_id = @enemy_pool_for_room.sample(random: rng)
+      enemy_pool_for_room_minus_failed = @enemy_pool_for_room - failed_enemies_for_this_spot
+      
+      if enemy_pool_for_room_minus_failed.any?
+        random_enemy_id = enemy_pool_for_room_minus_failed.sample(random: rng)
+      else
+        # Placing any more enemies would go over the asset limit, but none of the existing ones work in this spot.
+        # Just delete this enemy.
+        enemy.type = 0
+        enemy.write_to_rom()
+        return
+      end
     else
       # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
       # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
       max_enemy_id = ENEMY_IDS.max
-      weights = @allowed_enemies_for_room.map do |possible_enemy_id|
+      allowed_enemies_for_room_minus_failed = @allowed_enemies_for_room - failed_enemies_for_this_spot
+      weights = allowed_enemies_for_room_minus_failed.map do |possible_enemy_id|
         id_difference = (possible_enemy_id - enemy.subtype).abs
         weight = max_enemy_id - id_difference
         weight**@difficulty_settings[:enemy_id_preservation_exponent]
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
-      weighted_enemy_ids = @allowed_enemies_for_room.zip(ps).to_h
+      weighted_enemy_ids = allowed_enemies_for_room_minus_failed.zip(ps).to_h
       random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
     end
     
@@ -279,7 +290,8 @@ module EnemyRandomizer
     fix_enemy_position(enemy)
     
     if result == :redo
-      randomize_enemy(enemy)
+      failed_enemies_for_this_spot << random_enemy_id
+      randomize_enemy(enemy, failed_enemies_for_this_spot)
     else
       enemy.subtype = random_enemy_id
       enemy.write_to_rom()
