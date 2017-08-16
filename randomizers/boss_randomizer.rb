@@ -122,7 +122,8 @@ module BossRandomizer
       if old_boss["Soul"] == 0xFF
         # Some bosses such as Flying Armor won't open the boss doors until the player gets their soul drop.
         # So we have to make sure no bosses have no soul drop (FF).
-        queued_dna_changes[new_boss_id]["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+        non_progression_souls = SKILL_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        queued_dna_changes[new_boss_id]["Soul"] = non_progression_souls.sample(random: rng) - SKILL_GLOBAL_ID_RANGE.begin
       end
       
       # Make the new boss have the stats of the old boss so it fits in at this point in the game.

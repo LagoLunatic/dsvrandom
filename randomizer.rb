@@ -338,6 +338,56 @@ class Randomizer
     
     apply_pre_randomization_tweaks()
     
+    @max_up_items = []
+    if options[:randomize_consumable_behavior]
+      reset_rng()
+      case GAME
+      when "por"
+        possible_max_up_ids = (0..0x5F).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        possible_max_up_ids -= [0x00, 0x04] # Don't let starting items (potion and high tonic) be max ups.
+        possible_max_up_ids -= [0x3F] # Don't let ground meat by a max up since you can farm it infinitely.
+        possible_max_up_ids -= [0x45, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F] # Don't let magical tickets and records be max ups since other types of items can't be made magical tickets or max ups.
+        2.times do
+          max_up_id = possible_max_up_ids.sample(random: rng)
+          possible_max_up_ids.delete(max_up_id)
+          @max_up_items << max_up_id
+        end
+      when "ooe"
+        possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
+        possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
+        possible_max_up_ids -= [0xD2] # VIP card given to you by Jacob and put directly into your inventory.
+        3.times do
+          max_up_id = possible_max_up_ids.sample(random: rng)
+          possible_max_up_ids.delete(max_up_id)
+          @max_up_items << max_up_id
+        end
+      end
+    else
+      case GAME
+      when "por"
+        @max_up_items = [0x08, 0x09]
+      when "ooe"
+        @max_up_items = [0x7F, 0x80, 0x81]
+      end
+    end
+    
+    @red_wall_souls = []
+    if GAME == "dos"
+      if options[:randomize_red_walls]
+        randomize_red_walls()
+      else
+        @red_wall_souls = [
+          0xD2, # skeleton
+          0xD4, # axe armor
+          0xE3, # killer clown
+          0xEC, # ukoback
+        ]
+      end
+      
+      # Tell the completability checker logic what souls are for what red walls on this seed.
+      checker.set_red_wall_souls(@red_wall_souls)
+    end
+    
     if options[:randomize_bosses]
       yield [options_completed, "Shuffling bosses..."]
       reset_rng()
@@ -391,56 +441,6 @@ class Randomizer
         randomize_non_transition_doors()
         options_completed += 1
       end
-    end
-    
-    @max_up_items = []
-    if options[:randomize_consumable_behavior]
-      reset_rng()
-      case GAME
-      when "por"
-        possible_max_up_ids = (0..0x5F).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
-        possible_max_up_ids -= [0x00, 0x04] # Don't let starting items (potion and high tonic) be max ups.
-        possible_max_up_ids -= [0x3F] # Don't let ground meat by a max up since you can farm it infinitely.
-        possible_max_up_ids -= [0x45, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F] # Don't let magical tickets and records be max ups since other types of items can't be made magical tickets or max ups.
-        2.times do
-          max_up_id = possible_max_up_ids.sample(random: rng)
-          possible_max_up_ids.delete(max_up_id)
-          @max_up_items << max_up_id
-        end
-      when "ooe"
-        possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
-        possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
-        possible_max_up_ids -= [0xD2] # VIP card given to you by Jacob and put directly into your inventory.
-        3.times do
-          max_up_id = possible_max_up_ids.sample(random: rng)
-          possible_max_up_ids.delete(max_up_id)
-          @max_up_items << max_up_id
-        end
-      end
-    else
-      case GAME
-      when "por"
-        @max_up_items = [0x08, 0x09]
-      when "ooe"
-        @max_up_items = [0x7F, 0x80, 0x81]
-      end
-    end
-    
-    @red_wall_souls = []
-    if GAME == "dos"
-      if options[:randomize_red_walls]
-        randomize_red_walls()
-      else
-        @red_wall_souls = [
-          0xD2, # skeleton
-          0xD4, # axe armor
-          0xE3, # killer clown
-          0xEC, # ukoback
-        ]
-      end
-      
-      # Tell the completability checker logic what souls are for what red walls on this seed.
-      checker.set_red_wall_souls(@red_wall_souls)
     end
     
     @used_pickup_flags = []
