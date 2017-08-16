@@ -831,18 +831,9 @@ class Randomizer
     end
     
     if options[:remove_area_names]
-      area_name_subtype = case GAME
-      when "dos"
-        0x06
-      when "por"
-        0x79
-      when "ooe"
-        0x55
-      end
-      
       game.each_room do |room|
         room.entities.each do |entity|
-          if entity.is_special_object? && entity.subtype == area_name_subtype
+          if entity.is_special_object? && entity.subtype == AREA_NAME_SUBTYPE
             entity.type = 0
             entity.write_to_rom()
           end

@@ -81,6 +81,9 @@ module EnemyRandomizer
         if sprite_info.gfx_file_pointers == common_sprite_gfx_files
           # Don't count the common sprite.
           @assets_for_each_special_object[special_object_id] = []
+        elsif special_object_id == AREA_NAME_SUBTYPE
+          # Only count one gfx file for area names since the game only loads one.
+          @assets_for_each_special_object[special_object_id] = [sprite_info.gfx_file_pointers.first]
         else
           @assets_for_each_special_object[special_object_id] = sprite_info.gfx_file_pointers
         end
