@@ -780,10 +780,12 @@ class Randomizer
     end
     
     if GAME == "por" && options[:randomize_portraits]
-      # This is the line of code that the 13 Street and Burnt Paradise portraits use to create the flames to show that you can't enter them yet.
-      # But the flame sprites are part of special object 5F, so creating the flames without the proper sprites loaded causes a crash on no$gba and probably real hardware.
-      # We nop out this line to get rid of the flames, but the portraits still block you from entering them early even without the flames.
-      game.fs.write(0x02079014, [0xE1A00000].pack("V"))
+      # The 13 Street and Burnt Paradise portraits try to use the blue flame animation of object 5F when they're still locked.
+      # But object 5F's sprite is not loaded unless object 5F is in the room and before the portrait, so trying to use a sprite that's not loaded causes a crash on no$gba and probably real hardware.
+      # So we change the flames to use an animation in the common sprite, which is always loaded, so we still have a visual indicator of the portraits being locked without a crash.
+      
+      game.fs.write(0x020767DC, [0xEBFEA5BA].pack("V")) # Change this call to LoadCommonSprite
+      game.fs.write(0x02076804, [0x21].pack("C")) # Change the animation to 21
     end
     
     if GAME == "por" && options[:randomize_portraits]
