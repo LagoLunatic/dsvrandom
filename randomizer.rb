@@ -457,8 +457,8 @@ class Randomizer
       use_pickup_flag(0x10) # Cog's pickup flag, Legion specifically checks this flag, not whether you own the cog.
     when "ooe"
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
-      # Flags 12F-149 are unused in the base game but still work, so use those.
       @unused_pickup_flags = (0x71..0x15F).to_a
+      # Pickup flags 160-16D and 170-17D exist but are used by no-damage blue chests so we don't use those. 16E, 16F, 17E, and 17F could probably be used by the randomizer safely but currently are not.
     end
     
     options_completed += 2
