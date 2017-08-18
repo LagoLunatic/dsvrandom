@@ -1072,6 +1072,8 @@ module PickupRandomizer
       pickup_flag = entity.var_b
     elsif entity.is_pickup?
       pickup_flag = entity.var_a
+    elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x4D # Easter egg item
+      pickup_flag = entity.var_b
     end
     
     if GAME == "ooe" && (0..0x51).include?(pickup_flag)
@@ -1202,6 +1204,36 @@ module PickupRandomizer
       game.fs.write(0x020C027C, code.pack("V*"))
       game.fs.write(0x020C027C, [pickup_global_id+1].pack("C"))
       game.fs.write(0x021CBC20, [0xEAFBD195].pack("V"))
+    elsif event_entity.subtype == 0x4D # Easter egg item
+      # Change what item is actually placed into your inventory when you get the easter egg.
+      easter_egg_index = event_entity.var_a
+      game.fs.write(0x0222BE34 + easter_egg_index*0xC, [pickup_global_id+1].pack("v"))
+      
+      # Update the pickup flag.
+      pickup_flag = get_unused_pickup_flag_for_entity(event_entity)
+      event_entity.var_b = pickup_flag
+      use_pickup_flag(pickup_flag)
+      
+      # Make the easter egg special object use the same palette list as actual item icons, since that gives access to all 3 icon palettes, while the actual object's palette only has the first.
+      sprite_info = SpecialObjectType.new(0x4D, game.fs).extract_gfx_and_palette_and_sprite_from_create_code
+      item = game.items[pickup_global_id]
+      icon_palette_pointer = 0x022C4684
+      game.fs.write(0x021AF5CC, [icon_palette_pointer].pack("V"))
+      icon_palette_index = (item["Icon"] & 0xFF00) >> 8
+      sprite = sprite_info.sprite
+      sprite.frames[easter_egg_index].parts.first.palette_index = icon_palette_index
+      sprite.write_to_rom()
+      
+      # Now update the actual item visual on the object's GFX page so it visually shows the correct item.
+      sprite_info = SpecialObjectType.new(0x4D, game.fs).extract_gfx_and_palette_and_sprite_from_create_code # We extract sprite info again to get the updated palette pointer after we changed it.
+      gfx = sprite_info.gfx_pages.first
+      palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
+      chunky_image = renderer.render_gfx_page(gfx.file, palettes[icon_palette_index], gfx.canvas_width)
+      new_icon = renderer.render_icon_by_item(item)
+      x_offset = 16*easter_egg_index
+      y_offset = 0
+      chunky_image.replace!(new_icon, x_offset, y_offset)
+      renderer.save_gfx_page(chunky_image, gfx, sprite_info.palette_pointer, 16, icon_palette_index)
     end
   end
   

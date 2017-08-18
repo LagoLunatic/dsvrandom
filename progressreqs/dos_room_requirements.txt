@@ -64,7 +64,10 @@ Enemy locations:
   - 00-09-01_06
   - 00-0B-13_00
 Event locations:
-  - 00-01-37_00
+  - 00-01-37_00 # Mina's Talisman
+  - 00-01-36_00 # Crown
+  - 00-04-12_00 # Bell
+  - 00-08-18_00 # Konami Man
 Mirror locations:
   - 00-00-13_06
   - 00-01-1A_03
@@ -958,6 +961,9 @@ Rooms:
   00-01-35:
     000-e00: 
     e00-000: 
+  00-01-36:
+    000-e00: 
+    e00-000: 
   00-01-37:
     000-001: 
     000-e00: 
@@ -1617,11 +1623,15 @@ Rooms:
     e03-000: 
   00-04-12:
     000-001: small
+    000-e00: big height & small | cutallsuper & small | axesuper & small
     000-e01: height & small | black panther & small
     000-e02: small
     001-000: small
+    001-e00: big height | cutallsuper | axesuper
     001-e01: height | black panther
     001-e02: 
+    e00-000: small
+    e00-001: 
     e01-000: small
     e01-001: 
     e02-000: small
@@ -2581,10 +2591,16 @@ Rooms:
   00-08-18:
     000-001: 
     000-002: 
+    000-e00: 
     001-000: 
     001-002: 
+    001-e00: 
     002-000: 
     002-001: 
+    002-e00: 
+    e00-000: 
+    e00-001: 
+    e00-002: 
   00-08-19:
     000-001: 
     000-e00: 
