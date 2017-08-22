@@ -838,6 +838,14 @@ module PickupRandomizer
         
         return_portrait.write_to_rom()
       end
+      
+      
+      if dest_area_index == 7 # Forest of Doom
+        # Remove the event from the original Forest of Doom portrait room since the portrait is no longer there.
+        forest_event = game.entity_by_str("00-08-01_03")
+        forest_event.type = 0
+        forest_event.write_to_rom()
+      end
     elsif entity.type == 1
       # Boss
       
