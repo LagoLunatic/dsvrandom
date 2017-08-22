@@ -843,7 +843,7 @@ class Randomizer
       end
     end
     
-    if room_rando?
+    if room_rando? || (GAME == "por" && options[:randomize_portraits])
       room_rando_give_infinite_magical_tickets()
     end
   end
