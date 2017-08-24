@@ -314,6 +314,33 @@ class DoorCompletabilityChecker
     
     accessible_doors << @starting_location # Player can always use a magical ticket to access their starting location.
     
+    if GAME == "por"
+      @current_items.each do |pickup_global_id|
+        if PickupRandomizer::PORTRAIT_NAMES.include?(pickup_global_id)
+          portrait_data = PickupRandomizer::PORTRAIT_NAME_TO_DATA[pickup_global_id]
+          area_index = portrait_data[:var_a]
+          room_index = portrait_data[:var_b] & 0x3F
+          sector_index = (portrait_data[:var_b] >> 6) & 0xF
+          case area_index
+          when 5 # Nation of Fools
+            door_index = 1
+          when 6 # Burnt Paradise
+            if check_reqs([[:small_height]])
+              door_index = 0
+            else
+              # The player needs at least small height to reach either door in the first room of Burnt Paradise.
+              # Don't count Burnt Paradise as being reachable if the player can't reach any doors in it yet.
+              next
+            end
+          else
+            door_index = 0
+          end
+          
+          accessible_doors << "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
+        end
+      end
+    end
+    
     # Initialize reachable destinations of the current location the player is at.
     if @current_location_in_room =~ /^e(\h\h)/
       # At an entity
@@ -332,10 +359,6 @@ class DoorCompletabilityChecker
       # At a door
       current_door_str = "#{@current_room}_#{@current_location_in_room}"
       accessible_doors << current_door_str
-      
-      current_door = game.door_by_str(current_door_str)
-      dest_door = current_door.destination_door
-      accessible_doors << dest_door.door_str
     end
     
     accessible_doors.each do |door_str|
@@ -350,7 +373,7 @@ class DoorCompletabilityChecker
         accessible_doors << destination_door_str
       end
       
-      # TODO: PoR portraits and OoE world map
+      # TODO: OoE world map
       
       if door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h|e\h\h)$/
         room_str = $1
@@ -358,7 +381,11 @@ class DoorCompletabilityChecker
       else
         raise "Invalid door str: #{door_str.inspect}"
       end
-      room = game.room_by_str(room_str)
+      current_room = game.room_by_str(room_str)
+      current_door = current_room.doors[door_index]
+      
+      dest_door = current_door.destination_door
+      accessible_doors << dest_door.door_str
       
       if @room_reqs[room_str].nil?
         next
@@ -374,7 +401,7 @@ class DoorCompletabilityChecker
           else
             # Door
             door_index = path_end.to_i(16)
-            door = room.doors[door_index]
+            door = current_room.doors[door_index]
             next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
             dest_door = door.destination_door
             accessible_doors << dest_door.door_str

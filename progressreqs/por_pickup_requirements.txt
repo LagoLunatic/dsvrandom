@@ -722,14 +722,14 @@ Rooms:
     room: burntparadise & big height
     07 (Engagement Ring): 
   06-01-06:
-    room: burntparadise & small height # need small height to get back out
+    room: burntparadise & small height # need small height both to get into burnt paradise and to get back out
     06 (Cure Poison): 
   06-01-07:
-    room: burntparadise & small height # need small height to get back out
+    room: burntparadise & small height # need small height both to get into burnt paradise and to get back out
     09 (Bakatwa): 
     0A (Gold Leggings): 
   06-01-08:
-    room: burntparadise & small height # need small height to get back out
+    room: burntparadise & small height # need small height both to get into burnt paradise and to get back out
     08 (Artemis Shoes): 
   06-01-0D:
     room: burntparadise & height 2
