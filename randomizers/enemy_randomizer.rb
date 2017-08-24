@@ -642,6 +642,15 @@ module EnemyRandomizer
       
       # TODO: var B is num steps to take. try to detect collision and prevent him from walking off edges or walking into walls.
       enemy.var_b = rng.rand(0..6)
+    when "Yorick"
+      room_has_up_doors = !!enemy.room.doors.find{|door| door.direction == :up}
+      room_has_upwards_gravity = !!enemy.room.entities.find{|e| e.is_special_object? && e.subtype == 3 && e.var_a == 0xC000}
+      if room_has_up_doors && room_has_upwards_gravity
+        # In rooms with upside down gravity and an updoor, Yorick's skull can fall infinitely upwards out of bounds, which lags the game.
+        # The lag doesn't occur when falling infinitely downwards out of bounds for some reason.
+        puts enemy.room.room_str
+        return :redo
+      end
     end
   end
   
