@@ -55,14 +55,14 @@ Defs:
   mineraend: minera & magnes | minera & big height | minera & double jump # double jump is enough because you can kickbounce off the breakable wall to get an effective quadruple jump.
   
   lighthouse: mineraend | nonlinear
-  bossbrachyura: lighthouse & magnes | lighthouse & medium height
+  bossbrachyura: lighthouse & magnes | lighthouse & medium height & small distance | lighthouse & distance | lighthouse & big height | lighthouse & cat tackle # cat tackle gives you tons of iframes
   villagereugen: villagereugen
   
   kaliduslower: bossbrachyura & serpent scale
   villagermonica: villagermonica
   
   tymeo: kaliduslower | nonlinear
-  tymeomid: tymeo & magnes | tymeo & big height # to get past the spike room
+  tymeomid: tymeo & magnes | tymeo & big height | tymeo & cat tackle # this meaning past the spike room. cat tackle works because you can chain jumping and tackling with the large number of iframes cat tackle gives you.
   villagerlaura: villagerlaura
   tymeoeast: tymeomid & medium height | tymeomid & medium distance
   villagermarcel: villagermarcel
