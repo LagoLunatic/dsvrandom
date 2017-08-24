@@ -28,6 +28,30 @@ class DoorCompletabilityChecker
     
     load_room_reqs()
     @current_items = []
+    if @ooe_nonlinear
+      @currently_unlocked_world_map_areas = [
+        "02-00-03_000",
+        "03-00-00_000",
+        "04-00-00_000",
+        "05-00-03_000",
+        "06-00-00_000",
+        "07-00-00_000",
+        "08-00-00_000",
+        "09-00-00_000",
+        "0A-00-00_000",
+        "0B-00-00_000",
+        "0C-00-00_000",
+        "0D-00-00_000",
+        "0E-00-0C_000",
+        "0F-00-08_000",
+        "10-01-06_000",
+        "11-00-00_000",
+        "12-01-00_000",
+      ]
+    else
+      # Ecclesia is unlocked by default in Shanoa mode.
+      @currently_unlocked_world_map_areas = ["02-00-03_000"]
+    end
     @debug = false
   end
   
@@ -83,6 +107,8 @@ class DoorCompletabilityChecker
     @no_glyph_locations = yaml["No glyph locations"] || []
     @no_progression_locations = yaml["No progression locations"] || []
     @portrait_locations = yaml["Portrait locations"] || []
+    @world_map_exits = yaml["World map exits"] || []
+    @world_map_unlocks = yaml["World map unlocks"] || []
     
     @warp_connections = yaml["Warp connections"] || {}
     
@@ -311,8 +337,11 @@ class DoorCompletabilityChecker
     
     accessible_doors = []
     checked_doors = []
+    doors_to_check = []
     
-    accessible_doors << @starting_location # Player can always use a magical ticket to access their starting location.
+    world_map_accessible = false
+    
+    doors_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
     
     if GAME == "por"
       @current_items.each do |pickup_global_id|
@@ -336,7 +365,7 @@ class DoorCompletabilityChecker
             door_index = 0
           end
           
-          accessible_doors << "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
+          doors_to_check << "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
         end
       end
     end
@@ -352,28 +381,54 @@ class DoorCompletabilityChecker
       possible_path_ends.each do |path_end, path_reqs|
         if path_end !~ /^e(\h\h)/ && check_reqs(path_reqs)
           reachable_door_str = "#{@current_room}_#{path_end}"
-          accessible_doors << reachable_door_str
+          doors_to_check << reachable_door_str
         end
       end
     else
       # At a door
       current_door_str = "#{@current_room}_#{@current_location_in_room}"
-      accessible_doors << current_door_str
+      doors_to_check << current_door_str
     end
     
-    accessible_doors.each do |door_str|
+    while doors_to_check.any?
+      door_str = doors_to_check.shift()
       next if checked_doors.include?(door_str)
       checked_doors << door_str
+      accessible_doors << door_str
       
       if @warp_connections[door_str]
         connected_door_str = @warp_connections[door_str]
-        accessible_doors << connected_door_str
-        connected_door = game.door_by_str(connected_door_str)
-        destination_door_str = connected_door.destination_door.door_str
-        accessible_doors << destination_door_str
+        doors_to_check << connected_door_str
       end
       
-      # TODO: OoE world map
+      if GAME == "ooe" && @world_map_unlocks[door_str]
+        unlocked_door_strs = @world_map_unlocks[door_str].split(",").map{|str| str.strip}
+        @currently_unlocked_world_map_areas += unlocked_door_strs
+        @currently_unlocked_world_map_areas.uniq!
+        
+        if world_map_accessible
+          doors_to_check += unlocked_door_strs
+        end
+      end
+      
+      # TODO: add hardcoded world map unlocks to @world_map_unlocks
+      
+      if GAME == "ooe" && !world_map_accessible
+        @world_map_exits.each do |entry_point|
+          if accessible_doors.include?(entry_point)
+            if entry_point == "09-00-00_000" && !check_reqs([[:magnes] | [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
+              # Can't get past the spikes in the first room of lighthouse without taking damage
+              next
+            end
+            
+            # When we first unlock the world map, add the world map areas that we unlocked earlier to the currently accessible rooms.
+            doors_to_check += @currently_unlocked_world_map_areas
+            
+            world_map_accessible = true
+            break
+          end
+        end
+      end
       
       if door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h|e\h\h)$/
         room_str = $1
@@ -385,7 +440,7 @@ class DoorCompletabilityChecker
       current_door = current_room.doors[door_index]
       
       dest_door = current_door.destination_door
-      accessible_doors << dest_door.door_str
+      doors_to_check << dest_door.door_str
       
       if @room_reqs[room_str].nil?
         next
@@ -404,7 +459,7 @@ class DoorCompletabilityChecker
             door = current_room.doors[door_index]
             next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
             dest_door = door.destination_door
-            accessible_doors << dest_door.door_str
+            doors_to_check << dest_door.door_str
           end
         end
       end

@@ -52,6 +52,59 @@ No progression locations:
   # TODO
 Warp connections:
   # TODO
+World map exits:
+  - 00-0C-00_000
+  - 00-02-1B_000
+  - 02-00-03_000
+  - 03-00-00_000
+  - 04-00-00_000
+  - 04-00-03_000
+  - 05-00-00_000
+  - 05-00-03_000
+  - 06-00-00_000
+  - 06-00-0A_000
+  - 06-01-00_000
+  - 06-01-09_000
+  - 07-00-00_000
+  - 07-00-0E_000
+  - 08-00-00_000
+  - 08-02-07_000
+  - 09-00-00_000 # lighthouse entry room, needs this to get past the spikes damageless: magnes | medium height & small distance | distance | big height | cat tackle
+  - 09-00-07_000
+  - 0A-00-00_000
+  - 0A-00-0A_000
+  - 0A-00-13_000
+  - 0B-00-00_000
+  - 0B-00-10_000
+  - 0C-00-00_000
+  - 0D-00-00_000
+  - 0D-00-09_000
+  - 0E-00-0C_000
+  - 0F-00-00_000
+  - 0F-00-08_000
+  - 10-01-06_000
+  - 11-00-00_000
+  - 12-01-00_000
+World map unlocks:
+  00-02-1B_000: 03-00-00_000, 0C-00-00_000 # castle secret -> training and cavern
+  04-00-03_000: 06-00-00_000 # ruvas -> kalidus upper
+  05-00-00_000: 0E-00-0C_000 # argila -> mystery
+  06-00-0A_000: 08-00-00_000 # kalidus upper -> minera
+  06-01-00_000: 0A-00-00_000 # kalidus lower -> tymeo
+  07-00-0E_000: 0D-00-00_000 # somnus -> giant
+  08-02-07_000: 09-00-00_000 # minera -> lighthouse
+  09-00-07_000: 06-00-00_000, 06-01-09_000 # lighthouse -> kalidus upper and lower TODO apply kalidus patch to it
+  0A-00-0A_000: 0F-00-08_000 # tymeo -> misty
+  0A-00-13_000: 0F-00-08_000 # tymeo -> misty
+  0B-00-10_000: 10-01-06_000 # tristis -> oblivion
+  0D-00-09_000: 0B-00-00_000 # giant -> tristis
+  0F-00-00_000: 11-00-00_000 # misty -> skeleton
+  
+  # 00-0C-00_000: HARDCODED TODO must have all 13 villagers, must have access to mystery manor boss, must have access to ecclesia boss.
+  # 04-00-00_000: HARDCODED TODO event in village?
+  # 05-00-03_000: HARDCODED TODO event in oblivion ridge?
+  # 07-00-00_000: HARDCODED TODO unlocked by event in village after rescuing george?
+  # 12-01-00_000: HARDCODED TODO ecclesia event?
 Progress important rooms:
   - 00-0B-00 # Final boss fight
 Subrooms:
