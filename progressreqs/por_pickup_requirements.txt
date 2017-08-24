@@ -271,7 +271,7 @@ Rooms:
     01 (MP Max up): 
   00-06-05:
     room: upperentrance | greatstairway
-    00 (Whip Knuckles): quad jump height
+    00 (Whip Knuckles): height 2 # acrobat cube to get to right ledge, puppet master to get to middle platform, then puppet master from the middle to the left ledge.
     01 (Iron Plate): small height
   00-06-09:
     room: uppergreatstairway
