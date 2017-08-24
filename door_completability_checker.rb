@@ -312,28 +312,30 @@ class DoorCompletabilityChecker
     accessible_doors = []
     checked_doors = []
     
-    current_door_str = "#{@current_room}_#{@current_location_in_room}"
-    accessible_doors << current_door_str
     accessible_doors << @starting_location # Player can always use a magical ticket to access their starting location.
     
+    # Initialize reachable destinations of the current location the player is at.
     if @current_location_in_room =~ /^e(\h\h)/
       # At an entity
       entity_index = $1.to_i(16)
+      current_location_str = "#{@current_room}_%02X" % entity_index
+      accessible_locations << current_location_str
+      
       possible_path_ends = @room_reqs[@current_room][:entities][entity_index]
       possible_path_ends.each do |path_end, path_reqs|
-        if check_reqs(path_reqs)
+        if path_end !~ /^e(\h\h)/ && check_reqs(path_reqs)
           reachable_door_str = "#{@current_room}_#{path_end}"
           accessible_doors << reachable_door_str
         end
       end
     else
       # At a door
+      current_door_str = "#{@current_room}_#{@current_location_in_room}"
+      accessible_doors << current_door_str
+      
       current_door = game.door_by_str(current_door_str)
       dest_door = current_door.destination_door
-      dest_room = dest_door.room
-      dest_door_index = dest_room.doors.index(dest_door)
-      dest_door_str = "%02X-%02X-%02X_%03X" % [dest_room.area_index, dest_room.sector_index, dest_room.room_index, dest_door_index]
-      accessible_doors << dest_door_str
+      accessible_doors << dest_door.door_str
     end
     
     accessible_doors.each do |door_str|
@@ -348,13 +350,13 @@ class DoorCompletabilityChecker
         accessible_doors << destination_door_str
       end
       
-      door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h|e\h\h)$/
-      room_str = $1
-      door_or_ent_index = $2
-      if door_or_ent_index =~ /^e(\h\h)/
-        entity_index = $1.to_i(16)
+      # TODO: PoR portraits and OoE world map
+      
+      if door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h|e\h\h)$/
+        room_str = $1
+        door_index = $2.to_i(16)
       else
-        door_index = door_or_ent_index.to_i(16)
+        raise "Invalid door str: #{door_str.inspect}"
       end
       room = game.room_by_str(room_str)
       
@@ -362,16 +364,11 @@ class DoorCompletabilityChecker
         next
       end
       
-      if door_index
-        possible_path_ends = @room_reqs[room_str][:doors][door_index]
-      else
-        possible_path_ends = @room_reqs[room_str][:entities][entity_index]
-      end
+      possible_path_ends = @room_reqs[room_str][:doors][door_index]
       possible_path_ends.each do |path_end, path_reqs|
         if check_reqs(path_reqs)
           if path_end =~ /^e(\h\h)$/
             # Entity
-            entity_index = $1
             entity_str = "#{room_str}_#{$1}"
             accessible_locations << entity_str
           else
@@ -380,10 +377,7 @@ class DoorCompletabilityChecker
             door = room.doors[door_index]
             next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
             dest_door = door.destination_door
-            dest_room = dest_door.room
-            dest_door_index = dest_room.doors.index(dest_door)
-            dest_door_str = "%02X-%02X-%02X_%03X" % [dest_room.area_index, dest_room.sector_index, dest_room.room_index, dest_door_index]
-            accessible_doors << dest_door_str
+            accessible_doors << dest_door.door_str
           end
         end
       end
