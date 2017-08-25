@@ -29,7 +29,7 @@ class DoorCompletabilityChecker
     load_room_reqs()
     @current_items = []
     if @ooe_nonlinear
-      @currently_unlocked_world_map_areas = [
+      @world_map_areas_unlocked_from_beginning = [
         "02-00-03_000",
         "03-00-00_000",
         "04-00-00_000",
@@ -50,7 +50,7 @@ class DoorCompletabilityChecker
       ]
     else
       # Ecclesia is unlocked by default in Shanoa mode.
-      @currently_unlocked_world_map_areas = ["02-00-03_000"]
+      @world_map_areas_unlocked_from_beginning = ["02-00-03_000"]
     end
     @debug = false
   end
@@ -234,6 +234,10 @@ class DoorCompletabilityChecker
     @debug_doors = false
   end
   
+  def albus_fight_accessible?
+    get_accessible_doors().include?("0E-00-09_000")
+  end
+  
   def check_reqs(reqs)
     if reqs == true
       return true
@@ -315,7 +319,8 @@ class DoorCompletabilityChecker
       all_locations = {}
       
       @room_reqs.each do |room_str, room_req|
-        door_reqs = room_req[:doors] #TODO entities??
+        # We only both checking door reqs since these alone should have all entities at the end.
+        door_reqs = room_req[:doors]
         
         door_reqs.each do |path_begin, path_ends|
           path_ends.each do |path_end, path_reqs|
@@ -334,14 +339,29 @@ class DoorCompletabilityChecker
   
   def get_accessible_locations_doors_and_rooms
     accessible_locations = []
-    
     accessible_doors = []
-    checked_doors = []
     doors_to_check = []
     
-    world_map_accessible = false
-    
     doors_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
+    
+    # OoE-specific variables for dealing with the world map.
+    currently_unlocked_world_map_areas = []
+    currently_unlocked_world_map_areas += @world_map_areas_unlocked_from_beginning
+    world_map_accessible = false
+    castle_accessible = false
+    barlowe_accessible = false
+    george_accessible = false
+    albus_fight_accessible = false
+    oblivion_ridge_event_accessible = false
+    wygol_accessible = @ooe_nonlinear
+    ruvas_accessible = @ooe_nonlinear
+    monastery_accessible = @ooe_nonlinear
+    argila_accessible = @ooe_nonlinear
+    somnus_accessible = @ooe_nonlinear
+    has_all_randomizable_villagers = false
+    if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES - @current_items).empty?
+      has_all_randomizable_villagers = true
+    end
     
     if GAME == "por"
       @current_items.each do |pickup_global_id|
@@ -392,8 +412,7 @@ class DoorCompletabilityChecker
     
     while doors_to_check.any?
       door_str = doors_to_check.shift()
-      next if checked_doors.include?(door_str)
-      checked_doors << door_str
+      next if accessible_doors.include?(door_str)
       accessible_doors << door_str
       
       if @warp_connections[door_str]
@@ -401,31 +420,88 @@ class DoorCompletabilityChecker
         doors_to_check << connected_door_str
       end
       
-      if GAME == "ooe" && @world_map_unlocks[door_str]
-        unlocked_door_strs = @world_map_unlocks[door_str].split(",").map{|str| str.strip}
-        @currently_unlocked_world_map_areas += unlocked_door_strs
-        @currently_unlocked_world_map_areas.uniq!
+      # Handle the world map in OoE.
+      if GAME == "ooe"
+        newly_unlocked_world_map_door_strs = []
+        
+        # Normal world map unlocks, not hardcoded.
+        if @world_map_unlocks[door_str]
+          newly_unlocked_world_map_door_strs += @world_map_unlocks[door_str].split(",").map{|str| str.strip}
+        end
+        
+        if !barlowe_accessible && accessible_doors.include?("02-00-06_000")
+          barlowe_accessible = true
+        end
+        if !albus_fight_accessible && accessible_doors.include?("0E-00-09_000")
+          albus_fight_accessible = true
+        end
+        if !oblivion_ridge_event_accessible && accessible_doors.include?("10-00-00_000")
+          oblivion_ridge_event_accessible = true
+        end
+        if !wygol_accessible && accessible_doors.include?("12-00-14_000")
+          wygol_accessible = true
+        end
+        if !george_accessible && accessible_doors.include?("11-00-08_000")
+          george_accessible = true
+        end
+        
+        # Unlock the castle on the world map.
+        if !castle_accessible && has_all_randomizable_villagers &&
+            george_accessible &&
+            wygol_accessible && # nikolai in wygol
+            albus_fight_accessible &&
+            barlowe_accessible
+          newly_unlocked_world_map_door_strs << "00-0C-00_000"
+          castle_accessible = true
+        end
+        
+        # Unlock ruvas on the world map.
+        if wygol_accessible && !ruvas_accessible
+          newly_unlocked_world_map_door_strs << "04-00-00_000"
+          ruvas_accessible = true
+        end
+        
+        # Unlock argila on the world map.
+        if oblivion_ridge_event_accessible && barlowe_accessible && !argila_accessible
+          newly_unlocked_world_map_door_strs << "05-00-03_000"
+          argila_accessible = true
+        end
+        
+        # Unlock somnus on the world map.
+        if wygol_accessible && george_accessible && !somnus_accessible
+          newly_unlocked_world_map_door_strs << "07-00-00_000"
+          somnus_accessible = true
+        end
+        
+        # Unlock monastery on the world map.
+        if barlowe_accessible && !monastery_accessible
+          newly_unlocked_world_map_door_strs << "12-01-00_000"
+          monastery_accessible = true
+        end
         
         if world_map_accessible
-          doors_to_check += unlocked_door_strs
+          # If the world map is already accessible, we add them to the list of doors to check.
+          doors_to_check += newly_unlocked_world_map_door_strs
+        else
+          # Otherwise we add them to a temporary list which will be added to our doors to check whenever we get access to the world map.
+          currently_unlocked_world_map_areas += newly_unlocked_world_map_door_strs
+          currently_unlocked_world_map_areas.uniq!
         end
-      end
-      
-      # TODO: add hardcoded world map unlocks to @world_map_unlocks
-      
-      if GAME == "ooe" && !world_map_accessible
-        @world_map_exits.each do |entry_point|
-          if accessible_doors.include?(entry_point)
-            if entry_point == "09-00-00_000" && !check_reqs([[:magnes] | [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
-              # Can't get past the spikes in the first room of lighthouse without taking damage
-              next
+        
+        if !world_map_accessible
+          @world_map_exits.each do |entry_point|
+            if accessible_doors.include?(entry_point)
+              if entry_point == "09-00-00_000" && !check_reqs([[:magnes] | [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
+                # Can't get past the spikes in the first room of lighthouse without taking damage
+                next
+              end
+              
+              # When we first unlock the world map, add the world map areas that we unlocked earlier to the currently accessible rooms.
+              doors_to_check += currently_unlocked_world_map_areas
+              
+              world_map_accessible = true
+              break
             end
-            
-            # When we first unlock the world map, add the world map areas that we unlocked earlier to the currently accessible rooms.
-            doors_to_check += @currently_unlocked_world_map_areas
-            
-            world_map_accessible = true
-            break
           end
         end
       end

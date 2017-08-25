@@ -242,7 +242,7 @@ module PickupRandomizer
         
         if GAME == "ooe" && options[:randomize_villagers]
           valid_villagers = valid_pickups & RANDOMIZABLE_VILLAGER_NAMES
-          if checker.check_reqs([[:bossalbus]])
+          if checker.albus_fight_accessible?
             if valid_villagers.any?
               # Once Albus is accessible, prioritize placing villagers over other pickups.
               valid_pickups = valid_villagers

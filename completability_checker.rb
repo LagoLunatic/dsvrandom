@@ -149,6 +149,10 @@ class CompletabilityChecker
     check_reqs([[:beat_game]])
   end
   
+  def albus_fight_accessible?
+    check_reqs([[:bossalbus]])
+  end
+  
   def check_reqs(reqs)
     if reqs == true
       return true

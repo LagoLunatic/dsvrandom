@@ -48,6 +48,22 @@ Event locations:
   - 0E-00-09_06 # Dominus Agony
   - 12-00-05_05 # Magnes
   - 12-00-08_00 # Cubus
+Villager locations:
+  - 06-00-04_00 # Jacob
+  - 06-01-05_00 # Monica
+  - 07-00-06_01 # Anna
+  - 07-00-0A_02 # Serge
+  - 08-01-01_01 # Aeon
+  - 08-01-09_00 # Abram
+  - 09-00-06_00 # Eugen
+  - 0A-00-05_00 # Laura
+  - 0A-00-13_01 # Marcel
+  - 0B-01-03_00 # Irina
+  - 0D-00-05_00 # Daniela
+Hidden locations:
+  # TODO
+No glyph locations:
+  # TODO
 No progression locations:
   # TODO
 Warp connections:
@@ -99,12 +115,6 @@ World map unlocks:
   0B-00-10_000: 10-01-06_000 # tristis -> oblivion
   0D-00-09_000: 0B-00-00_000 # giant -> tristis
   0F-00-00_000: 11-00-00_000 # misty -> skeleton
-  
-  # 00-0C-00_000: HARDCODED TODO must have all 13 villagers, must have access to mystery manor boss, must have access to ecclesia boss.
-  # 04-00-00_000: HARDCODED TODO event in village?
-  # 05-00-03_000: HARDCODED TODO event in oblivion ridge?
-  # 07-00-00_000: HARDCODED TODO unlocked by event in village after rescuing george?
-  # 12-01-00_000: HARDCODED TODO ecclesia event?
 Progress important rooms:
   - 00-0B-00 # Final boss fight
 Subrooms:

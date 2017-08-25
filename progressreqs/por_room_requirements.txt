@@ -59,6 +59,10 @@ Enemy locations:
   # none
 Event locations:
   # none
+Hidden locations:
+  # TODO
+No progression locations:
+  # TODO
 Portrait locations:
   - 00-00-05_00
   - 00-01-00_00
@@ -69,8 +73,6 @@ Portrait locations:
   - 00-0B-00_02
   - 00-0B-00_03
   - 00-0B-00_04
-No progression locations:
-  # TODO
 Warp connections:
   # TODO
 Progress important rooms:
