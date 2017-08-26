@@ -61,13 +61,38 @@ Villager locations:
   - 0B-01-03_00 # Irina
   - 0D-00-05_00 # Daniela
 Hidden locations:
-  # TODO
+  - 00-00-03_01
+  - 00-02-11_06
+  - 00-04-07_03
+  - 00-05-09_02
+  - 00-06-0E_03
+  - 00-08-0C_02
+  - 00-09-01_02
+  - 00-0A-0C_02
+  - 06-00-07_04
+  - 07-00-0A_01
+  - 08-02-00_02
+  - 0A-01-08_03
+  - 0B-01-07_01
+  - 0D-00-03_01
+  - 0E-00-02_01
+  - 0F-00-04_03
+  - 10-00-00_02
+  - 10-01-01_02
+  - 11-00-05_01
+  - 12-00-0D_02
 No glyph locations:
-  # TODO
+  - 0B-01-02_00
+  - 0B-01-02_01
+  - 0B-01-02_03
+  - 11-00-03_00
+  - 11-00-09_00
+  - 12-00-07_00
 No progression locations:
-  # TODO
+  - 00-06-1C_01
+  - 12-00-08_00
 Warp connections:
-  # TODO
+  # none
 World map exits:
   - 00-0C-00_000
   - 00-02-1B_000
@@ -116,6 +141,7 @@ World map unlocks:
   0D-00-09_000: 0B-00-00_000 # giant -> tristis
   0F-00-00_000: 11-00-00_000 # misty -> skeleton
 Progress important rooms:
+  # TODO
   - 00-0B-00 # Final boss fight
 Subrooms:
   03-00-01:
@@ -151,10 +177,8 @@ Subrooms:
     -
       - 002
       - 003
-  # TODO
 Inaccessible doors:
-  # TODO
-# TODO: inaccessible rooms. are there any in OoE?
+  # none
 Rooms:
 #Dracula's Castle:
 #Castle Entrance:
