@@ -155,7 +155,6 @@ Subrooms:
 Inaccessible doors:
   # TODO
 # TODO: inaccessible rooms. are there any in OoE?
-# TODO: all rooms
 Rooms:
 #Dracula's Castle:
 #Castle Entrance:
@@ -165,14 +164,14 @@ Rooms:
   00-00-01:
     000-001: 
     000-002: 
-    000-e00: 
-    001-000: 
+    000-e00: medium height
+    001-000: medium height
     001-002: 
-    001-e00: 
-    002-000: 
+    001-e00: medium height
+    002-000: medium height
     002-001: 
-    002-e00: 
-    e00-000: 
+    002-e00: medium height
+    e00-000: medium height
     e00-001: 
     e00-002: 
   00-00-03:
@@ -182,25 +181,25 @@ Rooms:
     001-000: 
     001-002: 
     001-e01: 
-    002-000: 
-    002-001: 
-    002-e01: 
-    e01-000: 
-    e01-001: 
+    002-000: medium height
+    002-001: medium height
+    002-e01: medium height
+    e01-000: medium height
+    e01-001: medium height
     e01-002: 
   00-00-04:
     000-001: 
-    000-e01: 
-    001-000: 
-    001-e01: 
-    e01-000: 
+    000-e01: medium height
+    001-000: medium height
+    001-e01: medium height
+    e01-000: medium height
     e01-001: 
   00-00-05:
     000-001: 
     001-000: 
   00-00-06:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-00-07:
     000-001: 
     001-000: 
@@ -208,11 +207,11 @@ Rooms:
     000-001: 
     001-000: 
   00-00-09:
-    000-001: 
-    000-e00: 
-    001-000: 
+    000-001: paries
+    000-e00: paries
+    001-000: paries
     001-e00: 
-    e00-000: 
+    e00-000: paries
     e00-001: 
   00-01-00:
     000-001: 
@@ -229,17 +228,17 @@ Rooms:
     002-001: 
   00-01-03:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-01-04:
     000-001: 
     001-000: 
   00-01-05:
-    000-001: 
-    000-e00: 
-    001-000: 
-    001-e00: 
-    e00-000: 
-    e00-001: 
+    000-001: medium height | medium distance | cat tackle & mercury boots
+    000-e00: medium height | medium distance | cat tackle & mercury boots
+    001-000: medium height | medium distance | cat tackle & mercury boots
+    001-e00: medium height | medium distance | cat tackle & mercury boots
+    e00-000: medium height | medium distance | cat tackle & mercury boots
+    e00-001: medium height | medium distance | cat tackle & mercury boots
   00-01-06:
     000-001: 
     001-000: 
@@ -257,6 +256,9 @@ Rooms:
   00-02-01:
     000-001: 
     001-000: 
+  00-02-02:
+    000-e00: medium height
+    e00-000: medium height
   00-02-03:
     000-001: 
     000-002: 
@@ -271,7 +273,7 @@ Rooms:
     003-001: 
     003-002: 
   00-02-04:
-    000-001: 
+    000-001: medium height
     001-000: 
   00-02-05:
     000-001: 
@@ -284,19 +286,19 @@ Rooms:
     000-e00: 
     e00-000: 
   00-02-07:
-    000-001: 
+    000-001: medium height
     000-002: 
     001-000: 
     001-002: 
     002-000: 
-    002-001: 
+    002-001: medium height
   00-02-08:
     000-001: 
     000-e00: 
-    001-000: 
-    001-e00: 
-    e00-000: 
-    e00-001: 
+    001-000: medium height
+    001-e00: medium height
+    e00-000: medium height
+    e00-001: medium height
   00-02-09:
     000-001: 
     000-002: 
@@ -357,7 +359,9 @@ Rooms:
     003-001: 
     003-002: 
   00-02-14:
+    000-e04: paries
     000-e05: 
+    e04-000: 
     e05-000: 
   00-02-15:
     000-001: 
@@ -377,17 +381,17 @@ Rooms:
     e00-000: 
   00-02-19:
     000-001: 
-    000-002: 
-    000-e06: 
+    000-002: paries
+    000-e06: paries
     001-000: 
-    001-002: 
-    001-e06: 
-    002-000: 
-    002-001: 
-    002-e06: 
-    e06-000: 
-    e06-001: 
-    e06-002: 
+    001-002: paries
+    001-e06: paries
+    002-000: paries
+    002-001: paries
+    002-e06: paries
+    e06-000: paries
+    e06-001: paries
+    e06-002: paries
   00-02-1A:
     000-001: 
     001-000: 
@@ -398,20 +402,20 @@ Rooms:
     000-001: 
     001-000: 
   00-02-1D:
-    000-001: 
-    001-000: 
+    000-001: medium height
+    001-000: medium height
 #Library:
   00-03-00:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-03-01:
     000-001: 
     001-000: 
   00-03-02:
     000-001: 
     000-e00: 
-    001-000: 
-    001-e00: 
+    001-000: medium height
+    001-e00: medium height
     e00-000: 
     e00-001: 
   00-03-03:
@@ -445,11 +449,15 @@ Rooms:
     e00-002: 
     e00-003: 
   00-03-09:
-    000-001: 
-    000-e05: 
-    001-000: 
+    000-001: paries
+    000-e02: 
+    000-e05: paries
+    001-000: paries
+    001-e02: # you can't technically get to wallman's side from here without paries, but you can still absorb his glyph and kill him.
     001-e05: 
-    e05-000: 
+    e02-000: paries # because the player could have absorbed wallman's glyph from either side we don't know which side they're on and can't assume they can get to either door.
+    e02-001: paries
+    e05-000: paries
     e05-001: 
   00-03-0A:
     000-001: 
@@ -458,21 +466,21 @@ Rooms:
     000-001: 
     001-000: 
   00-03-0C:
-    000-001: 
+    000-001: big height
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: big height
   00-03-0D:
     000-001: 
     001-000: 
   00-03-0E:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
+    002-000: medium height
     002-001: 
   00-03-0F:
     000-001: 
@@ -480,9 +488,9 @@ Rooms:
   00-03-10:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
+    002-000: medium height
     002-001: 
   00-04-00:
     000-001: 
@@ -492,32 +500,35 @@ Rooms:
     000-002: 
     001-000: 
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
   00-04-02:
     000-e00: 
     000-e01: 
     e00-000: 
     e01-000: 
   00-04-03:
-    000-001: 
+    000-001: medium height
     001-000: 
   00-04-04:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-04-05:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-04-06:
     000-001: 
     001-000: 
   00-04-07:
     000-001: 
     000-e03: 
-    001-000: 
-    001-e03: 
+    001-000: medium height
+    001-e03: medium height
     e03-000: 
     e03-001: 
+  00-04-08:
+    000-e00: 
+    e00-000: 
 #Barracks:
   00-05-00:
     000-e00: 
@@ -527,8 +538,8 @@ Rooms:
     000-002: 
     001-000: 
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
   00-05-02:
     000-001: 
     001-000: 
@@ -536,45 +547,45 @@ Rooms:
     000-001: 
     000-002: 
     000-003: 
-    001-000: 
+    001-000: medium height
     001-002: 
     001-003: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height | small distance
     002-003: 
-    003-000: 
-    003-001: 
+    003-000: medium height
+    003-001: medium height | small distance
     003-002: 
   00-05-04:
     000-001: 
     000-002: 
     000-e02: 
-    001-000: 
+    001-000: medium height
     001-002: 
     001-e02: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
     002-e02: 
-    e02-000: 
-    e02-001: 
+    e02-000: medium height
+    e02-001: medium height
     e02-002: 
   00-05-06:
     000-001: 
     001-000: 
   00-05-07:
     000-001: 
-    000-e01: 
-    000-e02: 
+    000-e01: medium height
+    000-e02: medium height
     001-000: 
-    001-e01: 
-    001-e02: 
+    001-e01: medium height
+    001-e02: medium height
     e01-000: 
     e01-001: 
     e02-000: 
     e02-001: 
   00-05-08:
-    000-e02: 
-    000-e03: 
+    000-e02: medium height
+    000-e03: medium height
     e02-000: 
     e03-000: 
   00-05-09:
@@ -584,27 +595,27 @@ Rooms:
     001-000: 
     001-002: 
     001-e02: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
     002-e02: 
-    e02-000: 
-    e02-001: 
+    e02-000: medium height
+    e02-001: medium height
     e02-002: 
   00-05-0A:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: medium height
     001-e00: 
-    e00-000: 
+    e00-000: medium height
     e00-001: 
   00-05-0B:
     000-001: 
     001-000: 
   00-05-0C:
     000-001: 
-    000-e01: 
+    000-e01: medium height
     001-000: 
-    001-e01: 
+    001-e01: medium height
     e01-000: 
     e01-001: 
   00-05-0D:
@@ -619,23 +630,23 @@ Rooms:
   00-05-10:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
   00-05-11:
     000-001: 
     000-002: 
     001-000: 
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
   00-05-12:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
+    002-000: medium height
     002-001: 
 #Mechanical Tower:
   00-06-00:
@@ -646,13 +657,13 @@ Rooms:
     001-000: 
   00-06-02:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-06-03:
-    000-001: 
-    001-000: 
+    000-001: magnes | big height
+    001-000: magnes | big height
   00-06-04:
     000-001: 
-    001-000: 
+    001-000: magnes | big height
   00-06-05:
     000-001: 
     001-000: 
@@ -664,21 +675,21 @@ Rooms:
     001-000: 
   00-06-08:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-06-09:
-    000-001: 
-    000-e00: 
-    001-000: 
-    001-e00: 
-    e00-000: 
-    e00-001: 
+    000-001: double jump & cat tackle | magnes | big height
+    000-e00: magnes | big height
+    001-000: double jump & cat tackle | magnes & double jump | big height
+    001-e00: magnes & double jump | big height
+    e00-000: double jump & cat tackle | magnes | big height
+    e00-001: double jump & cat tackle | magnes | big height
   00-06-0A:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: magnes | big height
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: magnes & double jump | big height
+    002-001: magnes & double jump | big height
   00-06-0B:
     000-001: 
     001-000: 
@@ -687,29 +698,29 @@ Rooms:
     001-000: 
   00-06-0D:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-06-0E:
     000-001: 
-    000-002: 
-    000-e00: 
-    000-e03: 
+    000-002: cat tackle | double jump & distance | magnes | big height
+    000-e00: cat tackle | double jump & distance | magnes | big height
+    000-e03: cat tackle | double jump | magnes | big height
     001-000: 
-    001-002: 
-    001-e00: 
-    001-e03: 
-    002-000: 
-    002-001: 
-    002-e00: 
-    002-e03: 
-    e00-000: 
-    e00-001: 
-    e00-002: 
-    e03-000: 
-    e03-001: 
-    e03-002: 
+    001-002: cat tackle | double jump & distance | magnes | big height
+    001-e00: cat tackle | double jump & distance | magnes | big height
+    001-e03: cat tackle | double jump | magnes | big height
+    002-000: magnes | big height
+    002-001: magnes | big height
+    002-e00: magnes | big height
+    002-e03: cat tackle | double jump & distance | magnes | big height
+    e00-000: double jump & cat tackle | double jump & distance | magnes | big height
+    e00-001: double jump & cat tackle | double jump & distance | magnes | big height
+    e00-002: cat tackle | double jump & distance | magnes | big height
+    e03-000: magnes | big height
+    e03-001: magnes | big height
+    e03-002: cat tackle | double jump & distance | magnes | big height
   00-06-0F:
     000-001: 
-    001-000: 
+    001-000: magnes | big height
   00-06-10:
     000-001: 
     001-000: 
@@ -720,15 +731,18 @@ Rooms:
     001-000: 
     001-002: 
     001-003: 
-    002-000: 
-    002-001: 
+    002-000: magnes | big height
+    002-001: magnes | big height
     002-003: 
-    003-000: 
-    003-001: 
+    003-000: magnes | big height
+    003-001: magnes | big height
     003-002: 
   00-06-14:
     000-001: 
     001-000: 
+  00-06-15:
+    000-e01: 
+    e01-000: 
   00-06-16:
     000-001: 
     001-000: 
@@ -737,20 +751,23 @@ Rooms:
     001-000: 
   00-06-18:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-06-19:
-    000-001: 
-    000-002: 
-    001-000: 
-    001-002: 
-    002-000: 
-    002-001: 
+    000-001: cat tackle | magnes | medium height
+    000-002: double jump & cat tackle | magnes | big height
+    001-000: magnes | big height
+    001-002: double jump & cat tackle | magnes | big height
+    002-000: magnes | big height
+    002-001: double jump & cat tackle | magnes | big height
   00-06-1A:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-06-1B:
     000-e00: 
     e00-000: 
+  00-06-1C:
+    000-e01: 
+    e01-000: 
   00-07-00:
     000-001: 
     001-000: 
@@ -763,27 +780,27 @@ Rooms:
     000-003: 
     000-e00: 
     001-000: 
-    001-002: 
-    001-003: 
-    001-e00: 
-    002-000: 
-    002-001: 
+    001-002: medium height
+    001-003: medium height
+    001-e00: medium height
+    002-000: medium height
+    002-001: medium height
     002-003: 
     002-e00: 
-    003-000: 
-    003-001: 
-    003-002: 
-    003-e00: 
-    e00-000: 
-    e00-001: 
+    003-000: medium height
+    003-001: medium height
+    003-002: medium height
+    003-e00: medium height
+    e00-000: medium height
+    e00-001: medium height
     e00-002: 
     e00-003: 
   00-07-03:
     000-001: 
-    001-000: 
+    001-000: magnes & medium height | big height
   00-07-04:
     000-001: 
-    001-000: 
+    001-000: magnes | big height
 #Arms Depot:
   00-08-00:
     000-e00: 
@@ -795,13 +812,13 @@ Rooms:
     000-001: 
     000-002: 
     000-003: 
-    001-000: 
+    001-000: medium height | small distance
     001-002: 
     001-003: 
-    002-000: 
+    002-000: medium height | small distance
     002-001: 
     002-003: 
-    003-000: 
+    003-000: medium height | small distance
     003-001: 
     003-002: 
   00-08-04:
@@ -845,18 +862,21 @@ Rooms:
     000-001: 
     000-002: 
     000-e02: 
-    001-000: 
+    001-000: medium distance
     001-002: 
     001-e02: 
-    002-000: 
+    002-000: medium distance
     002-001: 
     002-e02: 
-    e02-000: 
+    e02-000: medium distance
     e02-001: 
     e02-002: 
   00-08-0E:
     000-001: 
     001-000: 
+  00-08-0F:
+    000-e00: 
+    e00-000: 
 #Forsaken Cloister:
   00-09-01:
     000-001: 
@@ -865,9 +885,9 @@ Rooms:
     001-000: 
     001-002: 
     001-e02: 
-    002-000: 
-    002-001: 
-    002-e02: 
+    002-000: medium height
+    002-001: medium height
+    002-e02: medium height
     e02-000: 
     e02-001: 
     e02-002: 
@@ -881,11 +901,11 @@ Rooms:
     000-001: 
     001-000: 
   00-09-05:
-    000-001: 
-    000-002: 
-    001-000: 
+    000-001: false
+    000-002: false
+    001-000: medium height & dextro custos & sinestro custos & arma custos
     001-002: 
-    002-000: 
+    002-000: medium height & dextro custos & sinestro custos & arma custos
     002-001: 
   00-09-06:
     000-001: 
@@ -913,24 +933,24 @@ Rooms:
     e02-000: 
     e03-000: 
   00-0A-03:
-    000-001: 
-    000-002: 
+    000-001: big height
+    000-002: big height
     000-e00: 
     000-e02: 
-    001-000: 
-    001-002: 
+    001-000: big height
+    001-002: big height
     001-e00: 
     001-e02: 
-    002-000: 
-    002-001: 
+    002-000: big height
+    002-001: big height
     002-e00: 
     002-e02: 
-    e00-000: 
-    e00-001: 
-    e00-002: 
-    e02-000: 
-    e02-001: 
-    e02-002: 
+    e00-000: big height
+    e00-001: big height
+    e00-002: big height
+    e02-000: big height
+    e02-001: big height
+    e02-002: big height
   00-0A-04:
     000-001: 
     001-000: 
@@ -940,9 +960,9 @@ Rooms:
   00-0A-06:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
+    002-000: medium height
     002-001: 
   00-0A-07:
     000-001: 
@@ -968,33 +988,33 @@ Rooms:
     e03-000: 
     e04-000: 
   00-0A-0C:
-    000-001: 
+    000-001: big height
     000-002: 
     000-003: 
     000-004: 
-    000-e02: 
+    000-e02: medium height | small distance
     001-000: 
     001-002: 
     001-003: 
     001-004: 
-    001-e02: 
+    001-e02: medium height | small distance
     002-000: 
-    002-001: 
+    002-001: big height
     002-003: 
     002-004: 
-    002-e02: 
+    002-e02: medium height | small distance
     003-000: 
-    003-001: 
+    003-001: big height
     003-002: 
     003-004: 
-    003-e02: 
+    003-e02: medium height | small distance
     004-000: 
-    004-001: 
+    004-001: big height
     004-002: 
     004-003: 
-    004-e02: 
+    004-e02: medium height | small distance
     e02-000: 
-    e02-001: 
+    e02-001: big height
     e02-002: 
     e02-003: 
     e02-004: 
@@ -1006,10 +1026,10 @@ Rooms:
     001-000: 
   00-0A-10:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-0A-11:
     000-001: 
-    001-000: 
+    001-000: medium height
   00-0A-12:
     000-001: 
     001-000: 
@@ -1020,16 +1040,16 @@ Rooms:
     000-001: 
     001-000: 
   00-0B-02:
-    000-001: 
-    000-e07: 
-    000-e08: 
-    001-000: 
-    001-e07: 
-    001-e08: 
-    e07-000: 
-    e07-001: 
-    e08-000: 
-    e08-001: 
+    000-001: cat tackle | winged boots | distance | medium height
+    000-e07: paries
+    000-e08: paries
+    001-000: big height
+    001-e07: paries
+    001-e08: paries
+    e07-000: paries
+    e07-001: paries
+    e08-000: paries
+    e08-001: paries
 #Castle Entrance:
   00-0C-01:
     000-001: 
@@ -1043,7 +1063,7 @@ Rooms:
   00-0C-04:
     000-001: 
     001-000: 
-#Ecclesia: # DONE
+#Ecclesia:
   02-00-00:
     000-e04: 
     e04-000: 
@@ -1082,7 +1102,7 @@ Rooms:
     e07-001: 
     e07-002: 
     e07-003: 
-#Training Chamber: # DONE
+#Training Chamber:
   03-00-01:
     000-001: false
     000-002: 
@@ -1135,7 +1155,7 @@ Rooms:
   03-00-0A:
     000-001: magnes & double jump | redire
     001-000: magnes & double jump | redire
-#Ruvas Forest: # DONE
+#Ruvas Forest:
   04-00-01:
     000-001: 
     000-e00: 
@@ -1149,7 +1169,7 @@ Rooms:
   04-00-04:
     000-001: 
     001-000: 
-#Argila Swamp: # DONE
+#Argila Swamp:
   05-00-01:
     000-001: 
     001-000: 
@@ -1159,7 +1179,7 @@ Rooms:
   05-00-04:
     000-001: 
     001-000: 
-#Kalidus Channel: # DONE
+#Kalidus Channel:
   06-00-01:
     000-001: 
     000-002: serpent scale
@@ -1470,7 +1490,7 @@ Rooms:
   06-01-08:
     000-001: serpent scale
     001-000: serpent scale
-#Somnus Reef: # DONE
+#Somnus Reef:
   07-00-01:
     000-001: 
     000-002: serpent scale
@@ -1613,7 +1633,7 @@ Rooms:
   07-01-04:
     000-001: 
     001-000: 
-#Minera Prison Island: # DONE
+#Minera Prison Island:
   08-00-01:
     000-001: 
     001-000: 
@@ -1703,7 +1723,11 @@ Rooms:
     002-001: 
   08-01-07:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   08-01-08:
     000-001: 
     000-002: 
@@ -1781,7 +1805,7 @@ Rooms:
   08-02-07:
     000-e02: 
     e02-000: 
-#Lighthouse: # DONE
+#Lighthouse:
   09-00-01:
     000-001: 
     001-000: 
@@ -1821,7 +1845,7 @@ Rooms:
   09-00-07:
     000-e01: 
     e01-000: 
-#Tymeo Mountains: # DONE
+#Tymeo Mountains:
   0A-00-00:
     000-e02: 
     e02-000: 
@@ -2004,7 +2028,7 @@ Rooms:
   0A-01-09:
     000-e00: magnes
     e00-000: 
-#Tristis Pass: # DONE
+#Tristis Pass:
   0B-00-01:
     000-001: 
     001-000: 
@@ -2140,7 +2164,7 @@ Rooms:
     001-e01: 
     e01-000: medium height
     e01-001: 
-#Large Cavern: # DONE
+#Large Cavern:
   0C-00-01:
     000-001: 
     001-000: 
@@ -2186,7 +2210,7 @@ Rooms:
   0C-00-0F:
     000-001: 
     001-000: false # TODO: don't randomize the connection between this one-way room and the warp room.
-#Giant's Dwelling: # DONE
+#Giant's Dwelling:
   0D-00-01:
     000-001: 
     001-000: 
@@ -2229,7 +2253,11 @@ Rooms:
     001-000: 
   0D-00-08:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   0D-00-0A:
     000-001: 
     001-000: 
@@ -2281,7 +2309,7 @@ Rooms:
   0D-00-14:
     000-001: 
     001-000: 
-#Mystery Manor: # DONE
+#Mystery Manor:
   0E-00-00:
     000-e00: 
     e00-000: 
@@ -2338,7 +2366,7 @@ Rooms:
   0E-00-0B:
     000-001: 
     001-000: 
-#Misty Forest Road: # DONE
+#Misty Forest Road:
   0F-00-01:
     000-001: 
     001-000: 
@@ -2382,7 +2410,7 @@ Rooms:
   0F-00-07:
     000-001: 
     001-000: 
-#Oblivion Ridge: # DONE
+#Oblivion Ridge:
   10-00-00:
     000-e02: 
     e02-000: 
@@ -2422,7 +2450,7 @@ Rooms:
   10-01-04:
     000-001: 
     001-000: 
-#Skeleton Cave: # DONE
+#Skeleton Cave:
   11-00-01:
     000-001: 
     001-000: 
@@ -2472,7 +2500,7 @@ Rooms:
   11-00-0B:
     000-001: 
     001-000: 
-#Monastery: # DONE
+#Monastery:
   12-00-00:
     000-001: 
     001-000: 
