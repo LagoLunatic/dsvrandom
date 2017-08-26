@@ -118,6 +118,32 @@ World map unlocks:
 Progress important rooms:
   - 00-0B-00 # Final boss fight
 Subrooms:
+  03-00-01:
+    -
+      - 000
+      - e01
+    -
+      - 001
+    -
+      - 002
+      - 003
+  06-00-0D:
+    -
+      - 000
+    -
+      - 001
+      - 002
+      - 003
+      - e01
+  0A-00-0C:
+    -
+      - 000
+      - 001
+    -
+      - 002
+      - e00
+      - e01
+      - e02
   0D-00-10:
     -
       - 000
@@ -1017,7 +1043,7 @@ Rooms:
   00-0C-04:
     000-001: 
     001-000: 
-#Ecclesia:
+#Ecclesia: # DONE
   02-00-00:
     000-e04: 
     e04-000: 
@@ -1056,26 +1082,26 @@ Rooms:
     e07-001: 
     e07-002: 
     e07-003: 
-#Training Chamber:
+#Training Chamber: # DONE
   03-00-01:
-    000-001: 
+    000-001: false
     000-002: 
     000-003: 
     000-e01: 
-    001-000: 
+    001-000: false
     001-002: 
     001-003: 
-    001-e01: 
-    002-000: 
-    002-001: 
+    001-e01: false
+    002-000: false
+    002-001: false
     002-003: 
-    002-e01: 
-    003-000: 
-    003-001: 
+    002-e01: false
+    003-000: false
+    003-001: false
     003-002: 
-    003-e01: 
-    e01-000: 
-    e01-001: 
+    003-e01: false
+    e01-000: false
+    e01-001: false
     e01-002: 
     e01-003: 
   03-00-02:
@@ -1083,33 +1109,33 @@ Rooms:
     001-000: 
   03-00-03:
     000-001: 
-    001-000: 
+    001-000: magnes & double jump | redire
   03-00-04:
     000-001: 
-    001-000: 
+    001-000: magnes & double jump | redire
   03-00-05:
-    000-001: 
-    000-002: 
-    001-000: 
+    000-001: magnes
+    000-002: magnes
+    001-000: magnes
     001-002: 
-    002-000: 
+    002-000: magnes
     002-001: 
   03-00-06:
-    000-001: 
-    001-000: 
+    000-001: double jump # needed so you don't get hit by the flames when going backwards
+    001-000: magnes
   03-00-07:
     000-001: 
-    001-000: 
+    001-000: magnes
   03-00-08:
     000-001: 
-    001-000: 
+    001-000: magnes & double jump | redire
   03-00-09:
     000-001: 
     001-000: 
   03-00-0A:
-    000-001: 
-    001-000: 
-#Ruvas Forest:
+    000-001: magnes & double jump | redire
+    001-000: magnes & double jump | redire
+#Ruvas Forest: # DONE
   04-00-01:
     000-001: 
     000-e00: 
@@ -1123,7 +1149,7 @@ Rooms:
   04-00-04:
     000-001: 
     001-000: 
-#Argila Swamp:
+#Argila Swamp: # DONE
   05-00-01:
     000-001: 
     001-000: 
@@ -1133,56 +1159,56 @@ Rooms:
   05-00-04:
     000-001: 
     001-000: 
-#Kalidus Channel:
+#Kalidus Channel: # DONE
   06-00-01:
     000-001: 
-    000-002: 
-    000-e00: 
+    000-002: serpent scale
+    000-e00: serpent scale
     001-000: 
-    001-002: 
-    001-e00: 
+    001-002: serpent scale
+    001-e00: serpent scale
     002-000: 
     002-001: 
-    002-e00: 
+    002-e00: serpent scale
     e00-000: 
     e00-001: 
-    e00-002: 
+    e00-002: serpent scale
   06-00-02:
     000-001: 
-    000-002: 
-    000-003: 
-    000-004: 
-    000-e00: 
+    000-002: serpent scale
+    000-003: serpent scale
+    000-004: serpent scale
+    000-e00: serpent scale
     001-000: 
-    001-002: 
-    001-003: 
-    001-004: 
-    001-e00: 
+    001-002: serpent scale
+    001-003: serpent scale
+    001-004: serpent scale
+    001-e00: serpent scale
     002-000: 
     002-001: 
-    002-003: 
-    002-004: 
-    002-e00: 
+    002-003: serpent scale
+    002-004: serpent scale
+    002-e00: serpent scale
     003-000: 
     003-001: 
-    003-002: 
-    003-004: 
-    003-e00: 
+    003-002: serpent scale
+    003-004: serpent scale
+    003-e00: serpent scale
     004-000: 
     004-001: 
-    004-002: 
-    004-003: 
-    004-e00: 
+    004-002: serpent scale
+    004-003: serpent scale
+    004-e00: serpent scale
     e00-000: 
     e00-001: 
-    e00-002: 
-    e00-003: 
-    e00-004: 
+    e00-002: serpent scale
+    e00-003: serpent scale
+    e00-004: serpent scale
   06-00-03:
     000-001: 
-    000-002: 
+    000-002: serpent scale
     001-000: 
-    001-002: 
+    001-002: serpent scale
     002-000: 
     002-001: 
   06-00-04:
@@ -1204,229 +1230,229 @@ Rooms:
     001-000: 
   06-00-07:
     000-001: 
-    000-002: 
-    000-e00: 
+    000-002: serpent scale
+    000-e00: serpent scale
     000-e04: 
     001-000: 
-    001-002: 
-    001-e00: 
+    001-002: serpent scale
+    001-e00: serpent scale
     001-e04: 
     002-000: 
     002-001: 
-    002-e00: 
+    002-e00: serpent scale
     002-e04: 
     e00-000: 
     e00-001: 
-    e00-002: 
+    e00-002: serpent scale
     e04-000: 
     e04-001: 
-    e04-002: 
+    e04-002: serpent scale
   06-00-08:
     000-001: 
-    000-002: 
-    000-003: 
-    000-004: 
+    000-002: serpent scale
+    000-003: serpent scale
+    000-004: serpent scale
     001-000: 
-    001-002: 
-    001-003: 
-    001-004: 
+    001-002: serpent scale
+    001-003: serpent scale
+    001-004: serpent scale
     002-000: 
     002-001: 
-    002-003: 
-    002-004: 
+    002-003: serpent scale
+    002-004: serpent scale
     003-000: 
     003-001: 
-    003-002: 
-    003-004: 
+    003-002: serpent scale
+    003-004: serpent scale
     004-000: 
     004-001: 
-    004-002: 
-    004-003: 
+    004-002: serpent scale
+    004-003: serpent scale
   06-00-09:
     000-001: 
-    000-002: 
-    000-e00: 
+    000-002: serpent scale
+    000-e00: serpent scale
     001-000: 
-    001-002: 
-    001-e00: 
+    001-002: serpent scale
+    001-e00: serpent scale
     002-000: 
     002-001: 
-    002-e00: 
+    002-e00: serpent scale
     e00-000: 
     e00-001: 
-    e00-002: 
+    e00-002: serpent scale
   06-00-0C:
-    000-001: 
-    000-002: 
+    000-001: serpent scale
+    000-002: serpent scale
     001-000: 
-    001-002: 
+    001-002: serpent scale
     002-000: 
     002-001: 
   06-00-0D:
-    000-001: 
-    000-002: 
-    000-003: 
-    000-e01: 
-    001-000: 
-    001-002: 
-    001-003: 
-    001-e01: 
-    002-000: 
-    002-001: 
-    002-003: 
-    002-e01: 
-    003-000: 
+    000-001: false
+    000-002: false
+    000-003: false
+    000-e01: false
+    001-000: false
+    001-002: serpent scale
+    001-003: serpent scale
+    001-e01: serpent scale
+    002-000: false
+    002-001: serpent scale
+    002-003: serpent scale
+    002-e01: serpent scale
+    003-000: false
     003-001: 
-    003-002: 
-    003-e01: 
-    e01-000: 
+    003-002: serpent scale
+    003-e01: serpent scale
+    e01-000: false
     e01-001: 
-    e01-002: 
-    e01-003: 
+    e01-002: serpent scale
+    e01-003: serpent scale
   06-00-0E:
-    000-001: 
-    000-002: 
-    000-003: 
-    000-004: 
+    000-001: serpent scale
+    000-002: serpent scale
+    000-003: serpent scale
+    000-004: serpent scale
     001-000: 
-    001-002: 
-    001-003: 
-    001-004: 
+    001-002: serpent scale
+    001-003: serpent scale
+    001-004: serpent scale
     002-000: 
     002-001: 
-    002-003: 
-    002-004: 
+    002-003: serpent scale
+    002-004: serpent scale
     003-000: 
     003-001: 
-    003-002: 
-    003-004: 
+    003-002: serpent scale
+    003-004: serpent scale
     004-000: 
     004-001: 
     004-002: 
-    004-003: 
+    004-003: serpent scale
   06-00-0F:
-    000-001: 
-    001-000: 
+    000-001: serpent scale
+    001-000: serpent scale
   06-00-10:
-    000-001: 
-    000-e00: 
+    000-001: serpent scale
+    000-e00: serpent scale
     001-000: 
-    001-e00: 
+    001-e00: serpent scale
     e00-000: 
-    e00-001: 
+    e00-001: serpent scale
   06-00-11:
-    000-001: 
-    001-000: 
+    000-001: serpent scale
+    001-000: serpent scale
   06-00-12:
-    000-001: 
-    001-000: 
+    000-001: serpent scale
+    001-000: serpent scale
   06-00-13:
-    000-001: 
-    000-002: 
+    000-001: serpent scale
+    000-002: serpent scale
     001-000: 
-    001-002: 
+    001-002: serpent scale
     002-000: 
-    002-001: 
+    002-001: serpent scale
   06-00-14:
-    000-001: 
-    000-002: 
-    001-000: 
-    001-002: 
-    002-000: 
+    000-001: serpent scale
+    000-002: serpent scale
+    001-000: serpent scale
+    001-002: serpent scale
+    002-000: serpent scale
     002-001: 
   06-00-15:
-    000-e00: 
-    000-e01: 
-    000-e02: 
+    000-e00: serpent scale
+    000-e01: serpent scale
+    000-e02: serpent scale
     e00-000: 
     e01-000: 
     e02-000: 
   06-00-16:
-    000-001: 
-    001-000: 
+    000-001: serpent scale
+    001-000: serpent scale
   06-00-17:
-    000-001: 
-    000-002: 
-    000-e00: 
+    000-001: serpent scale
+    000-002: serpent scale
+    000-e00: serpent scale
     001-000: 
-    001-002: 
-    001-e00: 
+    001-002: serpent scale
+    001-e00: serpent scale
     002-000: 
     002-001: 
-    002-e00: 
+    002-e00: serpent scale
     e00-000: 
     e00-001: 
-    e00-002: 
+    e00-002: serpent scale
   06-00-18:
-    000-e00: 
+    000-e00: serpent scale
     e00-000: 
   06-00-19:
-    000-001: 
+    000-001: serpent scale
     001-000: 
   06-00-1A:
-    000-001: 
-    000-002: 
-    000-e00: 
-    000-e02: 
-    001-000: 
-    001-002: 
-    001-e00: 
-    001-e02: 
-    002-000: 
+    000-001: serpent scale
+    000-002: serpent scale
+    000-e00: serpent scale
+    000-e02: serpent scale
+    001-000: serpent scale
+    001-002: serpent scale
+    001-e00: serpent scale
+    001-e02: serpent scale
+    002-000: serpent scale
     002-001: 
-    002-e00: 
-    002-e02: 
+    002-e00: serpent scale
+    002-e02: serpent scale
     e00-000: 
-    e00-001: 
-    e00-002: 
-    e02-000: 
+    e00-001: serpent scale
+    e00-002: serpent scale
+    e02-000: serpent scale
     e02-001: 
-    e02-002: 
+    e02-002: serpent scale
   06-01-01:
-    000-001: 
-    000-002: 
-    000-e00: 
-    001-000: 
-    001-002: 
-    001-e00: 
+    000-001: serpent scale
+    000-002: serpent scale
+    000-e00: serpent scale
+    001-000: serpent scale
+    001-002: serpent scale
+    001-e00: serpent scale
     002-000: 
-    002-001: 
-    002-e00: 
-    e00-000: 
-    e00-001: 
-    e00-002: 
+    002-001: serpent scale
+    002-e00: serpent scale
+    e00-000: serpent scale
+    e00-001: serpent scale
+    e00-002: serpent scale
   06-01-02:
     000-001: 
     001-000: 
   06-01-03:
-    000-001: 
-    001-000: 
+    000-001: serpent scale
+    001-000: serpent scale
   06-01-04:
-    000-001: 
-    000-e01: 
-    000-e02: 
-    000-e03: 
-    000-e04: 
-    000-e05: 
-    000-e06: 
-    001-000: 
+    000-001: serpent scale
+    000-e01: serpent scale
+    000-e02: serpent scale
+    000-e03: serpent scale
+    000-e04: serpent scale
+    000-e05: serpent scale
+    000-e06: serpent scale
+    001-000: serpent scale
     001-e01: 
     001-e02: 
     001-e03: 
     001-e04: 
     001-e05: 
     001-e06: 
-    e01-000: 
+    e01-000: serpent scale
     e01-001: 
-    e02-000: 
+    e02-000: serpent scale
     e02-001: 
-    e03-000: 
+    e03-000: serpent scale
     e03-001: 
-    e04-000: 
+    e04-000: serpent scale
     e04-001: 
-    e05-000: 
+    e05-000: serpent scale
     e05-001: 
-    e06-000: 
+    e06-000: serpent scale
     e06-001: 
   06-01-05:
     000-e00: 
@@ -1435,74 +1461,74 @@ Rooms:
     000-001: 
     001-000: 
   06-01-07:
-    000-001: 
-    000-e00: 
-    001-000: 
-    001-e00: 
+    000-001: serpent scale
+    000-e00: serpent scale
+    001-000: serpent scale
+    001-e00: serpent scale
     e00-000: 
-    e00-001: 
+    e00-001: serpent scale
   06-01-08:
-    000-001: 
-    001-000: 
-#Somnus Reef:
+    000-001: serpent scale
+    001-000: serpent scale
+#Somnus Reef: # DONE
   07-00-01:
     000-001: 
-    000-002: 
+    000-002: serpent scale
     001-000: 
-    001-002: 
+    001-002: serpent scale
     002-000: 
     002-001: 
   07-00-02:
     000-001: 
-    000-002: 
-    000-003: 
+    000-002: serpent scale
+    000-003: serpent scale
     001-000: 
-    001-002: 
-    001-003: 
+    001-002: serpent scale
+    001-003: serpent scale
     002-000: 
     002-001: 
-    002-003: 
+    002-003: serpent scale
     003-000: 
     003-001: 
-    003-002: 
+    003-002: serpent scale
   07-00-04:
-    000-001: 
-    000-e02: 
+    000-001: serpent scale
+    000-e02: serpent scale
     001-000: 
-    001-e02: 
+    001-e02: serpent scale
     e02-000: 
-    e02-001: 
+    e02-001: serpent scale
   07-00-05:
-    000-001: 
-    001-000: 
+    000-001: serpent scale
+    001-000: serpent scale
   07-00-06:
-    000-e01: 
+    000-e01: serpent scale
     e01-000: 
   07-00-07:
-    000-001: 
-    000-e00: 
-    001-000: 
-    001-e00: 
-    e00-000: 
+    000-001: serpent scale
+    000-e00: serpent scale
+    001-000: serpent scale
+    001-e00: serpent scale
+    e00-000: serpent scale
     e00-001: 
   07-00-08:
-    000-001: 
-    000-002: 
+    000-001: serpent scale
+    000-002: serpent scale
     001-000: 
-    001-002: 
+    001-002: serpent scale
     002-000: 
-    002-001: 
+    002-001: serpent scale
   07-00-09:
-    000-001: 
-    000-e01: 
-    000-e02: 
+    000-001: serpent scale
+    000-e01: serpent scale
+    000-e02: serpent scale
     001-000: 
-    001-e01: 
-    001-e02: 
+    001-e01: serpent scale
+    001-e02: serpent scale
     e01-000: 
-    e01-001: 
+    e01-001: serpent scale
     e02-000: 
-    e02-001: 
+    e02-001: serpent scale
   07-00-0A:
     000-e01: 
     000-e02: 
@@ -1510,71 +1536,71 @@ Rooms:
     e02-000: 
   07-00-0B:
     000-001: 
-    000-002: 
-    000-003: 
+    000-002: serpent scale
+    000-003: serpent scale
     001-000: 
-    001-002: 
-    001-003: 
+    001-002: serpent scale
+    001-003: serpent scale
     002-000: 
     002-001: 
-    002-003: 
+    002-003: serpent scale
     003-000: 
     003-001: 
-    003-002: 
+    003-002: serpent scale
   07-00-0C:
-    000-001: 
+    000-001: serpent scale
     001-000: 
   07-00-0D:
     000-001: 
-    000-002: 
-    000-e01: 
+    000-002: serpent scale
+    000-e01: serpent scale
     001-000: 
-    001-002: 
-    001-e01: 
+    001-002: serpent scale
+    001-e01: serpent scale
     002-000: 
     002-001: 
-    002-e01: 
+    002-e01: serpent scale
     e01-000: 
     e01-001: 
-    e01-002: 
+    e01-002: serpent scale
   07-00-0F:
-    000-001: 
+    000-001: serpent scale
     001-000: 
   07-00-10:
     000-001: 
     001-000: 
   07-00-12:
-    000-001: 
-    000-002: 
-    000-e01: 
+    000-001: serpent scale
+    000-002: serpent scale
+    000-e01: serpent scale
     001-000: 
-    001-002: 
-    001-e01: 
-    002-000: 
-    002-001: 
-    002-e01: 
-    e01-000: 
-    e01-001: 
-    e01-002: 
+    001-002: serpent scale
+    001-e01: serpent scale
+    002-000: serpent scale
+    002-001: serpent scale
+    002-e01: serpent scale
+    e01-000: serpent scale
+    e01-001: serpent scale
+    e01-002: serpent scale
   07-00-13:
-    000-001: 
-    000-002: 
+    000-001: serpent scale
+    000-002: serpent scale
     001-000: 
-    001-002: 
-    002-000: 
-    002-001: 
+    001-002: serpent scale
+    002-000: serpent scale
+    002-001: serpent scale
   07-00-14:
-    000-e00: 
+    000-e00: serpent scale
     e00-000: 
   07-00-15:
     000-001: 
     001-000: 
   07-00-16:
-    000-001: 
+    000-001: serpent scale
     001-000: 
   07-01-00:
     000-001: 
-    001-000: 
+    001-000: medium height | distance | cat tackle | winged boots
   07-01-01:
     000-001: 
     001-000: 
@@ -1587,7 +1613,7 @@ Rooms:
   07-01-04:
     000-001: 
     001-000: 
-#Minera Prison Island:
+#Minera Prison Island: # DONE
   08-00-01:
     000-001: 
     001-000: 
@@ -1643,16 +1669,16 @@ Rooms:
     000-001: 
     001-000: 
   08-01-01:
-    000-e00: 
+    000-e00: medium height
     000-e01: 
     e00-000: 
     e01-000: 
   08-01-02:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: medium height
     001-e00: 
-    e00-000: 
+    e00-000: medium height
     e00-001: 
   08-01-03:
     000-001: 
@@ -1707,15 +1733,15 @@ Rooms:
     000-001: 
     000-002: 
     000-e00: 
-    000-e02: 
-    001-000: 
+    000-e02: magnes | big height | medium height # double jump is enough because you can kickbounce off the breakable wall to get an effective quadruple jump.
+    001-000: magnes | big height | medium height
     001-002: 
-    001-e00: 
-    001-e02: 
-    002-000: 
+    001-e00: magnes | big height | medium height
+    001-e02: magnes | big height | medium height
+    002-000: magnes | big height | medium height
     002-001: 
-    002-e00: 
-    002-e02: 
+    002-e00: magnes | big height | medium height
+    002-e02: magnes | big height | medium height
     e00-000: 
     e00-001: 
     e00-002: 
@@ -1725,6 +1751,9 @@ Rooms:
   08-02-01:
     000-001: 
     001-000: 
+  08-02-03:
+    000-e00: 
+    e00-000: 
   08-02-05:
     000-001: 
     000-002: 
@@ -1752,7 +1781,7 @@ Rooms:
   08-02-07:
     000-e02: 
     e02-000: 
-#Lighthouse:
+#Lighthouse: # DONE
   09-00-01:
     000-001: 
     001-000: 
@@ -1761,11 +1790,15 @@ Rooms:
     001-000: 
   09-00-03:
     000-001: 
+    000-e00: 
     001-000: 
+    001-e00: 
+    e00-000: 
+    e00-001: 
   09-00-04:
     000-001: 
     001-000: 
-  09-00-05:
+  09-00-05: # brachyura's room. TODO: don't allow this area to be randomized so that the player can enter from the top of the lighthouse, as that bugs the fight.
     000-001: 
     000-002: 
     000-003: 
@@ -1788,7 +1821,7 @@ Rooms:
   09-00-07:
     000-e01: 
     e01-000: 
-#Tymeo Mountains:
+#Tymeo Mountains: # DONE
   0A-00-00:
     000-e02: 
     e02-000: 
@@ -1822,12 +1855,12 @@ Rooms:
     003-001: 
     003-002: 
   0A-00-08:
-    000-001: 
+    000-001: medium height | medium distance
     000-002: 
     001-000: 
     001-002: 
     002-000: 
-    002-001: 
+    002-001: medium height | medium distance
   0A-00-09:
     000-001: 
     000-e00: 
@@ -1844,29 +1877,29 @@ Rooms:
     001-000: 
   0A-00-0C:
     000-001: 
-    000-002: 
-    000-e00: 
-    000-e01: 
-    000-e02: 
+    000-002: false
+    000-e00: false
+    000-e01: false
+    000-e02: false
     001-000: 
-    001-002: 
-    001-e00: 
-    001-e01: 
-    001-e02: 
-    002-000: 
-    002-001: 
-    002-e00: 
-    002-e01: 
-    002-e02: 
-    e00-000: 
-    e00-001: 
-    e00-002: 
-    e01-000: 
-    e01-001: 
-    e01-002: 
-    e02-000: 
-    e02-001: 
-    e02-002: 
+    001-002: false
+    001-e00: false
+    001-e01: false
+    001-e02: false
+    002-000: false
+    002-001: false
+    002-e00: paries
+    002-e01: paries
+    002-e02: paries
+    e00-000: false
+    e00-001: false
+    e00-002: paries
+    e01-000: false
+    e01-001: false
+    e01-002: paries
+    e02-000: false
+    e02-001: false
+    e02-002: paries
   0A-00-0D:
     000-001: 
     000-002: 
@@ -1894,27 +1927,27 @@ Rooms:
   0A-00-11:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: small distance | medium height
     001-e00: 
-    e00-000: 
+    e00-000: small distance | medium height
     e00-001: 
   0A-00-12:
     000-001: 
     000-002: 
     001-000: 
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
   0A-00-13:
     000-e01: 
     e01-000: 
   0A-00-14:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: medium height
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: medium height
+    002-001: medium height
   0A-00-16:
     000-001: 
     001-000: 
@@ -1935,7 +1968,7 @@ Rooms:
     e01-001: 
     e01-002: 
   0A-01-02:
-    000-001: 
+    000-001: magnes | big height | cat tackle
     001-000: 
   0A-01-03:
     000-e00: 
@@ -1961,13 +1994,16 @@ Rooms:
     000-001: 
     000-e00: 
     000-e03: 
-    001-000: 
+    001-000: medium height
     001-e00: 
     001-e03: 
-    e00-000: 
+    e00-000: medium height
     e00-001: 
-    e03-000: 
+    e03-000: medium height
     e03-001: 
+  0A-01-09:
+    000-e00: magnes
+    e00-000: 
 #Tristis Pass: # DONE
   0B-00-01:
     000-001: 

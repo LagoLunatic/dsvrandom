@@ -379,7 +379,7 @@ module DoorRandomizer
     when "por"
       [0x37, 0x30, 0x3B, 0x89]
     when "ooe"
-      [0x5C]
+      [0x5C, 0x5B, 0x5A]
     end
     
     game.each_room do |room|
