@@ -81,6 +81,10 @@ module DoorRandomizer
             # Don't randomize first subsector in PoR.
             next
           end
+          if GAME == "ooe" && area.area_index == 2
+            # Don't randomize Ecclesia in OoE.
+            next
+          end
           
           subsector_rooms = checker.convert_rooms_to_subrooms(subsector_rooms)
           
@@ -413,6 +417,7 @@ module DoorRandomizer
     end
     
     game.each_room do |room|
+      next if room.area_index == 2 && GAME == "ooe" # Ecclesia, we don't want to replace Barlowe's doors.
       room.entities.each do |entity|
         if entity.is_boss_door? && entity.var_a == 0
           # Boss door outside a boss room. Remove it.
