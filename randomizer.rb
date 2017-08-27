@@ -696,6 +696,12 @@ class Randomizer
       searchlights.type = 0
       searchlights.write_to_rom()
       game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
+      
+      # The right entrance to the Lighthouse has a wall that blocks it at first.
+      # If the player enters the Lighthouse from the right they'll get softlocked there.
+      # So we remove the line of code where the elevator creates that wall.
+      game.fs.load_overlay(53)
+      game.fs.write(0x022C331C, [0xE3A00000].pack("V"))
     end
     
     # Add a free space overlay so we can add entities as much as we want.
