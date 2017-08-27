@@ -665,6 +665,12 @@ class Randomizer
       dos_implement_magical_tickets()
     end
     
+    if GAME == "ooe" && room_rando?
+      # Make the frozen waterfall always be unfrozen. (Only the bottom part, the part at the top will still be frozen.)
+      game.fs.load_overlay(57)
+      game.fs.write(0x022C2CAC, [0xE3E01000].pack("V"))
+    end
+    
     # Add a free space overlay so we can add entities as much as we want.
     if !game.fs.has_free_space_overlay?
       game.add_new_overlay()

@@ -2128,7 +2128,7 @@ Rooms:
   0B-01-01:
     000-e01: magnes
     e01-000: 
-  0B-01-02: # waterfall room. TODO: make the waterfall always gone so it doesn't block the way sometimes.
+  0B-01-02: # waterfall room.
     000-001: 
     000-002: 
     000-003: 
@@ -2231,9 +2231,9 @@ Rooms:
   0C-00-0E:
     000-001: 
     001-000: 
-  0C-00-0F:
+  0C-00-0F: # one-way room at the end of large cavern.
     000-001: 
-    001-000: false # TODO: don't randomize the connection between this one-way room and the warp room.
+    001-000: false
 #Giant's Dwelling:
   0D-00-01:
     000-001: 

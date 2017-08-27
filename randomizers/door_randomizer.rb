@@ -316,6 +316,14 @@ module DoorRandomizer
           # Don't randomize the door connecting Paranoia and Mini-Paranoia.
           next
         end
+        if GAME == "ooe" && ["09-00-05_000", "09-00-05_001", "09-00-02_000", "09-00-02_001", "09-00-04_000", "09-00-04_001", "09-00-03_000", "09-00-03_001"].include?(door.door_str)
+          # Don't randomize the doors at the top of the Lighthouse, otherwise the player could enter Brachyura's room from the top and the fight would bug out.
+          next
+        end
+        if GAME == "ooe" && ["0C-00-0E_000", "0C-00-0F_000", "0C-00-0F_001", "0C-00-10_000"].include?(door.door_str)
+          # Don't randomize the doors in Large Cavern connecting the warp room, one-way room, and boss room.
+          next
+        end
         
         map_tile_x_pos = room.room_xpos_on_map
         map_tile_y_pos = room.room_ypos_on_map
