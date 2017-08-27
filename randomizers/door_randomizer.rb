@@ -67,7 +67,17 @@ module DoorRandomizer
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
     game.areas.each do |area|
+      if GAME == "ooe" && area.area_index == 2
+        # Don't randomize Ecclesia.
+        next
+      end
+      
       area.sectors.each do |sector|
+        if GAME == "ooe" && area.area_index == 7 && sector.sector_index == 1
+          # Don't randomize Rusalka's sector. It's too small to do anything with properly.
+          next
+        end
+        
         # First get the "subsectors" in this sector.
         # A subsector is a group of rooms in a sector that can access each other.
         # This separates certains sectors into multiple parts like the first sector of PoR.
@@ -79,10 +89,6 @@ module DoorRandomizer
         subsectors.each_with_index do |subsector_rooms, i|
           if GAME == "por" && area.area_index == 0 && sector.sector_index == 0 && i == 0
             # Don't randomize first subsector in PoR.
-            next
-          end
-          if GAME == "ooe" && area.area_index == 2
-            # Don't randomize Ecclesia in OoE.
             next
           end
           
