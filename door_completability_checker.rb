@@ -230,7 +230,8 @@ class DoorCompletabilityChecker
   end
   
   def game_beatable?
-    return get_accessible_rooms().include?(@final_room_str)
+    accessible_rooms = get_accessible_doors().map{|door_str| door_str[0,8]}.uniq
+    return accessible_rooms.include?(@final_room_str)
     @debug_doors = false
   end
   
@@ -294,6 +295,10 @@ class DoorCompletabilityChecker
         # When glitches are disabled, always consider a glitch requirement false.
         return false
       end
+      if [:villagernikolai, :villagergeorge] && GAME == "ooe"
+        return @current_items.include?(req)
+      end
+      
       raise "Invalid requirement: #{req}"
     end
   end
@@ -337,7 +342,7 @@ class DoorCompletabilityChecker
     end
   end
   
-  def get_accessible_locations_doors_and_rooms
+  def get_accessible_locations_and_doors
     accessible_locations = []
     accessible_doors = []
     doors_to_check = []
@@ -544,21 +549,19 @@ class DoorCompletabilityChecker
       end
     end
     
-    accessible_rooms = accessible_doors.map{|door_str| door_str[0,8]}.uniq
+    if wygol_accessible
+      accessible_doors << "01-01-00_000" # Technically not a real door, Wygol has no doors. This is just a hack to keep track of whether we can access Nikolai.
+    end
     
-    return [accessible_locations, accessible_doors, accessible_rooms]
+    return [accessible_locations, accessible_doors]
   end
   
   def get_accessible_locations
-    get_accessible_locations_doors_and_rooms()[0]
+    get_accessible_locations_and_doors()[0]
   end
   
   def get_accessible_doors
-    get_accessible_locations_doors_and_rooms()[1]
-  end
-  
-  def get_accessible_rooms
-    get_accessible_locations_doors_and_rooms()[2]
+    get_accessible_locations_and_doors()[1]
   end
   
   def all_progression_pickups

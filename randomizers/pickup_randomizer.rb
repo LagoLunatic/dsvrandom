@@ -264,7 +264,11 @@ module PickupRandomizer
       pickup_name = checker.defs.invert[pickup_global_id].to_s
       puts "Trying to place #{pickup_name}"
       
-      possible_locations = checker.get_accessible_locations()
+      if room_rando?
+        possible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
+      else
+        possible_locations = checker.get_accessible_locations()
+      end
       possible_locations -= @locations_randomized_to_have_useful_pickups
       puts "Total possible locations: #{possible_locations.size}"
       
@@ -436,6 +440,15 @@ module PickupRandomizer
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
+      
+      if room_rando? && GAME == "ooe"
+        if accessible_doors.include?("01-01-00_000")
+          checker.add_item(:villagernikolai)
+        end
+        if accessible_doors.include?("11-00-08_000")
+          checker.add_item(:villagergeorge)
+        end
+      end
       
       progression_pickups_placed += 1
       yield(progression_pickups_placed)
