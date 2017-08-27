@@ -409,11 +409,22 @@ module DoorRandomizer
           entity.type = 0
           entity.write_to_rom()
         elsif entity.is_special_object? && entity.subtype == breakable_wall_subtype
-          PATH_BLOCKING_BREAKABLE_WALLS.each do |wall_vars|
-            if entity.var_a == wall_vars[:var_a] && entity.var_b == wall_vars[:var_b]
-              entity.type = 0
-              entity.write_to_rom()
-              break
+          case GAME
+          when "por"
+            PATH_BLOCKING_BREAKABLE_WALLS.each do |wall_data|
+              if entity.var_a == wall_data[:var_a] && entity.room.area_index == wall_data[:area_index] && (entity.room.area_index != 0 || entity.room.sector_index == wall_data[:sector_index])
+                entity.type = 0
+                entity.write_to_rom()
+                break
+              end
+            end
+          when "ooe"
+            PATH_BLOCKING_BREAKABLE_WALLS.each do |wall_vars|
+              if entity.var_a == wall_vars[:var_a] && entity.var_b == wall_vars[:var_b]
+                entity.type = 0
+                entity.write_to_rom()
+                break
+              end
             end
           end
         end

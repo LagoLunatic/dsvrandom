@@ -11,5 +11,28 @@ RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x88, 0x89] # Also remove Fake Grant and Sypha as they're placed together with Trevor.
 
 PATH_BLOCKING_BREAKABLE_WALLS = [
-  # TODO
+  {area_index: 0, sector_index: 0, var_a: 1},
+  {area_index: 0, sector_index: 1, var_a: 0},
+  {area_index: 0, sector_index: 2, var_a: 0xA},
+  {area_index: 0, sector_index: 2, var_a: 0xB},
+  {area_index: 0, sector_index: 4, var_a: 8},
+  {area_index: 0, sector_index: 6, var_a: 0xF},
+  {area_index: 0, sector_index: 7, var_a: 3},
+  {area_index: 0, sector_index: 8, var_a: 6},
+  {area_index: 0, sector_index: 8, var_a: 7},
+  {area_index: 0, sector_index: 9, var_a: 0xD},
+  {area_index: 0, sector_index: 0xA, var_a: 0x10},
+  {area_index: 1, var_a: 0},
+  {area_index: 1, var_a: 1},
+  {area_index: 1, var_a: 3},
+  {area_index: 1, var_a: 5},
+  {area_index: 1, var_a: 9},
+  {area_index: 2, var_a: 4},
+  {area_index: 2, var_a: 7},
+  {area_index: 2, var_a: 2},
+  {area_index: 2, var_a: 6},
+  {area_index: 2, var_a: 8},
+  {area_index: 5, var_a: 0},
+  {area_index: 7, var_a: 1},
+  {area_index: 8, var_a: 0},
 ]
