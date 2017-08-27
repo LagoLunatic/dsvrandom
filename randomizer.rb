@@ -669,6 +669,13 @@ class Randomizer
       # Make the frozen waterfall always be unfrozen. (Only the bottom part, the part at the top will still be frozen.)
       game.fs.load_overlay(57)
       game.fs.write(0x022C2CAC, [0xE3E01000].pack("V"))
+      
+      # The Giant Skeleton boss room will softlock the game if the player enters from the right side.
+      # So we get rid of the searchlights that softlock the game and modify the Giant Skeleton boss's AI to wake up like a non-boss Giant Skeleton.
+      searchlights = game.entity_by_str("08-00-02_03")
+      searchlights.type = 0
+      searchlights.write_to_rom()
+      game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
     end
     
     # Add a free space overlay so we can add entities as much as we want.
