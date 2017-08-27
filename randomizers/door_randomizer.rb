@@ -389,9 +389,18 @@ module DoorRandomizer
     when "dos"
       [0x43, 0x44, 0x46, 0x57, 0x1E, 0x2B, 0x26, 0x2A, 0x29, 0x45, 0x27, 0x24, 0x37, 0x04]
     when "por"
-      [0x37, 0x30, 0x3B, 0x89]
+      [0x37, 0x30, 0x89]
     when "ooe"
-      [0x5C, 0x5B, 0x5A, 0x59, 0x5E]
+      [0x5B, 0x5A, 0x59, 0x5E]
+    end
+    
+    breakable_wall_subtype = case GAME
+    when "dos"
+      nil # All breakable walls are path blocking in DoS, so they're instead included in obj_subtypes_to_remove.
+    when "por"
+      0x3B
+    when "ooe"
+      0x5C
     end
     
     game.each_room do |room|
@@ -399,6 +408,14 @@ module DoorRandomizer
         if entity.is_special_object? && obj_subtypes_to_remove.include?(entity.subtype)
           entity.type = 0
           entity.write_to_rom()
+        elsif entity.is_special_object? && entity.subtype == breakable_wall_subtype
+          PATH_BLOCKING_BREAKABLE_WALLS.each do |wall_vars|
+            if entity.var_a == wall_vars[:var_a] && entity.var_b == wall_vars[:var_b]
+              entity.type = 0
+              entity.write_to_rom()
+              break
+            end
+          end
         end
       end
     end

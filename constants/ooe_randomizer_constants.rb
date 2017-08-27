@@ -12,3 +12,19 @@ RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x78] - # Remove the final boss, Dracula. 
   [0x6D, 0x76] - # Also remove Brachyura and Eligor since they need their own huge rooms.
   [0x71] # Remove Gravedorcus because he relies on code and objects specific to Oblivion Ridge.
+
+PATH_BLOCKING_BREAKABLE_WALLS = [
+  {var_a: 2, var_b: 0},
+  {var_a: 0, var_b: 0},
+  {var_a: 0, var_b: 3},
+  {var_a: 3, var_b: 3},
+  {var_a: 3, var_b: 4},
+  {var_a: 8, var_b: 0},
+  {var_a: 7, var_b: 4},
+  {var_a: 3, var_b: 0},
+  {var_a: 3, var_b: 1},
+  {var_a: 3, var_b: 2},
+  {var_a: 1, var_b: 0},
+  {var_a: 1, var_b: 1},
+  {var_a: 0, var_b: 1},
+]
