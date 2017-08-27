@@ -1156,7 +1156,7 @@ Rooms:
     001-000: magnes & double jump | redire
   03-00-04:
     000-001: 
-    001-000: magnes & double jump | redire
+    001-000: double jump | redire
   03-00-05:
     000-001: magnes
     000-002: magnes
