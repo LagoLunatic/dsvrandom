@@ -442,6 +442,38 @@ module DoorRandomizer
       drawbridge_room_waterlevel.type = 0
       drawbridge_room_waterlevel.write_to_rom()
     end
+    
+    # Remove breakable walls from the map as well so it matches visually with the level design.
+    maps = []
+    if GAME == "dos"
+      maps << game.get_map(0, 0)
+      maps << game.get_map(0, 0xA)
+    else
+      AREA_INDEX_TO_OVERLAY_INDEX.keys.each do |area_index|
+        maps << game.get_map(area_index, 0)
+      end
+    end
+    maps.each do |map|
+      map.tiles.each do |tile|
+        if tile.left_secret
+          tile.left_secret = false
+          tile.left_door = true
+        end
+        if tile.top_secret
+          tile.top_secret = false
+          tile.top_door = true
+        end
+        if tile.right_secret
+          tile.right_secret = false
+          tile.right_door = true
+        end
+        if tile.bottom_secret
+          tile.bottom_secret = false
+          tile.bottom_door = true
+        end
+      end
+      map.write_to_rom()
+    end
   end
   
   def replace_outer_boss_doors
