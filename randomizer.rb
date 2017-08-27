@@ -607,6 +607,26 @@ class Randomizer
   end
   
   def apply_pre_randomization_tweaks
+    if GAME == "ooe" && options[:open_world_map]
+      game.apply_armips_patch("ooe_nonlinear")
+      
+      # Fix some broken platforms in Tristis Pass so the player cannot become permastuck.
+      layer = game.areas[0xB].sectors[0].rooms[2].layers.first
+      layer.tiles[0xD1].index_on_tileset = 0x378
+      layer.tiles[0xD2].index_on_tileset = 0x378
+      layer.write_to_rom()
+      layer = game.areas[0xB].sectors[0].rooms[4].layers.first
+      layer.tiles[0x31].index_on_tileset = 0x37C
+      layer.tiles[0x32].index_on_tileset = 0x37C
+      layer.tiles[0x121].index_on_tileset = 0x378
+      layer.tiles[0x122].index_on_tileset = 0x378
+      layer.tiles[0x1BD].index_on_tileset = 0x37C
+      layer.tiles[0x1BE].index_on_tileset = 0x37C
+      layer.tiles[0x2AD].index_on_tileset = 0x378
+      layer.tiles[0x2AE].index_on_tileset = 0x378
+      layer.write_to_rom()
+    end
+    
     if GAME == "dos" && room_rando?
       # Remove the special code for the slide puzzle.
       game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
@@ -721,26 +741,6 @@ class Randomizer
       boss_door = game.areas[0].sectors[8].rooms[0xD].entities[1]
       boss_door.x_pos = 0xF0
       boss_door.write_to_rom()
-    end
-    
-    if GAME == "ooe" && options[:open_world_map]
-      game.apply_armips_patch("ooe_nonlinear")
-      
-      # Fix some broken platforms in Tristis Pass so the player cannot become permastuck.
-      layer = game.areas[0xB].sectors[0].rooms[2].layers.first
-      layer.tiles[0xD1].index_on_tileset = 0x378
-      layer.tiles[0xD2].index_on_tileset = 0x378
-      layer.write_to_rom()
-      layer = game.areas[0xB].sectors[0].rooms[4].layers.first
-      layer.tiles[0x31].index_on_tileset = 0x37C
-      layer.tiles[0x32].index_on_tileset = 0x37C
-      layer.tiles[0x121].index_on_tileset = 0x378
-      layer.tiles[0x122].index_on_tileset = 0x378
-      layer.tiles[0x1BD].index_on_tileset = 0x37C
-      layer.tiles[0x1BE].index_on_tileset = 0x37C
-      layer.tiles[0x2AD].index_on_tileset = 0x378
-      layer.tiles[0x2AE].index_on_tileset = 0x378
-      layer.write_to_rom()
     end
     
     if options[:randomize_boss_souls] && GAME == "dos"
