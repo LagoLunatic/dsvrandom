@@ -526,7 +526,7 @@ module DoorRandomizer
         dest_door = door.destination_door
         dest_room = dest_door.room
         
-        gap_start_index, gap_end_index, gap_size = get_biggest_door_gap(dest_door)
+        gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
         gap_end_offset = gap_end_index * 0x10 + 0x10
         
         new_boss_door = Entity.new(dest_room, game.fs)
@@ -571,8 +571,8 @@ module DoorRandomizer
     
     case door.direction
     when :left, :right
-      left_first_tile_i, left_last_tile_i, left_gap_size = get_biggest_door_gap(left_door)
-      right_first_tile_i, right_last_tile_i, right_gap_size = get_biggest_door_gap(right_door)
+      left_first_tile_i, left_last_tile_i, left_tiles_in_biggest_gap = get_biggest_door_gap(left_door)
+      right_first_tile_i, right_last_tile_i, right_tiles_in_biggest_gap = get_biggest_door_gap(right_door)
       
       unless left_last_tile_i == right_last_tile_i
         left_door_dest_y_offset = (right_last_tile_i - left_last_tile_i) * 0x10
@@ -585,9 +585,23 @@ module DoorRandomizer
         right_door.dest_y_unused = right_door_dest_y_offset
         right_door.write_to_rom()
       end
+      
+      # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.
+      # Otherwise the player could enter a room inside a solid wall, and get thrown out of bounds.
+      if left_tiles_in_biggest_gap.size < right_tiles_in_biggest_gap.size
+        num_tiles_to_remove = right_tiles_in_biggest_gap.size - left_tiles_in_biggest_gap.size
+        tiles_to_remove = right_tiles_in_biggest_gap[0, num_tiles_to_remove]
+        
+        block_off_tiles(right_door.room, tiles_to_remove)
+      elsif right_tiles_in_biggest_gap.size < left_tiles_in_biggest_gap.size
+        num_tiles_to_remove = left_tiles_in_biggest_gap.size - right_tiles_in_biggest_gap.size
+        tiles_to_remove = left_tiles_in_biggest_gap[0, num_tiles_to_remove]
+        
+        block_off_tiles(left_door.room, tiles_to_remove)
+      end
     when :up, :down
-      up_first_tile_i, up_last_tile_i, up_gap_size = get_biggest_door_gap(up_door)
-      down_first_tile_i, down_last_tile_i, down_gap_size = get_biggest_door_gap(down_door)
+      up_first_tile_i, up_last_tile_i, up_tiles_in_biggest_gap = get_biggest_door_gap(up_door)
+      down_first_tile_i, down_last_tile_i, down_tiles_in_biggest_gap = get_biggest_door_gap(down_door)
       
       unless up_last_tile_i == down_last_tile_i
         up_door_dest_x_offset = (down_last_tile_i - up_last_tile_i) * 0x10
@@ -599,6 +613,20 @@ module DoorRandomizer
         
         down_door.dest_x_unused = down_door_dest_x_offset
         down_door.write_to_rom()
+      end
+      
+      # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.
+      # Otherwise the player could enter a room inside a solid wall, and get thrown out of bounds.
+      if up_tiles_in_biggest_gap.size < down_tiles_in_biggest_gap.size
+        num_tiles_to_remove = down_tiles_in_biggest_gap.size - up_tiles_in_biggest_gap.size
+        tiles_to_remove = down_tiles_in_biggest_gap[0, num_tiles_to_remove]
+        
+        block_off_tiles(down_door.room, tiles_to_remove)
+      elsif down_tiles_in_biggest_gap.size < up_tiles_in_biggest_gap.size
+        num_tiles_to_remove = up_tiles_in_biggest_gap.size - down_tiles_in_biggest_gap.size
+        tiles_to_remove = up_tiles_in_biggest_gap[0, num_tiles_to_remove]
+        
+        block_off_tiles(up_door.room, tiles_to_remove)
       end
     end
   end
@@ -618,8 +646,9 @@ module DoorRandomizer
       end
       
       y_start = door.y_pos*SCREEN_HEIGHT_IN_TILES
-      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
-        tiles << coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
+      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each_with_index do |y, i|
+        is_solid = coll[x*0x10,y*0x10].is_solid?
+        tiles << {is_solid: is_solid, i: i, x: x, y: y}
       end
     when :up, :down
       if door.direction == :up
@@ -629,19 +658,33 @@ module DoorRandomizer
       end
       
       x_start = door.x_pos*SCREEN_WIDTH_IN_TILES
-      (x_start..x_start+SCREEN_WIDTH_IN_TILES-1).each do |x|
-        tiles << coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
+      (x_start..x_start+SCREEN_WIDTH_IN_TILES-1).each_with_index do |x, i|
+        is_solid = coll[x*0x10,y*0x10].is_solid?
+        tiles << {is_solid: is_solid, i: i, x: x, y: y}
       end
     end
     
-    chunks = tiles.chunk{|tile| tile.is_solid?}
+    chunks = tiles.chunk{|tile| tile[:is_solid]}
     gaps = chunks.select{|is_solid, tiles| !is_solid}
     tiles_in_biggest_gap = gaps.max_by{|is_solid, tiles| tiles.length}[1]
-    first_tile_i = tiles.index(tiles_in_biggest_gap.first)
-    last_tile_i = tiles.index(tiles_in_biggest_gap.last)
-    gap_size = tiles_in_biggest_gap.size
+    first_tile_i = tiles_in_biggest_gap.first[:i]
+    last_tile_i = tiles_in_biggest_gap.last[:i]
     
-    return [first_tile_i, last_tile_i, gap_size]
+    return [first_tile_i, last_tile_i, tiles_in_biggest_gap]
+  end
+  
+  def block_off_tiles(room, tiles)
+    coll_layer = room.layers.first
+    coll_tileset = CollisionTileset.new(coll_layer.collision_tileset_pointer, game.fs)
+    solid_tile = coll_tileset.tiles.find{|tile| tile.is_solid?}
+    solid_tile_index_on_tileset = coll_tileset.tiles.index(solid_tile)
+    
+    tiles.each do |tile|
+      tile_i = tile[:x] + tile[:y]*SCREEN_WIDTH_IN_TILES*coll_layer.width
+      coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+      coll_layer.tiles[tile_i].horizontal_flip = false
+    end
+    coll_layer.write_to_rom()
   end
   
   def randomize_doors_no_overlap(&block)
