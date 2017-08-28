@@ -607,10 +607,10 @@ class DoorCompletabilityChecker
     @current_items << new_item_global_id
   end
   
-  def set_starting_room(starting_room)
-    @starting_location = "#{starting_room.room_str}_000"
+  def set_starting_room(starting_room, starting_room_door_index)
     @current_room = starting_room.room_str
-    @current_location_in_room = "000"
+    @current_location_in_room = "%03X" % starting_room_door_index
+    @starting_location = "#{@current_room}_#{@current_location_in_room}"
   end
   
   def set_red_wall_souls(red_wall_souls)

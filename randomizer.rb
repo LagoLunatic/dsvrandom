@@ -409,9 +409,10 @@ class Randomizer
       when "ooe"
         game.areas[2].sectors[0].rooms[4]
       end
+      @starting_room_door_index = 0
     end
     if room_rando?
-      checker.set_starting_room(@starting_room)
+      checker.set_starting_room(@starting_room, @starting_room_door_index)
     end
     
     if room_rando?

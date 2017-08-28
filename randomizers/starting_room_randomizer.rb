@@ -63,5 +63,6 @@ module StartingRoomRandomizer
     game.set_starting_position(x_pos, y_pos)
     
     @starting_room = room
+    @starting_room_door_index = room.doors.index(door)
   end
 end
