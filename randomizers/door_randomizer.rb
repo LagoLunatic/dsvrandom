@@ -518,11 +518,15 @@ module DoorRandomizer
       doors.each do |door|
         next unless [:left, :right].include?(door.direction)
         
-        dest_room = door.destination_door.room
-        new_boss_door = Entity.new(dest_room, game.fs)
+        dest_door = door.destination_door
+        dest_room = dest_door.room
         
+        gap_start_index, gap_end_index, gap_size = get_biggest_door_gap(dest_door)
+        gap_end_offset = gap_end_index * 0x10 + 0x10
+        
+        new_boss_door = Entity.new(dest_room, game.fs)
         new_boss_door.x_pos = door.dest_x
-        new_boss_door.y_pos = door.dest_y + 0x80
+        new_boss_door.y_pos = door.dest_y + gap_end_offset
         if door.direction == :left
           new_boss_door.x_pos += 0xF0
         end
