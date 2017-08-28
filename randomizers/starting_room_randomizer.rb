@@ -6,7 +6,9 @@ module StartingRoomRandomizer
     rooms = []
     game.each_room do |room|
       next if room.layers.length == 0
-      next if room.doors.length == 0
+      
+      room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+      next if room_doors.empty?
       
       next if room.area.name.include?("Boss Rush")
       next if room.sector.name.include?("Boss Rush")
@@ -34,6 +36,29 @@ module StartingRoomRandomizer
     
     room = rooms.sample(random: rng)
     game.set_starting_room(room.area_index, room.sector_index, room.room_index)
+    
+    room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+    door = room_doors.sample(random: rng)
+    gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
+    case door.direction
+    when :left
+      x_pos = 0
+      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
+      y_pos += gap_end_index*0x10 + 0x10
+    when :right
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS-1
+      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
+      y_pos += gap_end_index*0x10 + 0x10
+    when :up
+      y_pos = 0
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
+      x_pos += gap_end_index*0x10
+    when :down
+      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS-1
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
+      x_pos += gap_end_index*0x10
+    end
+    game.set_starting_position(x_pos, y_pos)
     
     @starting_room = room
   end
