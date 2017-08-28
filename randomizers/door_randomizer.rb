@@ -273,7 +273,11 @@ module DoorRandomizer
       door.write_to_rom()
     end
     
+    lined_up_door_strs = []
     doors_to_line_up.each do |door|
+      next if lined_up_door_strs.include?(door.destination_door.door_str)
+      lined_up_door_strs << door.door_str
+      
       line_up_door(door)
     end
     
@@ -587,10 +591,10 @@ module DoorRandomizer
         right_door_dest_y_offset = (left_last_tile_i - right_last_tile_i) * 0x10
         
         # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
-        left_door.dest_y_unused += left_door_dest_y_offset
+        left_door.dest_y_unused = left_door_dest_y_offset
         left_door.write_to_rom()
         
-        right_door.dest_y_unused += right_door_dest_y_offset
+        right_door.dest_y_unused = right_door_dest_y_offset
         right_door.write_to_rom()
       end
     end

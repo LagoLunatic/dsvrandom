@@ -514,7 +514,7 @@ class DoorCompletabilityChecker
         end
       end
       
-      if door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h|e\h\h)$/
+      if door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h)$/
         room_str = $1
         door_index = $2.to_i(16)
       else
@@ -758,6 +758,10 @@ class RoomRandoDoor < Door
     # Need to reload the original door so it can be referenced by the completability checking logic.
     @original_door.read_from_rom(door_ram_pointer)
   end
+  
+  def door_str
+    @original_door.door_str
+  end
 end
 
 class RoomRandoSubroom < Room
@@ -774,8 +778,4 @@ class RoomRandoSubroom < Room
   def set_subroom_doors(subroom_doors)
     @doors = subroom_doors
   end
-  
-  #def room_str
-  #  "#{super}-SUB%02X" % @subroom_index
-  #end
 end
