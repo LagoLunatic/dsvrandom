@@ -1,6 +1,6 @@
 
 module EnemyRandomizer
-  MAX_ASSETS_PER_ROOM = 17
+  MAX_ASSETS_PER_ROOM = 16
   
   attr_reader :coll
   
