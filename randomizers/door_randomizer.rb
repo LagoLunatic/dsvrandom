@@ -580,10 +580,7 @@ module DoorRandomizer
         
         # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
         left_door.dest_y_unused = left_door_dest_y_offset
-        left_door.write_to_rom()
-        
         right_door.dest_y_unused = right_door_dest_y_offset
-        right_door.write_to_rom()
       end
       
       # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.
@@ -592,13 +589,38 @@ module DoorRandomizer
         num_tiles_to_remove = right_tiles_in_biggest_gap.size - left_tiles_in_biggest_gap.size
         tiles_to_remove = right_tiles_in_biggest_gap[0, num_tiles_to_remove]
         
+        # For those huge doorways that take up the entire screen (e.g. Kalidus), we want to make sure the bottommost tile of that screen is solid so it's properly delineated from the doorway of the screen below.
+        if right_tiles_in_biggest_gap.size == SCREEN_HEIGHT_IN_TILES
+          # We move up the gap by one block.
+          tiles_to_remove = tiles_to_remove[0..-2]
+          tiles_to_remove << right_tiles_in_biggest_gap.last
+          
+          # Then we also have to readjust the dest y offsets.
+          left_door.dest_y_unused -= 0x10
+          right_door.dest_y_unused += 0x10
+        end
+        
         block_off_tiles(right_door.room, tiles_to_remove)
       elsif right_tiles_in_biggest_gap.size < left_tiles_in_biggest_gap.size
         num_tiles_to_remove = left_tiles_in_biggest_gap.size - right_tiles_in_biggest_gap.size
         tiles_to_remove = left_tiles_in_biggest_gap[0, num_tiles_to_remove]
         
+        # For those huge doorways that take up the entire screen (e.g. Kalidus), we want to make sure the bottommost tile of that screen is solid so it's properly delineated from the doorway of the screen below.
+        if left_tiles_in_biggest_gap.size == SCREEN_HEIGHT_IN_TILES
+          # We move up the gap by one block.
+          tiles_to_remove = tiles_to_remove[0..-2]
+          tiles_to_remove << left_tiles_in_biggest_gap.last
+          
+          # Then we also have to readjust the dest y offsets.
+          right_door.dest_y_unused -= 0x10
+          left_door.dest_y_unused += 0x10
+        end
+        
         block_off_tiles(left_door.room, tiles_to_remove)
       end
+      
+      left_door.write_to_rom()
+      right_door.write_to_rom()
     when :up, :down
       up_first_tile_i, up_last_tile_i, up_tiles_in_biggest_gap = get_biggest_door_gap(up_door)
       down_first_tile_i, down_last_tile_i, down_tiles_in_biggest_gap = get_biggest_door_gap(down_door)
@@ -609,10 +631,7 @@ module DoorRandomizer
         
         # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
         up_door.dest_x_unused = up_door_dest_x_offset
-        up_door.write_to_rom()
-        
         down_door.dest_x_unused = down_door_dest_x_offset
-        down_door.write_to_rom()
       end
       
       # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.
@@ -628,6 +647,9 @@ module DoorRandomizer
         
         block_off_tiles(up_door.room, tiles_to_remove)
       end
+      
+      up_door.write_to_rom()
+      down_door.write_to_rom()
     end
   end
   
