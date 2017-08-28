@@ -401,7 +401,7 @@ module DoorRandomizer
     when "por"
       [0x37, 0x30, 0x89]
     when "ooe"
-      [0x5B, 0x5A, 0x59, 0x5E]
+      [0x5B, 0x5A, 0x59]
     end
     
     breakable_wall_subtype = case GAME
@@ -441,10 +441,15 @@ module DoorRandomizer
       end
     end
     
-    if GAME == "dos"
-      drawbridge_room_waterlevel = game.areas[0].sectors[0].rooms[0x15].entities[4]
+    case GAME
+    when "dos"
+      drawbridge_room_waterlevel = game.entity_by_str("00-00-15_04")
       drawbridge_room_waterlevel.type = 0
       drawbridge_room_waterlevel.write_to_rom()
+    when "ooe"
+      forsaken_cloister_gate = game.entity_by_str("00-09-06_00")
+      forsaken_cloister_gate.type = 0
+      forsaken_cloister_gate.write_to_rom()
     end
     
     # Remove breakable walls from the map as well so it matches visually with the level design.
