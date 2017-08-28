@@ -552,39 +552,18 @@ module DoorRandomizer
     when :right
       right_door = door
       left_door = dest_door
+    when :up
+      up_door = door
+      down_door = dest_door
+    when :down
+      down_door = door
+      up_door = dest_door
     end
     
     case door.direction
     when :left, :right
-      left_coll = RoomCollision.new(left_door.room, game.fs)
-      x = 0
-      y_start = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
-      left_tiles = []
-      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
-        left_tiles << left_coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
-      end
-      
-      right_coll = RoomCollision.new(right_door.room, game.fs)
-      x = right_door.x_pos*SCREEN_WIDTH_IN_TILES - 1
-      y_start = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
-      right_tiles = []
-      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
-        right_tiles << right_coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
-      end
-      
-      chunks = left_tiles.chunk{|tile| tile.is_blank}
-      gaps = chunks.select{|is_blank, tiles| is_blank}
-      tiles_in_biggest_gap = gaps.max_by{|is_blank, tiles| tiles.length}[1]
-      left_first_tile_i = left_tiles.index(tiles_in_biggest_gap.first)
-      left_last_tile_i = left_tiles.index(tiles_in_biggest_gap.last)
-      left_gap_size = tiles_in_biggest_gap.size
-      
-      chunks = right_tiles.chunk{|tile| tile.is_blank}
-      gaps = chunks.select{|is_blank, tiles| is_blank}
-      tiles_in_biggest_gap = gaps.max_by{|is_blank, tiles| tiles.length}[1]
-      right_first_tile_i = right_tiles.index(tiles_in_biggest_gap.first)
-      right_last_tile_i = right_tiles.index(tiles_in_biggest_gap.last)
-      right_gap_size = tiles_in_biggest_gap.size
+      left_first_tile_i, left_last_tile_i, left_gap_size = get_biggest_door_gap(left_door)
+      right_first_tile_i, right_last_tile_i, right_gap_size = get_biggest_door_gap(right_door)
       
       unless left_last_tile_i == right_last_tile_i
         left_door_dest_y_offset = (right_last_tile_i - left_last_tile_i) * 0x10
@@ -597,7 +576,63 @@ module DoorRandomizer
         right_door.dest_y_unused = right_door_dest_y_offset
         right_door.write_to_rom()
       end
+    when :up, :down
+      up_first_tile_i, up_last_tile_i, up_gap_size = get_biggest_door_gap(up_door)
+      down_first_tile_i, down_last_tile_i, down_gap_size = get_biggest_door_gap(down_door)
+      
+      unless up_last_tile_i == down_last_tile_i
+        up_door_dest_x_offset = (down_last_tile_i - up_last_tile_i) * 0x10
+        down_door_dest_x_offset = (up_last_tile_i - down_last_tile_i) * 0x10
+        
+        # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
+        up_door.dest_x_unused = up_door_dest_x_offset
+        up_door.write_to_rom()
+        
+        down_door.dest_x_unused = down_door_dest_x_offset
+        down_door.write_to_rom()
+      end
     end
+  end
+  
+  def get_biggest_door_gap(door)
+    puts door.door_str
+    coll = RoomCollision.new(door.room, game.fs)
+    
+    tiles = []
+    
+    case door.direction
+    when :left, :right
+      if door.direction == :left
+        x = 0
+      else
+        x = door.x_pos*SCREEN_WIDTH_IN_TILES - 1
+      end
+      
+      y_start = door.y_pos*SCREEN_HEIGHT_IN_TILES
+      (y_start..y_start+SCREEN_HEIGHT_IN_TILES-1).each do |y|
+        tiles << coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
+      end
+    when :up, :down
+      if door.direction == :up
+        y = 0
+      else
+        y = door.y_pos*SCREEN_HEIGHT_IN_TILES - 1
+      end
+      
+      x_start = door.x_pos*SCREEN_WIDTH_IN_TILES
+      (x_start..x_start+SCREEN_WIDTH_IN_TILES-1).each do |x|
+        tiles << coll[x*0x10,y*0x10].dup # Dup so it has a unique object ID, TODO HACKY
+      end
+    end
+    
+    chunks = tiles.chunk{|tile| tile.is_solid?}
+    gaps = chunks.select{|is_solid, tiles| !is_solid}
+    tiles_in_biggest_gap = gaps.max_by{|is_solid, tiles| tiles.length}[1]
+    first_tile_i = tiles.index(tiles_in_biggest_gap.first)
+    last_tile_i = tiles.index(tiles_in_biggest_gap.last)
+    gap_size = tiles_in_biggest_gap.size
+    
+    return [first_tile_i, last_tile_i, gap_size]
   end
   
   def randomize_doors_no_overlap(&block)
