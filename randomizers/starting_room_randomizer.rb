@@ -8,6 +8,7 @@ module StartingRoomRandomizer
       next if room.layers.length == 0
       
       room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+      room_doors.select!{|door| door.direction == :left || door.direction == :right}
       next if room_doors.empty?
       
       next if room.area.name.include?("Boss Rush")
@@ -38,6 +39,7 @@ module StartingRoomRandomizer
     game.set_starting_room(room.area_index, room.sector_index, room.room_index)
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+    room_doors.select!{|door| door.direction == :left || door.direction == :right}
     door = room_doors.sample(random: rng)
     gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
     case door.direction
