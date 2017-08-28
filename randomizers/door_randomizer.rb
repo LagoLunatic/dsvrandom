@@ -124,7 +124,7 @@ module DoorRandomizer
           
           while true
             debug = false
-            debug = (area.area_index == 0 && sector.sector_index == 5)
+            #debug = (area.area_index == 0 && sector.sector_index == 5)
             #debug = true
             
             puts "on room #{current_room.room_str}" if debug
@@ -654,7 +654,6 @@ module DoorRandomizer
   end
   
   def get_biggest_door_gap(door)
-    puts door.door_str
     coll = RoomCollision.new(door.room, game.fs)
     
     tiles = []
