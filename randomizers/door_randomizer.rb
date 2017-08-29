@@ -1,52 +1,153 @@
 
 module DoorRandomizer
   def randomize_transition_doors
-    transition_rooms = game.get_transition_rooms()
-    remaining_transition_rooms = transition_rooms.dup
-    remaining_transition_rooms.reject! do |room|
+    @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
       FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
     end
+    
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
-    transition_rooms.shuffle(random: rng).each_with_index do |transition_room, i|
-      next unless remaining_transition_rooms.include?(transition_room) # Already randomized this room
-      
-      remaining_transition_rooms.delete(transition_room)
-      
-      # Transition rooms can only lead to rooms in the same area or the game will crash.
-      remaining_transition_rooms_for_area = remaining_transition_rooms.select do |other_room|
-        transition_room.area_index == other_room.area_index
+    game.areas.each do |area|
+      all_area_transition_rooms = @transition_rooms.select do |transition_room|
+        transition_room.area_index == area.area_index
       end
       
-      if remaining_transition_rooms_for_area.length == 0
-        # There aren't any more transition rooms left in this area to randomize with.
-        # This is because the area had an odd number of transition rooms, so not all of them can be swapped.
+      if all_area_transition_rooms.empty?
+        # No transition rooms in this area.
         next
       end
       
-      # Only randomize one of the doors, no point in randomizing them both.
-      inside_door = transition_room.doors.first
-      old_outside_door = inside_door.destination_door
-      transition_room_to_swap_with = remaining_transition_rooms_for_area.sample(random: rng)
-      remaining_transition_rooms.delete(transition_room_to_swap_with)
-      inside_door_to_swap_with = transition_room_to_swap_with.doors.first
-      new_outside_door = inside_door_to_swap_with.destination_door
+      all_area_subsectors = []
+      area.sectors.each do |sector|
+        all_area_subsectors += get_subsectors(sector)
+      end
       
-      queued_door_changes[inside_door]["destination_room_metadata_ram_pointer"] = inside_door_to_swap_with.destination_room_metadata_ram_pointer
-      queued_door_changes[inside_door]["dest_x"] = inside_door_to_swap_with.dest_x
-      queued_door_changes[inside_door]["dest_y"] = inside_door_to_swap_with.dest_y
+      remaining_transitions = {
+        left: [],
+        right: [],
+      }
       
-      queued_door_changes[inside_door_to_swap_with]["destination_room_metadata_ram_pointer"] = inside_door.destination_room_metadata_ram_pointer
-      queued_door_changes[inside_door_to_swap_with]["dest_x"] = inside_door.dest_x
-      queued_door_changes[inside_door_to_swap_with]["dest_y"] = inside_door.dest_y
+      other_transitions_in_same_subsector = {}
+      accessible_unused_transitions = []
+      transition_doors_by_subsector = Array.new(all_area_subsectors.size){ [] }
       
-      queued_door_changes[old_outside_door]["destination_room_metadata_ram_pointer"] = new_outside_door.destination_room_metadata_ram_pointer
-      queued_door_changes[old_outside_door]["dest_x"] = new_outside_door.dest_x
-      queued_door_changes[old_outside_door]["dest_y"] = new_outside_door.dest_y
+      starting_transition = nil
       
-      queued_door_changes[new_outside_door]["destination_room_metadata_ram_pointer"] = old_outside_door.destination_room_metadata_ram_pointer
-      queued_door_changes[new_outside_door]["dest_x"] = old_outside_door.dest_x
-      queued_door_changes[new_outside_door]["dest_y"] = old_outside_door.dest_y
+      # First we make a list of the transition doors, specifically the left door in a transition room, and the right door that leads into that transition room.
+      all_area_transition_rooms.each do |transition_room|
+        transition_door = transition_room.doors.find{|door| door.direction == :left}
+        dest_door = transition_door.destination_door
+        remaining_transitions[transition_door.direction] << transition_door
+        remaining_transitions[dest_door.direction] << dest_door
+      end
+      
+      # Then we go through each transition door and keep track of what subsector it's located in.
+      remaining_transitions.values.flatten.each do |transition_door|
+        all_area_subsectors.each_with_index do |subsector_rooms, subsector_index|
+          if subsector_rooms.include?(transition_door.room)
+            transition_doors_by_subsector[subsector_index] << transition_door
+            other_transitions_in_same_subsector[transition_door] = transition_doors_by_subsector[subsector_index]
+            break
+          end
+        end
+        
+        if other_transitions_in_same_subsector[transition_door].nil?
+          puts all_area_subsectors.flatten.map{|x| x.room_str}
+          raise "#{transition_door.door_str} can't be found in any subsector"
+        end
+      end
+      
+      starting_transition = remaining_transitions.values.flatten.sample(random: rng)
+      
+      on_first = true
+      while true
+        debug = false
+        
+        if on_first
+          inside_transition_door = starting_transition
+          on_first = false
+        else
+          inside_transition_door = accessible_unused_transitions.sample(random: rng)
+        end
+        
+        puts "(area connections) inside door: #{inside_transition_door.door_str}" if debug
+        
+        inside_door_opposite_direction = case inside_transition_door.direction
+        when :left
+          :right
+        when :right
+          :left
+        end
+        inaccessible_remaining_matching_doors = remaining_transitions[inside_door_opposite_direction] - accessible_unused_transitions
+        inaccessible_remaining_matching_doors -= other_transitions_in_same_subsector[inside_transition_door]
+        
+        inaccessible_remaining_matching_doors_with_other_exits = inaccessible_remaining_matching_doors.select do |door|
+          new_subsector_exits = (other_transitions_in_same_subsector[door] & remaining_transitions.values.flatten) - [door]
+          new_subsector_exits.any?
+        end
+        
+        if inaccessible_remaining_matching_doors_with_other_exits.any?
+          # There are doors we can swap with that allow more progress to new subsectors.
+          possible_dest_doors = inaccessible_remaining_matching_doors_with_other_exits
+          
+          puts "TRANSITION TYPE 1" if debug
+        elsif inaccessible_remaining_matching_doors.any?
+          # There are doors we can swap with that will allow you to reach one new subsector which is a dead end.
+          possible_dest_doors = inaccessible_remaining_matching_doors
+          
+          puts "TRANSITION TYPE 2" if debug
+        elsif remaining_transitions[inside_door_opposite_direction].any?
+          # This door direction doesn't have any more matching doors left to swap with that will result in progress.
+          # So just pick any matching door.
+          possible_dest_doors = remaining_transitions[inside_door_opposite_direction]
+          
+          puts "TRANSITION TYPE 3" if debug
+        else
+          # This door direction doesn't have any matching doors left.
+          
+          puts "TRANSITION TYPE 4" if debug
+          
+          raise "Area connections randomizer: Could not link all subsectors!"
+        end
+        
+        outside_transition_door = possible_dest_doors.sample(random: rng)
+        
+        puts "(area connections) outside door: #{outside_transition_door.door_str}" if debug
+        
+        remaining_transitions[inside_transition_door.direction].delete(inside_transition_door)
+        remaining_transitions[outside_transition_door.direction].delete(outside_transition_door)
+        
+        if queued_door_changes[inside_transition_door].any?
+          puts "changed inside transition door twice: #{inside_transition_door.door_str}"
+          raise "Changed a transition door twice"
+        end
+        if queued_door_changes[outside_transition_door].any?
+          puts "changed outside transition door twice: #{outside_transition_door.door_str}"
+          raise "Changed a transition door twice"
+        end
+        
+        queued_door_changes[inside_transition_door]["destination_room_metadata_ram_pointer"] = outside_transition_door.room.room_metadata_ram_pointer
+        queued_door_changes[inside_transition_door]["dest_x"] = outside_transition_door.destination_door.dest_x
+        queued_door_changes[inside_transition_door]["dest_y"] = outside_transition_door.destination_door.dest_y
+        queued_door_changes[outside_transition_door]["destination_room_metadata_ram_pointer"] = inside_transition_door.room.room_metadata_ram_pointer
+        queued_door_changes[outside_transition_door]["dest_x"] = inside_transition_door.destination_door.dest_x
+        queued_door_changes[outside_transition_door]["dest_y"] = inside_transition_door.destination_door.dest_y
+        
+        accessible_unused_transitions.delete(inside_transition_door)
+        accessible_unused_transitions.delete(outside_transition_door)
+        accessible_unused_transitions += (other_transitions_in_same_subsector[inside_transition_door] & remaining_transitions.values.flatten)
+        accessible_unused_transitions += (other_transitions_in_same_subsector[outside_transition_door] & remaining_transitions.values.flatten)
+        accessible_unused_transitions.uniq!
+        
+        if accessible_unused_transitions.empty?
+          if remaining_transitions.values.flatten.size == 0
+            break
+          else
+            raise "Area connections randomizer: Not all sectors connected: #{remaining_transitions.values.flatten.map{|door| door.door_str}}"
+          end
+        end
+      end
     end
     
     queued_door_changes.each do |door, changes|
