@@ -63,6 +63,9 @@ module DoorRandomizer
     # Loop through each room. search for remaining rooms that have a matching door. But the room we find must also have remaining doors in it besides the one we swap with so it's not a dead end, or a loop. If there are no rooms that meet those conditions, then we go with the more lax condition of just having a matching door, allowing dead ends.
     
     @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
     
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
