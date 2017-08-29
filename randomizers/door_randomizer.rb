@@ -492,7 +492,10 @@ module DoorRandomizer
     end
     
     game.each_room do |room|
-      next if room.area_index == 2 && GAME == "ooe" # Ecclesia, we don't want to replace Barlowe's doors.
+      next if room.area.name == "Ecclesia"
+      next if room.area.name == "Nest of Evil"
+      next if room.area.name == "Large Cavern"
+      
       room.entities.each do |entity|
         if entity.is_boss_door? && entity.var_a == 0
           # Boss door outside a boss room. Remove it.
