@@ -854,6 +854,12 @@ class Randomizer
       game.apply_armips_patch("#{GAME}_reveal_bestiary")
     end
     
+    if GAME == "dos"
+      # When you walk over an item you already have 9 of, the game plays a sound effect every 0.5 seconds.
+      # We change it to play once a second so it's less annoying.
+      game.fs.write(0x021E8B30, [0x3C].pack("C"))
+    end
+    
     if options[:remove_area_names]
       game.each_room do |room|
         room.entities.each do |entity|
