@@ -629,6 +629,7 @@ module DoorRandomizer
       
       doors.each do |door|
         next unless [:left, :right].include?(door.direction)
+        next if checker.inaccessible_doors.include?(door.door_str)
         
         dest_door = door.destination_door
         dest_room = dest_door.room
