@@ -523,8 +523,12 @@ class DoorCompletabilityChecker
       current_room = game.room_by_str(room_str)
       current_door = current_room.doors[door_index]
       
-      dest_door = current_door.destination_door
-      doors_to_check << dest_door.door_str
+      # Add this door's destination door to the list of doors to check
+      # Unless this door has been dummied out by the map-friendly room randomizer, in which case it has no destination door.
+      unless current_door.destination_room_metadata_ram_pointer == 0
+        dest_door = current_door.destination_door
+        doors_to_check << dest_door.door_str
+      end
       
       if @room_reqs[room_str].nil?
         next
