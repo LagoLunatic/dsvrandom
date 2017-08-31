@@ -608,6 +608,8 @@ class Randomizer
   end
   
   def apply_pre_randomization_tweaks
+    tiled = TMXInterface.new
+    
     if GAME == "ooe" && options[:open_world_map]
       game.apply_armips_patch("ooe_nonlinear")
       
@@ -633,7 +635,6 @@ class Randomizer
       game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
       
       # Next we remove the walls on certain rooms so the dead end rooms are accessible and fix a couple other things in the level design.
-      tiled = TMXInterface.new
       [0xE, 0xF, 0x14, 0x15, 0x19].each do |room_index|
         # 5 room: Remove floor and move the item off where the floor used to be.
         # 6 room: Remove left wall.
@@ -703,6 +704,15 @@ class Randomizer
       # So we remove the line of code where the elevator creates that wall.
       game.fs.load_overlay(53)
       game.fs.write(0x022C331C, [0xE3A00000].pack("V"))
+      
+      # Modify the level design of three Tymeo rooms where they have a platform at the bottom door, but only on either the left or right edge of the screen.
+      # If the upwards door connected to one of these downwards doors doesn't have a platform on the same side of the screen, the player won't be able to get up.
+      # So we place a large platform across the center of the bottom of these three rooms so the player can walk across it.
+      [0x8, 0xD, 0x12].each do |room_index|
+        room = game.areas[0xA].sectors[0].rooms[room_index]
+        filename = "./dsvrandom/roomedits/ooe_room_rando_0A-00-%02X.tmx" % room_index
+        tiled.read(filename, room)
+      end
     end
     
     # Add a free space overlay so we can add entities as much as we want.
