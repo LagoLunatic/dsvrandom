@@ -30,7 +30,7 @@ Defs:
   sanctuary: 0x179
   cog: 0x4E
   puppet master: 0x151
-  speed up: 0x17A
+  speed up spell: 0x17A
   
   callswitch: change cube & call cube
   slide: lizard tail | frog | owl
@@ -42,6 +42,7 @@ Defs:
   small: frog | owl | puppet master
   small free move: frog | owl
   purify: sanctuary & canusespells
+  speed up: speed up spell & canusespells
   
   small height: puppet master | height
   height: shoulderjump | height 2
@@ -51,6 +52,7 @@ Defs:
   quad jump height: quadjumpglitch | big height
   big height: owl | superjump
   distance: speed up | big height
+  big distance: speed up & change cube | big height # fully charged speed up
   
   wind: true # TODO
   vincent: true # TODO
@@ -2365,7 +2367,7 @@ Rooms:
   03-01-21:
     000-001: 
     001-000: 
-#Forgotten City:
+#Forgotten City: # DONE
   04-00-01:
     000-001: 
     001-000: 
@@ -2381,14 +2383,14 @@ Rooms:
   04-00-05:
     000-001: 
     000-002: 
-    000-e00: 
-    001-000: 
+    000-e00: quad jump height | distance & double jump
+    001-000: height
     001-002: 
-    001-e00: 
-    002-000: 
+    001-e00: quad jump height | distance & double jump
+    002-000: height
     002-001: 
-    002-e00: 
-    e00-000: 
+    002-e00: quad jump height | distance & double jump
+    e00-000: height
     e00-001: 
     e00-002: 
   04-00-06:
@@ -2396,20 +2398,20 @@ Rooms:
     001-000: 
   04-00-07:
     000-001: 
-    001-000: 
+    001-000: small height
   04-00-08:
     000-001: 
-    001-000: 
+    001-000: small height
   04-00-09:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: medium height 2
     001-e00: 
-    e00-000: 
+    e00-000: medium height 2
     e00-001: 
   04-00-0A:
     000-001: 
-    001-000: 
+    001-000: height 2
   04-00-0B:
     000-001: 
     001-000: 
@@ -2430,41 +2432,41 @@ Rooms:
     001-000: 
     001-002: 
     001-003: 
-    002-000: 
-    002-001: 
+    002-000: height 2
+    002-001: height 2
     002-003: 
-    003-000: 
-    003-001: 
+    003-000: height 2
+    003-001: height 2
     003-002: 
   04-00-11:
     000-001: 
     000-002: 
-    000-e00: 
-    001-000: 
+    000-e00: small height | big distance # need fully charged speed up if you have no jump upgrades
+    001-000: height
     001-002: 
-    001-e00: 
-    002-000: 
+    001-e00: height
+    002-000: height
     002-001: 
-    002-e00: 
-    e00-000: 
+    002-e00: height
+    e00-000: height
     e00-001: 
     e00-002: 
   04-00-12:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: height
     001-e00: 
-    e00-000: 
-    e00-001: 
+    e00-000: puppet master & change cube | height # puppet master by itself gets you stuck crouching on the platform so you would also need change cube to sneak your way out.
+    e00-001: puppet master & change cube | height
   04-00-13:
-    000-e00: 
-    e00-000: 
+    000-e00: height 2 | big distance
+    e00-000: small height
   04-00-14:
     000-001: 
-    000-e00: 
-    001-000: 
-    001-e00: 
-    e00-000: 
+    000-e00: jumpglitch | medium height 2 | distance & double jump
+    001-000: height 2
+    001-e00: jumpglitch | medium height 2 | distance & double jump
+    e00-000: height 2
     e00-001: 
   04-00-15:
     000-001: 
@@ -2472,13 +2474,13 @@ Rooms:
   04-00-16:
     000-001: 
     000-002: 
-    001-000: 
-    001-002: 
+    001-000: small height
+    001-002: small height
     002-000: 
     002-001: 
   04-00-18:
     000-001: 
-    001-000: 
+    001-000: small height
   04-00-19:
     000-001: 
     001-000: 
@@ -2491,8 +2493,8 @@ Rooms:
   04-01-01:
     000-001: 
     000-002: 
-    001-000: 
-    001-002: 
+    001-000: small height
+    001-002: small height
     002-000: 
     002-001: 
   04-01-02:
@@ -2504,26 +2506,26 @@ Rooms:
     000-003: 
     000-e00: 
     000-e01: 
-    001-000: 
+    001-000: big height
     001-002: 
     001-003: 
-    001-e00: 
-    001-e01: 
-    002-000: 
+    001-e00: big height
+    001-e01: big height
+    002-000: big height
     002-001: 
     002-003: 
-    002-e00: 
-    002-e01: 
-    003-000: 
+    002-e00: big height
+    002-e01: big height
+    003-000: big height
     003-001: 
     003-002: 
-    003-e00: 
-    003-e01: 
-    e00-000: 
+    003-e00: big height
+    003-e01: big height
+    e00-000: quad jump height & puppet master | big height
     e00-001: 
     e00-002: 
     e00-003: 
-    e01-000: 
+    e01-000: quad jump height & puppet master | big height
     e01-001: 
     e01-002: 
     e01-003: 
@@ -2568,7 +2570,7 @@ Rooms:
     000-e00: 
     e00-000: 
   04-01-11:
-    000-e00: 
+    000-e00: small height
     e00-000: 
   04-01-12:
     000-001: 
@@ -2582,14 +2584,14 @@ Rooms:
     001-000: 
   04-01-14:
     000-001: 
-    001-000: 
+    001-000: medium height
   04-01-15:
     000-001: 
-    000-e00: 
-    000-e01: 
+    000-e00: quad jump height
+    000-e01: small free move
     001-000: 
-    001-e00: 
-    001-e01: 
+    001-e00: quad jump height
+    001-e01: small free move
     e00-000: 
     e00-001: 
     e01-000: 
@@ -2600,12 +2602,12 @@ Rooms:
   04-01-17:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: height 2
     001-002: 
-    002-000: 
+    002-000: height 2
     002-001: 
   04-01-18:
-    000-e00: 
+    000-e00: height 2
     000-e01: 
     e00-000: 
     e01-000: 
@@ -2615,20 +2617,20 @@ Rooms:
   04-01-1A:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: small height
     001-002: 
-    002-000: 
+    002-000: small height
     002-001: 
   04-01-1B:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: puppet master | height 2 # acrobat cube height isn't enough, but puppet master works by itself because it also gives distance so you can use the higher platform on the left as a starting point.
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: puppet master | height 2
+    002-001: small height
   04-01-1C:
     000-001: 
-    001-000: 
+    001-000: small height
   04-01-1D:
     000-001: 
     001-000: 

@@ -32,7 +32,10 @@ Defs:
   sanctuary: 0x179
   cog: 0x4E
   puppet master: 0x151
-  speed up: 0x17A
+  speed up spell: 0x17A
+  #moonwalkers: 0x10E
+  #mercury boots: 0x111
+  #winged boots: 0x112
   
   callswitch: change cube & call cube
   slide: lizard tail | frog | owl
@@ -44,6 +47,7 @@ Defs:
   small: frog | owl | puppet master
   small free move: frog | owl
   purify: sanctuary & canusespells
+  speed up: speed up spell & canusespells
   
   small height: puppet master | height
   height: shoulderjump | height 2
@@ -53,6 +57,7 @@ Defs:
   quad jump height: quadjumpglitch | big height
   big height: owl | superjump
   distance: speed up | big height
+  big distance: speed up & change cube | big height # fully charged speed up
   
   entrance: call cube
   midentrance: entrance & callswitch | entrance & small height
@@ -575,7 +580,7 @@ Rooms:
     00 (Eye for an Eye): 
   04-00-05:
     room: forgottencity
-    00 (Griffon Wing): quad jump height
+    00 (Griffon Wing): quad jump height | distance & double jump | double jump & puppet master
   04-00-09:
     room: forgottencity
     00 (Attica Helmet): # you can get out of here by going down to the lower warp point and warping out
