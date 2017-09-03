@@ -84,3 +84,13 @@ A: This is a known bug that happens in DoS sometimes.
 Q: I'm playing Portrait of Ruin randomized on my flash card, and getting a lot of crashes.
 
 A: This is a bug with PoR that occurs only on certain flash cards, such as R4 cards. It happens in vanilla PoR too, so it's unrelated to the randomizer. I recommend playing on emulator if you get this issue on your card.
+
+### Running from source
+
+If you want to run the latest development (unstable) version of DSVRandom from source, follow these instructions:
+
+* First you must download DSVEdit's source code and follow the instructions in its readme to get DSVEdit running from source: https://github.com/LagoLunatic/DSVEdit
+* Then download DSVRandom's source code and put the dsvrandom folder inside the DSVEdit folder.
+* Run build_ui to compile DSVRandom's UI files.
+* Finally run "ruby dsvrandom/dsvrandom.rb" to launch DSVRandom.
+* Note that later on when updating to a future version of DSVRandom, you should also update DSVEdit at the same time.
