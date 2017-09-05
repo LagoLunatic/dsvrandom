@@ -70,6 +70,8 @@ module ShopRandomizer
       else
         item["Price"] = named_rand_range_weighted(:item_price_range)/100*100
       end
+      
+      item.write_to_rom()
     end
   end
 end
