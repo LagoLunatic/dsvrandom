@@ -103,20 +103,20 @@ Defs:
   
   # to unlock the castle you must have medium height and serpect scale already.
   entrance: bossbarlowe
-  entranceeast: entrance & paries # TODO nonlinear entrance
+  entranceeast: entrance & paries
   library: entrance | libraryeast & paries
   libraryeast: library & paries | forsakencloister | finalapproachwest
   labyrinth: entranceeast | barracks
   backexit: labyrinth & paries
-  barracks: labyrinth | mechtower # TODO nonlinear entranceeast
+  barracks: labyrinth | mechtower
   mechtower: barracks | mechtowerupper
-  mechtowerupper: mechtower & magnes | mechtower & volaticus | forsakencloistereast # TODO nonlinear
+  mechtowerupper: mechtower & magnes | mechtower & volaticus | forsakencloistereast
   bossdeath: mechtowerupper & magnes | mechtowerupper & volaticus
   armsdepot: mechtower
   forsakencloister: libraryeast | mechtower
-  forsakencloistereast: mechtower # TODO nonlinear forsakencloister
+  forsakencloistereast: mechtower
   forsakencloisterupper: forsakencloister & dextro custos & sinestro custos & arma custos | finalapproach
-  finalapproach: forsakencloisterupper # TODO nonlinear libraryeast & big height
+  finalapproach: forsakencloisterupper
   finalapproachwest: finalapproach & big height
   throne room: finalapproach & big height
   bossdracula: throne room & dominus hatred & dominus anger & dominus agony

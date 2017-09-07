@@ -1,7 +1,10 @@
 
 DSVania Randomizer is a randomizer for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's only compatible with the North American versions.
 
+Download the latest release: https://github.com/LagoLunatic/dsvrandom/releases
+
 Source code: https://github.com/LagoLunatic/dsvrandom
+Report issues here: https://github.com/LagoLunatic/dsvrandom/issues
 
 ### What does it randomize?
 
