@@ -235,11 +235,10 @@ module ItemSkillStatRandomizer
         next if item.name == "Knife"
       when "por"
         next if item["Item ID"] == 0x61 # starting Vampire Killer
-      when "ooe"
-        if room_rando?
-          # Don't randomize what the base magical ticket does in OoE room rando since we need to start the player with it so they don't get trapped.
-          next if item.name == "Magical Ticket"
-        end
+      end
+      
+      if @needs_infinite_magical_tickets
+        next if item.name == "Magical Ticket"
       end
       
       if item.item_type_name == "Consumables"

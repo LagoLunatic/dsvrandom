@@ -200,6 +200,12 @@ class Randomizer
       )
     end
     
+    if room_rando? || (GAME == "por" && options[:randomize_portraits])
+      @needs_infinite_magical_tickets = true
+    else
+      @needs_infinite_magical_tickets = false
+    end
+    
     @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(@int_seed)
     
@@ -881,7 +887,7 @@ class Randomizer
       end
     end
     
-    if room_rando? || (GAME == "por" && options[:randomize_portraits])
+    if @needs_infinite_magical_tickets
       room_rando_give_infinite_magical_tickets()
     end
   end
