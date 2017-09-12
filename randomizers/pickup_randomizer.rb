@@ -321,6 +321,7 @@ module PickupRandomizer
       
       filtered_new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       puts "Filtered new possible locations: #{filtered_new_possible_locations.size}"
+      puts filtered_new_possible_locations.join(", ")
       
       valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
         possible_locations = previous_accessible_region.dup
@@ -819,7 +820,7 @@ module PickupRandomizer
       dest_sector_index = (entity.var_b & 0x3C0) >> 6
       dest_room_index = entity.var_b & 0x3F
       dest_room = game.areas[dest_area_index].sectors[dest_sector_index].rooms[dest_room_index]
-      dest_portrait = dest_room.entities.find{|entity| [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)}
+      dest_portrait = dest_room.entities.find{|entity| entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)}
       return_portraits = [dest_portrait]
       
       # Also update the bonus return portrait at the end of some areas.
@@ -1174,7 +1175,7 @@ module PickupRandomizer
   def get_portrait_name_by_entity_location(location)
     entity = get_entity_by_location_str(location)
     
-    if GAME == "por" && entity.type == 2 && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
+    if GAME == "por" && entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
       portrait_name = PORTRAIT_VAR_A_TO_NAME[entity.var_a]
       return portrait_name
     else

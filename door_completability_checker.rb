@@ -557,6 +557,8 @@ class DoorCompletabilityChecker
       accessible_doors << "01-01-00_000" # Technically not a real door, Wygol has no doors. This is just a hack to keep track of whether we can access Nikolai.
     end
     
+    accessible_locations.uniq!
+    
     return [accessible_locations, accessible_doors]
   end
   
