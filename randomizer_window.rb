@@ -44,6 +44,7 @@ class RandomizerWindow < Qt::Dialog
     unlock_boss_doors
     remove_slot_machines
     add_magical_tickets
+    always_start_with_rare_ring
     fix_infinite_quest_rewards
     skip_emblem_drawing
     dont_randomize_change_cube

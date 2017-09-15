@@ -566,23 +566,13 @@
           <string>Dawn of Sorrow</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="remove_slot_machines">
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="add_magical_tickets">
             <property name="toolTip">
-             <string>Removes golden slot machines that require specific amounts of gold to open.</string>
+             <string>Implements a new magical ticket item that functions like it does in PoR and OoE.</string>
             </property>
             <property name="text">
-             <string>Remove slot machines</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="no_touch_screen">
-            <property name="toolTip">
-             <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
-            </property>
-            <property name="text">
-             <string>No required touch screen</string>
+             <string>Add Magical Tickets</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -628,16 +618,33 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="add_magical_tickets">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="no_touch_screen">
             <property name="toolTip">
-             <string>Implements a new magical ticket item that functions like it does in PoR and OoE.</string>
+             <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
             </property>
             <property name="text">
-             <string>Add Magical Tickets</string>
+             <string>No required touch screen</string>
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="remove_slot_machines">
+            <property name="toolTip">
+             <string>Removes golden slot machines that require specific amounts of gold to open.</string>
+            </property>
+            <property name="text">
+             <string>Remove slot machines</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="always_start_with_rare_ring">
+            <property name="text">
+             <string>Always start with Rare Ring</string>
             </property>
            </widget>
           </item>

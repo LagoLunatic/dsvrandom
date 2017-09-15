@@ -811,6 +811,11 @@ class Randomizer
       game.apply_armips_patch("dos_skip_boss_door_seals")
     end
     
+    if GAME == "dos" && options[:always_start_with_rare_ring]
+      # Make the game think AoS is always in the GBA slot.
+      game.fs.write(0x02000D84, [0xE3A00001].pack("V"))
+    end
+    
     if GAME == "por" && options[:fix_infinite_quest_rewards]
       game.apply_armips_patch("por_fix_infinite_quest_rewards")
     end
