@@ -473,8 +473,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>436</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -657,6 +657,16 @@
             </property>
             <property name="text">
              <string>Fix infinite quest rewards bug</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="skip_emblem_drawing">
+            <property name="text">
+             <string>Skip emblem drawing</string>
             </property>
             <property name="checked">
              <bool>true</bool>

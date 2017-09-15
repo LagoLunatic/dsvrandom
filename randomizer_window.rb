@@ -45,6 +45,7 @@ class RandomizerWindow < Qt::Dialog
     remove_slot_machines
     add_magical_tickets
     fix_infinite_quest_rewards
+    skip_emblem_drawing
     dont_randomize_change_cube
     open_world_map
     always_dowsing

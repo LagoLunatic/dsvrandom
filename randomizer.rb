@@ -815,6 +815,10 @@ class Randomizer
       game.apply_armips_patch("por_fix_infinite_quest_rewards")
     end
     
+    if GAME == "por" && options[:skip_emblem_drawing]
+      game.apply_armips_patch("por_skip_emblem_drawing")
+    end
+    
     if GAME == "por" && options[:randomize_portraits]
       # The 13 Street and Burnt Paradise portraits try to use the blue flame animation of object 5F when they're still locked.
       # But object 5F's sprite is not loaded unless object 5F is in the room and before the portrait, so trying to use a sprite that's not loaded causes a crash on no$gba and probably real hardware.
