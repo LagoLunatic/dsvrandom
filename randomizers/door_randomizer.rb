@@ -921,7 +921,7 @@ module DoorRandomizer
     sectors_for_area = area_rooms.group_by{|room| room.sector_index}
     
     if GAME == "dos" && sectors_for_area[0xA]
-      # Menace. Don't try to connect this room since it has no doors, just place it first at a totally random position.
+      # Menace. Don't try to connect this room since it has no doors, just place it first at the normal position since the center of the Abyss map doesn't like other tiles being there anyway.
       room = sectors_for_area[0xA].first
       room_x = 7
       room_y = 10
@@ -1005,7 +1005,15 @@ module DoorRandomizer
       end
       sector_rooms.delete(room)
       
-      if room == area_starting_room
+      if room == area_starting_room && GAME == "dos" && area_starting_room.sector_index == 0xB
+        # Placing the first room, in the Abyss.
+        # Can't place any rooms too close to the center where Menace's room is. Also don't place it too close to the map edges.
+        non_center_spots = (2..5).to_a + (11..15).to_a
+        start_x = non_center_spots.sample(random: rng)
+        start_y = non_center_spots.sample(random: rng)
+        valid_spots = [[start_x, start_y]]
+      elsif room == area_starting_room
+        # Placing the first room. Place it somewhere random, but not too close to the map edges.
         start_x = rng.rand(5..map_width-5)
         start_y = rng.rand(5..map_height-5)
         valid_spots = [[start_x, start_y]]
@@ -1592,8 +1600,8 @@ module DoorRandomizer
     end
   end
   
-  def regenerate_map(area_index, sector_index, filename_num=nil)
-    map = game.get_map(area_index, sector_index)
+  def regenerate_map(area_index, map_sector_index, filename_num=nil)
+    map = game.get_map(area_index, map_sector_index)
     area = game.areas[area_index]
     
     map.tiles.each do |tile|
@@ -1678,9 +1686,10 @@ module DoorRandomizer
     end
     map.write_to_rom()
     
-    filename = "./logs/maptest.png"
+    p [area_index, map_sector_index]
+    filename = "./logs/maptest %02X-%02X.png" % [area_index, map_sector_index]
     if filename_num
-      filename = "./logs/maptest #{filename_num}.png"
+      filename = "./logs/maptest %02X-%02X #{filename_num}.png" % [area_index, map_sector_index]
     end
     renderer.render_map(map, scale=3, hardcoded_transition_rooms=@transition_rooms).save(filename)
   end
