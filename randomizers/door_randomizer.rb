@@ -690,6 +690,28 @@ module DoorRandomizer
         dest_room.write_entities_to_rom()
       end
     end
+    
+    
+    game.each_room do |room|
+      next unless room.area.name == "Nest of Evil" || room.area.name == "Large Cavern"
+      
+      room_has_enemies = room.entities.find{|e| e.type == 1}
+      
+      room.entities.each do |entity|
+        if entity.is_boss_door? && entity.var_a == 2
+          # Boss door in Nest of Evil/Large Cavern that never opens.
+          if room_has_enemies
+            # We switch these to the normal ones that open when the room is cleared so the player can progress even with rooms randomized.
+            entity.var_a = 1
+          else
+            # This is one of the vertical corridors with no enemies. A normal boss door wouldn't open here since there's no way to clear a room with no enemies.
+            # So instead just delete the door.
+            entity.type = 0
+          end
+          entity.write_to_rom()
+        end
+      end
+    end
   end
   
   def line_up_door(door)
