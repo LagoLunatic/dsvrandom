@@ -168,6 +168,14 @@ module DoorRandomizer
       FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
     end
     
+    # Make a list of doors that lead into transition rooms so we can tell these apart from regular doors.
+    transition_doors = []
+    @transition_rooms.each do |room|
+      room.doors.each do |inside_door|
+        transition_doors << inside_door.destination_door
+      end
+    end
+    
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
     game.areas.each do |area|
@@ -230,7 +238,6 @@ module DoorRandomizer
           while true
             debug = false
             #debug = (area.area_index == 0 && sector.sector_index == 1)
-            #debug = true
             
             #puts remaining_doors[:down].map{|d| d.door_str} if debug
             #gets if debug
@@ -275,7 +282,7 @@ module DoorRandomizer
             #puts "REMAINING: #{remaining_doors[inside_door_opposite_direction].map{|x| "  #{x.door_str}\n"}}"
             
             inaccessible_remaining_matching_doors_with_other_exits = inaccessible_remaining_matching_doors.select do |door|
-              door.room.doors.length > 1 && unvisited_rooms.include?(door.room)
+              ((door.room.doors & all_randomizable_doors) - transition_doors).length > 1 && unvisited_rooms.include?(door.room)
             end
             
             inaccessible_remaining_matching_doors_with_updown_door_exits = []
@@ -285,7 +292,7 @@ module DoorRandomizer
               
               inaccessible_remaining_matching_doors_with_updown_door_exits = inaccessible_remaining_matching_doors_with_other_exits.select do |door|
                 if door.direction == :left || door.direction == :right
-                  (door.room.doors & all_randomizable_doors).any?{|x| x.direction == :up || x.direction == :down}
+                  ((door.room.doors & all_randomizable_doors) - transition_doors).any?{|x| x.direction == :up || x.direction == :down}
                 end
               end
             else
@@ -294,11 +301,11 @@ module DoorRandomizer
               
               inaccessible_remaining_matching_doors_with_no_leftright_door_exits = inaccessible_remaining_matching_doors.select do |door|
                 if door.direction == :up || door.direction == :down
-                  (door.room.doors & all_randomizable_doors).none?{|x| x.direction == :left || x.direction == :right}
+                  ((door.room.doors & all_randomizable_doors) - transition_doors).none?{|x| x.direction == :left || x.direction == :right}
                 end
               end
               
-              if debug
+              if debug && inaccessible_remaining_matching_doors_with_no_leftright_door_exits.any?
                 puts "Found up/down doors with no left/right exits in destination:"
                 inaccessible_remaining_matching_doors_with_no_leftright_door_exits.each{|x| puts "  #{x.door_str}"}
               end
