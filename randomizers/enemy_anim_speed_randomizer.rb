@@ -2,6 +2,11 @@
 module EnemyAnimSpeedRandomizer
   def randomize_enemy_anim_speeds
     game.enemy_dnas.each do |enemy_dna|
+      if enemy_dna.name == "Wallman"
+        # Wallman can't be defeated if he gets sped up.
+        next
+      end
+      
       speed_mult = rng.rand(0.33..3.0)
       
       begin
