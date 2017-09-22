@@ -230,9 +230,12 @@ class DoorCompletabilityChecker
   end
   
   def game_beatable?
+    if GAME == "ooe" && !check_reqs([[:dominus_hatred, :dominus_anger, :dominus_agony]])
+      # Reaching the throne room in OoE isn't good enough, you also need all 3 dominus glyphs.
+      return false
+    end
     accessible_rooms = get_accessible_doors().map{|door_str| door_str[0,8]}.uniq
     return accessible_rooms.include?(@final_room_str)
-    @debug_doors = false
   end
   
   def albus_fight_accessible?
