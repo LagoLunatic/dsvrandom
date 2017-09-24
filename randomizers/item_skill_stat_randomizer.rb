@@ -317,6 +317,11 @@ module ItemSkillStatRandomizer
             possible_types.delete(7)
           end
           
+          # If the player has an infinite magical ticket, don't bother letting any other items be magical tickets too.
+          if @needs_infinite_magical_tickets
+            possible_types.delete(0xA)
+          end
+          
           if (0x9C..0xA0).include?(item["Item ID"]) && rng.rand >= 0.60
             # Drops. These are the only ones that can be AP increasers, so give them a 60% to be an AP increaser.
             possible_types = [0xB]
