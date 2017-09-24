@@ -98,7 +98,6 @@ module BossRandomizer
         ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
       end
       if result == :skip
-        update_boss_doors(old_boss_id, new_boss_id, boss_entity)
         next
       end
       
