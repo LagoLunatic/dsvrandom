@@ -639,6 +639,7 @@ module DoorRandomizer
       boss_rooms << game.room_by_str("00-03-0E") # Doppelganger event room
     end
     
+    # Make a list of boss rooms to fix the boss doors for.
     game.each_room do |room|
       next if room.area.name == "Ecclesia"
       next if room.area.name == "Nest of Evil"
@@ -658,6 +659,7 @@ module DoorRandomizer
     end
     
     
+    # Replace boss doors.
     boss_rooms.uniq.each do |boss_room|
       if boss_room.room_str == "00-03-0E"
         # Doppelganger event room
@@ -677,6 +679,11 @@ module DoorRandomizer
         
         dest_door = door.destination_door
         dest_room = dest_door.room
+        
+        # Don't add a boss door when two boss rooms are connected to each other, that would result in overlapping boss doors.
+        if boss_rooms.include?(dest_room)
+          next
+        end
         
         gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
         gap_end_offset = gap_end_index * 0x10 + 0x10
@@ -699,6 +706,7 @@ module DoorRandomizer
     end
     
     
+    # Fix Nest of Evil/Large Cavern boss doors.
     game.each_room do |room|
       next unless room.area.name == "Nest of Evil" || room.area.name == "Large Cavern"
       
