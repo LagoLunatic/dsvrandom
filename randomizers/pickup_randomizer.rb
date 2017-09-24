@@ -166,6 +166,12 @@ module PickupRandomizer
       forest_cutscene = game.entity_by_str("00-08-01_03")
       forest_cutscene.type = 0
       forest_cutscene.write_to_rom()
+      
+      # Remove the cutscene where the player characters talk about the first portrait they find that leads to City of Haze.
+      # It bugs out the game pretty seriously if there's no portrait in the room.
+      forest_cutscene = game.entity_by_str("00-01-00_01")
+      forest_cutscene.type = 0
+      forest_cutscene.write_to_rom()
     end
   end
   
