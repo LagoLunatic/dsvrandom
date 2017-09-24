@@ -1428,7 +1428,7 @@ Rooms:
   00-0B-05:
     000-001: 
     001-000: 
-#City of Haze:
+#City of Haze: # DONE
   01-00-00:
     000-001: 
     001-000: 
@@ -1602,13 +1602,13 @@ Rooms:
     e00-000: 
     e00-001: 
     e00-002: 
-  01-01-04:
-    000-001: 
+  01-01-04: # TODO drill cart room, we should remove the entity hider so that the enemies appear here in place of the drill cart we removed.
+    000-001: quad jump height
     000-002: 
     001-000: 
     001-002: 
     002-000: 
-    002-001: 
+    002-001: quad jump height
   01-01-05:
     000-001: 
     000-002: 
@@ -1669,11 +1669,11 @@ Rooms:
     001-000: 
   01-02-01:
     000-001: 
-    000-e00: 
-    000-e01: 
+    000-e00: small height
+    000-e01: small height
     001-000: 
-    001-e00: 
-    001-e01: 
+    001-e00: small height
+    001-e01: small height
     e00-000: 
     e00-001: 
     e01-000: 
@@ -1704,27 +1704,27 @@ Rooms:
     000-001: 
     001-000: 
   01-02-07:
-    000-e00: 
+    000-e00: small
     000-e01: 
-    e00-000: 
+    e00-000: small
     e01-000: 
   01-02-08:
     000-001: 
     000-002: 
     000-003: 
-    000-e00: 
+    000-e00: small height
     001-000: 
     001-002: 
     001-003: 
-    001-e00: 
+    001-e00: small height
     002-000: 
     002-001: 
     002-003: 
-    002-e00: 
+    002-e00: small height
     003-000: 
     003-001: 
     003-002: 
-    003-e00: 
+    003-e00: small height
     e00-000: 
     e00-001: 
     e00-002: 
@@ -2029,7 +2029,7 @@ Rooms:
   02-02-15:
     000-001: 
     001-000: 
-#Sandy Grave:
+#Sandy Grave: # DONE
   03-00-01:
     000-001: 
     001-000: 
@@ -2042,7 +2042,7 @@ Rooms:
   03-00-04:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: # sand worm's hole, you don't need anything to jump out of it.
     001-002: 
     002-000: 
     002-001: 
@@ -2051,27 +2051,27 @@ Rooms:
     000-002: 
     000-003: 
     000-e00: 
-    000-e01: 
-    001-000: 
+    000-e01: quad jump height
+    001-000: quad jump height
     001-002: 
     001-003: 
     001-e00: 
-    001-e01: 
-    002-000: 
+    001-e01: quad jump height
+    002-000: quad jump height
     002-001: 
     002-003: 
     002-e00: 
-    002-e01: 
-    003-000: 
+    002-e01: quad jump height
+    003-000: quad jump height
     003-001: 
     003-002: 
     003-e00: 
-    003-e01: 
-    e00-000: 
+    003-e01: quad jump height
+    e00-000: quad jump height
     e00-001: 
     e00-002: 
     e00-003: 
-    e01-000: 
+    e01-000: quad jump height
     e01-001: 
     e01-002: 
     e01-003: 
@@ -2086,32 +2086,32 @@ Rooms:
     000-001: 
     000-e00: 
     000-e01: 
-    001-000: 
+    001-000: small height
     001-e00: 
     001-e01: 
-    e00-000: 
+    e00-000: small height
     e00-001: 
-    e01-000: 
+    e01-000: small height
     e01-001: 
   03-00-08:
     000-001: 
-    001-000: 
-  03-00-09:
+    001-000: small height
+  03-00-09: # this room has the big pushable stone block, but currently room rando removes that.
     000-001: 
     000-002: 
     000-e00: 
-    001-000: 
+    001-000: medium height 2
     001-002: 
-    001-e00: 
-    002-000: 
+    001-e00: medium height 2
+    002-000: medium height 2
     002-001: 
-    002-e00: 
-    e00-000: 
+    002-e00: medium height 2
+    e00-000: medium height
     e00-001: 
     e00-002: 
   03-00-0A:
     000-001: 
-    001-000: 
+    001-000: height 2
   03-00-0B:
     000-001: 
     001-000: 
@@ -2128,50 +2128,50 @@ Rooms:
     001-000: 
     001-002: 
     001-003: 
-    002-000: 
-    002-001: 
+    002-000: height 2
+    002-001: height 2
     002-003: 
-    003-000: 
-    003-001: 
+    003-000: height 2
+    003-001: height 2
     003-002: 
   03-00-11:
     000-001: 
     000-002: 
-    000-e00: 
-    001-000: 
+    000-e00: small height | big distance # need fully charged speed up if you have no jump upgrades
+    001-000: height
     001-002: 
-    001-e00: 
-    002-000: 
+    001-e00: height
+    002-000: height
     002-001: 
-    002-e00: 
-    e00-000: 
+    002-e00: height
+    e00-000: height
     e00-001: 
     e00-002: 
   03-00-12:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: height
     001-e00: 
-    e00-000: 
-    e00-001: 
+    e00-000: puppet master & change cube | height # puppet master by itself gets you stuck crouching on the platform so you would also need change cube to sneak your way out.
+    e00-001: puppet master & change cube | height
   03-00-13:
     000-e00: 
     000-e01: 
-    000-e02: 
-    e00-000: 
-    e01-000: 
-    e02-000: 
+    000-e02: small height | big distance
+    e00-000: small height # only necessary if it leads up out of the worm hole since that's the highest gap in this sector.
+    e01-000: small height
+    e02-000: small height
   03-00-14:
     000-001: 
     000-002: 
-    000-e00: 
-    001-000: 
-    001-002: 
-    001-e00: 
-    002-000: 
+    000-e00: jumpglitch | medium height 2 | distance & double jump
+    001-000: height 2
+    001-002: height
+    001-e00: jumpglitch | medium height 2 | distance & double jump
+    002-000: height 2
     002-001: 
-    002-e00: 
-    e00-000: 
+    002-e00: jumpglitch | medium height 2 | distance & double jump
+    e00-000: height 2
     e00-001: 
     e00-002: 
   03-00-15:
@@ -2189,8 +2189,8 @@ Rooms:
   03-01-01:
     000-001: 
     000-002: 
-    001-000: 
-    001-002: 
+    001-000: small height
+    001-002: small height
     002-000: 
     002-001: 
   03-01-02:
@@ -2203,33 +2203,33 @@ Rooms:
     000-e00: 
     000-e01: 
     000-e02: 
-    001-000: 
+    001-000: big height
     001-002: 
     001-003: 
     001-e00: 
     001-e01: 
-    001-e02: 
-    002-000: 
+    001-e02: big height
+    002-000: big height
     002-001: 
     002-003: 
     002-e00: 
     002-e01: 
-    002-e02: 
-    003-000: 
+    002-e02: big height
+    003-000: big height
     003-001: 
     003-002: 
     003-e00: 
     003-e01: 
-    003-e02: 
-    e00-000: 
+    003-e02: big height
+    e00-000: big height
     e00-001: 
     e00-002: 
     e00-003: 
-    e01-000: 
+    e01-000: big height
     e01-001: 
     e01-002: 
     e01-003: 
-    e02-000: 
+    e02-000: quad jump height & puppet master | big height
     e02-001: 
     e02-002: 
     e02-003: 
@@ -2275,11 +2275,11 @@ Rooms:
     001-000: 
   03-01-11:
     000-001: 
-    000-e00: 
-    000-e01: 
+    000-e00: small height
+    000-e01: small height
     001-000: 
-    001-e00: 
-    001-e01: 
+    001-e00: small height
+    001-e01: small height
     e00-000: 
     e00-001: 
     e01-000: 
@@ -2319,7 +2319,7 @@ Rooms:
     002-000: 
     002-001: 
   03-01-18:
-    000-e00: 
+    000-e00: height 2
     000-e01: 
     e00-000: 
     e01-000: 
@@ -2329,24 +2329,24 @@ Rooms:
   03-01-1A:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: small height
     001-002: 
-    002-000: 
+    002-000: small height
     002-001: 
   03-01-1B:
     000-001: 
-    000-e00: 
+    000-e00: height 2
     001-000: 
-    001-e00: 
+    001-e00: height 2
     e00-000: 
     e00-001: 
   03-01-1C:
     000-001: 
-    000-e00: 
-    000-e01: 
+    000-e00: small
+    000-e01: quad jump height
     001-000: 
-    001-e00: 
-    001-e01: 
+    001-e00: small
+    001-e01: quad jump height
     e00-000: 
     e00-001: 
     e01-000: 
@@ -2459,7 +2459,7 @@ Rooms:
     e00-000: puppet master & change cube | height # puppet master by itself gets you stuck crouching on the platform so you would also need change cube to sneak your way out.
     e00-001: puppet master & change cube | height
   04-00-13:
-    000-e00: height 2 | big distance
+    000-e00: small height | big distance
     e00-000: small height
   04-00-14:
     000-001: 
