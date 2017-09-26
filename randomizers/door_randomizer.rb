@@ -891,6 +891,8 @@ module DoorRandomizer
   end
   
   def randomize_doors_no_overlap(&block)
+    # TEST SEED: GrandGraveSoup
+    
     @transition_rooms = game.get_transition_rooms()
     
     maps_rendered = 0
@@ -996,6 +998,15 @@ module DoorRandomizer
     #puts "Which non-transition rooms to place: #{sector_rooms.map{|x| x.room_str}.join(", ")}"
     #puts "Which transition rooms to place: #{transition_rooms_in_this_sector.map{|x| x.room_str}.join(", ")}"
     sector_rooms += transition_rooms_in_this_sector
+    
+    # TODO: keep list of all locations on the map that are currently open to place rooms at (number of empty spots next to a door on this sector)
+    # then we just use this to improve performance instead of recalculating everything every time. we just add and delete from this list.
+    
+    # TODO: don't place a room in a given spot if doing so would waste more open door spots than it adds (room's walls overlap more unused doors than this room's number of doors that would touch an empty spot)
+    
+    # TODO: instead of selecting room to place, then finding all valid spots to place it, then picking one at random, let's use a different method:
+    # shuffle the list of all currently open doors we can use. then go through these, and for each spot, go through a shuffled list of each room we can place, and check if we can place it.
+    # but we also need to account for the difference in open doors (+/- the total number of open doors after placing this room) and take that into account somehow.
     
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
