@@ -369,7 +369,14 @@ module DoorRandomizer
               next
             end
             
-            new_dest_door = possible_dest_doors.sample(random: rng)
+            if [:up, :down].include?(inside_door.direction)
+              # Don't randomize up/down doors. This is a temporary hacky measure to greatly reduce failures at connecting all rooms in a subsector.
+              new_dest_door = inside_door.destination_door
+              # Also need to convert this door to a subroomdoor, if applicable.
+              new_dest_door = all_randomizable_doors.find{|subroomdoor| subroomdoor.door_str == new_dest_door.door_str}
+            else
+              new_dest_door = possible_dest_doors.sample(random: rng)
+            end
             remaining_doors[new_dest_door.direction].delete(new_dest_door)
             
             current_room = new_dest_door.room
@@ -402,6 +409,7 @@ module DoorRandomizer
             unvisited_rooms.each do |room|
               puts "  #{room.room_str}"
             end
+            raise "Room connections randomizer failed to connect some rooms."
           end
         end
       end
