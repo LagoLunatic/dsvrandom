@@ -16,18 +16,18 @@ class RandomizerWindow < Qt::Dialog
     randomize_wooden_chests
     randomize_villagers
     randomize_weapon_synths
+    randomize_enemy_stats
+    randomize_enemy_anim_speed
     randomize_portraits
     randomize_red_walls
+    randomize_room_connections
+    randomize_area_connections
+    randomize_starting_room
     
     randomize_players
     randomize_bosses
-    randomize_area_connections
-    randomize_room_connections
-    randomize_starting_room
     randomize_enemy_ai
-    randomize_enemy_stats
     randomize_skill_sprites
-    randomize_enemy_anim_speed
     randomize_rooms_map_friendly
     
     enable_glitch_reqs
