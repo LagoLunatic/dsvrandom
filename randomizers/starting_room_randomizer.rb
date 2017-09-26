@@ -24,6 +24,11 @@ module StartingRoomRandomizer
       
       next if room.entities.find{|e| e.is_boss?}
       
+      # Limit to rooms that connect to a save room.
+      next unless room.doors.find do |door|
+        door.destination_door.room.entities.find{|e| e.is_save_point?}
+      end
+      
       rooms << room
     end
     
@@ -33,6 +38,7 @@ module StartingRoomRandomizer
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
     room_doors.select!{|door| door.direction == :left || door.direction == :right}
+    room_doors.select!{|door| door.destination_door.room.entities.find{|e| e.is_save_point?}} # Limit to doors that lead to a save point.
     door = room_doors.sample(random: rng)
     gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
     case door.direction
