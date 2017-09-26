@@ -182,6 +182,10 @@ class Randomizer
       raise "No seed given"
     end
     
+    if GAME == "por" && room_rando?
+      raise "Room randomizer options don't properly support Portrait of Ruin yet in this beta version."
+    end
+    
     if room_rando?
       @checker = DoorCompletabilityChecker.new(
         game,
