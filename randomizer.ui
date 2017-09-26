@@ -293,6 +293,44 @@
             </item>
            </layout>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QCheckBox" name="randomize_room_connections">
+              <property name="toolTip">
+               <string>Randomizes which rooms within an area connect to each other.</string>
+              </property>
+              <property name="text">
+               <string>Room Connections</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_area_connections">
+              <property name="toolTip">
+               <string>Randomizes which areas connect to each other.</string>
+              </property>
+              <property name="text">
+               <string>Area Connections</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QCheckBox" name="randomize_starting_room">
+              <property name="toolTip">
+               <string>Randomizes which room you start in.</string>
+              </property>
+              <property name="text">
+               <string>Starting Room</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
@@ -327,41 +365,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <widget class="QCheckBox" name="randomize_area_connections">
-              <property name="toolTip">
-               <string>Randomizes which areas connect to each other.</string>
-              </property>
-              <property name="text">
-               <string>Area Connections (Not map-friendly)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_room_connections">
-              <property name="toolTip">
-               <string>Randomizes which rooms within an area connect to each other.</string>
-              </property>
-              <property name="text">
-               <string>Room Connections (Not map-friendly)</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QCheckBox" name="randomize_starting_room">
-              <property name="toolTip">
-               <string>Randomizes which room you start in.</string>
-              </property>
-              <property name="text">
-               <string>Starting Room</string>
-              </property>
-             </widget>
-            </item>
             <item>
              <widget class="QCheckBox" name="randomize_enemy_ai">
               <property name="toolTip">
@@ -372,10 +376,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_17">
             <item>
              <widget class="QCheckBox" name="randomize_skill_sprites">
               <property name="toolTip">
@@ -396,7 +396,6 @@
            </layout>
           </item>
          </layout>
-         <zorder></zorder>
          <zorder></zorder>
          <zorder></zorder>
         </widget>
@@ -643,6 +642,9 @@
           </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="always_start_with_rare_ring">
+            <property name="toolTip">
+             <string>Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.</string>
+            </property>
             <property name="text">
              <string>Always start with Rare Ring</string>
             </property>
@@ -672,6 +674,9 @@
           </item>
           <item>
            <widget class="QCheckBox" name="skip_emblem_drawing">
+            <property name="toolTip">
+             <string>Skips the screen where you have to use the touch screen to draw an emblem.</string>
+            </property>
             <property name="text">
              <string>Skip emblem drawing</string>
             </property>
@@ -796,11 +801,7 @@
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_area_connections</tabstop>
-  <tabstop>randomize_room_connections</tabstop>
-  <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
-  <tabstop>randomize_skill_sprites</tabstop>
-  <tabstop>randomize_rooms_map_friendly</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>
