@@ -139,6 +139,9 @@ class RandomizerWindow < Qt::Dialog
     
     self.resize(640, 1)
     
+    @ui.randomize_rooms_map_friendly.checked = false
+    @ui.randomize_rooms_map_friendly.hide()
+    
     self.show()
   end
   
