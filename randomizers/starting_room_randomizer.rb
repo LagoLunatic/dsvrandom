@@ -27,8 +27,9 @@ module StartingRoomRandomizer
       rooms << room
     end
     
+    # TODO: in OoE put the glyph given by barlowe in the starting room.
+    
     room = rooms.sample(random: rng)
-    game.set_starting_room(room.area_index, room.sector_index, room.room_index)
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
     room_doors.select!{|door| door.direction == :left || door.direction == :right}
@@ -52,7 +53,30 @@ module StartingRoomRandomizer
       x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
       x_pos += gap_end_index*0x10
     end
-    game.set_starting_position(x_pos, y_pos)
+    
+    if GAME == "dos"
+      # In DoS we don't want to actually change the starting room, we instead change where the prologue cutscene teleports you to, so you still go through the tutorial.
+      
+      game.fs.write(0x021C74CC, [0xE3A00000].pack("V")) # Change this to a constant mov first
+      # Then replace the sector and room indexes.
+      game.fs.write(0x021C74CC, [room.sector_index].pack("C"))
+      game.fs.write(0x021C74D0, [room.room_index].pack("C"))
+      # And the x/y position in the room.
+      game.fs.replace_arm_shifted_immediate_integer(0x021C74D4, x_pos)
+      game.fs.replace_arm_shifted_immediate_integer(0x021C74D8, y_pos)
+      
+      # And then we do that all again for the code that runs if the player skips the prologue cutscene by pressing start.
+      game.fs.write(0x021C77E4, [0xE3A00000].pack("V"))
+      game.fs.write(0x021C77E4, [room.sector_index].pack("C"))
+      game.fs.write(0x021C77E8, [room.room_index].pack("C"))
+      game.fs.replace_arm_shifted_immediate_integer(0x021C77EC, x_pos)
+      game.fs.replace_arm_shifted_immediate_integer(0x021C77F0, y_pos)
+    else
+      game.set_starting_room(room.area_index, room.sector_index, room.room_index)
+      game.set_starting_position(x_pos, y_pos)
+    end
+    
+    # TODO: also set magical ticket position here
     
     @starting_room = room
     @starting_room_door_index = room.doors.index(door)
