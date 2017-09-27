@@ -398,6 +398,20 @@ module BossRandomizer
       # Blackmore needs to be in this position or he becomes very aggressive and corners the player up against the wall.
       boss_entity.x_pos = 0x100
       boss_entity.y_pos = 0xA0
+    when "Jiang Shi"
+      unless old_boss.name == "Jiang Shi"
+        # Jiang Shi needs a special object in his room for the boss doors to open since he doesn't die.
+        room = boss_entity.room
+        door_opener = Entity.new(room, room.fs)
+        
+        door_opener.y_pos = 0x80
+        door_opener.type = 2
+        door_opener.subtype = 0x24
+        door_opener.var_a = 1
+        
+        room.entities << door_opener
+        room.write_entities_to_rom()
+      end
     end
   end
   
