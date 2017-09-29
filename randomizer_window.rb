@@ -67,6 +67,7 @@ class RandomizerWindow < Qt::Dialog
     :skill_price_range              => "Subweapon/Spell Price",
     :skill_dmg_range                => "Skill Damage",
     :crush_or_union_dmg_range       => "Dual Crush/Glyph Union Damage",
+    :skill_iframes_range            => "Skill IFrames",
     :subweapon_sp_to_master_range   => "Subweapon SP To Master",
     :spell_charge_time_range        => "Spell Charge Time",
     :skill_mana_cost_range          => "Skill Mana Cost",

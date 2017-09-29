@@ -538,7 +538,7 @@ module ItemSkillStatRandomizer
         skill["Delay"] = named_rand_range_weighted(:glyph_attack_delay_range) unless progress_skill
       end
       
-      iframes = named_rand_range_weighted(:weapon_iframes_range)
+      iframes = named_rand_range_weighted(:skill_iframes_range)
       set_skill_iframes(skill, skill_global_id, iframes)
       
       
@@ -695,14 +695,14 @@ module ItemSkillStatRandomizer
       0x0220A974
     when 0xE1 # Ripper
       # ???
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x0220A704, [iframes2].pack("C"))
       
       # ???
       0x0220A72C
     when 0xE2 # Guillotiner
       # Head?
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x02203CAC, [iframes2].pack("C"))
       
       # Body?
@@ -818,7 +818,7 @@ module ItemSkillStatRandomizer
       0x021E3124
     when 0x121 # Quetzalcoatl
       # Head
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x021E1BAC, [iframes2].pack("C"))
       
       # Body
@@ -969,7 +969,7 @@ module ItemSkillStatRandomizer
       0x021E82B0
     when 0x199 # Salamander
       # ???
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x021E79D0, [iframes2].pack("C"))
       
       # ???
@@ -982,7 +982,7 @@ module ItemSkillStatRandomizer
       0x021E73D0
     when 0x19D # Summon Ghost
       # ???
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x021E73D0, [iframes2].pack("C"))
       
       # ???
@@ -1072,7 +1072,7 @@ module ItemSkillStatRandomizer
       0x02077328
     when 0x31 # Dominus Hatred
       # The first projectile you shoot up.
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x02077A08, [iframes2].pack("C"))
       
       # The rain of projectiles that comes down.
@@ -1112,14 +1112,14 @@ module ItemSkillStatRandomizer
       0x020A18B8
     when 0x59 # Fulgur union
       # ???
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x02073F30, [iframes2].pack("C"))
       
       # ???
       0x02073FFC
     when 0x5A # Fire+ice union
       # Circling ice and fire parts
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x020A243C, [iframes2].pack("C"))
       
       # Center
@@ -1143,7 +1143,7 @@ module ItemSkillStatRandomizer
       0x020A8F08
     when 0x6E # Arcus union
       # Single upwards arrow
-      iframes2 = named_rand_range_weighted(:weapon_iframes_range)
+      iframes2 = named_rand_range_weighted(:skill_iframes_range)
       game.fs.write(0x020A9458, [iframes2].pack("C"))
       
       # Rain of arrows
