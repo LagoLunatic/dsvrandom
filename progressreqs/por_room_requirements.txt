@@ -138,6 +138,9 @@ Inaccessible doors:
   - 07-01-0A_000
   # TODO
 # TODO: inaccessible rooms.
+# 00-07-14
+# 00-08-05
+# 00-08-09
 # 05-01-09
 # 05-01-12
 # 06-00-31
@@ -923,7 +926,7 @@ Rooms:
   00-06-0D:
     000-001: 
     001-000: 
-#Tower of Death:
+#Tower of Death: # DONE
   00-07-00:
     000-e00: 
     e00-000: 
@@ -935,7 +938,7 @@ Rooms:
     000-005: 
     000-e00: 
     000-e01: 
-    000-e02: 
+    000-e02: big height
     001-000: 
     001-002: 
     001-003: 
@@ -943,55 +946,55 @@ Rooms:
     001-005: 
     001-e00: 
     001-e01: 
-    001-e02: 
-    002-000: 
-    002-001: 
-    002-003: 
+    001-e02: big height
+    002-000: big height
+    002-001: big height
+    002-003: height 2
     002-004: 
     002-005: 
-    002-e00: 
-    002-e01: 
-    002-e02: 
-    003-000: 
-    003-001: 
-    003-002: 
+    002-e00: big height
+    002-e01: big height
+    002-e02: big height
+    003-000: big height
+    003-001: big height
+    003-002: big height
     003-004: 
     003-005: 
-    003-e00: 
-    003-e01: 
-    003-e02: 
-    004-000: 
-    004-001: 
-    004-002: 
-    004-003: 
+    003-e00: big height
+    003-e01: big height
+    003-e02: big height
+    004-000: big height
+    004-001: big height
+    004-002: big height
+    004-003: height 2
     004-005: 
-    004-e00: 
-    004-e01: 
-    004-e02: 
-    005-000: 
-    005-001: 
-    005-002: 
-    005-003: 
+    004-e00: big height
+    004-e01: big height
+    004-e02: big height
+    005-000: big height
+    005-001: big height
+    005-002: big height
+    005-003: height 2
     005-004: 
-    005-e00: 
-    005-e01: 
-    005-e02: 
+    005-e00: big height
+    005-e01: big height
+    005-e02: big height
     e00-000: 
     e00-001: 
     e00-002: 
     e00-003: 
     e00-004: 
     e00-005: 
-    e01-000: 
-    e01-001: 
-    e01-002: 
-    e01-003: 
-    e01-004: 
-    e01-005: 
-    e02-000: 
-    e02-001: 
-    e02-002: 
-    e02-003: 
+    e01-000: small height
+    e01-001: small height
+    e01-002: small height
+    e01-003: small height
+    e01-004: small height
+    e01-005: small height
+    e02-000: big height
+    e02-001: big height
+    e02-002: big height
+    e02-003: height 2
     e02-004: 
     e02-005: 
   00-07-02:
@@ -1002,18 +1005,18 @@ Rooms:
     000-002: 
     001-000: 
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: small height
+    002-001: small height
   00-07-05:
     000-001: 
     000-002: 
     000-e00: 
-    001-000: 
+    001-000: height
     001-002: 
-    001-e00: 
-    002-000: 
-    002-001: 
-    002-e00: 
+    001-e00: height
+    002-000: height
+    002-001: height
+    002-e00: height
     e00-000: 
     e00-001: 
     e00-002: 
@@ -1023,9 +1026,9 @@ Rooms:
   00-07-08:
     000-001: 
     000-e00: 
-    001-000: 
+    001-000: small height
     001-e00: 
-    e00-000: 
+    e00-000: small height
     e00-001: 
   00-07-09:
     000-001: 
@@ -1042,11 +1045,11 @@ Rooms:
     e05-001: 
   00-07-0C:
     000-001: 
-    000-e00: 
-    000-e01: 
-    001-000: 
-    001-e00: 
-    001-e01: 
+    000-e00: height 2
+    000-e01: height 2
+    001-000: height 2
+    001-e00: height 2
+    001-e01: height 2
     e00-000: 
     e00-001: 
     e01-000: 
@@ -1067,15 +1070,15 @@ Rooms:
     001-000: 
     001-002: 
     001-e00: 
-    002-000: 
-    002-001: 
-    002-e00: 
-    e00-000: 
-    e00-001: 
-    e00-002: 
+    002-000: small height
+    002-001: small height
+    002-e00: small height
+    e00-000: double jump & shoulderjump | quad jump height
+    e00-001: double jump & shoulderjump | quad jump height
+    e00-002: double jump & shoulderjump | quad jump height
   00-07-11:
-    000-001: 
-    001-000: 
+    000-001: small
+    001-000: small
   00-07-12:
     000-001: 
     000-002: 
@@ -1213,17 +1216,17 @@ Rooms:
   00-08-0B:
     000-001: 
     001-000: 
-  00-08-0C:
-    000-001: 
+  00-08-0C: # motorcycle room. motorcycles removed.
+    000-001: medium height 2
     000-002: 
     001-000: 
     001-002: 
     002-000: 
-    002-001: 
+    002-001: medium height 2
   00-08-0D:
     000-e00: 
     e00-000: 
-  00-08-0E:
+  00-08-0E: # cog room. machinery removed.
     000-001: 
     001-000: 
   00-08-0F:
