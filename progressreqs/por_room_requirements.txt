@@ -138,6 +138,8 @@ Inaccessible doors:
   - 07-01-0A_000
   # TODO
 # TODO: inaccessible rooms.
+# 00-02-12
+# 00-02-16
 # 00-07-14
 # 00-08-05
 # 00-08-09
@@ -147,25 +149,26 @@ Inaccessible doors:
 # 06-01-09
 # 06-01-12
 # TODO: all rooms
+# TODO: how should slide be handled? currently the room reqs assume you always have slide, but with area/room rando on you may not be able to access wind at the start of the game...
 Rooms:
 #Dracula's Castle:
-#Entrance:
-  00-00-01:
+#Entrance: # DONE
+  00-00-01: # TODO: drawbridge room, get rid of the floor that leads down to the underground portion, will require ASM
     000-001: 
     000-002: 
     000-e01: 
     000-e02: 
-    000-e03: 
+    000-e03: double jump & shoulderjump & puppet master | quad jump height
     001-000: 
     001-002: 
     001-e01: 
     001-e02: 
-    001-e03: 
+    001-e03: double jump & shoulderjump & puppet master | quad jump height
     002-000: 
     002-001: 
     002-e01: 
     002-e02: 
-    002-e03: 
+    002-e03: double jump & shoulderjump & puppet master | quad jump height
     e01-000: 
     e01-001: 
     e01-002: 
@@ -182,14 +185,14 @@ Rooms:
     000-001: 
     000-002: 
     000-003: 
-    001-000: 
+    001-000: height
     001-002: 
     001-003: 
-    002-000: 
-    002-001: 
+    002-000: height
+    002-001: small height
     002-003: 
-    003-000: 
-    003-001: 
+    003-000: height
+    003-001: small height
     003-002: 
   00-00-05:
     000-e00: 
@@ -221,8 +224,8 @@ Rooms:
     003-001: 
     003-002: 
   00-00-0B:
-    000-001: 
-    001-000: 
+    000-001: partnerpush & strength cube
+    001-000: partnerpush & strength cube
   00-00-0C:
     000-001: 
     001-000: 
@@ -241,56 +244,56 @@ Rooms:
   00-01-03:
     000-001: 
     000-002: 
-    000-003: 
+    000-003: slide
     000-004: 
     000-005: 
     000-e00: 
     000-e01: 
     001-000: 
     001-002: 
-    001-003: 
+    001-003: slide
     001-004: 
     001-005: 
     001-e00: 
     001-e01: 
     002-000: 
     002-001: 
-    002-003: 
+    002-003: slide
     002-004: 
     002-005: 
     002-e00: 
     002-e01: 
-    003-000: 
-    003-001: 
-    003-002: 
-    003-004: 
-    003-005: 
-    003-e00: 
-    003-e01: 
+    003-000: slide
+    003-001: slide
+    003-002: slide
+    003-004: slide
+    003-005: slide
+    003-e00: slide
+    003-e01: slide
     004-000: 
     004-001: 
     004-002: 
-    004-003: 
+    004-003: slide
     004-005: 
     004-e00: 
     004-e01: 
     005-000: 
     005-001: 
     005-002: 
-    005-003: 
+    005-003: slide
     005-004: 
     005-e00: 
     005-e01: 
     e00-000: 
     e00-001: 
     e00-002: 
-    e00-003: 
+    e00-003: slide
     e00-004: 
     e00-005: 
     e01-000: 
     e01-001: 
     e01-002: 
-    e01-003: 
+    e01-003: slide
     e01-004: 
     e01-005: 
   00-01-04:
@@ -336,7 +339,7 @@ Rooms:
   00-01-06:
     000-001: 
     001-000: 
-  00-01-07:
+  00-01-07: # TODO: behemoth chase sequence. test if this works when entering from the right.
     000-001: 
     000-e2A: 
     001-000: 
@@ -354,7 +357,7 @@ Rooms:
     002-000: 
     002-001: 
   00-01-0C:
-    000-001: 
+    000-001: medium height 2
     000-002: 
     000-e00: 
     000-e01: 
@@ -362,15 +365,15 @@ Rooms:
     001-002: 
     001-e00: 
     001-e01: 
-    002-000: 
-    002-001: 
+    002-000: callswitch | small height
+    002-001: medium height 2
     002-e00: 
-    002-e01: 
-    e00-000: 
-    e00-001: 
+    002-e01: callswitch | small height
+    e00-000: callswitch | small height
+    e00-001: medium height 2
     e00-002: 
     e01-000: 
-    e01-001: 
+    e01-001: medium height 2
     e01-002: 
   00-01-0D:
     000-001: 
@@ -379,10 +382,10 @@ Rooms:
     000-001: 
     001-000: 
   00-01-0F:
-    000-001: 
+    000-001: height
     000-002: 
     000-003: 
-    000-e00: 
+    000-e00: height
     000-e01: 
     001-000: 
     001-002: 
@@ -390,21 +393,21 @@ Rooms:
     001-e00: 
     001-e01: 
     002-000: 
-    002-001: 
+    002-001: height
     002-003: 
-    002-e00: 
+    002-e00: height
     002-e01: 
     003-000: 
-    003-001: 
+    003-001: height
     003-002: 
-    003-e00: 
+    003-e00: height
     003-e01: 
     e00-000: 
     e00-001: 
     e00-002: 
     e00-003: 
     e01-000: 
-    e01-001: 
+    e01-001: height
     e01-002: 
     e01-003: 
   00-01-10:
@@ -418,19 +421,19 @@ Rooms:
     000-002: 
     000-003: 
     000-004: 
-    001-000: 
+    001-000: partnerpush & strength cube & height 2 | quad jump height
     001-002: 
     001-003: 
     001-004: 
-    002-000: 
+    002-000: partnerpush & strength cube & height 2 | quad jump height
     002-001: 
     002-003: 
     002-004: 
-    003-000: 
+    003-000: partnerpush & strength cube & height 2 | quad jump height
     003-001: 
     003-002: 
     003-004: 
-    004-000: 
+    004-000: partnerpush & strength cube & height 2 | quad jump height
     004-001: 
     004-002: 
     004-003: 
@@ -446,7 +449,7 @@ Rooms:
   00-01-17:
     000-e00: 
     e00-000: 
-#Buried Chamber:
+#Buried Chamber: # DONE
   00-02-00:
     000-e00: 
     e00-000: 
@@ -587,7 +590,7 @@ Rooms:
   00-02-1D:
     000-001: 
     001-000: 
-#Great Stairway:
+#Great Stairway: # TODO
   00-03-00:
     000-001: 
     000-002: 
@@ -1803,17 +1806,17 @@ Rooms:
   01-02-18:
     000-001: 
     001-000: 
-#13th Street:
+#13th Street: # DONE
   02-00-00:
     000-001: 
     001-000: 
-  02-00-01:
-    000-001: 
+  02-00-01: # train room. note that if you enter this room from the left the train permanently disappears without the player having to do anything.
+    000-001: quad jump height
     000-002: 
-    001-000: 
+    001-000: partnerpush & strength cube | telesuper
     001-002: 
-    002-000: 
-    002-001: 
+    002-000: partnerpush & strength cube | telesuper
+    002-001: partnerpush & strength cube & quad jump height | telesuper & quad jump height
   02-00-02:
     000-e00: 
     000-e01: 
@@ -1845,9 +1848,9 @@ Rooms:
     001-000: 
     001-002: 
     001-e00: 
-    002-000: 
-    002-001: 
-    002-e00: 
+    002-000: small height
+    002-001: small height
+    002-e00: small height
     e00-000: 
     e00-001: 
     e00-002: 
@@ -1880,7 +1883,7 @@ Rooms:
     001-000: 
   02-01-08:
     000-001: 
-    001-000: 
+    001-000: small height
   02-01-09:
     000-001: 
     000-002: 
@@ -1932,11 +1935,11 @@ Rooms:
     001-000: 
   02-02-01:
     000-001: 
-    000-e00: 
-    000-e01: 
+    000-e00: height
+    000-e01: height
     001-000: 
-    001-e00: 
-    001-e01: 
+    001-e00: height
+    001-e01: height
     e00-000: 
     e00-001: 
     e01-000: 
@@ -1961,17 +1964,17 @@ Rooms:
   02-02-06:
     000-001: 
     001-000: 
-  02-02-07:
+  02-02-07: # not having slide could be problematic here, not in this room itself, but in whatever room gets linked to the small door here, since you'd need to slide to get in.
     000-001: 
     000-002: 
     000-003: 
-    001-000: 
+    001-000: height 2 & small
     001-002: 
     001-003: 
-    002-000: 
+    002-000: height 2 & small
     002-001: 
     002-003: 
-    003-000: 
+    003-000: height 2 & small
     003-001: 
     003-002: 
   02-02-08:
@@ -2002,7 +2005,7 @@ Rooms:
     003-002: 
   02-02-0E:
     000-001: 
-    001-000: 
+    001-000: height
   02-02-0F:
     000-001: 
     000-e00: 
@@ -2649,7 +2652,7 @@ Rooms:
   04-01-22:
     000-e00: 
     e00-000: 
-#Nation of Fools:
+#Nation of Fools: # TODO
   05-00-00:
     000-001: 
     001-000: 
@@ -3195,7 +3198,7 @@ Rooms:
     e01-001: 
     e01-002: 
     e01-003: 
-#Burnt Paradise:
+#Burnt Paradise: # TODO
   06-00-00:
     000-001: 
     001-000: 
