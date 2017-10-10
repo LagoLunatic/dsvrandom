@@ -38,3 +38,6 @@ PATH_BLOCKING_BREAKABLE_WALLS = [
   {area_index: 7, var_a: 1},
   {area_index: 8, var_a: 0},
 ]
+
+MAGICAL_TICKET_X_POS_OFFSET = 0x0203A298
+MAGICAL_TICKET_Y_POS_OFFSET = 0x0203A284

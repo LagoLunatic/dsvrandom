@@ -423,6 +423,8 @@ class Randomizer
         game.areas[2].sectors[0].rooms[4]
       end
       @starting_room_door_index = 0
+      @starting_x_pos = 0x80
+      @starting_y_pos = 0x60
     end
     if room_rando?
       checker.set_starting_room(@starting_room, @starting_room_door_index)
@@ -959,24 +961,16 @@ class Randomizer
     when "dos"
       game.fs.write(0x023E0114, [sector_index].pack("C"))
       game.fs.write(0x023E0118, [room_index].pack("C"))
-      # 0x023E011C is x pos
-      # 0x023E0120 is x pos
     when "por"
       game.fs.write(0x0203A280, [0xE3A00000].pack("V")) # Change mov to constant mov instead of register mov
       game.fs.write(0x0203A280, [area_index].pack("C"))
       game.fs.write(0x0203A290, [sector_index].pack("C"))
       game.fs.write(0x0203A294, [room_index].pack("C"))
-      # 0x0203A298 is x pos
-      # 0x0203A284 is y pos
     when "ooe"
       game.fs.write(0x02037B08, [0xE3A01001].pack("V")) # Change mov to constant mov instead of register mov
       game.fs.write(0x02037B00, [area_index].pack("C"))
       game.fs.write(0x02037B08, [sector_index].pack("C"))
       game.fs.write(0x02037B0C, [room_index].pack("C"))
-      x_pos = 0x80
-      y_pos = 0x60
-      game.fs.replace_arm_shifted_immediate_integer(0x02037B10, x_pos)
-      game.fs.replace_arm_shifted_immediate_integer(0x02037B04, y_pos)
       
       if area_index != 1
         # Starting room is not in Wygol, so make the magical ticket change to the normal map screen, instead of the Wygol map screen.
@@ -984,6 +978,19 @@ class Randomizer
         game.fs.write(0x02037B4C, [0x05].pack("C"))
       end
     end
+    
+    # Also change the magical ticket's destination x/y position.
+    # The x/y are going to be arm shifted immediates, so they need to be rounded down to the nearest 0x10 to make sure they don't use too many bits.
+    x_pos = @starting_x_pos
+    y_pos = @starting_y_pos
+    if x_pos > 0x100
+      x_pos = x_pos/0x10*0x10
+    end
+    if y_pos > 0x100
+      y_pos = y_pos/0x10*0x10
+    end
+    game.fs.replace_arm_shifted_immediate_integer(MAGICAL_TICKET_X_POS_OFFSET, x_pos)
+    game.fs.replace_arm_shifted_immediate_integer(MAGICAL_TICKET_Y_POS_OFFSET, y_pos)
     
     case GAME
     when "dos"

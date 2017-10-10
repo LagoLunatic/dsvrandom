@@ -16,3 +16,6 @@ POSSIBLE_RED_WALL_SOULS = (0..0x34).to_a -
   (0x2D..0x34).to_a # julius mode souls including hell fire, these have no enemy graphic
 
 PATH_BLOCKING_BREAKABLE_WALLS = [] # All breakable walls are path blocking in DoS.
+
+MAGICAL_TICKET_X_POS_OFFSET = 0x023E011C
+MAGICAL_TICKET_Y_POS_OFFSET = 0x023E0120

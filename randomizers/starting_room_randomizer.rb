@@ -68,12 +68,12 @@ module StartingRoomRandomizer
       game.fs.write(0x021C74CC, [room.sector_index].pack("C"))
       game.fs.write(0x021C74D0, [room.room_index].pack("C"))
       # And the x/y position in the room.
-      # The x/y are going to be arm shifted immediates, so if they're above 0x100, we need to round it down to the nearest 4.
+      # The x/y are going to be arm shifted immediates, so they need to be rounded down to the nearest 0x10 to make sure they don't use too many bits.
       if x_pos > 0x100
-        x_pos = x_pos/4*4
+        x_pos = x_pos/0x10*0x10
       end
       if y_pos > 0x100
-        y_pos = y_pos/4*4
+        y_pos = y_pos/0x10*0x10
       end
       game.fs.replace_arm_shifted_immediate_integer(0x021C74D4, x_pos)
       game.fs.replace_arm_shifted_immediate_integer(0x021C74D8, y_pos)
@@ -89,9 +89,9 @@ module StartingRoomRandomizer
       game.set_starting_position(x_pos, y_pos)
     end
     
-    # TODO: also set magical ticket position here
-    
     @starting_room = room
     @starting_room_door_index = room.doors.index(door)
+    @starting_x_pos = x_pos
+    @starting_y_pos = y_pos
   end
 end
