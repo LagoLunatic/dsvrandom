@@ -892,6 +892,13 @@ class Randomizer
       game.fs.write(0x021E8B30, [0x3C].pack("C"))
     end
     
+    if GAME == "dos" && options[:randomize_starting_room]
+      # Fix the HUD disappearing with the starting room rando.
+      game.fs.write(0x021D9910, [0xE3C11081].pack("V")) # This line normally disables global game flag 0x1, we change it to disable both 0x1 and 0x80 (which hides the HUD).
+      game.fs.write(0x021C782C, [0xE1A00000].pack("V")) # This line explicitly resets 0x80 later on, so nop it out.
+      game.fs.write(0x021C7518, [0xE1A00000].pack("V")) # Same as above, but this is for if the player watched the cutscene instead of skipping it.
+    end
+    
     if options[:remove_area_names]
       game.each_room do |room|
         room.entities.each do |entity|
