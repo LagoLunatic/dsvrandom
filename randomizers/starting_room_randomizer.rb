@@ -68,6 +68,13 @@ module StartingRoomRandomizer
       game.fs.write(0x021C74CC, [room.sector_index].pack("C"))
       game.fs.write(0x021C74D0, [room.room_index].pack("C"))
       # And the x/y position in the room.
+      # The x/y are going to be arm shifted immediates, so if they're above 0x100, we need to round it down to the nearest 4.
+      if x_pos > 0x100
+        x_pos = x_pos/4*4
+      end
+      if y_pos > 0x100
+        y_pos = y_pos/4*4
+      end
       game.fs.replace_arm_shifted_immediate_integer(0x021C74D4, x_pos)
       game.fs.replace_arm_shifted_immediate_integer(0x021C74D8, y_pos)
       
