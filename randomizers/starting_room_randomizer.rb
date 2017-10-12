@@ -34,6 +34,8 @@ module StartingRoomRandomizer
     
     # TODO: in OoE put the glyph given by barlowe in the starting room.
     
+    # TODO: for the bonus starting items option, use the new x/y pos from here.
+    
     room = rooms.sample(random: rng)
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
