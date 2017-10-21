@@ -109,7 +109,7 @@ class Randomizer
       :spell_charge_time_range        => 32,
       :skill_mana_cost_range          => 25,
       :crush_mana_cost_range          => 150,
-      :union_heart_cost_range         => 20,
+      :union_heart_cost_range         => 10,
       :skill_max_at_once_range        => 2,
       :glyph_attack_delay_range       => 7,
     
@@ -150,7 +150,7 @@ class Randomizer
       :spell_charge_time_range        => 37,
       :skill_mana_cost_range          => 30,
       :crush_mana_cost_range          => 175,
-      :union_heart_cost_range         => 30,
+      :union_heart_cost_range         => 15,
       :skill_max_at_once_range        => 1.5,
       :glyph_attack_delay_range       => 8.5,
       
