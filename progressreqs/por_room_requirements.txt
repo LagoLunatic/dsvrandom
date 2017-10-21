@@ -3536,16 +3536,16 @@ Rooms:
     000-003: 
     000-e02: 
     000-e03: small height
-    001-000:false
-    001-002:false
-    001-003:false
-    001-e02:false
-    001-e03:false
-    002-000:false
-    002-001:false
-    002-003:false
-    002-e02:false
-    002-e03:false
+    001-000: false
+    001-002: false
+    001-003: false
+    001-e02: false
+    001-e03: false
+    002-000: false
+    002-001: false
+    002-003: false
+    002-e02: false
+    002-e03: false
     003-000: height
     003-001: false
     003-002: false
