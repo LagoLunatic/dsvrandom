@@ -29,6 +29,12 @@ module ItemSkillStatRandomizer
         
         extra_stats = ["Defense", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
+        
+        # Clear all stats to 0 first before randomizing some of them.
+        extra_stats.each do |stat_name|
+          item[stat_name] = 0
+        end
+        
         total_num_extra_stats = extra_stats.length
         
         num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
@@ -46,6 +52,12 @@ module ItemSkillStatRandomizer
         
         extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
+        
+        # Clear all stats to 0 first before randomizing some of them.
+        extra_stats.each do |stat_name|
+          item[stat_name] = 0
+        end
+        
         total_num_extra_stats = extra_stats.length
         
         num_extra_stats_for_this_item = rand_range_weighted(0..total_num_extra_stats, average: 1)
