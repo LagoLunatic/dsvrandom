@@ -53,6 +53,10 @@ module ItemSkillStatRandomizer
         extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
         
+        if item.name == "Death Ring"
+          extra_stats -= ["Strength", "Constitution", "Intelligence", "Mind"]
+        end
+        
         # Clear all stats to 0 first before randomizing some of them.
         extra_stats.each do |stat_name|
           item[stat_name] = 0
