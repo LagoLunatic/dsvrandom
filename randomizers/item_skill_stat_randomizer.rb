@@ -48,13 +48,20 @@ module ItemSkillStatRandomizer
         
         item.write_to_rom()
       elsif ["Armor", "Body Armor", "Head Armor", "Leg Armor", "Accessories"].include?(item.item_type_name)
-        item["Defense"] = named_rand_range_weighted(:armor_defense_range)
+        item["Defense"] = named_rand_range_weighted(:armor_defense_range) unless item.name == "Heavy Armor"
         
         extra_stats = ["Attack", "Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
         
+        # Don't randomize some extreme stats that are part of the identity of the item.
         if item.name == "Death Ring"
           extra_stats -= ["Strength", "Constitution", "Intelligence", "Mind"]
+        end
+        if item.name == "Berserker Mail"
+          extra_stats -= ["Strength", "Constitution", "Mind"]
+        end
+        if item.name == "Heavy Armor"
+          extra_stats -= ["Mind"]
         end
         
         # Clear all stats to 0 first before randomizing some of them.
