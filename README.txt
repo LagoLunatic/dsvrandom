@@ -88,6 +88,10 @@ Q: I'm playing Portrait of Ruin randomized on my flash card, and getting a lot o
 
 A: This is a bug with PoR that occurs only on certain flash cards, such as R4 cards. It happens in vanilla PoR too, so it's unrelated to the randomizer. I recommend playing on emulator if you get this issue on your card.
 
+Q: There's a randomly placed enemy that keeps knocking me back through a door as soon as I walk through so I can't progress.
+
+A: Enemies knock you back depending on what direction you're facing, not the direction they hit you from. So when you're walking through the door and don't have control yet hold the D-pad in the direction away from the enemy. This way you will face away from the enemy the instant you gain control and be knocked towards the enemy instead of back into the door.
+
 ### Running from source
 
 If you want to run the latest development (unstable) version of DSVRandom from source, follow these instructions:
