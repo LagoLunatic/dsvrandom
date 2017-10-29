@@ -353,6 +353,8 @@ class Randomizer
     
     if GAME == "por"
       if options[:por_short_mode]
+        reset_rng()
+        
         @portraits_to_remove = []
         possible_portraits = (PORTRAIT_NAMES - [:portraitnestofevil])
         4.times do
@@ -395,6 +397,7 @@ class Randomizer
     @max_up_items = []
     if options[:randomize_consumable_behavior]
       reset_rng()
+      
       case GAME
       when "por"
         possible_max_up_ids = (0..0x5F).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
@@ -428,6 +431,7 @@ class Randomizer
     @red_wall_souls = []
     if GAME == "dos"
       if options[:randomize_red_walls]
+        reset_rng()
         randomize_red_walls()
       else
         @red_wall_souls = [
