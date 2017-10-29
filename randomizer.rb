@@ -351,6 +351,47 @@ class Randomizer
     
     apply_pre_randomization_tweaks()
     
+    if GAME == "por"
+      if options[:por_short_mode]
+        @portraits_to_remove = []
+        possible_portraits = (PORTRAIT_NAMES - [:portraitnestofevil])
+        4.times do
+          portrait_to_remove = possible_portraits.sample(random: rng)
+          @portraits_to_remove << portrait_to_remove
+          possible_portraits.delete(portrait_to_remove)
+        end
+        
+        checker.remove_13th_street_and_burnt_paradise_boss_death_prerequisites()
+        
+        if !options[:randomize_portraits]
+          # If portrait randomizer is off, remove the portraits immediately.
+          game.each_room do |room|
+            room.entities.each do |entity|
+              if entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
+                @portraits_to_remove.each do |portrait_name|
+                  portrait_data = PORTRAIT_NAME_TO_DATA[portrait_name]
+                  if entity.subtype == portrait_data[:subtype] && entity.var_a == portrait_data[:var_a] && entity.var_b == portrait_data[:var_b]
+                    entity.type = 0
+                    entity.write_to_rom()
+                    break
+                  end
+                end
+              end
+            end
+          end
+          @portrait_locations_to_remove = @portraits_to_remove.map do |portrait_name|
+            PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION[portrait_name]
+          end
+        end
+      else
+        @portraits_to_remove = []
+        @portrait_locations_to_remove = []
+      end
+      
+      # Tell the completability checker which portraits to remove so the pickup randomizer doesn't place those portraits if the portrait randomizer is on.
+      checker.set_removed_portraits(@portraits_to_remove)
+    end
+    
     @max_up_items = []
     if options[:randomize_consumable_behavior]
       reset_rng()
@@ -399,47 +440,6 @@ class Randomizer
       
       # Tell the completability checker logic what souls are for what red walls on this seed.
       checker.set_red_wall_souls(@red_wall_souls)
-    end
-    
-    if GAME == "por"
-      if options[:por_short_mode]
-        @portraits_to_remove = []
-        possible_portraits = (PORTRAIT_NAMES - [:portraitnestofevil])
-        4.times do
-          portrait_to_remove = possible_portraits.sample(random: rng)
-          @portraits_to_remove << portrait_to_remove
-          possible_portraits.delete(portrait_to_remove)
-        end
-        
-        checker.remove_13th_street_and_burnt_paradise_boss_death_prerequisites()
-        
-        if !options[:randomize_portraits]
-          # If portrait randomizer is off, remove the portraits immediately.
-          game.each_room do |room|
-            room.entities.each do |entity|
-              if entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
-                @portraits_to_remove.each do |portrait_name|
-                  portrait_data = PORTRAIT_NAME_TO_DATA[portrait_name]
-                  if entity.subtype == portrait_data[:subtype] && entity.var_a == portrait_data[:var_a] && entity.var_b == portrait_data[:var_b]
-                    entity.type = 0
-                    entity.write_to_rom()
-                    break
-                  end
-                end
-              end
-            end
-          end
-          @portrait_locations_to_remove = @portraits_to_remove.map do |portrait_name|
-            PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION[portrait_name]
-          end
-        end
-      else
-        @portraits_to_remove = []
-        @portrait_locations_to_remove = []
-      end
-      
-      # Tell the completability checker which portraits to remove so the pickup randomizer doesn't place those portraits if the portrait randomizer is on.
-      checker.set_removed_portraits(@portraits_to_remove)
     end
     
     if options[:randomize_bosses]
