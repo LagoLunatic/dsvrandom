@@ -658,8 +658,8 @@
          <property name="title">
           <string>Portrait of Ruin</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
            <widget class="QCheckBox" name="fix_infinite_quest_rewards">
             <property name="toolTip">
              <string>Fixes a bug where you could get any quest reward over and over again.</string>
@@ -672,7 +672,20 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="dont_randomize_change_cube">
+            <property name="toolTip">
+             <string>The change cube will always be the first item you get.</string>
+            </property>
+            <property name="text">
+             <string>Don't randomize Change Cube</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
            <widget class="QCheckBox" name="skip_emblem_drawing">
             <property name="toolTip">
              <string>Skips the screen where you have to use the touch screen to draw an emblem.</string>
@@ -685,16 +698,13 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="dont_randomize_change_cube">
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="por_short_mode">
             <property name="toolTip">
-             <string>The change cube will always be the first item you get.</string>
+             <string>Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).</string>
             </property>
             <property name="text">
-             <string>Don't randomize Change Cube</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Short Mode</string>
             </property>
            </widget>
           </item>

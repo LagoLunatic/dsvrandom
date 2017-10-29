@@ -401,6 +401,45 @@ class Randomizer
       checker.set_red_wall_souls(@red_wall_souls)
     end
     
+    if GAME == "por"
+      if options[:por_short_mode]
+        @portraits_to_remove = []
+        possible_portraits = (PORTRAIT_NAMES - [:portraitnestofevil])
+        4.times do
+          @portraits_to_remove << possible_portraits.sample(random: rng)
+        end
+        
+        checker.remove_13th_street_and_burnt_paradise_boss_death_prerequisites()
+        
+        if !options[:randomize_portraits]
+          # If portrait randomizer is off, remove the portraits immediately.
+          game.each_room do |room|
+            room.entities.each do |entity|
+              if entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
+                @portraits_to_remove.each do |portrait_name|
+                  portrait_data = PORTRAIT_NAME_TO_DATA[portrait_name]
+                  if entity.subtype == portrait_data[:subtype] && entity.var_a == portrait_data[:var_a] && entity.var_b == portrait_data[:var_b]
+                    entity.type = 0
+                    entity.write_to_rom()
+                    break
+                  end
+                end
+              end
+            end
+          end
+          @portrait_locations_to_remove = @portraits_to_remove.map do |portrait_name|
+            PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION[portrait_name]
+          end
+        end
+      else
+        @portraits_to_remove = []
+        @portrait_locations_to_remove = []
+      end
+      
+      # Tell the completability checker which portraits to remove so the pickup randomizer doesn't place those portraits if the portrait randomizer is on.
+      checker.set_removed_portraits(@portraits_to_remove)
+    end
+    
     if options[:randomize_bosses]
       yield [options_completed, "Shuffling bosses..."]
       reset_rng()
@@ -831,6 +870,36 @@ class Randomizer
     
     if GAME == "por" && options[:skip_emblem_drawing]
       game.apply_armips_patch("por_skip_emblem_drawing")
+    end
+    
+    if GAME == "por" && options[:por_short_mode]
+      portraits_needed_to_open_studio_portrait = PORTRAIT_NAMES - [:portraitnestofevil] - @portraits_to_remove
+      boss_flag_checking_code_locations = [0x02076B84, 0x02076BA4, 0x02076BC4, 0x02076BE4]
+      portraits_needed_to_open_studio_portrait.each_with_index do |portrait_name, i|
+        new_boss_flag = case portrait_name
+        when :portraitcityofhaze
+          0x2
+        when :portraitsandygrave
+          0x80
+        when :portraitnationoffools
+          0x20
+        when :portraitforestofdoom
+          0x40
+        when :portraitdarkacademy
+          0x200
+        when :portraitburntparadise
+          0x800
+        when :portraitforgottencity
+          0x400
+        when :portrait13thstreet
+          0x100
+        else
+          raise "Invalid portrait name: #{portrait_name}"
+        end
+        
+        code_location = boss_flag_checking_code_locations[i]
+        game.fs.replace_arm_shifted_immediate_integer(code_location, new_boss_flag)
+      end
     end
     
     if GAME == "por" && options[:randomize_portraits]

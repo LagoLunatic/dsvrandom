@@ -48,6 +48,7 @@ class RandomizerWindow < Qt::Dialog
     fix_infinite_quest_rewards
     skip_emblem_drawing
     dont_randomize_change_cube
+    por_short_mode
     open_world_map
     always_dowsing
   )

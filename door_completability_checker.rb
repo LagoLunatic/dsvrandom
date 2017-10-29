@@ -585,6 +585,7 @@ class DoorCompletabilityChecker
       end
       if GAME == "por" && @por_randomize_portraits
         pickups += PickupRandomizer::PORTRAIT_NAMES
+        pickups -= @removed_portraits
       end
       
       pickups
@@ -627,6 +628,22 @@ class DoorCompletabilityChecker
     @defs[:red_wall_soul_1] = red_wall_souls[1]
     @defs[:red_wall_soul_2] = red_wall_souls[2]
     @defs[:red_wall_soul_3] = red_wall_souls[3]
+  end
+  
+  def set_removed_portraits(removed_portraits)
+    @removed_portraits = removed_portraits
+    
+    # TODO: Code the logic for determining if you can reach the Lost Gallery in room rando to take removed portraits into account.
+  end
+  
+  def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
+    # Remove 13th street's mummy requirement.
+    game.fs.write(0x02078FC4+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
+    # TODO: Once portraits are accounted for in the room rando logic, modify the logic here.
+    
+    # Remove burnt paradise's creature requirement.
+    game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
+    # TODO: Once portraits are accounted for in the room rando logic, modify the logic here.
   end
   
   def set_current_location_by_entity(entity_str)

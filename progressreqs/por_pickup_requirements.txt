@@ -131,7 +131,7 @@ Defs:
   portraitnestofevil: portraitnestofevil
   bossdoppelganger: nestofevil
   
-  lostgallery: bosswerewolf & bossmummy & bossmedusa & bosscreature
+  lostgallery: four seal bosses killed
   
   throneroom: lostgallery
   

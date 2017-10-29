@@ -30,6 +30,17 @@ module PickupRandomizer
   PORTRAIT_VAR_A_TO_NAME = PORTRAIT_NAME_TO_DATA.map do |name, data|
     [data[:var_a], name]
   end.to_h
+  PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION = {
+    :portraitcityofhaze => "00-01-00_00",
+    :portraitsandygrave => "00-04-12_00",
+    :portraitnationoffools => "00-06-01_00",
+    :portraitforestofdoom => "00-08-01_02",
+    :portraitdarkacademy => "00-0B-00_04",
+    :portraitburntparadise => "00-0B-00_03",
+    :portraitforgottencity => "00-0B-00_01",
+    :portrait13thstreet => "00-0B-00_02",
+    :portraitnestofevil => "00-00-05_00",
+  }
   
   def randomize_pickups_completably(&block)
     spoiler_log.puts "Randomizing pickups:"
@@ -311,6 +322,7 @@ module PickupRandomizer
       if !options[:randomize_portraits] && GAME == "por"
         # If randomize portraits option is off, don't allow putting random things in these locations.
         accessible_unused_portrait_locations = possible_locations & checker.portrait_locations
+        accessible_unused_portrait_locations -= @portrait_locations_to_remove # Don't count removed portraits in short mode as portrait locations.
         accessible_unused_portrait_locations.each do |location|
           possible_locations.delete(location)
           @locations_randomized_to_have_useful_pickups << location

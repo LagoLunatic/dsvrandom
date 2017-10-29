@@ -274,6 +274,7 @@ class CompletabilityChecker
       end
       if GAME == "por" && @por_randomize_portraits
         pickups += PickupRandomizer::PORTRAIT_NAMES
+        pickups -= @removed_portraits
       end
       
       pickups
@@ -310,6 +311,51 @@ class CompletabilityChecker
     @defs[:red_wall_soul_1] = red_wall_souls[1]
     @defs[:red_wall_soul_2] = red_wall_souls[2]
     @defs[:red_wall_soul_3] = red_wall_souls[3]
+  end
+  
+  def set_removed_portraits(removed_portraits)
+    @removed_portraits = removed_portraits
+    
+    if removed_portraits.empty?
+      @defs[:four_seal_bosses_killed] = [[:bosswerewolf, :bossmummy, :bossmedusa, :bosscreature]]
+    else
+      portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - removed_portraits
+      
+      bosses_needed = portraits_needed.map do |portrait_name|
+        case portrait_name
+        when :portraitcityofhaze
+          :bossdullahan
+        when :portraitsandygrave
+          :bossastarte
+        when :portraitnationoffools
+          :bosslegion
+        when :portraitforestofdoom
+          :bossdagon
+        when :portraitdarkacademy
+          :bosscreature
+        when :portraitburntparadise
+          :bossmedusa
+        when :portraitforgottencity
+          :bossmummy
+        when :portrait13thstreet
+          :bosswerewolf
+        else
+          raise "Invalid portrait name: #{portrait_name}"
+        end
+      end
+      
+      @defs[:four_seal_bosses_killed] = [bosses_needed]
+    end
+  end
+  
+  def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
+    # Remove 13th street's mummy requirement.
+    game.fs.write(0x02078FC4+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
+    @defs[:"13thstreet"] = [[:portrait13thstreet]] # Update the pickup requirement for the logic.
+    
+    # Remove burnt paradise's creature requirement.
+    game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
+    @defs[:burntparadise] = [[:portraitburntparadise]] # Update the pickup requirement for the logic.
   end
   
   def generate_empty_item_requirements_file
