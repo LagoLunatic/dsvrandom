@@ -406,7 +406,9 @@ class Randomizer
         @portraits_to_remove = []
         possible_portraits = (PORTRAIT_NAMES - [:portraitnestofevil])
         4.times do
-          @portraits_to_remove << possible_portraits.sample(random: rng)
+          portrait_to_remove = possible_portraits.sample(random: rng)
+          @portraits_to_remove << portrait_to_remove
+          possible_portraits.delete(portrait_to_remove)
         end
         
         checker.remove_13th_street_and_burnt_paradise_boss_death_prerequisites()
