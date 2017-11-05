@@ -937,6 +937,27 @@ class Randomizer
     end
     
     if GAME == "por"
+      # If the portrait randomizer or short mode remove all 4 portraits from the studio portrait room, going into the studio portrait crashes on real hardware.
+      # This is because it needs part of the small square-framed portrait's sprite.
+      # So in this case we just add a dummy portrait out of bounds so it loads its sprite.
+      studio_portrait_room = game.room_by_str("00-0B-00")
+      square_framed_portrait = studio_portrait_room.entities.find{|e| e.is_special_object? && [0x76, 0x87].include?(e.subtype)}
+      if square_framed_portrait.nil?
+        dummy_portrait = Entity.new(studio_portrait_room, game.fs)
+        
+        dummy_portrait.x_pos = 0
+        dummy_portrait.y_pos = -0x100
+        dummy_portrait.type = 2
+        dummy_portrait.subtype = 0x76
+        dummy_portrait.var_a = 0
+        dummy_portrait.var_b = 0
+        
+        studio_portrait_room.entities << dummy_portrait
+        studio_portrait_room.write_entities_to_rom()
+      end
+    end
+    
+    if GAME == "por"
       # Fix a bug in the base game where you have a couple seconds after picking up the cog where you can use a magical ticket to skip fighting Legion.
       # To do this we make Legion's horizontal boss doors turn on global flag 2 (in the middle of a boss fight, prevents magical ticket use) as soon as you enter the room, in the same line that it was turning on global flag 1.
       game.fs.load_overlay(98)
