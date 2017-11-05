@@ -919,7 +919,7 @@ class Randomizer
       game.fs.write(0x0207B9C0, [0x5380].pack("V"))
     end
     
-    if GAME == "por" && options[:randomize_portraits]
+    if GAME == "por" && options[:randomize_portraits] || options[:por_short_mode]
       game.areas.each do |area|
         map = game.get_map(area.area_index, 0)
         map.tiles.each do |tile|
