@@ -924,6 +924,13 @@ class Randomizer
         map = game.get_map(area.area_index, 0)
         map.tiles.each do |tile|
           room = game.areas[area.area_index].sectors[tile.sector_index].rooms[tile.room_index]
+          
+          if room.room_str == "00-0B-00"
+            # The studio portrait room. Always mark this as having a portrait.
+            tile.is_entrance = true
+            next
+          end
+          
           tile_x_off = (tile.x_pos - room.room_xpos_on_map) * SCREEN_WIDTH_IN_PIXELS
           tile_y_off = (tile.y_pos - room.room_ypos_on_map) * SCREEN_HEIGHT_IN_PIXELS
           tile.is_entrance = room.entities.find do |e|
