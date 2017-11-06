@@ -919,6 +919,14 @@ class Randomizer
       game.fs.write(0x0207B9C0, [0x5380].pack("V"))
     end
     
+    if GAME == "por" && options[:randomize_portraits]
+      # We also apply a patch in portrait randomizer that will show a text popup when the player tries to enter the Forest of Doom early.
+      # Without this patch there is no indication as to why you can't enter the portrait, as the normal event doesn't work outside the sector the portrait is normally in.
+      game.apply_armips_patch("por_show_popup_for_locked_portrait")
+      game.text_database.text_list[0x4BE].decoded_string = "You must beat Stella and talk to Wind\\nto unlock the Forest of Doom."
+      game.text_database.write_to_rom()
+    end
+    
     if GAME == "por" && options[:randomize_portraits] || options[:por_short_mode]
       game.areas.each do |area|
         map = game.get_map(area.area_index, 0)
