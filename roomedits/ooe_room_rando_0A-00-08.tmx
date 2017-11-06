@@ -151,9 +151,9 @@
   <object id="1" x="-256" y="0" width="256" height="192">
    <properties>
     <property name="dest_x" value="0200"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="00C0"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="022A9368"/>
     <property name="door_ram_pointer" value="022A9318"/>
    </properties>
@@ -161,9 +161,9 @@
   <object id="2" x="256" y="0" width="256" height="192">
    <properties>
     <property name="dest_x" value="0000"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="00C0"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="022A93D8"/>
     <property name="door_ram_pointer" value="022A9328"/>
    </properties>
@@ -171,9 +171,9 @@
   <object id="3" x="0" y="384" width="256" height="192">
    <properties>
     <property name="dest_x" value="0000"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="0000"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="022A9268"/>
     <property name="door_ram_pointer" value="022A9338"/>
    </properties>

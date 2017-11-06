@@ -769,8 +769,8 @@ module DoorRandomizer
         right_door_dest_y_offset = (left_last_tile_i - right_last_tile_i) * 0x10
         
         # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
-        left_door.dest_y_unused = left_door_dest_y_offset
-        right_door.dest_y_unused = right_door_dest_y_offset
+        left_door.dest_y_2 = left_door_dest_y_offset
+        right_door.dest_y_2 = right_door_dest_y_offset
       end
       
       # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.
@@ -786,8 +786,8 @@ module DoorRandomizer
           tiles_to_remove << right_tiles_in_biggest_gap.last
           
           # Then we also have to readjust the dest y offsets.
-          left_door.dest_y_unused -= 0x10
-          right_door.dest_y_unused += 0x10
+          left_door.dest_y_2 -= 0x10
+          right_door.dest_y_2 += 0x10
         end
         
         block_off_tiles(right_door.room, tiles_to_remove)
@@ -802,8 +802,8 @@ module DoorRandomizer
           tiles_to_remove << left_tiles_in_biggest_gap.last
           
           # Then we also have to readjust the dest y offsets.
-          right_door.dest_y_unused -= 0x10
-          left_door.dest_y_unused += 0x10
+          right_door.dest_y_2 -= 0x10
+          left_door.dest_y_2 += 0x10
         end
         
         block_off_tiles(left_door.room, tiles_to_remove)
@@ -820,8 +820,8 @@ module DoorRandomizer
         down_door_dest_x_offset = (up_last_tile_i - down_last_tile_i) * 0x10
         
         # We use the unused dest offsets because they still work fine and this way we don't mess up the code Door#destination_door uses to guess the destination door, since that's based off the used dest_x and dest_y.
-        up_door.dest_x_unused = up_door_dest_x_offset
-        down_door.dest_x_unused = down_door_dest_x_offset
+        up_door.dest_x_2 = up_door_dest_x_offset
+        down_door.dest_x_2 = down_door_dest_x_offset
       end
       
       # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.

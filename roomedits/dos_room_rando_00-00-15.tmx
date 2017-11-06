@@ -173,9 +173,9 @@
   <object id="1" x="-256" y="192" width="256" height="192">
    <properties>
     <property name="dest_x" value="0300"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="00C0"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="0209FFBC"/>
     <property name="door_ram_pointer" value="020A0554"/>
    </properties>
@@ -183,9 +183,9 @@
   <object id="2" x="512" y="192" width="256" height="192">
    <properties>
     <property name="dest_x" value="0000"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="00C0"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="020A0664"/>
     <property name="door_ram_pointer" value="020A0564"/>
    </properties>
@@ -193,9 +193,9 @@
   <object id="3" x="-256" y="576" width="256" height="192">
    <properties>
     <property name="dest_x" value="0000"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="0000"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="020A03FC"/>
     <property name="door_ram_pointer" value="020A0574"/>
    </properties>
@@ -203,9 +203,9 @@
   <object id="4" x="512" y="576" width="256" height="192">
    <properties>
     <property name="dest_x" value="0000"/>
-    <property name="dest_x_unused" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
     <property name="dest_y" value="0000"/>
-    <property name="dest_y_unused" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
     <property name="destination_room" value="020A8C68"/>
     <property name="door_ram_pointer" value="020A0584"/>
    </properties>
