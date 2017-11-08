@@ -927,7 +927,7 @@ class Randomizer
       game.text_database.write_to_rom()
     end
     
-    if GAME == "por" && options[:randomize_portraits] || options[:por_short_mode]
+    if GAME == "por" && (options[:randomize_portraits] || options[:por_short_mode])
       game.areas.each do |area|
         map = game.get_map(area.area_index, 0)
         map.tiles.each do |tile|
