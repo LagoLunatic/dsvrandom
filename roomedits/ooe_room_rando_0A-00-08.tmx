@@ -182,7 +182,7 @@
  <objectgroup name="Entities">
   <object id="1" x="256" y="160">
    <properties>
-    <property name="05" value="00"/>
+    <property name="05 (unique_id)" value="00"/>
     <property name="06 (type)" value="01"/>
     <property name="07 (subtype)" value="1B"/>
     <property name="08" value="00"/>
@@ -193,7 +193,7 @@
   </object>
   <object id="2" x="0" y="-32">
    <properties>
-    <property name="05" value="00"/>
+    <property name="05 (unique_id)" value="00"/>
     <property name="06 (type)" value="02"/>
     <property name="07 (subtype)" value="37"/>
     <property name="08" value="00"/>
@@ -204,7 +204,7 @@
   </object>
   <object id="3" x="0" y="-8">
    <properties>
-    <property name="05" value="00"/>
+    <property name="05 (unique_id)" value="00"/>
     <property name="06 (type)" value="02"/>
     <property name="07 (subtype)" value="37"/>
     <property name="08" value="00"/>
@@ -215,7 +215,7 @@
   </object>
   <object id="4" x="0" y="16">
    <properties>
-    <property name="05" value="00"/>
+    <property name="05 (unique_id)" value="00"/>
     <property name="06 (type)" value="02"/>
     <property name="07 (subtype)" value="37"/>
     <property name="08" value="00"/>

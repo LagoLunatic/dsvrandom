@@ -94,7 +94,7 @@
  <objectgroup name="Entities">
   <object id="1" x="0" y="0">
    <properties>
-    <property name="05" value="00"/>
+    <property name="05 (unique_id)" value="00"/>
     <property name="06 (type)" value="02"/>
     <property name="07 (subtype)" value="0D"/>
     <property name="08" value="00"/>
@@ -105,7 +105,7 @@
   </object>
   <object id="2" x="64" y="160">
    <properties>
-    <property name="05" value="00"/>
+    <property name="05 (unique_id)" value="00"/>
     <property name="06 (type)" value="04"/>
     <property name="07 (subtype)" value="03"/>
     <property name="08" value="00"/>
