@@ -449,7 +449,14 @@ module ItemSkillStatRandomizer
         skill["DMG multiplier"] = named_rand_range_weighted(:skill_dmg_range)
       end
       
-      skill["Soul Scaling"] = rng.rand(0..4) if GAME == "dos"
+      if GAME == "dos"
+        max_soul_scaling_type = 4
+        if skill.name == "Persephone"
+          max_soul_scaling_type = 2
+        end
+        soul_scaling_type = rng.rand(0..max_soul_scaling_type)
+        skill["Soul Scaling"] = soul_scaling_type
+      end
       
       if skill["?/Swings/Union"]
         union_type = skill["?/Swings/Union"] >> 2
