@@ -72,73 +72,81 @@ module EnemyStatRandomizer
       
       enemy_dna["Blood Color"] = rng.rand(0..8) if GAME == "ooe"
       
-      if GAME == "ooe"
-        all_non_status_elements = ENEMY_DNA_BITFIELD_ATTRIBUTES["Weaknesses"][0,7]
-      else
-        all_non_status_elements = ENEMY_DNA_BITFIELD_ATTRIBUTES["Weaknesses"][0,8]
+      should_randomize_weaknesses_and_resists = true
+      if GAME == "por" && enemy_dna.name == "Death"
+        # PoR Death hardcodes his weaknesses and resists, so don't both randomizing them
+        should_randomize_weaknesses_and_resists = false
       end
       
-      if is_boss
-        # Make sure bosses have the same number of weaknesses/resistances as they originally did.
-        
-        orig_num_weaknesses = 0
-        all_non_status_elements.each_with_index do |name, i|
-          if enemy_dna["Weaknesses"][i]
-            orig_num_weaknesses += 1
-          end
+      if should_randomize_weaknesses_and_resists
+        if GAME == "ooe"
+          all_non_status_elements = ENEMY_DNA_BITFIELD_ATTRIBUTES["Weaknesses"][0,7]
+        else
+          all_non_status_elements = ENEMY_DNA_BITFIELD_ATTRIBUTES["Weaknesses"][0,8]
         end
         
-        orig_num_resists = 0
-        all_non_status_elements.each_with_index do |name, i|
-          if enemy_dna["Resistances"][i]
-            orig_num_resists += 1
-          end
-        end
-        
-        num_weaknesses = orig_num_weaknesses
-        num_resists = orig_num_resists
-      else
-        num_weaknesses = named_rand_range_weighted(:enemy_num_weaknesses_range)
-        num_resists = named_rand_range_weighted(:enemy_num_resistances_range)
-      end
-      
-      weakness_names = all_non_status_elements.sample(num_weaknesses, random: rng)
-      resist_names = all_non_status_elements.sample(num_resists, random: rng)
-      
-      [
-        "Weaknesses",
-        "Resistances",
-      ].each do |bitfield_attr_name|
-        enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
-          next if bit_name == "Resistance 32" # Something related to rendering its GFX
+        if is_boss
+          # Make sure bosses have the same number of weaknesses/resistances as they originally did.
           
-          if all_non_status_elements.include?(bit_name)
-            if bitfield_attr_name == "Weaknesses" && weakness_names.include?(bit_name) || bitfield_attr_name == "Resistances" && resist_names.include?(bit_name)
-              enemy_dna[bitfield_attr_name][i] = true
-            else
-              enemy_dna[bitfield_attr_name][i] = false
-            end
-          elsif is_boss
-            # Don't randomize boss status effect weaknesses.
-            next
-          elsif GAME == "por" && bitfield_attr_name == "Resistances" && [25, 26].include?(i)
-            # Deflect subweapons/Deflect spells bits.
-            if rng.rand() <= 0.10
-              enemy_dna[bitfield_attr_name][i] = true
-            else
-              enemy_dna[bitfield_attr_name][i] = false
-            end
-          else
-            # Status effects for common enemies.
-            if GAME == "dos" || bitfield_attr_name == "Weaknesses" # Don't set status effect resists in PoR/OoE since they do nothing anyway.
-              enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
+          orig_num_weaknesses = 0
+          all_non_status_elements.each_with_index do |name, i|
+            if enemy_dna["Weaknesses"][i]
+              orig_num_weaknesses += 1
             end
           end
           
-          if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
-            # Don't set both the weakness and resistance bits for a given element.
-            # Depending on the game this can be somewhat buggy.
-            enemy_dna["Resistances"][i] = false
+          orig_num_resists = 0
+          all_non_status_elements.each_with_index do |name, i|
+            if enemy_dna["Resistances"][i]
+              orig_num_resists += 1
+            end
+          end
+          
+          num_weaknesses = orig_num_weaknesses
+          num_resists = orig_num_resists
+        else
+          num_weaknesses = named_rand_range_weighted(:enemy_num_weaknesses_range)
+          num_resists = named_rand_range_weighted(:enemy_num_resistances_range)
+        end
+        
+        weakness_names = all_non_status_elements.sample(num_weaknesses, random: rng)
+        resist_names = all_non_status_elements.sample(num_resists, random: rng)
+        
+        [
+          "Weaknesses",
+          "Resistances",
+        ].each do |bitfield_attr_name|
+          enemy_dna[bitfield_attr_name].names.each_with_index do |bit_name, i|
+            next if bit_name == "Resistance 32" # Something related to rendering its GFX
+            
+            if all_non_status_elements.include?(bit_name)
+              if bitfield_attr_name == "Weaknesses" && weakness_names.include?(bit_name) || bitfield_attr_name == "Resistances" && resist_names.include?(bit_name)
+                enemy_dna[bitfield_attr_name][i] = true
+              else
+                enemy_dna[bitfield_attr_name][i] = false
+              end
+            elsif is_boss
+              # Don't randomize boss status effect weaknesses.
+              next
+            elsif GAME == "por" && bitfield_attr_name == "Resistances" && [25, 26].include?(i)
+              # Deflect subweapons/Deflect spells bits.
+              if rng.rand() <= 0.10
+                enemy_dna[bitfield_attr_name][i] = true
+              else
+                enemy_dna[bitfield_attr_name][i] = false
+              end
+            else
+              # Status effects for common enemies.
+              if GAME == "dos" || bitfield_attr_name == "Weaknesses" # Don't set status effect resists in PoR/OoE since they do nothing anyway.
+                enemy_dna[bitfield_attr_name][i] = [true, false, false, false, false, false].sample(random: rng)
+              end
+            end
+            
+            if bitfield_attr_name == "Resistances" && enemy_dna["Weaknesses"][i] == true
+              # Don't set both the weakness and resistance bits for a given element.
+              # Depending on the game this can be somewhat buggy.
+              enemy_dna["Resistances"][i] = false
+            end
           end
         end
       end
