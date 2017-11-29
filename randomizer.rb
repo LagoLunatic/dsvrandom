@@ -783,7 +783,7 @@ class Randomizer
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
     new_overlay_size = new_overlay_file[:size]
-    game.fs.mark_space_unused(new_overlay_path, new_overlay_size, NEW_OVERLAY_FREE_SPACE_SIZE-new_overlay_size)
+    game.fs.mark_space_unused(new_overlay_path, new_overlay_size, NEW_OVERLAY_FREE_SPACE_MAX_SIZE-new_overlay_size)
   end
   
   def apply_tweaks
