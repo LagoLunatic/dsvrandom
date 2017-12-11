@@ -20,7 +20,7 @@ module DoorRandomizer
       
       all_area_subsectors = []
       area.sectors.each do |sector|
-        all_area_subsectors += get_subsectors(sector)
+        all_area_subsectors += get_subsectors(sector, include_transitions: true)
       end
       
       remaining_transitions = {
@@ -237,7 +237,7 @@ module DoorRandomizer
           
           while true
             debug = false
-            #debug = (area.area_index == 0 && sector.sector_index == 1)
+            #debug = (area.area_index == 6 && sector.sector_index == 0)
             
             #puts remaining_doors[:down].map{|d| d.door_str} if debug
             #gets if debug
@@ -440,10 +440,11 @@ module DoorRandomizer
     replace_outer_boss_doors()
   end
   
-  def get_subsectors(sector)
+  def get_subsectors(sector, include_transitions: false)
     subsectors = []
     
     remaining_rooms_to_check = sector.rooms.dup
+    remaining_rooms_to_check -= @transition_rooms unless include_transitions
     while remaining_rooms_to_check.any?
       current_subsector = []
       current_room = remaining_rooms_to_check.first
@@ -452,6 +453,7 @@ module DoorRandomizer
         remaining_rooms_to_check.delete(current_room)
         connected_rooms = current_room.doors.map{|door| door.destination_door.room}.uniq
         connected_rooms = connected_rooms & sector.rooms
+        connected_rooms -= @transition_rooms unless include_transitions
         current_subsector += connected_rooms
         current_subsector.uniq!
         
