@@ -529,7 +529,7 @@ class RandomizerWindow < Qt::Dialog
 end
 
 class ProgressDialog < Qt::ProgressDialog
-  slots "cancel_write_to_rom_thread()"
+  slots "cancel_thread()"
   
   def initialize(title, description, max_val)
     super()
@@ -539,19 +539,20 @@ class ProgressDialog < Qt::ProgressDialog
     self.windowModality = Qt::ApplicationModal
     self.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
     self.setFixedSize(self.size);
-    connect(self, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
+    connect(self, SIGNAL("canceled()"), self, SLOT("cancel_thread()"))
     self.show
   end
   
   def execute(&block)
-    @write_to_rom_thread = Thread.new do
+    @thread = Thread.new do
       yield
     end
   end
   
-  def cancel_write_to_rom_thread
+  def cancel_thread
     puts "Cancelled."
-    @write_to_rom_thread.kill
+    @thread.kill
+    self.close()
   end
 end
 
