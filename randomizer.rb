@@ -236,6 +236,8 @@ class Randomizer
     @difficulty_level = difficulty_level
     @user_given_difficulty_settings = difficulty_settings_averages
     
+    @glyphs_placed_as_event_glyphs = []
+    
     load_randomizer_constants()
   end
   

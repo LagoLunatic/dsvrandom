@@ -478,17 +478,27 @@ module PickupRandomizer
   
   def place_non_progression_pickups
     remaining_locations = checker.all_locations.keys - @locations_randomized_to_have_useful_pickups
+    remaining_locations.shuffle!(random: rng)
+    
+    if GAME == "ooe"
+      # Do event glyphs first. This is so they don't reuse a glyph already used by a glyph statue.
+      # If the player got the one from the glyph statue first then the one in the event/puzzle wouldn't appear, breaking the event/puzzle.
+      ooe_event_glyph_locations = remaining_locations.select{|location| checker.event_locations.include?(location)}
+      ooe_event_glyph_locations.each do |location|
+        pickup_global_id = get_unplaced_non_progression_skill()
+        change_entity_location_to_pickup_global_id(location, pickup_global_id)
+      end
+      remaining_locations -= ooe_event_glyph_locations
+    end
+    
     chaos_ring_placed = false
-    remaining_locations.shuffle(random: rng).each_with_index do |location, i|
+    remaining_locations.each_with_index do |location, i|
       if checker.enemy_locations.include?(location)
         # Boss
         pickup_global_id = get_unplaced_non_progression_skill()
       elsif ["dos", "por"].include?(GAME) && checker.event_locations.include?(location)
         # Event item
         pickup_global_id = get_unplaced_non_progression_item()
-      elsif GAME == "ooe" && checker.event_locations.include?(location)
-        # Event glyph
-        pickup_global_id = get_unplaced_non_progression_skill()
       elsif GAME == "dos" && checker.mirror_locations.include?(location)
         # Soul candles shouldn't be placed in mirrors, as they will appear even outside the mirror.
         pickup_global_id = get_unplaced_non_progression_item()
@@ -696,6 +706,11 @@ module PickupRandomizer
         SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       end
       @unplaced_non_progression_pickups -= checker.current_items
+      
+      # If a glyph has already been placed as an event glyph, do not place it again somewhere.
+      # If the player gets one from a glyph statue first, then the one in the event/puzzle won't appear.
+      @unplaced_non_progression_pickups -= @glyphs_placed_as_event_glyphs
+      
       return get_unplaced_non_progression_skill()
     end
     
@@ -1287,6 +1302,8 @@ module PickupRandomizer
   
   def ooe_change_hardcoded_event_pickup(event_entity, pickup_global_id)
     event_entity.room.sector.load_necessary_overlay()
+    
+    @glyphs_placed_as_event_glyphs << pickup_global_id
     
     if event_entity.subtype == 0x8A # Magnes
       # Get rid of the event, turn it into a normal free glyph
