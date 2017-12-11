@@ -655,6 +655,15 @@ module EnemyRandomizer
   end
   
   def ooe_adjust_randomized_enemy(enemy, enemy_dna)
+    if enemy_dna["Glyph"] != 0
+      glyphs_in_room = enemy.room.entities.select{|e| e.is_glyph? || e.is_glyph_statue? || e.is_villager?}
+      if glyphs_in_room.length >= 2
+        # If the room already has 2+ glyphs in it, don't put any enemies that create glyphs in the room too.
+        # (Applies to both enemies that drop glyphs when they die, as well as ones that use glyphs while they're alive.)
+        return :redo
+      end
+    end
+    
     case enemy_dna.name
     when "Bat", "Medusa Head", "Bone Pillar", "Fish Head", "White Dragon"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
