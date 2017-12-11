@@ -490,6 +490,8 @@ class DoorCompletabilityChecker
         if world_map_accessible
           # If the world map is already accessible, we add them to the list of doors to check.
           doors_to_check += newly_unlocked_world_map_door_strs
+          currently_unlocked_world_map_areas += newly_unlocked_world_map_door_strs
+          currently_unlocked_world_map_areas.uniq!
         else
           # Otherwise we add them to a temporary list which will be added to our doors to check whenever we get access to the world map.
           currently_unlocked_world_map_areas += newly_unlocked_world_map_door_strs
