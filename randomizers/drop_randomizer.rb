@@ -116,16 +116,32 @@ module DropRandomizer
       
       enemy["Item 1"] = 0
       enemy["Item 2"] = 0
-      enemy["Soul"]   = 0 if GAME == "dos"
-      enemy["Glyph"]  = 0 if GAME == "ooe"
+      enemy["Soul"] = 0 if GAME == "dos"
+      
+      # Don't remove the glyph from enemies that use glyphs to attack, or they won't be able to attack.
+      next if enemy.name.include?("Demon")
+      next if enemy.name.include?("Fomor")
+      next if ["Necromancer", "Nova Skeleton"].include?(enemy.name)
+      enemy["Glyph"] = 0 if GAME == "ooe"
+      
+      enemy.write_to_rom()
     end
     
-    if GAME == "ooe"
-      # Jiang Shi, Albus, and Barlowe
-      [0x67, 0x72, 0x73].each do |enemy_id|
+    if options[:randomize_enemy_drops] && GAME == "ooe"
+      # Randomize the glyphs used by enemies that we couldn't remove them from if the player has randomize enemy drops selected.
+      ENEMY_IDS.each do |enemy_id|
         enemy = game.enemy_dnas[enemy_id]
         
-        enemy["Glyph"] = 0
+        next unless enemy.name.include?("Demon") || enemy.name.include?("Fomor") || ["Necromancer", "Nova Skeleton", "Jiang Shi", "Albus", "Barlowe"].include?(enemy.name)
+        
+        if enemy.name.include?("Fomor") || enemy.name.include?("Demon")
+          # Fomors and Demons can actually use the glyph you give them, but only if it's a projectile arm glyph.
+          enemy["Glyph"] = get_unplaced_non_progression_projectile_glyph() - SKILL_GLOBAL_ID_RANGE.begin + 1
+        else
+          enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
+        end
+        
+        enemy.write_to_rom()
       end
     end
   end
