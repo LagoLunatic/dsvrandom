@@ -13,8 +13,8 @@ module DoorRandomizer
         transition_room.area_index == area.area_index
       end
       
-      if all_area_transition_rooms.empty?
-        # No transition rooms in this area.
+      if all_area_transition_rooms.size <= 2
+        # Not enough transition rooms in this area to properly randomize it. Need at least 3.
         next
       end
       
@@ -63,6 +63,7 @@ module DoorRandomizer
       on_first = true
       while true
         debug = false
+        #debug = (area.area_index == 0xB)
         
         if on_first
           inside_transition_door = starting_transition
