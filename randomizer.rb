@@ -538,11 +538,15 @@ class Randomizer
     @unplaced_non_progression_pickups = all_non_progression_pickups.dup
     @unplaced_non_progression_pickups -= checker.current_items
     
-    if options[:randomize_enemy_drops]
-      yield [options_completed, "Randomizing enemy drops..."]
-      reset_rng()
-      randomize_enemy_drops()
-      options_completed += 1
+    if options[:scavenger_mode]
+      remove_all_enemy_drops()
+    else
+      if options[:randomize_enemy_drops]
+        yield [options_completed, "Randomizing enemy drops..."]
+        reset_rng()
+        randomize_enemy_drops()
+        options_completed += 1
+      end
     end
     
     if options[:randomize_pickups]

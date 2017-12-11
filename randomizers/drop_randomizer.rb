@@ -109,4 +109,24 @@ module DropRandomizer
       enemy.write_to_rom()
     end
   end
+  
+  def remove_all_enemy_drops
+    COMMON_ENEMY_IDS.each do |enemy_id|
+      enemy = game.enemy_dnas[enemy_id]
+      
+      enemy["Item 1"] = 0
+      enemy["Item 2"] = 0
+      enemy["Soul"]   = 0 if GAME == "dos"
+      enemy["Glyph"]  = 0 if GAME == "ooe"
+    end
+    
+    if GAME == "ooe"
+      # Jiang Shi, Albus, and Barlowe
+      [0x67, 0x72, 0x73].each do |enemy_id|
+        enemy = game.enemy_dnas[enemy_id]
+        
+        enemy["Glyph"] = 0
+      end
+    end
+  end
 end

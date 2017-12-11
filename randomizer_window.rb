@@ -32,7 +32,8 @@ class RandomizerWindow < Qt::Dialog
     
     enable_glitch_reqs
     bonus_starting_items
-
+    
+    scavenger_mode
     name_unnamed_skills
     unlock_all_modes
     reveal_breakable_walls
