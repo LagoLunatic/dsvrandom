@@ -119,7 +119,7 @@ module DropRandomizer
       enemy["Soul"] = 0 if GAME == "dos"
       
       # Don't remove the glyph from enemies that use glyphs to attack, or they won't be able to attack.
-      next if enemy.name.include?("Demon")
+      next if enemy.name.include?("Demon") && enemy.name != "Demon"
       next if enemy.name.include?("Fomor")
       next if ["Necromancer", "Nova Skeleton"].include?(enemy.name)
       enemy["Glyph"] = 0 if GAME == "ooe"
@@ -132,6 +132,7 @@ module DropRandomizer
       ENEMY_IDS.each do |enemy_id|
         enemy = game.enemy_dnas[enemy_id]
         
+        next if enemy.name == "Demon"
         next unless enemy.name.include?("Demon") || enemy.name.include?("Fomor") || ["Necromancer", "Nova Skeleton", "Jiang Shi", "Albus", "Barlowe"].include?(enemy.name)
         
         if enemy.name.include?("Fomor") || enemy.name.include?("Demon")
