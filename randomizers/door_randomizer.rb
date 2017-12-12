@@ -49,8 +49,18 @@ module DoorRandomizer
       
       # Then we go through each transition door and keep track of what subsector it's located in.
       remaining_transitions.values.flatten.each do |transition_door|
+        if transition_door.direction == :right
+          # The door leading right into a transition room.
+          # This is part of the sector proper, so we just use this room itself to detect the proper subsector.
+          room_in_desired_subsector = transition_door.room
+        else
+          # The door leading left out of the transition room.
+          # We want the subsector to the right. But since this is in the transition room, we have no idea what subsector the transition room itself is in.
+          # So follow the right door out of the transition room, and use the room there to detect the proper subsector.
+          room_in_desired_subsector = transition_door.room.doors.find{|d| d.direction == :right}.destination_room
+        end
         all_area_subsectors.each_with_index do |subsector_rooms, subsector_index|
-          if subsector_rooms.include?(transition_door.room)
+          if subsector_rooms.include?(room_in_desired_subsector)
             transition_doors_by_subsector[subsector_index] << transition_door
             other_transitions_in_same_subsector[transition_door] = transition_doors_by_subsector[subsector_index]
             break
@@ -63,12 +73,16 @@ module DoorRandomizer
         end
       end
       
+      #other_transitions_in_same_subsector.each do |k, v|
+      #  puts "#{k.door_str}: #{v.map{|d| d.door_str}.join(", ")}"
+      #end
+      
       starting_transition = remaining_transitions.values.flatten.sample(random: rng)
       
       on_first = true
       while true
         debug = false
-        #debug = (area.area_index == 0xB)
+        #debug = (area.area_index == 0)
         
         if on_first
           inside_transition_door = starting_transition
@@ -140,11 +154,13 @@ module DoorRandomizer
         queued_door_changes[outside_transition_door]["dest_x"] = inside_transition_door.destination_door.dest_x
         queued_door_changes[outside_transition_door]["dest_y"] = inside_transition_door.destination_door.dest_y
         
+        #puts "accessible_unused_transitions before: #{accessible_unused_transitions.map{|d| d.door_str}}"
         accessible_unused_transitions.delete(inside_transition_door)
         accessible_unused_transitions.delete(outside_transition_door)
         accessible_unused_transitions += (other_transitions_in_same_subsector[inside_transition_door] & remaining_transitions.values.flatten)
         accessible_unused_transitions += (other_transitions_in_same_subsector[outside_transition_door] & remaining_transitions.values.flatten)
         accessible_unused_transitions.uniq!
+        #puts "accessible_unused_transitions after: #{accessible_unused_transitions.map{|d| d.door_str}}"
         
         if accessible_unused_transitions.empty?
           if remaining_transitions.values.flatten.size == 0
