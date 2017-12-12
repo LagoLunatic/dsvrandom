@@ -198,6 +198,8 @@ module DoorRandomizer
       end
     end
     
+    @randomize_up_down_doors = true
+    
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
     game.areas.each do |area|
@@ -259,7 +261,7 @@ module DoorRandomizer
           
           while true
             debug = false
-            #debug = (area.area_index == 6 && sector.sector_index == 0)
+            #debug = (area.area_index == 0x11 && sector.sector_index == 0)
             
             #puts remaining_doors[:down].map{|d| d.door_str} if debug
             #gets if debug
@@ -307,12 +309,13 @@ module DoorRandomizer
               ((door.room.doors & all_randomizable_doors) - transition_doors).length > 1 && unvisited_rooms.include?(door.room)
             end
             
-            inaccessible_remaining_matching_doors_with_updown_door_exits = []
+            inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright = []
             inaccessible_remaining_matching_doors_with_no_leftright_door_exits = []
+            inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits = []
             if [:left, :right].include?(inside_door.direction)
               # If we're on a left/right door, prioritize going to new rooms that have an up/down door so we don't get locked out of having any up/down doors to work with.
               
-              inaccessible_remaining_matching_doors_with_updown_door_exits = inaccessible_remaining_matching_doors_with_other_exits.select do |door|
+              inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright = inaccessible_remaining_matching_doors_with_other_exits.select do |door|
                 if door.direction == :left || door.direction == :right
                   ((door.room.doors & all_randomizable_doors) - transition_doors).any?{|x| x.direction == :up || x.direction == :down}
                 end
@@ -327,45 +330,59 @@ module DoorRandomizer
                 end
               end
               
+              inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits = inaccessible_remaining_matching_doors_with_other_exits.select do |door|
+                if door.direction == :up || door.direction == :down
+                  ((door.room.doors & all_randomizable_doors) - transition_doors).none?{|x| x.direction == :left || x.direction == :right}
+                end
+              end
+              
               if debug && inaccessible_remaining_matching_doors_with_no_leftright_door_exits.any?
                 puts "Found up/down doors with no left/right exits in destination:"
                 inaccessible_remaining_matching_doors_with_no_leftright_door_exits.each{|x| puts "  #{x.door_str}"}
               end
             end
             
-            if inaccessible_remaining_matching_doors_with_no_leftright_door_exits.any? && accessible_remaining_leftright_doors.size >= 1
+            remaining_inaccessible_rooms_with_up_down_doors = (remaining_doors[:up] + remaining_doors[:down] - accessible_remaining_doors).map{|d| d.room}.uniq
+            
+            if inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits.any? && remaining_inaccessible_rooms_with_up_down_doors.size > 1
+              # There are doors we can swap with that allow you to reach a new room which allows more progress, but only via up/down doors.
+              # We want to prioritize these because they can't be gotten into via left/right doors like rooms that have at least one left/right.
+              possible_dest_doors = inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits
+              
+              puts "TYPE 1" if debug
+            elsif inaccessible_remaining_matching_doors_with_no_leftright_door_exits.any? && accessible_remaining_leftright_doors.size >= 1
               # There are doors we can swap with that allow you to reach a new room which is a dead end, but is a dead end with only up/down doors.
               # We want to prioritize these because they can't be gotten into via left/right doors like rooms that have at least one left/right.
               # Note that we also only take this option if there's at least 1 accessible left/right door for us to still use. If there's not this would deadend us instantly.
               possible_dest_doors = inaccessible_remaining_matching_doors_with_no_leftright_door_exits
               
-              puts "TYPE 1" if debug
-            elsif inaccessible_remaining_matching_doors_with_updown_door_exits.any?
-              # There are doors we can swap with that allow more progress, and also allow accessing an new up/down door from a left/right door.
-              possible_dest_doors = inaccessible_remaining_matching_doors_with_updown_door_exits
-              
               puts "TYPE 2" if debug
+            elsif inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright.any? && remaining_inaccessible_rooms_with_up_down_doors.size > 1
+              # There are doors we can swap with that allow more progress, and also allow accessing a new up/down door from a left/right door.
+              possible_dest_doors = inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright
+              
+              puts "TYPE 3" if debug
             elsif inaccessible_remaining_matching_doors_with_other_exits.any?
               # There are doors we can swap with that allow more progress.
               possible_dest_doors = inaccessible_remaining_matching_doors_with_other_exits
               
-              puts "TYPE 3" if debug
+              puts "TYPE 4" if debug
             elsif inaccessible_remaining_matching_doors.any?
               # There are doors we can swap with that will allow you to reach one new room which is a dead end.
               possible_dest_doors = inaccessible_remaining_matching_doors
               
-              puts "TYPE 4" if debug
+              puts "TYPE 5" if debug
             elsif remaining_doors[inside_door_opposite_direction].any?
               # This door direction doesn't have any more matching doors left to swap with that will result in progress.
               # So just pick any matching door.
               possible_dest_doors = remaining_doors[inside_door_opposite_direction]
               
-              puts "TYPE 5" if debug
+              puts "TYPE 6" if debug
             else
               # This door direction doesn't have any matching doors left.
               # Don't do anything to this door.
               
-              puts "TYPE 6" if debug
+              puts "TYPE 7" if debug
               
               #puts "#{inside_door.direction} empty"
               #
@@ -391,7 +408,7 @@ module DoorRandomizer
               next
             end
             
-            if [:up, :down].include?(inside_door.direction)
+            if !@randomize_up_down_doors && [:up, :down].include?(inside_door.direction)
               # Don't randomize up/down doors. This is a temporary hacky measure to greatly reduce failures at connecting all rooms in a subsector.
               new_dest_door = inside_door.destination_door
               # Also need to convert this door to a subroomdoor, if applicable.
