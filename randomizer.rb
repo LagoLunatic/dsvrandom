@@ -455,28 +455,6 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_starting_room]
-      yield [options_completed, "Selecting starting room..."]
-      reset_rng()
-      randomize_starting_room()
-      options_completed += 1
-    else
-      @starting_room = case GAME
-      when "dos"
-        game.areas[0].sectors[0].rooms[1]
-      when "por"
-        game.areas[0].sectors[0].rooms[0]
-      when "ooe"
-        game.areas[2].sectors[0].rooms[4]
-      end
-      @starting_room_door_index = 0
-      @starting_x_pos = 0x80
-      @starting_y_pos = 0x60
-    end
-    if room_rando?
-      checker.set_starting_room(@starting_room, @starting_room_door_index)
-    end
-    
     if room_rando?
       # Remove breakable walls and similar things that prevent you from going in certain doors.
       remove_door_blockers()
@@ -504,6 +482,28 @@ class Randomizer
         randomize_non_transition_doors()
         options_completed += 1
       end
+    end
+    
+    if options[:randomize_starting_room]
+      yield [options_completed, "Selecting starting room..."]
+      reset_rng()
+      randomize_starting_room()
+      options_completed += 1
+    else
+      @starting_room = case GAME
+      when "dos"
+        game.areas[0].sectors[0].rooms[1]
+      when "por"
+        game.areas[0].sectors[0].rooms[0]
+      when "ooe"
+        game.areas[2].sectors[0].rooms[4]
+      end
+      @starting_room_door_index = 0
+      @starting_x_pos = 0x80
+      @starting_y_pos = 0x60
+    end
+    if room_rando?
+      checker.set_starting_room(@starting_room, @starting_room_door_index)
     end
     
     @used_pickup_flags = []

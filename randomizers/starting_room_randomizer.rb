@@ -27,6 +27,11 @@ module StartingRoomRandomizer
       
       next if room.entities.find{|e| e.is_boss?}
       
+      # Limit to rooms where the player can access at least 3 item locations. Otherwise the player could be stuck right at the start with no items.
+      checker.set_starting_room(room, 0)
+      accessible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
+      next if accessible_locations.size < 3
+      
       rooms << room
     end
     
