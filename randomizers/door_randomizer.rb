@@ -36,6 +36,11 @@ module DoorRandomizer
       
       # First we make a list of the transition doors, specifically the left door in a transition room, and the right door that leads into that transition room.
       all_area_transition_rooms.each do |transition_room|
+        if transition_room.room_str == "00-0A-00"
+          # The transition room connecting the Library to the blocked off entrance of Final Approach.
+          # Don't randomize this connection, since it could result in progression being impossible.
+          next
+        end
         transition_door = transition_room.doors.find{|door| door.direction == :left}
         dest_door = transition_door.destination_door
         remaining_transitions[transition_door.direction] << transition_door
