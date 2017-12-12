@@ -11,6 +11,9 @@ module StartingRoomRandomizer
       room_doors.select!{|door| door.direction == :left || door.direction == :right}
       next if room_doors.empty?
       
+      # Limit to save rooms.
+      next unless room.entities.find{|e| e.is_save_point?}
+      
       next if room.area.name.include?("Boss Rush")
       next if room.sector.name.include?("Boss Rush")
       
@@ -24,15 +27,10 @@ module StartingRoomRandomizer
       
       next if room.entities.find{|e| e.is_boss?}
       
-      # Limit to rooms that connect to a save room.
-      next unless room.doors.find do |door|
-        door.destination_door.room.entities.find{|e| e.is_save_point?}
-      end
-      
       rooms << room
     end
     
-    # TODO: in OoE put the glyph given by barlowe in the starting room.
+    # TODO: in OoE put the glyph given by barlowe in the randomized starting room so the player has a weapon
     
     # TODO: for the bonus starting items option, use the new x/y pos from here.
     
@@ -40,7 +38,6 @@ module StartingRoomRandomizer
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
     room_doors.select!{|door| door.direction == :left || door.direction == :right}
-    room_doors.select!{|door| door.destination_door.room.entities.find{|e| e.is_save_point?}} # Limit to doors that lead to a save point.
     door = room_doors.sample(random: rng)
     gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
     case door.direction
