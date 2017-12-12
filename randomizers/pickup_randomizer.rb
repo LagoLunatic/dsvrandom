@@ -146,7 +146,11 @@ module PickupRandomizer
     
     if !checker.game_beatable?
       item_names = checker.current_items.map do |global_id|
-        checker.defs.invert[global_id]
+        if global_id.is_a?(Symbol)
+          global_id
+        else
+          checker.defs.invert[global_id]
+        end
       end.compact
       raise "Bug: Game is not beatable on this seed!\nThis error shouldn't happen.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
     end
