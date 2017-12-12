@@ -208,6 +208,8 @@ module PickupRandomizer
       end
     end
     
+    verbose = false
+    
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
     while true
@@ -221,7 +223,7 @@ module PickupRandomizer
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
       currently_useless_pickups = pickups_by_locations.select{|pickup, num_locations| num_locations == 0}
-      puts "Num useless pickups: #{currently_useless_pickups.size}"
+      puts "Num useless pickups: #{currently_useless_pickups.size}" if verbose
       placing_currently_useless_pickup = false
       if pickups_by_usefulness.any?
         max_usefulness = pickups_by_usefulness.values.max
@@ -283,7 +285,7 @@ module PickupRandomizer
       end
       
       pickup_name = checker.defs.invert[pickup_global_id].to_s
-      puts "Trying to place #{pickup_name}"
+      puts "Trying to place #{pickup_name}" if verbose
       
       if room_rando?
         possible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
@@ -291,7 +293,7 @@ module PickupRandomizer
         possible_locations = checker.get_accessible_locations()
       end
       possible_locations -= @locations_randomized_to_have_useful_pickups
-      puts "Total possible locations: #{possible_locations.size}"
+      puts "Total possible locations: #{possible_locations.size}" if verbose
       
       if !options[:randomize_boss_souls]
         # If randomize boss souls option is off, don't allow putting random things in these locations.
@@ -342,8 +344,8 @@ module PickupRandomizer
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
       filtered_new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
-      puts "Filtered new possible locations: #{filtered_new_possible_locations.size}"
-      puts filtered_new_possible_locations.join(", ")
+      puts "Filtered new possible locations: #{filtered_new_possible_locations.size}" if verbose
+      puts filtered_new_possible_locations.join(", ") if verbose
       
       valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
         possible_locations = previous_accessible_region.dup
@@ -406,7 +408,7 @@ module PickupRandomizer
           # Always place in the most recent accessible region.
           
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
-          puts "No new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"
+          puts "No new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}" if verbose
         end
       elsif filtered_new_possible_locations.size <= 5 && valid_previous_accessible_regions.last && valid_previous_accessible_regions.last.size >= 15
         # There aren't many new locations unlocked by the last item we placed.
@@ -416,7 +418,7 @@ module PickupRandomizer
         chance = 0.30 + (5-filtered_new_possible_locations.size)*10
         if rng.rand() <= chance
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
-          puts "Not many new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}"
+          puts "Not many new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}" if verbose
         end
       end
       
@@ -458,7 +460,7 @@ module PickupRandomizer
       is_mirror_str = checker.mirror_locations.include?(location) ? " (mirror)" : ""
       spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
       spoiler_log.puts spoiler_str
-      puts spoiler_str
+      puts spoiler_str if verbose
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
