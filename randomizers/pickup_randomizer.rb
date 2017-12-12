@@ -461,10 +461,10 @@ module PickupRandomizer
       checker.add_item(pickup_global_id)
       
       if room_rando? && GAME == "ooe"
-        if accessible_doors.include?("01-01-00_000")
+        if accessible_doors.include?("01-01-00_000") && !checker.current_items.include?(:villagernikolai)
           checker.add_item(:villagernikolai)
         end
-        if accessible_doors.include?("11-00-08_000")
+        if accessible_doors.include?("11-00-08_000") && !checker.current_items.include?(:villagergeorge)
           checker.add_item(:villagergeorge)
         end
       end
