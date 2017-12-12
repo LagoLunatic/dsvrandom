@@ -109,8 +109,16 @@ module EnemyRandomizer
         overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
         overlay.nil? || overlay == enemy_overlay_id_for_room
       end
+      if GAME == "ooe"
+        @allowed_enemies_for_room << 0x6B # Count Giant Skeleton as a common enemy
+      end
       
       enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
+      if GAME == "ooe"
+        enemies_in_room += room.entities.select do |e|
+           e.is_enemy? && e.subtype == 0x6B && e.var_a == 0 # Count Giant Skeleton as a common enemy
+        end
+      end
       
       next if enemies_in_room.empty?
       
@@ -758,6 +766,9 @@ module EnemyRandomizer
       
       # If var A is nonzero, Tin Man will be able to fall off ledges - but long falls will crash the game, so disable this.
       enemy.var_a = 0
+    when "Giant Skeleton"
+      enemy.var_a = 0 # Common enemy Giant Skeleton.
+      enemy.var_b = 0 # Faces the player when they enter the room.
     end
   end
 end
