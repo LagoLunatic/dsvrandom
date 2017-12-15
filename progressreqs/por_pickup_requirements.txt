@@ -91,7 +91,8 @@ Defs:
   forestofdoom: portraitforestofdoom & bossstella & wind
   portraitforestofdoom: portraitforestofdoom
   forestofdoomcenter: forestofdoom & height
-  forestofdoomeast: forestofdoomcenter & height 2
+  forestofdoomunderground: forestofdoomcenter & partnerpush & strength cube
+  forestofdoomeast: forestofdoomunderground & height 2
   bossdagon: forestofdoomeast
   
   towerofdeathstart: greatstairway & partnerpush & strength cube | towerofdeathelevator
@@ -781,7 +782,7 @@ Rooms:
     room: forestofdoomcenter
     00 (Silver Plate): 
   07-02-0F:
-    room: forestofdoomcenter & quad jump height
+    room: forestofdoomunderground & quad jump height
     00 (Dark Gate): 
   07-02-11:
     room: forestofdoomcenter
