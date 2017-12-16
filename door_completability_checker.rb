@@ -11,6 +11,7 @@ class DoorCompletabilityChecker
               :subrooms_doors_only,
               :enemy_locations,
               :event_locations,
+              :easter_egg_locations,
               :villager_locations,
               :hidden_locations,
               :mirror_locations,
@@ -100,6 +101,7 @@ class DoorCompletabilityChecker
     
     @enemy_locations = yaml["Enemy locations"] || []
     @event_locations = yaml["Event locations"] || []
+    @easter_egg_locations = yaml["Easter egg locations"] || []
     @villager_locations = yaml["Villager locations"] || []
     @hidden_locations = yaml["Hidden locations"] || []
     @mirror_locations = yaml["Mirror locations"] || []

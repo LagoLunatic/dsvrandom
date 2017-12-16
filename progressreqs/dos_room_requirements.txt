@@ -65,6 +65,7 @@ Enemy locations:
   - 00-0B-13_00
 Event locations:
   - 00-01-37_00 # Mina's Talisman
+Easter egg locations:
   - 00-01-36_00 # Crown
   - 00-04-12_00 # Bell
   - 00-08-18_00 # Konami Man

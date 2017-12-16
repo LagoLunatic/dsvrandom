@@ -8,6 +8,7 @@ class CompletabilityChecker
               :preferences,
               :enemy_locations,
               :event_locations,
+              :easter_egg_locations,
               :villager_locations,
               :hidden_locations,
               :mirror_locations,
@@ -66,6 +67,7 @@ class CompletabilityChecker
     
     @enemy_locations = []
     @event_locations = []
+    @easter_egg_locations = []
     @villager_locations = []
     @hidden_locations = []
     @mirror_locations = []
@@ -94,6 +96,9 @@ class CompletabilityChecker
           end
           if applies_to.include?(" (Event)")
             @event_locations << entity_str
+          end
+          if applies_to.include?(" (Easter egg)")
+            @easter_egg_locations << entity_str
           end
           if applies_to.include?(" (Villager)")
             @villager_locations << entity_str

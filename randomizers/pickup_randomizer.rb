@@ -456,9 +456,10 @@ module PickupRandomizer
       end
       is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
       is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
+      is_easter_egg_str = checker.easter_egg_locations.include?(location) ? " (easter egg)" : ""
       is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
       is_mirror_str = checker.mirror_locations.include?(location) ? " (mirror)" : ""
-      spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
+      spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
       spoiler_log.puts spoiler_str
       puts spoiler_str if verbose
       
@@ -502,7 +503,7 @@ module PickupRandomizer
       if checker.enemy_locations.include?(location)
         # Boss
         pickup_global_id = get_unplaced_non_progression_skill()
-      elsif ["dos", "por"].include?(GAME) && checker.event_locations.include?(location)
+      elsif ["dos", "por"].include?(GAME) && (checker.event_locations.include?(location) || checker.easter_egg_locations.include?(location))
         # Event item
         pickup_global_id = get_unplaced_non_progression_item()
       elsif GAME == "dos" && checker.mirror_locations.include?(location)
@@ -594,12 +595,17 @@ module PickupRandomizer
     if GAME == "dos" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you souls in DoS.
       locations -= checker.event_locations
+      locations -= checker.easter_egg_locations
       
       # Don't let soul candles be inside mirrors. They don't get hidden, and are accessible without Paranoia.
       locations -= checker.mirror_locations
       
       # Don't let soul candles be inside specific locations that can be broken without reaching them.
       locations -= checker.no_soul_locations
+    end
+    if GAME == "dos" && (0x3D..0x41).include?(pickup_global_id)
+      # Magic seals can't be given by easter egg locations.
+      locations -= checker.easter_egg_locations
     end
     if GAME == "ooe" && ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't let events give you items in OoE.
@@ -786,7 +792,7 @@ module PickupRandomizer
   def change_entity_location_to_pickup_global_id(location, pickup_global_id)
     entity = get_entity_by_location_str(location)
     
-    if checker.event_locations.include?(location)
+    if checker.event_locations.include?(location) || checker.easter_egg_locations.include?(location)
       # Event with a hardcoded item/glyph.
       change_hardcoded_event_pickup(entity, pickup_global_id)
       return
