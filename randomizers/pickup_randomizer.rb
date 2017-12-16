@@ -666,15 +666,25 @@ module PickupRandomizer
     locations
   end
   
-  def get_unplaced_non_progression_pickup
-    pickup_global_id = @unplaced_non_progression_pickups.sample(random: rng)
+  def get_unplaced_non_progression_pickup(valid_ids: PICKUP_GLOBAL_ID_RANGE.to_a)
+    valid_possible_items = @unplaced_non_progression_pickups.select do |pickup_global_id|
+      valid_ids.include?(pickup_global_id)
+    end
+    
+    pickup_global_id = valid_possible_items.sample(random: rng)
     
     if pickup_global_id.nil?
-      #puts "RAN OUT OF PICKUPS"
       # Ran out of unplaced pickups, so place a duplicate instead.
-      @unplaced_non_progression_pickups = all_non_progression_pickups().dup
+      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
+        valid_ids.include?(pickup_global_id)
+      end
       @unplaced_non_progression_pickups -= checker.current_items
-      return get_unplaced_non_progression_pickup()
+      
+      # If a glyph has already been placed as an event glyph, do not place it again somewhere.
+      # If the player gets one from a glyph statue first, then the one in the event/puzzle won't appear.
+      @unplaced_non_progression_pickups -= @glyphs_placed_as_event_glyphs
+      
+      return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
     end
     
     @unplaced_non_progression_pickups.delete(pickup_global_id)
@@ -683,52 +693,11 @@ module PickupRandomizer
   end
   
   def get_unplaced_non_progression_item
-    unplaced_non_progression_items = @unplaced_non_progression_pickups.select do |pickup_global_id|
-      ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
-    end
-    
-    item_global_id = unplaced_non_progression_items.sample(random: rng)
-    
-    if item_global_id.nil?
-      #puts "RAN OUT OF ITEMS"
-      # Ran out of unplaced items, so place a duplicate instead.
-      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
-        ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
-      end
-      @unplaced_non_progression_pickups -= checker.current_items
-      return get_unplaced_non_progression_item()
-    end
-    
-    @unplaced_non_progression_pickups.delete(item_global_id)
-    
-    return item_global_id
+    return get_unplaced_non_progression_pickup(valid_ids: ITEM_GLOBAL_ID_RANGE.to_a)
   end
   
   def get_unplaced_non_progression_skill
-    unplaced_non_progression_skills = @unplaced_non_progression_pickups.select do |pickup_global_id|
-      SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
-    end
-    
-    skill_global_id = unplaced_non_progression_skills.sample(random: rng)
-    
-    if skill_global_id.nil?
-      #puts "RAN OUT OF SKILLS"
-      # Ran out of unplaced skills, so place a duplicate instead.
-      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
-        SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
-      end
-      @unplaced_non_progression_pickups -= checker.current_items
-      
-      # If a glyph has already been placed as an event glyph, do not place it again somewhere.
-      # If the player gets one from a glyph statue first, then the one in the event/puzzle won't appear.
-      @unplaced_non_progression_pickups -= @glyphs_placed_as_event_glyphs
-      
-      return get_unplaced_non_progression_skill()
-    end
-    
-    @unplaced_non_progression_pickups.delete(skill_global_id)
-    
-    return skill_global_id
+    return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a)
   end
   
   def get_unplaced_non_progression_item_except_ooe_relics
@@ -736,47 +705,12 @@ module PickupRandomizer
     if GAME == "ooe"
       valid_ids -= (0x6F..0x74).to_a
     end
-    unplaced_non_progression_items = @unplaced_non_progression_pickups.select do |pickup_global_id|
-      valid_ids.include?(pickup_global_id)
-    end
-    
-    item_global_id = unplaced_non_progression_items.sample(random: rng)
-    
-    if item_global_id.nil?
-      #puts "RAN OUT OF ITEMS"
-      # Ran out of unplaced items, so place a duplicate instead.
-      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
-        valid_ids.include?(pickup_global_id)
-      end
-      @unplaced_non_progression_pickups -= checker.current_items
-      return get_unplaced_non_progression_item()
-    end
-    
-    @unplaced_non_progression_pickups.delete(item_global_id)
-    
-    return item_global_id
+    return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a)
   end
   
   def get_unplaced_non_progression_projectile_glyph
     projectile_glyph_ids = (0x16..0x18).to_a + (0x1C..0x32).to_a + (0x34..0x36).to_a
-    valid_skills = @unplaced_non_progression_pickups.select do |pickup_global_id|
-      projectile_glyph_ids.include?(pickup_global_id)
-    end
-    
-    skill_global_id = valid_skills.sample(random: rng)
-    
-    if skill_global_id.nil?
-      # Ran out of unplaced projectile glyphs, so place a duplicate instead.
-      @unplaced_non_progression_pickups += all_non_progression_pickups().select do |pickup_global_id|
-        projectile_glyph_ids.include?(pickup_global_id)
-      end
-      @unplaced_non_progression_pickups -= checker.current_items
-      return get_unplaced_non_progression_projectile_glyph()
-    end
-    
-    @unplaced_non_progression_pickups.delete(skill_global_id)
-    
-    return skill_global_id
+    return get_unplaced_non_progression_pickup(valid_ids: projectile_glyph_ids)
   end
   
   def get_entity_by_location_str(location)
