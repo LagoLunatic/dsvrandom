@@ -14,6 +14,7 @@ module ChestPoolRandomizer
       item = game.items[item_id]
       item["Price"] >= 4000
     end
+    available_rare_wooden_chest_item_ids -= ITEMS_WITH_OP_HARDCODED_EFFECT
     
     available_common_wooden_chest_item_ids = (0x75..0xA3).to_a + (0xBA..0xD1).to_a
     available_common_wooden_chest_item_ids -= available_rare_wooden_chest_item_ids

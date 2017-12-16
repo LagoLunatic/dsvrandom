@@ -4,6 +4,8 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
   [0x12C] + # magus ring (placed separately by the randomizer logic)
   [0x4F, 0x50, 0x51] # the hard mode clear rewards that give +50 to certain stats. these make the game too easy
 
+ITEMS_WITH_OP_HARDCODED_EFFECT = []
+
 MAGICAL_TICKET_GLOBAL_ID = 0x45
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x09, 0x18, 0x24, 0x38, 0x49, 0x68]

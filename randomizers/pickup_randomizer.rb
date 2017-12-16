@@ -713,6 +713,24 @@ module PickupRandomizer
     return get_unplaced_non_progression_pickup(valid_ids: projectile_glyph_ids)
   end
   
+  def get_unplaced_non_progression_pickup_for_enemy_drop
+    valid_ids = PICKUP_GLOBAL_ID_RANGE.to_a - ITEMS_WITH_OP_HARDCODED_EFFECT
+    return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
+  end
+  
+  def get_unplaced_non_progression_item_for_enemy_drop
+    valid_ids = ITEM_GLOBAL_ID_RANGE.to_a - ITEMS_WITH_OP_HARDCODED_EFFECT
+    return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
+  end
+  
+  def get_unplaced_non_progression_item_except_ooe_relics_for_enemy_drop
+    valid_ids = ITEM_GLOBAL_ID_RANGE.to_a - ITEMS_WITH_OP_HARDCODED_EFFECT
+    if GAME == "ooe"
+      valid_ids -= (0x6F..0x74).to_a
+    end
+    return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
+  end
+  
   def get_entity_by_location_str(location)
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
