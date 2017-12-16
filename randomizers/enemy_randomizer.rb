@@ -93,6 +93,11 @@ module EnemyRandomizer
       end
     end
     
+    if GAME == "dos"
+      # Add the searchlight's assets to Mothman's assets since it will be placed alongside him.
+      @assets_for_each_enemy[0x50] += @assets_for_each_special_object[0x4B]
+    end
+    
     total_rooms = 0
     game.each_room do |room|
       total_rooms += 1
@@ -524,6 +529,18 @@ module EnemyRandomizer
         # Homunculus freaks out in large rooms.
         return :redo
       end
+    when "Mothman"
+      # Mothman needs a searchlight in his room for him to appear.
+      room = enemy.room
+      searchlight = Entity.new(room, room.fs)
+      
+      searchlight.x_pos = enemy.x_pos
+      searchlight.y_pos = enemy.y_pos
+      searchlight.type = 2
+      searchlight.subtype = 0x4B
+      
+      room.entities << searchlight
+      room.write_entities_to_rom()
     end
   end
   
