@@ -96,8 +96,8 @@ Defs:
   allvillagers: villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
   bossbarlowe: ecclesia & bossalbus & allvillagers
   
-  trainchamber: backexit | nonlinear
-  trainchamberend: trainchamber & magnes & double jump | trainchamber & redire
+  trainhall: backexit | nonlinear
+  trainhallend: trainhall & magnes & double jump | trainhall & redire
   
   largecavern: backexit | nonlinear
   
@@ -304,10 +304,10 @@ Rooms:
     room: ecclesia
     05 (Record 1): 
     #07 (Glyph Sleeve): # don't randomize this, always start the player with the glyph sleeve
-#Training Chamber:
+#Training Hall:
   03-00-01:
-    room: trainchamber
-    01 (Redire): trainchamberend
+    room: trainhall
+    01 (Redire): trainhallend
 #Ruvas Forest:
   04-00-01:
     room: ruvas

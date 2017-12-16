@@ -1126,7 +1126,7 @@ Rooms:
     #e07-001: 
     #e07-002: 
     #e07-003: 
-#Training Chamber:
+#Training Hall:
   03-00-01:
     000-001: false
     000-002: 
