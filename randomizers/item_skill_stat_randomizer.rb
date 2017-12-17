@@ -445,8 +445,17 @@ module ItemSkillStatRandomizer
         
         skill["Heart cost"] = 0 if skill_global_id == 0x68 # Dominus union shouldn't cost hearts
       else
-        skill["Mana cost"] = named_rand_range_weighted(:skill_mana_cost_range) unless progress_skill
         skill["DMG multiplier"] = named_rand_range_weighted(:skill_dmg_range)
+        if progress_skill
+          # Don't randomize mana cost for progress skills.
+        elsif GAME == "dos" && skill["Type"] == 1
+          # Guardian souls should have lower mana costs than bullet souls.
+          mana_cost = named_rand_range_weighted(:skill_mana_cost_range)
+          mana_cost = (mana_cost / 4.0).round
+          skill["Mana cost"] = mana_cost
+        else
+          skill["Mana cost"] = named_rand_range_weighted(:skill_mana_cost_range)
+        end
       end
       
       if GAME == "dos"
