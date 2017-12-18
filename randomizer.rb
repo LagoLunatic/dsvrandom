@@ -978,6 +978,15 @@ class Randomizer
       end
     end
     
+    if GAME == "por" && options[:randomize_portraits]
+      # Portraits that return to the castle from 13th Street/Forgotten City/Burnt Paradise/Dark Academy (object 87) place the player at a different X position than other portraits.
+      # Those other positions aren't taken into account by the logic, so change these to use the same X pos (80) as the others.
+      game.fs.replace_arm_shifted_immediate_integer(0x02078EA0, 0x80)
+      game.fs.replace_arm_shifted_immediate_integer(0x02078E98, 0x80)
+      game.fs.replace_arm_shifted_immediate_integer(0x02078EA8, 0x80)
+      game.fs.replace_arm_shifted_immediate_integer(0x02078EB0, 0x80)
+    end
+    
     if GAME == "por"
       # Fix a bug in the base game where you have a couple seconds after picking up the cog where you can use a magical ticket to skip fighting Legion.
       # To do this we make Legion's horizontal boss doors turn on global flag 2 (in the middle of a boss fight, prevents magical ticket use) as soon as you enter the room, in the same line that it was turning on global flag 1.
