@@ -650,8 +650,6 @@ module PickupRandomizer
         "05-01-01",
         "05-01-14",
         "06-01-14",
-        "00-06-03",
-        "00-06-09",
         "00-05-02", # This great stairway room doesn't put you out of bounds, but does let you sequence break the button lock.
       ]
       
