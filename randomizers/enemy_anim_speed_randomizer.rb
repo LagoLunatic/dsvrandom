@@ -7,7 +7,8 @@ module EnemyAnimSpeedRandomizer
         next
       end
       
-      speed_mult = rng.rand(0.33..3.0)
+      speed_mult = named_rand_range_weighted(:enemy_anim_speed_mult_range)
+      delay_mult = 1.0 / speed_mult
       
       begin
         sprite_info = enemy_dna.extract_gfx_and_palette_and_sprite_from_init_ai
@@ -17,18 +18,19 @@ module EnemyAnimSpeedRandomizer
       sprite = sprite_info.sprite
       
       sprite.frame_delays.each do |frame_delay|
-        frame_delay.delay *= speed_mult
+        frame_delay.delay *= delay_mult
         frame_delay.delay = 1 if frame_delay.delay < 1
         frame_delay.delay = frame_delay.delay.round
       end
       sprite.write_to_rom()
       
       if sprite_info.skeleton_file
+        # In OoE, also randomize the speed of skeletal animations.
         skeleton = SpriteSkeleton.new(sprite_info.skeleton_file, game.fs)
         
         skeleton.animations.each do |anim|
           anim.keyframes.each do |keyframe|
-            keyframe.length_in_frames *= speed_mult
+            keyframe.length_in_frames *= delay_mult
             keyframe.length_in_frames = 1 if keyframe.length_in_frames < 1
             keyframe.length_in_frames = keyframe.length_in_frames.round
           end

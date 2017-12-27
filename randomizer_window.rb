@@ -100,6 +100,7 @@ class RandomizerWindow < Qt::Dialog
     :enemy_num_weaknesses_range     => "Common Enemy # of Weaknesses",
     :enemy_num_resistances_range    => "Common Enemy # of Resistances",
     :boss_stat_mult_range           => "Boss Stat Multiplier",
+    :enemy_anim_speed_mult_range    => "Enemy Anim Speed Multiplier",
   }
   
   slots "update_settings()"

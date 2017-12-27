@@ -89,6 +89,7 @@ class Randomizer
     :enemy_num_weaknesses_range     => 0..8,
     :enemy_num_resistances_range    => 0..8,
     :boss_stat_mult_range           => 0.75..1.25,
+    :enemy_anim_speed_mult_range    => 0.33..3.0,
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
@@ -131,6 +132,7 @@ class Randomizer
       :enemy_num_weaknesses_range     => 2,
       :enemy_num_resistances_range    => 2,
       :boss_stat_mult_range           => 1.0,
+      :enemy_anim_speed_mult_range    => 0.9,
     },
     "Normal" => {
       :item_price_range               => 5000,
@@ -172,6 +174,7 @@ class Randomizer
       :enemy_num_weaknesses_range     => 1,
       :enemy_num_resistances_range    => 2.5,
       :boss_stat_mult_range           => 1.12,
+      :enemy_anim_speed_mult_range    => 1.3,
     },
   }
   
