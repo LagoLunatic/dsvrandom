@@ -1,5 +1,7 @@
 
 module DoorRandomizer
+  class NotAllRoomsAreConnectedError < StandardError ; end
+  
   def randomize_transition_doors
     @transition_rooms = game.get_transition_rooms()
     @transition_rooms.reject! do |room|
@@ -219,11 +221,20 @@ module DoorRandomizer
         # This separates certains sectors into multiple parts like the first sector of PoR.
         subsectors = get_subsectors(sector)
         
-        # TODO: for each subsector, count the number of up/down connections vs the number of left/right connections.
-        # then prioritize doing the rarer ones first when possible.
-        # also, guarantee that ALL rooms in a subsector connect to each other somehow.
+        redo_counts_for_subsector = Hash.new(0)
         subsectors.each_with_index do |subsector_rooms, subsector_index|
-          randomize_non_transition_doors_for_subsector(subsector_rooms, subsector_index, area, sector, queued_door_changes, transition_doors)
+          orig_queued_door_changes = queued_door_changes.dup
+          begin
+            randomize_non_transition_doors_for_subsector(subsector_rooms, subsector_index, area, sector, queued_door_changes, transition_doors)
+          rescue NotAllRoomsAreConnectedError => e
+            redo_counts_for_subsector[subsector_index] += 1
+            if redo_counts_for_subsector[subsector_index] > 5
+              raise "Bug: Door randomizer failed to connect all rooms in subsector #{subsector_index} in %02X-%02X more than 5 times" % [area.area_index, sector.sector_index]
+            end
+            puts "Door randomizer needed to redo subsector #{subsector_index} in %02X-%02X" % [area.area_index, sector.sector_index]
+            queued_door_changes = orig_queued_door_changes
+            redo
+          end
         end
       end
     end
@@ -256,6 +267,11 @@ module DoorRandomizer
   def randomize_non_transition_doors_for_subsector(subsector_rooms, subsector_index, area, sector, queued_door_changes, transition_doors)
     if GAME == "por" && area.area_index == 0 && sector.sector_index == 0 && subsector_index == 0
       # Don't randomize first subsector in PoR.
+      return
+    end
+    if GAME == "por" && area.area_index == 5 && sector.sector_index == 2 && subsector_index == 0
+      # Don't randomize the middle sector in Nation of Fools with Legion.
+      # The randomizer never connects all the rooms properly, and Legion further complicates things anyway, so don't bother.
       return
     end
     
@@ -292,7 +308,7 @@ module DoorRandomizer
     
     while true
       debug = false
-      #debug = (area.area_index == 0x11 && sector.sector_index == 0)
+      #debug = (area.area_index == 0x6 && sector.sector_index == 0 && subsector_index == 1)
       
       #puts remaining_doors[:down].map{|d| d.door_str} if debug
       #gets if debug
@@ -424,7 +440,7 @@ module DoorRandomizer
         #p accessible_remaining_doors.size
         #gets
         
-        raise "not all rooms in this subsector are connected! %02X-%02X" % [area.area_index, sector.sector_index]
+        raise NotAllRoomsAreConnectedError.new("not all rooms in this subsector are connected! %02X-%02X" % [area.area_index, sector.sector_index])
         
         current_room = unvisited_rooms.sample(random: rng)
         
@@ -479,7 +495,7 @@ module DoorRandomizer
       unvisited_rooms.each do |room|
         puts "  #{room.room_str}"
       end
-      raise "Room connections randomizer failed to connect some rooms."
+      raise NotAllRoomsAreConnectedError.new("Room connections randomizer failed to connect some rooms.")
     end
   end
   
