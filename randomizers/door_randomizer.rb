@@ -287,6 +287,13 @@ module DoorRandomizer
     
     remaining_doors = get_valid_doors(subsector_rooms, sector)
     
+    if remaining_doors[:left].size != remaining_doors[:right].size
+      raise "Subsector #{subsector_index} of %02X-%02X has an unmatching number of left/right doors!\nleft: #{remaining_doors[:left].size}, right: #{remaining_doors[:right].size}, up: #{remaining_doors[:up].size}, down: #{remaining_doors[:down].size}," % [area.area_index, sector.sector_index]
+    end
+    if remaining_doors[:up].size != remaining_doors[:down].size
+      raise "Subsector #{subsector_index} of %02X-%02X has an unmatching number of up/down doors!\nleft: #{remaining_doors[:left].size}, right: #{remaining_doors[:right].size}, up: #{remaining_doors[:up].size}, down: #{remaining_doors[:down].size}," % [area.area_index, sector.sector_index]
+    end
+    
     #if sector.sector_index == 1
     #  remaining_doors.values.flatten.each do |door|
     #    puts "  #{door.door_str}"
@@ -440,7 +447,7 @@ module DoorRandomizer
         #p accessible_remaining_doors.size
         #gets
         
-        raise NotAllRoomsAreConnectedError.new("not all rooms in this subsector are connected! %02X-%02X" % [area.area_index, sector.sector_index])
+        raise "No remaining matching doors to connect to! Door #{inside_door.door_str}, subsector #{subsector_index} of %02X-%02X" % [area.area_index, sector.sector_index]
         
         current_room = unvisited_rooms.sample(random: rng)
         
