@@ -134,7 +134,7 @@ Inaccessible doors:
   - 06-01-13_004
   - 06-01-14_002
   
-  - 07-01-03_000
+  - 07-01-03_001
   - 07-01-0A_000
   # TODO
 # TODO: inaccessible rooms.
