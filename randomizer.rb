@@ -997,6 +997,12 @@ class Randomizer
       game.fs.write(0x022E88E4, [3].pack("C"))
     end
     
+    if GAME == "por" && room_rando?
+      # In room rando, unlock the bottom passage in the second room of the game by default to simplify the logic. (The one that usually needs you to complete the Nest of Evil quest.)
+      game.fs.load_overlay(78)
+      game.fs.write(0x022E8988, [0xE3E00000].pack("V")) # mvn r0, 0h
+    end
+    
     if GAME == "ooe" && options[:always_dowsing]
       game.apply_armips_patch("ooe_always_dowsing")
     end

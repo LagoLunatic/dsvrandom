@@ -152,12 +152,12 @@ Inaccessible doors:
 # 06-00-31
 # 06-01-09
 # 06-01-12
-# TODO: all rooms
 # TODO: how should slide be handled? currently the room reqs assume you always have slide, but with area/room rando on you may not be able to access wind at the start of the game...
 Rooms:
 #Dracula's Castle:
 #Entrance: # DONE
-  00-00-01: # TODO: drawbridge room, get rid of the floor that leads down to the underground portion, will require ASM
+  00-00-01: # Drawbridge room.
+    # The bottom door is considered always accessible, since room rando has special code to always unlock it without needing to complete the Nest of Evil quest.
     000-001: 
     000-002: 
     000-e01: 
@@ -1613,7 +1613,7 @@ Rooms:
     e00-000: 
     e00-001: 
     e00-002: 
-  01-01-04: # TODO drill cart room, we should remove the entity hider so that the enemies appear here in place of the drill cart we removed.
+  01-01-04: # Drill cart room
     000-001: quad jump height
     000-002: 
     001-000: 
