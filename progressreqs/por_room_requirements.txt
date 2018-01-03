@@ -343,7 +343,8 @@ Rooms:
   00-01-06:
     000-001: 
     001-000: 
-  00-01-07: # TODO: behemoth chase sequence. test if this works when entering from the right.
+  00-01-07: # Behemoth chase sequence.
+    # Note that if the player enters from the right, they will appear in the gate. So I put special code on the door leading in to offset the player past that gate.
     000-001: 
     000-e2A: 
     001-000: 

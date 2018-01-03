@@ -820,6 +820,13 @@ module DoorRandomizer
       up_door = dest_door
     end
     
+    if GAME == "por" && left_door && left_door.destination_room.room_str == "00-01-07"
+      # Left door that leads into the Behemoth chase sequence room.
+      # If the player enters through this door first instead of from the normal direction, they can get stuck in the gate at the right side of the room.
+      # Give it an x offset 2 blocks to the left so the player gets past the gate.
+      left_door.dest_x_2 -= 0x20
+    end
+    
     case door.direction
     when :left, :right
       left_first_tile_i, left_last_tile_i, left_tiles_in_biggest_gap = get_biggest_door_gap(left_door)
