@@ -663,6 +663,12 @@ module DoorRandomizer
       drawbridge_room_waterlevel = game.entity_by_str("00-00-15_04")
       drawbridge_room_waterlevel.type = 0
       drawbridge_room_waterlevel.write_to_rom()
+    when "por"
+      # The whole drill cart puzzle from City of Haze was removed.
+      # So let's also remove the entity hider so that the enemies from the alternate game modes appear.
+      drill_room_entity_hider = game.entity_by_str("01-01-04_02")
+      drill_room_entity_hider.type = 0
+      drill_room_entity_hider.write_to_rom()
     when "ooe"
       forsaken_cloister_gate = game.entity_by_str("00-09-06_00")
       forsaken_cloister_gate.type = 0
