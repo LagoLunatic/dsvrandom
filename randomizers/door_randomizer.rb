@@ -275,6 +275,12 @@ module DoorRandomizer
       return
     end
     
+    prioritize_up_down = true
+    if GAME == "por" && area.area_index == 6 && sector.sector_index == 0 && [1, 3].include?(subsector_index)
+      # The center-left and center-right parts of Burnt Paradise. These only have a few left/right doors, so it screws up if we prioritize up/down doors.
+      prioritize_up_down = false
+    end
+    
     subsector_rooms = checker.convert_rooms_to_subrooms(subsector_rooms)
     
     #if sector.sector_index == 2
@@ -398,7 +404,7 @@ module DoorRandomizer
       
       remaining_inaccessible_rooms_with_up_down_doors = (remaining_doors[:up] + remaining_doors[:down] - accessible_remaining_doors).map{|d| d.room}.uniq
       
-      if inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits.any? && remaining_inaccessible_rooms_with_up_down_doors.size > 1
+      if inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits.any? && remaining_inaccessible_rooms_with_up_down_doors.size > 1 && prioritize_up_down
         # There are doors we can swap with that allow you to reach a new room which allows more progress, but only via up/down doors.
         # We want to prioritize these because they can't be gotten into via left/right doors like rooms that have at least one left/right.
         possible_dest_doors = inaccessible_remaining_matching_doors_with_no_leftright_door_exits_and_other_exits
@@ -411,7 +417,7 @@ module DoorRandomizer
         possible_dest_doors = inaccessible_remaining_matching_doors_with_no_leftright_door_exits
         
         puts "TYPE 2" if debug
-      elsif inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright.any? && remaining_inaccessible_rooms_with_up_down_doors.size > 1
+      elsif inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright.any? && remaining_inaccessible_rooms_with_up_down_doors.size > 1 && prioritize_up_down
         # There are doors we can swap with that allow more progress, and also allow accessing a new up/down door from a left/right door.
         possible_dest_doors = inaccessible_remaining_matching_doors_with_updown_door_exits_via_leftright
         
