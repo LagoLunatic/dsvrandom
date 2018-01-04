@@ -244,6 +244,14 @@ class DoorCompletabilityChecker
     get_accessible_doors().include?("0E-00-09_000")
   end
   
+  def wind_accessible?
+    get_accessible_doors().include?("00-01-06_000")
+  end
+  
+  def vincent_accessible?
+    get_accessible_doors().include?("00-01-09_000")
+  end
+  
   def check_reqs(reqs)
     if reqs == true
       return true

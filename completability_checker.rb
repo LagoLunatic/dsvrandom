@@ -158,6 +158,14 @@ class CompletabilityChecker
     check_reqs([[:bossalbus]])
   end
   
+  def wind_accessible?
+    check_reqs([[:wind]])
+  end
+  
+  def vincent_accessible?
+    check_reqs([[:vincent]])
+  end
+  
   def check_reqs(reqs)
     if reqs == true
       return true

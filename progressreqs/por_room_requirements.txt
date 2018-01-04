@@ -53,9 +53,6 @@ Defs:
   big height: owl | superjump
   distance: speed up | big height
   big distance: speed up & change cube | big height # fully charged speed up
-  
-  wind: true # TODO
-  vincent: true # TODO
 Final room: 00-09-01
 Enemy locations:
   # none

@@ -215,7 +215,7 @@ module PickupRandomizer
     while true
       case GAME
       when "por"
-        if !checker.current_items.include?(0x1B2) && checker.check_reqs([[:wind, :vincent]])
+        if !checker.current_items.include?(0x1B2) && checker.wind_accessible? && checker.vincent_accessible?
           checker.add_item(0x1B2) # give lizard tail if the player has reached wind
         end
       end
