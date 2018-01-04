@@ -570,6 +570,10 @@ module DoorRandomizer
           # Don't randomize the door connecting Paranoia and Mini-Paranoia.
           next
         end
+        if GAME == "por" && ["00-01-04_001", "00-01-03_005", "00-01-03_000", "00-01-18_000", "00-01-03_004", "00-01-06_000", "00-01-06_001", "00-01-09_000"].include?(door.door_str)
+          # Don't randomize the rooms around the Entrance hub (warp room, Wind, shop, etc).
+          next
+        end
         if GAME == "ooe" && ["09-00-05_000", "09-00-05_001", "09-00-02_000", "09-00-02_001", "09-00-04_000", "09-00-04_001", "09-00-03_000", "09-00-03_001"].include?(door.door_str)
           # Don't randomize the doors at the top of the Lighthouse, otherwise the player could enter Brachyura's room from the top and the fight would bug out.
           next
