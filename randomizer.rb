@@ -221,6 +221,7 @@ class Randomizer
     
     @weak_enemy_attack_threshold = 28
     @max_spawners_per_room = 1
+    @max_room_rando_subsector_redos = 20
     
     @difficulty_settings = {}
     DIFFICULTY_RANGES.each do |name, range|

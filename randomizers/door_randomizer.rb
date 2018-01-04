@@ -228,8 +228,8 @@ module DoorRandomizer
             randomize_non_transition_doors_for_subsector(subsector_rooms, subsector_index, area, sector, queued_door_changes, transition_doors)
           rescue NotAllRoomsAreConnectedError => e
             redo_counts_for_subsector[subsector_index] += 1
-            if redo_counts_for_subsector[subsector_index] > 5
-              raise "Bug: Door randomizer failed to connect all rooms in subsector #{subsector_index} in %02X-%02X more than 5 times" % [area.area_index, sector.sector_index]
+            if redo_counts_for_subsector[subsector_index] > @max_room_rando_subsector_redos
+              raise "Bug: Door randomizer failed to connect all rooms in subsector #{subsector_index} in %02X-%02X more than #{@max_room_rando_subsector_redos} times" % [area.area_index, sector.sector_index]
             end
             puts "Door randomizer needed to redo subsector #{subsector_index} in %02X-%02X" % [area.area_index, sector.sector_index]
             queued_door_changes = orig_queued_door_changes
