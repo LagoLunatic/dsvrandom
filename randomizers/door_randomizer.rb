@@ -38,6 +38,11 @@ module DoorRandomizer
       
       # First we make a list of the transition doors, specifically the left door in a transition room, and the right door that leads into that transition room.
       all_area_transition_rooms.each do |transition_room|
+        if GAME == "por" && transition_room.room_str == "00-0A-00"
+          # The transition room leading to the Throne Room behind the barrier.
+          # Don't randomize this connection, always have the Throne Room behind the barrier.
+          next
+        end
         if GAME == "ooe" && ["00-0A-00", "00-0A-07", "00-0A-13"].include?(transition_room.room_str)
           # The transition rooms in the Final Approach.
           # Don't randomize these connections, since it could result in progression being impossible.
