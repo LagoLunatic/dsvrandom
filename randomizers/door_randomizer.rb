@@ -38,7 +38,7 @@ module DoorRandomizer
       
       # First we make a list of the transition doors, specifically the left door in a transition room, and the right door that leads into that transition room.
       all_area_transition_rooms.each do |transition_room|
-        if ["00-0A-00", "00-0A-07", "00-0A-13"].include?(transition_room.room_str)
+        if GAME == "ooe" && ["00-0A-00", "00-0A-07", "00-0A-13"].include?(transition_room.room_str)
           # The transition rooms in the Final Approach.
           # Don't randomize these connections, since it could result in progression being impossible.
           next
@@ -749,7 +749,7 @@ module DoorRandomizer
     
     # Replace boss doors.
     boss_rooms.uniq.each do |boss_room|
-      if boss_room.room_str == "00-03-0E"
+      if GAME == "dos" && boss_room.room_str == "00-03-0E"
         # Doppelganger event room
         boss_index = 0xE
       else
