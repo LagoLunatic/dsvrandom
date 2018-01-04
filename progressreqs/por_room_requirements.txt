@@ -136,22 +136,21 @@ Inaccessible doors:
   
   - 07-01-03_001
   - 07-01-0A_000
-  # TODO
-# TODO: inaccessible rooms.
-# 00-02-12
-# 00-02-16
-# 00-04-00
-# 00-04-01
-# 00-04-02
-# 00-04-0E
-# 00-07-14
-# 00-08-05
-# 00-08-09
-# 05-01-09
-# 05-01-12
-# 06-00-31
-# 06-01-09
-# 06-01-12
+# TODO: inaccessible rooms?
+#   00-02-12
+#   00-02-16
+#   00-04-00
+#   00-04-01
+#   00-04-02
+#   00-04-0E
+#   00-07-14
+#   00-08-05
+#   00-08-09
+#   05-01-09
+#   05-01-12
+#   06-00-31
+#   06-01-09
+#   06-01-12
 # TODO: how should slide be handled? currently the room reqs assume you always have slide, but with area/room rando on you may not be able to access wind at the start of the game...
 Rooms:
 #Dracula's Castle:
@@ -1279,9 +1278,9 @@ Rooms:
   00-0A-00:
     000-001: 
     001-000: 
-  00-0A-01: # TODO: room with the magic barrier blocking the throne. what to do about this?
+  00-0A-01: # Room with magic barrier blocking the way to the Throne Room.
     000-001: 
-    001-000: 
+    001-000: false
   00-0A-02:
     000-001: 
     000-002: 

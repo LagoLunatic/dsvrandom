@@ -373,6 +373,9 @@ class DoorCompletabilityChecker
       has_all_randomizable_villagers = true
     end
     
+    # PoR-specific variable for keeping track of if the Throne Room is accessible.
+    por_throne_room_stairway_accessible = false
+    
     if GAME == "por"
       @current_items.each do |pickup_global_id|
         if PickupRandomizer::PORTRAIT_NAMES.include?(pickup_global_id)
@@ -428,6 +431,17 @@ class DoorCompletabilityChecker
       if @warp_connections[door_str]
         connected_door_str = @warp_connections[door_str]
         doors_to_check << connected_door_str
+      end
+      
+      # Handle the Studio Portrait warp to the Throne Room stairway in PoR.
+      if GAME == "por"
+        if !por_throne_room_stairway_accessible && accessible_doors.include?("00-0B-00_000") # Player has access to the 5-portrait room.
+          studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all?{|door_str| accessible_doors.include?(door_str)}
+          if studio_portrait_unlocked # The studio portrait is unlocked.
+            doors_to_check << "00-09-03_001" # Give access to the stairway room leading to the Throne Room.
+            por_throne_room_stairway_accessible = true
+          end
+        end
       end
       
       # Handle the world map in OoE.
@@ -637,7 +651,34 @@ class DoorCompletabilityChecker
   def set_removed_portraits(removed_portraits)
     @removed_portraits = removed_portraits
     
-    # TODO: Code the logic for determining if you can reach the Lost Gallery in room rando to take removed portraits into account.
+    if removed_portraits.empty?
+      @required_boss_room_doors_to_unlock_studio_portrait = ["02-02-14_001", "04-01-08_001", "06-00-05_001", "08-00-04_000"] # Werewolf, Mummy Man, Medusa, and The Creature
+    else
+      portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - removed_portraits
+      
+      @required_boss_room_doors_to_unlock_studio_portrait = portraits_needed.map do |portrait_name|
+        case portrait_name
+        when :portraitcityofhaze
+          "01-02-0B_001" # Dullahan
+        when :portraitsandygrave
+          "03-00-0C_001" # Astarte
+        when :portraitnationoffools
+          "05-02-0C_000" # Legion (TODO make sure logic works properly since legion has a weird room)
+        when :portraitforestofdoom
+          "07-00-0E_000" # Dagon
+        when :portraitdarkacademy
+          "08-00-04_000" # The Creature
+        when :portraitburntparadise
+          "06-00-05_001" # Medusa
+        when :portraitforgottencity
+          "04-01-08_001" # Mummy Man
+        when :portrait13thstreet
+          "02-02-14_001" # Werewolf
+        else
+          raise "Invalid portrait name: #{portrait_name}"
+        end
+      end
+    end
   end
   
   def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
