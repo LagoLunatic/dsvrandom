@@ -535,6 +535,16 @@ module DoorRandomizer
         remaining_rooms_to_check.delete(current_room)
         connected_rooms = current_room.doors.map{|door| door.destination_door.room}.uniq
         connected_rooms = connected_rooms & sector.rooms
+        if GAME == "dos" && current_room.sector.name == "Condemned Tower & Mine of Judgment"
+          # Need to split Condemned Tower from Mine of Judgement into separate subsectors.
+          if current_room.room_ypos_on_map >= 0x17
+            # Current subsector is Mine of Judgement, so remove Condemned Tower rooms.
+            connected_rooms.reject!{|room| room.room_ypos_on_map < 0x17}
+          else
+            # Current subsector is Condemned Tower, so remove Mine of Judgement rooms.
+            connected_rooms.reject!{|room| room.room_ypos_on_map >= 0x17}
+          end
+        end
         connected_rooms -= @transition_rooms unless include_transitions
         current_subsector += connected_rooms
         current_subsector.uniq!
@@ -568,6 +578,10 @@ module DoorRandomizer
         
         if GAME == "dos" && ["00-01-1C_001", "00-01-20_000"].include?(door.door_str)
           # Don't randomize the door connecting Paranoia and Mini-Paranoia.
+          next
+        end
+        if GAME == "dos" && ["00-05-0C_001", "00-05-18_000"].include?(door.door_str)
+          # Don't randomize the up/down door connecting Condemned Tower and Mine of Judgement.
           next
         end
         if GAME == "por" && ["00-01-04_001", "00-01-03_005", "00-01-03_000", "00-01-18_000", "00-01-03_004", "00-01-06_000", "00-01-06_001", "00-01-09_000"].include?(door.door_str)

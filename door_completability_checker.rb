@@ -361,6 +361,13 @@ class DoorCompletabilityChecker
     
     doors_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
     
+    # DoS-specific variables for keeping track of whether the darkness seal is unlocked.
+    has_mina_talisman = check_reqs([[:mina_talisman]])
+    dos_darkness_seal_unlocked = false
+    
+    # PoR-specific variable for keeping track of if the Throne Room is accessible.
+    por_throne_room_stairway_accessible = false
+    
     # OoE-specific variables for dealing with the world map.
     currently_unlocked_world_map_areas = []
     currently_unlocked_world_map_areas += @world_map_areas_unlocked_from_beginning
@@ -379,9 +386,6 @@ class DoorCompletabilityChecker
     if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES - @current_items).empty?
       has_all_randomizable_villagers = true
     end
-    
-    # PoR-specific variable for keeping track of if the Throne Room is accessible.
-    por_throne_room_stairway_accessible = false
     
     if GAME == "por"
       @current_items.each do |pickup_global_id|
@@ -438,6 +442,18 @@ class DoorCompletabilityChecker
       if @warp_connections[door_str]
         connected_door_str = @warp_connections[door_str]
         doors_to_check << connected_door_str
+      end
+      
+      # Handle the darkness seal.
+      if GAME == "dos"
+        if has_mina_talisman && !dos_darkness_seal_unlocked && accessible_doors.include?("00-03-0E_000")
+          # Player can access and complete the doppelganger event in the center of the castle.
+          dos_darkness_seal_unlocked = true
+        end
+        if dos_darkness_seal_unlocked && accessible_doors.include?("00-05-0C_000")
+          # Player can access the darkness seal room, and has also unlocked the darkness seal.
+          doors_to_check << "00-05-0C_001"
+        end
       end
       
       # Handle the Studio Portrait warp to the Throne Room stairway in PoR.

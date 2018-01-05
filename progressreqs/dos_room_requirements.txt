@@ -1377,8 +1377,8 @@ Rooms:
     005-003: false
     005-004: false
   00-03-0E: # doppelganger event
-    000-001: mina talisman & seal 5
-    001-000: mina talisman & seal 5
+    000-001: mina talisman
+    001-000: mina talisman
   00-03-0F:
     000-001: rahab
     001-000: rahab
@@ -2054,9 +2054,9 @@ Rooms:
     e02-000: 
     e02-001: 
     e02-002: 
-  00-05-0C:
-    000-001: # TODO the sealed darkness gate
-    001-000: #false
+  00-05-0C: # The sealed darkness gate to the Mine of Judgement.
+    000-001: false # There's special logic to handle this door down.
+    001-000: 
   00-05-0E:
     000-001: 
     001-000: 
