@@ -17,6 +17,9 @@ module StartingRoomRandomizer
       next if room.area.name.include?("Boss Rush")
       next if room.sector.name.include?("Boss Rush")
       
+      next if room.sector.name == "The Abyss"
+      next if room.sector.name == "Condemned Tower & Mine of Judgment" && room.room_ypos_on_map >= 0x17
+      
       next if room.area.name == "Nest of Evil"
       next if room.sector.name == "The Throne Room"
       next if room.sector.name == "Master's Keep" && room.sector_index == 0xC # Cutscene where Dracula dies
