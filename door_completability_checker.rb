@@ -269,6 +269,9 @@ class DoorCompletabilityChecker
     if req == :nonlinear && GAME == "ooe"
       return @ooe_nonlinear
     end
+    if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(req) || [:villagernikolai, :villagergeorge].include?(req))
+      return @current_items.include?(req)
+    end
     
     if @defs[req]
       if @defs[req].is_a?(Integer)
@@ -308,10 +311,6 @@ class DoorCompletabilityChecker
         # When glitches are disabled, always consider a glitch requirement false.
         return false
       end
-      if [:villagernikolai, :villagergeorge] && GAME == "ooe"
-        return @current_items.include?(req)
-      end
-      
       raise "Invalid requirement: #{req}"
     end
   end
