@@ -284,7 +284,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_red_walls">
               <property name="toolTip">
-               <string>Randomizes what bullet souls is needed to open the red walls (DoS only).</string>
+               <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
               </property>
               <property name="text">
                <string>Red Soul Walls</string>
