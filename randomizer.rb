@@ -93,7 +93,7 @@ class Randomizer
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
-      :item_price_range               => 2500,
+      :item_price_range               => 500,
       :weapon_attack_range            => 30,
       :weapon_iframes_range           => 30,
       :armor_defense_range            => 10,
@@ -135,7 +135,7 @@ class Randomizer
       :enemy_anim_speed_mult_range    => 0.9,
     },
     "Normal" => {
-      :item_price_range               => 5000,
+      :item_price_range               => 1500,
       :weapon_attack_range            => 20,
       :weapon_iframes_range           => 37,
       :armor_defense_range            => 6,
