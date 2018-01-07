@@ -21,12 +21,14 @@ module WeaponSynthRandomizer
       item_types_with_enough_items = items_by_type.select do |item_list_for_type|
         item_list_for_type.length >= chain.synths.length*2
       end
-      items_available_for_this_chain = item_types_with_enough_items.sample(random: rng)#.dup
+      items_available_for_this_chain = item_types_with_enough_items.sample(random: rng)
       
       chain.synths.each do |synth|
-        req_item = items_available_for_this_chain.sample(random: rng)
+        req_item, created_item = items_available_for_this_chain.sample(2, random: rng)
+        
+        # Remove the chosen items from the list of available items so it's never chosen again.
+        # Note that this doesn't only affect this chain, but all other chains as well, so a given item never appears multiple times in the synth screen.
         items_available_for_this_chain.delete(req_item)
-        created_item = items_available_for_this_chain.sample(random: rng)
         items_available_for_this_chain.delete(created_item)
         
         synth.required_item_id = req_item + 1
