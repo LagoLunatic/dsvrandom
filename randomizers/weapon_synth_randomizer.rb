@@ -3,10 +3,10 @@ module WeaponSynthRandomizer
   def randomize_weapon_synths
     return unless GAME == "dos"
     
-    items_by_type = []
-    items_by_type << (0x42..0x90).to_a # Weapons
-    items_by_type << (0x91..0xAE).to_a # Body armor
-    items_by_type << (0xAF..0xCD).to_a # Accessories
+    items_by_type = {}
+    items_by_type[:weapons] = (0x42..0x90).to_a
+    items_by_type[:body_armor] = (0x91..0xAE).to_a
+    items_by_type[:accessories] = (0xAF..0xCD).to_a
     
     # For consumables, we separate different types of consumables into separate lists.
     # This is so HP restoratives only upgrade to better HP restoratives, etc.
@@ -28,27 +28,37 @@ module WeaponSynthRandomizer
       end
     end
     consumables_by_type.delete(:unusable) # Don't allow unusable items to appear in weapon synths.
-    items_by_type += consumables_by_type.values
-    items_by_type.map! do |item_list_for_type|
-      item_list_for_type & all_non_progression_pickups
-    end
+    items_by_type.merge!(consumables_by_type)
+    
+    items_by_type = items_by_type.map do |type_name, item_list_for_type|
+      [type_name, item_list_for_type & all_non_progression_pickups]
+    end.to_h
     
     available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE.to_a
     available_souls.map!{|global_id| global_id - 0xCE}
     
+    item_type_names_for_each_chain = []
+    
     WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
       chain = WeaponSynthChain.new(index, game.fs)
       
-      item_types_with_enough_items = items_by_type.select do |item_list_for_type|
+      item_types_with_enough_items = items_by_type.select do |type_name, item_list_for_type|
         item_list_for_type.length >= chain.synths.length+1
       end
-      items_available_for_this_chain = item_types_with_enough_items.sample(random: rng)
+      type_name_for_this_chain = item_types_with_enough_items.keys.sample(random: rng)
+      items_available_for_this_chain = item_types_with_enough_items[type_name_for_this_chain]
+      
+      # Keep track of what type of items are in this chain for the names at the top of the screen.
+      item_type_names_for_each_chain << type_name_for_this_chain
       
       items_for_this_chain = []
       (chain.synths.length+1).times do
         item_id = items_available_for_this_chain.sample(random: rng)
-        items_available_for_this_chain.delete(item_id)
         items_for_this_chain << item_id
+        
+        # Remove the chosen item from the list of available items so it's never chosen again.
+        # Note that this doesn't only affect this chain, but all other chains as well, so a given item never appears multiple times in the synth screen.
+        items_available_for_this_chain.delete(item_id)
       end
       items_for_this_chain.sort_by! do |item_id|
         item = game.items[item_id]
@@ -76,11 +86,6 @@ module WeaponSynthRandomizer
       chain.synths.each_with_index do |synth, i|
         req_item = items_for_this_chain[i]
         created_item = items_for_this_chain[i+1]
-        
-        # Remove the chosen items from the list of available items so it's never chosen again.
-        # Note that this doesn't only affect this chain, but all other chains as well, so a given item never appears multiple times in the synth screen.
-        items_available_for_this_chain.delete(req_item)
-        items_available_for_this_chain.delete(created_item)
         
         synth.required_item_id = req_item + 1
         synth.required_soul_id = available_souls.sample(random: rng)
