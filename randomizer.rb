@@ -1018,6 +1018,14 @@ class Randomizer
       game.fs.write(0x021E8B30, [0x3C].pack("C"))
     end
     
+    if GAME == "dos" && options[:randomize_weapon_synths]
+      # Fix the stat difference display in the weapon synth screen.
+      # It assumes that all items are weapons and displays a weapon's stats by default.
+      # This change tells it to make no assumptions and calculate what the item type actually is.
+      game.fs.write(0x02032A2C, [0xE3E00000].pack("V")) # mvn r0, 0h
+      game.fs.write(0x02032A3C, [0xE3E00000].pack("V")) # mvn r0, 0h
+    end
+    
     if GAME == "dos" && options[:randomize_starting_room]
       # Fix the HUD disappearing with the starting room rando.
       game.fs.write(0x021D9910, [0xE3C11081].pack("V")) # This line normally disables global game flag 0x1, we change it to disable both 0x1 and 0x80 (which hides the HUD).
