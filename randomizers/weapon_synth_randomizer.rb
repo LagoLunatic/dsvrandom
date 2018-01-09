@@ -94,5 +94,28 @@ module WeaponSynthRandomizer
         synth.write_to_rom()
       end
     end
+    
+    
+    # Now update the image with the names of the synth categories.
+    
+    chain_names_image = ChunkyPNG::Image.from_file("./dsvrandom/assets/synth type names.png")
+    chain_names_order_list = %i(weapons body_armor accessories restores_hp restores_mp subtracts_hp consumable restorative curative)
+    
+    gfx_pointer = 0x022D0B00 # /sc/f_mix_e.dat
+    palette_pointer = 0x022C490C
+    # Need to use palette 1 even though 3 is the correct one.
+    # This is because a couple of colors in palette 3 are exactly the same, and saving as that palette would merge the two into one palette and the image would look wrong.
+    palette_index = 1
+    gfx_page = GfxWrapper.new(gfx_pointer, game.fs)
+    palette = renderer.generate_palettes(palette_pointer, 16)[palette_index]
+    image = renderer.render_gfx_1_dimensional_mode(gfx_page, palette)
+    
+    item_type_names_for_each_chain.each_with_index do |type_name, i|
+      type_name_image_index = chain_names_order_list.index(type_name)
+      name_image = chain_names_image.crop(0, type_name_image_index*16, 64, 16)
+      image.compose!(name_image, 64, i*16)
+    end
+    
+    renderer.save_gfx_page_1_dimensional_mode(image, gfx_page, palette_pointer, 16, palette_index, should_convert_image_to_palette: true)
   end
 end
