@@ -868,6 +868,10 @@ class Randomizer
       game.fs.write(0x02000D84, [0xE3A00001].pack("V"))
     end
     
+    if GAME == "dos" && options[:randomize_pickups]
+      game.apply_armips_patch("dos_julius_start_with_tower_key")
+    end
+    
     if GAME == "por" && options[:fix_infinite_quest_rewards]
       game.apply_armips_patch("por_fix_infinite_quest_rewards")
     end
