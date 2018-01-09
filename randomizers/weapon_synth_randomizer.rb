@@ -117,5 +117,12 @@ module WeaponSynthRandomizer
     end
     
     renderer.save_gfx_page_1_dimensional_mode(image, gfx_page, palette_pointer, 16, palette_index, should_convert_image_to_palette: true)
+    
+    
+    # Also, update palette 7 so grey ability souls render properly.
+    # Note that there's a possibility palette 7 is used by something else and changing it like this will make that something else look wrong.
+    # But as far as I can tell palettes 7-B are all just unused, and are simply a gradient from green to orange.
+    colors = renderer.import_palette_from_palette_swatches_file("./dsvrandom/assets/synth grey souls palette_022C490C-07.png", 16)
+    @renderer.save_palette(colors, palette_pointer, 7, 16)
   end
 end
