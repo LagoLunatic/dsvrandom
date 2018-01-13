@@ -494,20 +494,34 @@ class RandomizerWindow < Qt::Dialog
     max_val = game.fs.files_without_dirs.length
     @progress_dialog = ProgressDialog.new("Building", "Writing files to ROM", max_val)
     @progress_dialog.execute do
-      game.fs.write_to_rom(output_rom_path) do |files_written|
-        next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
-        break if @progress_dialog.nil?
-        
-        Qt.execute_in_main_thread do
-          if @progress_dialog && !@progress_dialog.wasCanceled
-            @progress_dialog.setValue(files_written)
+      begin
+        game.fs.write_to_rom(output_rom_path) do |files_written|
+          next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
+          break if @progress_dialog.nil?
+          
+          Qt.execute_in_main_thread do
+            if @progress_dialog && !@progress_dialog.wasCanceled
+              @progress_dialog.setValue(files_written)
+            end
           end
         end
+      rescue StandardError => e
+        Qt.execute_in_main_thread do
+          if @progress_dialog
+            @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+            @progress_dialog.close()
+            @progress_dialog = nil
+          end
+          
+          Qt::MessageBox.critical(self, "Building ROM failed", "Failed to build ROM with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
+        end
+        return
       end
       
       Qt.execute_in_main_thread do
         if @progress_dialog
           @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+          @progress_dialog.close()
           @progress_dialog = nil
         end
         
