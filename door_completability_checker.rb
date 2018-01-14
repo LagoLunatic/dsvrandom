@@ -361,30 +361,33 @@ class DoorCompletabilityChecker
     
     doors_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
     
-    # DoS-specific variables for keeping track of whether the darkness seal is unlocked.
-    has_mina_talisman = check_reqs([[:mina_talisman]])
-    dos_darkness_seal_unlocked = false
-    
-    # PoR-specific variable for keeping track of if the Throne Room is accessible.
-    por_throne_room_stairway_accessible = false
-    
-    # OoE-specific variables for dealing with the world map.
-    currently_unlocked_world_map_areas = []
-    currently_unlocked_world_map_areas += @world_map_areas_unlocked_from_beginning
-    world_map_accessible = false
-    castle_accessible = false
-    barlowe_accessible = false
-    george_accessible = false
-    albus_fight_accessible = false
-    oblivion_ridge_event_accessible = false
-    wygol_accessible = @ooe_nonlinear
-    ruvas_accessible = @ooe_nonlinear
-    monastery_accessible = @ooe_nonlinear
-    argila_accessible = @ooe_nonlinear
-    somnus_accessible = @ooe_nonlinear
-    has_all_randomizable_villagers = false
-    if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES - @current_items).empty?
-      has_all_randomizable_villagers = true
+    case GAME
+    when "dos"
+      # DoS-specific variables for keeping track of whether the darkness seal is unlocked.
+      has_mina_talisman = check_reqs([[:mina_talisman]])
+      dos_darkness_seal_unlocked = false
+    when "por"
+      # PoR-specific variable for keeping track of if the Throne Room is accessible.
+      por_throne_room_stairway_accessible = false
+    when "ooe"
+      # OoE-specific variables for dealing with the world map.
+      currently_unlocked_world_map_areas = []
+      currently_unlocked_world_map_areas += @world_map_areas_unlocked_from_beginning
+      world_map_accessible = false
+      castle_accessible = false
+      barlowe_accessible = false
+      george_accessible = false
+      albus_fight_accessible = false
+      oblivion_ridge_event_accessible = false
+      wygol_accessible = @ooe_nonlinear
+      ruvas_accessible = @ooe_nonlinear
+      monastery_accessible = @ooe_nonlinear
+      argila_accessible = @ooe_nonlinear
+      somnus_accessible = @ooe_nonlinear
+      has_all_randomizable_villagers = false
+      if (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES - @current_items).empty?
+        has_all_randomizable_villagers = true
+      end
     end
     
     if GAME == "por"
