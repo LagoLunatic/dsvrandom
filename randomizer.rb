@@ -745,6 +745,16 @@ class Randomizer
       dos_implement_magical_tickets()
     end
     
+    if GAME == "por" && room_rando?
+      # Modify several split doors, where there are two different gaps in the level design, to only have one gap instead.
+      # This is because the logic doesn't support multi-gap doors.
+      ["07-00-07", "07-00-0A", "07-00-0B", "07-00-0D", "08-02-18", "08-02-19"].each do |room_str|
+        room = game.room_by_str(room_str)
+        filename = "./dsvrandom/roomedits/por_room_rando_#{room_str}.tmx"
+        tiled.read(filename, room)
+      end
+    end
+    
     if GAME == "ooe" && room_rando?
       # Make the frozen waterfall always be unfrozen. (Only the bottom part, the part at the top will still be frozen.)
       game.fs.load_overlay(57)

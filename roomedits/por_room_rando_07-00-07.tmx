@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.0" orientation="orthogonal" renderorder="right-down" width="48" height="12" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+ <properties>
+  <property name="map_x" value="21"/>
+  <property name="map_y" value="19"/>
+ </properties>
+ <tileset firstgid="1" name="022EDDE4-022EEDE0_020EC130-00_020EC140" tilewidth="16" tileheight="16" tilecount="1024" columns="16">
+  <image source="Tilesets/022EDDE4-022EEDE0_020EC130-00_020EC140" width="256" height="1024"/>
+ </tileset>
+ <layer name="layer 022FACB0" width="48" height="12">
+  <properties>
+   <property name="collision_tileset" value="022EEDE0"/>
+   <property name="colors_per_palette" value="10"/>
+   <property name="layer_height" value="01"/>
+   <property name="layer_width" value="03"/>
+   <property name="main_gfx_page_index" value="00"/>
+   <property name="scroll_mode" value="01"/>
+   <property name="tileset" value="022EDDE4"/>
+   <property name="z_index" value="1B"/>
+  </properties>
+  <data encoding="csv">
+225,225,124,124,124,124,124,124,124,124,124,225,225,225,225,225,124,124,124,124,124,124,124,124,124,124,124,225,225,225,225,225,124,124,124,124,124,124,124,124,124,124,124,225,225,225,225,225,
+225,225,124,124,124,124,124,124,124,124,124,225,225,225,225,225,124,124,124,124,124,124,124,124,124,124,124,225,225,225,225,225,124,124,124,124,124,124,124,124,124,124,124,225,225,225,225,225,
+225,225,124,124,124,124,124,124,124,124,124,225,225,225,225,225,124,124,124,124,124,124,124,124,124,124,124,225,225,225,225,225,124,124,124,124,124,124,124,124,124,124,124,225,225,225,225,225,
+225,225,225,177,137,138,139,140,141,142,143,144,13,14,15,16,124,124,124,124,137,138,139,140,141,142,143,144,13,14,15,16,124,124,124,124,137,138,139,140,141,142,143,144,13,14,15,16,
+225,225,225,193,153,154,155,156,157,158,159,160,29,30,31,32,124,124,124,124,153,154,155,156,157,158,159,160,29,30,31,32,124,124,124,124,153,154,155,156,157,158,159,160,29,30,31,32,
+225,225,225,209,169,170,171,172,173,174,175,176,45,46,47,48,124,124,124,124,169,170,171,172,173,174,175,176,45,46,47,48,124,124,124,124,169,170,171,172,173,174,175,176,45,46,47,48,
+225,225,225,225,185,186,187,188,189,190,191,192,61,62,63,64,124,124,124,124,185,186,187,188,189,190,191,192,61,62,63,64,124,124,124,124,185,186,187,188,189,190,191,192,61,62,63,64,
+124,124,124,124,201,202,203,204,205,206,207,208,77,78,79,80,124,124,124,124,201,202,203,204,205,206,207,208,77,78,79,80,124,124,124,124,201,202,203,204,205,206,207,208,77,78,79,80,
+124,124,124,124,217,218,219,220,221,222,223,224,93,94,95,96,124,124,124,124,217,218,219,220,221,222,223,224,93,94,95,96,124,124,124,124,217,218,219,220,221,222,223,224,93,94,95,96,
+124,124,124,124,108,234,235,236,237,238,239,240,109,110,111,112,124,124,124,124,108,234,235,236,237,238,239,240,109,110,111,112,124,124,124,124,108,234,235,236,237,238,239,240,109,110,111,112,
+124,124,124,124,249,250,251,252,253,254,255,256,125,126,127,128,124,124,124,124,249,250,251,252,253,254,255,256,125,126,127,128,124,124,124,124,249,250,251,252,253,254,255,256,125,126,127,128,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="layer 022FACA0" width="48" height="12">
+  <properties>
+   <property name="collision_tileset" value="022EEDE0"/>
+   <property name="colors_per_palette" value="10"/>
+   <property name="layer_height" value="01"/>
+   <property name="layer_width" value="03"/>
+   <property name="main_gfx_page_index" value="00"/>
+   <property name="scroll_mode" value="01"/>
+   <property name="tileset" value="022EDDE4"/>
+   <property name="z_index" value="16"/>
+  </properties>
+  <data encoding="csv">
+1073741908,1073741909,1073741910,1073741911,1073741911,1073741924,3221225576,3221225575,3221225574,3221225573,3221225572,3221225574,3221225573,3221225572,3221225559,3221225558,3221225557,3221225556,3221225559,3221225558,3221225557,3221225556,3221225559,3221225558,3221225557,3221225556,3221225559,3221225558,3221225557,3221225556,1073741911,1073741911,1073741924,3221225576,3221225575,3221225574,3221225573,3221225572,3221225559,3221225558,3221225557,3221225556,3221225559,3221225558,3221225557,3221225556,1073741911,1073741911,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2147483674,2147483673,2147483674,2147483673,0,0,0,0,
+0,0,0,0,0,2147483671,2147483670,115,116,117,118,119,2147483764,115,116,117,118,22,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2147483690,2147483689,2147483690,2147483689,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,38,39,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2147483671,2147483670,115,116,117,118,119,2147483764,115,116,117,118,119,120,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,54,55,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2147483687,2147483686,0,0,0,0,0,0,0,0,0,0,0,72,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,54,55,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2147483703,2147483702,2147483676,0,0,0,0,0,0,0,0,0,0,40,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,54,55,0,2147483674,2147483673,2147483674,2147483673,2147483674,2147483673,0,0,0,0,0,2147483674,2147483673,0,2147483703,2147483702,2147483692,0,0,0,0,0,0,0,0,0,0,56,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,70,71,0,2147483690,2147483689,2147483690,2147483689,2147483690,2147483689,0,0,0,0,0,2147483690,2147483689,0,2147483719,2147483718,2147483708,0,0,0,0,0,0,0,0,0,0,72,
+100,2147483752,2147483751,2147483750,2147483749,2147483748,2147483750,2147483749,2147483748,87,84,85,86,87,84,85,86,87,84,85,86,87,87,100,2147483752,2147483751,2147483750,2147483749,2147483748,2147483750,2147483749,2147483748,2147483735,2147483734,2147483733,2147483732,2147483735,2147483734,2147483733,2147483732,2147483735,2147483734,2147483733,2147483732,2147483735,2147483734,2147483733,2147483732
+</data>
+ </layer>
+ <objectgroup color="#800080" name="Doors">
+  <object id="1" x="-256" y="0" width="256" height="192">
+   <properties>
+    <property name="dest_x" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
+    <property name="dest_y" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
+    <property name="destination_room" value="020ED228"/>
+    <property name="door_ram_pointer" value="020EC3A0"/>
+   </properties>
+  </object>
+  <object id="2" x="768" y="0" width="256" height="192">
+   <properties>
+    <property name="dest_x" value="0000"/>
+    <property name="dest_x_2" value="0000"/>
+    <property name="dest_y" value="0000"/>
+    <property name="dest_y_2" value="0000"/>
+    <property name="destination_room" value="020EC4A0"/>
+    <property name="door_ram_pointer" value="020EC3B0"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Entities">
+  <object id="1" x="112" y="176">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="01"/>
+    <property name="07 (subtype)" value="3E"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB024"/>
+   </properties>
+  </object>
+  <object id="2" x="152" y="176">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="01"/>
+    <property name="07 (subtype)" value="3E"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB030"/>
+   </properties>
+  </object>
+  <object id="3" x="192" y="176">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="01"/>
+    <property name="07 (subtype)" value="3E"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB03C"/>
+   </properties>
+  </object>
+  <object id="4" x="560" y="96">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="01"/>
+    <property name="07 (subtype)" value="3E"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB048"/>
+   </properties>
+  </object>
+  <object id="5" x="600" y="96">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="01"/>
+    <property name="07 (subtype)" value="3E"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB054"/>
+   </properties>
+  </object>
+  <object id="6" x="640" y="96">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="01"/>
+    <property name="07 (subtype)" value="3E"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB060"/>
+   </properties>
+  </object>
+  <object id="7" x="0" y="0">
+   <properties>
+    <property name="05 (unique_id)" value="00"/>
+    <property name="06 (type)" value="02"/>
+    <property name="07 (subtype)" value="19"/>
+    <property name="08" value="00"/>
+    <property name="09 (var_a)" value="0000"/>
+    <property name="11 (var_b)" value="0000"/>
+    <property name="entity_ram_pointer" value="022FB06C"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

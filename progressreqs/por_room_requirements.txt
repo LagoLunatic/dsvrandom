@@ -87,11 +87,11 @@ Portrait locations:
   - 00-0B-00_03
   - 00-0B-00_04
 Warp connections:
-  # TODO
+  # None.
 Progress important rooms:
   - 00-09-01 # Final boss fight
 Subrooms:
-  # TODO
+  # None.
 Inaccessible doors:
   - 05-01-01_002
   - 05-01-02_001
@@ -3330,7 +3330,7 @@ Rooms:
     001-002: 
     002-000: small height
     002-001: 
-  06-00-20: # TODO: portrait room where you can't reach the doors from the portrait if you have no height.
+  06-00-20: # TODO: portrait room where you can't reach the doors from the portrait if you have no height. (this should already be taken account by hardcoded logic for non-room rando, but I need to check if that also applies to room rando logic too or not.)
     000-001: small height
     001-000: small height
   06-00-21:
@@ -3648,7 +3648,7 @@ Rooms:
   07-00-06:
     000-001: 
     001-000: 
-  07-00-07: # TODO right door is split into 2 parts, get rid of the bottom part
+  07-00-07:
     000-001: height
     001-000: height
   07-00-08:
@@ -3667,10 +3667,10 @@ Rooms:
     003-000: 
     003-001: 
     003-002: 
-  07-00-0A: # TODO left door is split into 2 parts, get rid of the bottom part
+  07-00-0A:
     000-001: 
     001-000: height 2
-  07-00-0B: # TODO right door is split into 2 parts, get rid of the top part
+  07-00-0B:
     000-001: 
     000-e00: 
     001-000: height
@@ -3680,7 +3680,7 @@ Rooms:
   07-00-0C:
     000-001: 
     001-000: 
-  #07-00-0D: # TODO left door is split into 2 parts, get rid of the top part
+  #07-00-0D:
   07-00-0E:
     000-001: 
     001-000: 
@@ -4082,14 +4082,14 @@ Rooms:
   08-02-15:
     000-e00: 
     e00-000: 
-  08-02-18: # TODO the bottom door here is split into two parts. we'll need to manually block off the left entrance.
+  08-02-18:
     000-001: 
     000-002: height | distance
     001-000: small height
     001-002: height | small height & distance
     002-000: big height
     002-001: big height
-  08-02-19: # TODO same as above, block off the left entrance
+  08-02-19:
     000-001: big height
     000-002: 
     000-003: 
