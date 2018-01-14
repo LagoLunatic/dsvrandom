@@ -91,7 +91,14 @@ Warp connections:
 Progress important rooms:
   - 00-09-01 # Final boss fight
 Subrooms:
-  # None.
+  05-02-0C: # Legion's room.
+    -
+      - 000
+      - e01
+    -
+      - 001
+      - 002
+      - 003
 Inaccessible doors:
   - 05-01-01_002
   - 05-01-02_001
@@ -3178,27 +3185,28 @@ Rooms:
   05-02-0B:
     000-e00: 
     e00-000: 
-  05-02-0C: # legion room. TODO get rid of the walls disconnecting the top door to the other parts of the room.
-    000-001: 
-    000-002: 
-    000-003: 
+  05-02-0C: # Legion's room.
+    # The logic considers Legion's part to be a separate subroom from the bottom part.
+    000-001: # Note: These 000-other doors paths are for going from the top of the room with Legion to the bottom of the room.
+    000-002: #       These are intentionally left blank instead of false.
+    000-003: #       This is so the logic knows the player can go from the top to the bottom after beating Legion (but not from bottom to top).
     000-e01: 
-    001-000: height
+    001-000: false # height
     001-002: small height
     001-003: 
     001-e01: small height
-    002-000: height
+    002-000: false # height
     002-001: small height
     002-003: 
     002-e01: small height
-    003-000: height
+    003-000: false # height
     003-001: small height
     003-002: small height
     003-e01: small height
     e01-000: height
-    e01-001: 
-    e01-002: 
-    e01-003: 
+    e01-001: # Same as above comment, intentionally left blank.
+    e01-002: # ^
+    e01-003: # ^
 #Burnt Paradise: # DONE
   06-00-00:
     000-001: 
