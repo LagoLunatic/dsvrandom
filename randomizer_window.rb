@@ -101,6 +101,9 @@ class RandomizerWindow < Qt::Dialog
     :enemy_num_resistances_range    => "Common Enemy # of Resistances",
     :boss_stat_mult_range           => "Boss Stat Multiplier",
     :enemy_anim_speed_mult_range    => "Enemy Anim Speed Multiplier",
+    
+    :starting_room_label            => "<b>Starting Room Difficulty</b>",
+    :starting_room_max_difficulty   => "Max Average Attack of Starting Area",
   }
   
   slots "update_settings()"

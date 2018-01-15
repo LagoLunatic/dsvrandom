@@ -38,11 +38,23 @@ module StartingRoomRandomizer
       rooms << room
     end
     
-    # TODO: in OoE put the glyph given by barlowe in the randomized starting room so the player has a weapon
+    # Limit potential starting rooms by how powerful common enemies in their subsector are on average (in the base game, not after enemies are randomized).
+    subsector_difficulty_for_each_room = {}
+    @enemy_difficulty_by_subsector.each do |rooms_in_subsector, difficulty|
+      (rooms & rooms_in_subsector).each do |room|
+        subsector_difficulty_for_each_room[room] = difficulty
+      end
+    end
+    #subsector_difficulty_for_each_room.sort_by{|k,v| p v; v}.each do |room, difficulty|
+    #  puts "#{room.room_str}: #{difficulty.round(4)}"
+    #end
+    possible_rooms = subsector_difficulty_for_each_room.select do |room, difficulty|
+      difficulty <= @difficulty_settings[:starting_room_max_difficulty]
+    end.keys
     
     # TODO: for the bonus starting items option, use the new x/y pos from here.
     
-    room = rooms.sample(random: rng)
+    room = possible_rooms.sample(random: rng)
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
     room_doors.select!{|door| door.direction == :left || door.direction == :right}

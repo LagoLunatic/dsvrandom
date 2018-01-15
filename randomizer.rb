@@ -90,6 +90,8 @@ class Randomizer
     :enemy_num_resistances_range    => 0..8,
     :boss_stat_mult_range           => 0.75..1.25,
     :enemy_anim_speed_mult_range    => 0.33..3.0,
+    
+    :starting_room_max_difficulty   => 15..75,
   }
   DIFFICULTY_LEVELS = {
     "Easy" => {
@@ -133,6 +135,8 @@ class Randomizer
       :enemy_num_resistances_range    => 2,
       :boss_stat_mult_range           => 1.0,
       :enemy_anim_speed_mult_range    => 0.9,
+      
+      :starting_room_max_difficulty   => 22,
     },
     "Normal" => {
       :item_price_range               => 1500,
@@ -175,6 +179,8 @@ class Randomizer
       :enemy_num_resistances_range    => 2.5,
       :boss_stat_mult_range           => 1.12,
       :enemy_anim_speed_mult_range    => 1.3,
+      
+      :starting_room_max_difficulty   => 35,
     },
   }
   
@@ -488,6 +494,42 @@ class Randomizer
       end
     end
     
+    # Preserve the original enemy DNAs so we know how hard rooms were in the base game.
+    @original_enemy_dnas = []
+    ENEMY_IDS.each do |enemy_id|
+      enemy_dna = EnemyDNA.new(enemy_id, game)
+      @original_enemy_dnas << enemy_dna
+    end
+    
+    # Calculate the average difficulty of common enemies in each subsector.
+    @enemy_difficulty_by_subsector = {}
+    game.areas.each do |area|
+      area.sectors.each do |sector|
+        subsectors = get_subsectors(sector)
+        subsectors.each do |rooms_in_subsector|
+          sum_of_all_subsector_enemy_attacks = 0
+          num_enemies_in_subsector = 0
+          
+          rooms_in_subsector.each do |room|
+            room.entities.select{|e| e.is_common_enemy?}.each do |enemy|
+              num_enemies_in_subsector += 1
+              
+              enemy_dna = @original_enemy_dnas[enemy.subtype]
+              sum_of_all_subsector_enemy_attacks += enemy_dna["Attack"]
+            end
+          end
+          
+          if num_enemies_in_subsector == 0
+            average_enemy_attack = 0
+          else
+            average_enemy_attack = sum_of_all_subsector_enemy_attacks.to_f / num_enemies_in_subsector
+          end
+          
+          @enemy_difficulty_by_subsector[rooms_in_subsector] = average_enemy_attack
+        end
+      end
+    end
+    
     if options[:randomize_starting_room]
       yield [options_completed, "Selecting starting room..."]
       reset_rng()
@@ -581,12 +623,6 @@ class Randomizer
       reset_rng()
       place_non_progression_pickups()
       options_completed += 1
-    end
-    
-    @original_enemy_dnas = []
-    ENEMY_IDS.each do |enemy_id|
-      enemy_dna = EnemyDNA.new(enemy_id, game)
-      @original_enemy_dnas << enemy_dna
     end
     
     if options[:randomize_enemy_stats]
