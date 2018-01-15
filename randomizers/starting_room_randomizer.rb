@@ -62,11 +62,11 @@ module StartingRoomRandomizer
     gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
     case door.direction
     when :left
-      x_pos = 0
+      x_pos = 0x10
       y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
       y_pos += gap_end_index*0x10 + 0x10
     when :right
-      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS-1
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS-0x10
       y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
       y_pos += gap_end_index*0x10 + 0x10
     when :up
@@ -112,5 +112,30 @@ module StartingRoomRandomizer
     @starting_room_door_index = room.doors.index(door)
     @starting_x_pos = x_pos
     @starting_y_pos = y_pos
+  end
+  
+  def add_starter_items_to_randomized_starting_room
+    case GAME
+    when "ooe"
+      # Put the glyph Barlowe would normally give you at the start in the randomized starting room.
+      
+      entity = @starting_room.add_new_entity()
+      
+      entity.x_pos = @starting_x_pos
+      entity.y_pos = @starting_y_pos
+      
+      @coll = RoomCollision.new(@starting_room, game.fs)
+      floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
+      entity.y_pos = floor_y
+      
+      if @ooe_starter_glyph_id
+        pickup_global_id = @ooe_starter_glyph_id
+      else
+        pickup_global_id = 1
+      end
+      
+      location = "#{@starting_room.room_str}_%02X" % (@starting_room.entities.length-1)
+      change_entity_location_to_pickup_global_id(location, pickup_global_id)
+    end
   end
 end

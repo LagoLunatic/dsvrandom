@@ -641,6 +641,11 @@ class Randomizer
       options_completed += 7
     end
     
+    if options[:randomize_starting_room]
+      reset_rng()
+      add_starter_items_to_randomized_starting_room()
+    end
+    
     if options[:bonus_starting_items]
       yield [options_completed, "Placing starting items..."]
       reset_rng()
