@@ -29,6 +29,7 @@ class DoorCompletabilityChecker
     
     load_room_reqs()
     @current_items = []
+    @return_portraits = {}
     if @ooe_nonlinear
       @world_map_areas_unlocked_from_beginning = [
         "02-00-03_000",
@@ -357,9 +358,9 @@ class DoorCompletabilityChecker
   def get_accessible_locations_and_doors
     accessible_locations = []
     accessible_doors = []
-    doors_to_check = []
+    doors_and_entities_to_check = []
     
-    doors_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
+    doors_and_entities_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
     
     case GAME
     when "dos"
@@ -412,7 +413,7 @@ class DoorCompletabilityChecker
             door_index = 0
           end
           
-          doors_to_check << "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
+          doors_and_entities_to_check << "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
         end
       end
     end
@@ -421,30 +422,93 @@ class DoorCompletabilityChecker
     if @current_location_in_room =~ /^e(\h\h)/
       # At an entity
       entity_index = $1.to_i(16)
-      current_location_str = "#{@current_room}_%02X" % entity_index
-      accessible_locations << current_location_str
-      
-      possible_path_ends = @room_reqs[@current_room][:entities][entity_index]
-      possible_path_ends.each do |path_end, path_reqs|
-        if path_end !~ /^e(\h\h)/ && check_reqs(path_reqs)
-          reachable_door_str = "#{@current_room}_#{path_end}"
-          doors_to_check << reachable_door_str
-        end
-      end
+      current_entity_str = "#{@current_room}_e%02X" % entity_index
+      doors_and_entities_to_check << current_entity_str
     else
       # At a door
       current_door_str = "#{@current_room}_#{@current_location_in_room}"
-      doors_to_check << current_door_str
+      doors_and_entities_to_check << current_door_str
     end
     
-    while doors_to_check.any?
-      door_str = doors_to_check.shift()
-      next if accessible_doors.include?(door_str)
-      accessible_doors << door_str
+    while doors_and_entities_to_check.any?
+      door_or_entity_str = doors_and_entities_to_check.shift()
       
-      if @warp_connections[door_str]
-        connected_door_str = @warp_connections[door_str]
-        doors_to_check << connected_door_str
+      if door_or_entity_str =~ /^(\h\h-\h\h-\h\h)_e(\h\h)$/
+        room_str = $1
+        entity_index = $2.to_i(16)
+        
+        next if accessible_locations.include?(door_or_entity_str)
+        entity_location_str = "#{room_str}_%02X" % entity_index # Remove the e prefix for the entity.
+        accessible_locations << entity_location_str
+        
+        current_room = game.room_by_str(room_str)
+        current_entity = current_room.entities[entity_index]
+        
+        if @room_reqs[room_str]
+          possible_path_ends = @room_reqs[room_str][:entities][entity_index]
+          possible_path_ends.each do |path_end, path_reqs|
+            if check_reqs(path_reqs)
+              if path_end =~ /^e(\h\h)$/
+                # Entity. This code shouldn't ever run since the room reqs don't include entity->entity paths, but put it here anyway for future-proofing.
+                entity_str = "#{room_str}_#{$1}"
+                accessible_locations << entity_str
+              else
+                # Door
+                door_index = path_end.to_i(16)
+                door = current_room.doors[door_index]
+                next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
+                dest_door = door.destination_door
+                doors_and_entities_to_check << dest_door.door_str
+              end
+            end
+          end
+        end
+      elsif door_or_entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h)$/
+        room_str = $1
+        door_index = $2.to_i(16)
+        
+        next if accessible_doors.include?(door_or_entity_str)
+        accessible_doors << door_or_entity_str
+        
+        current_room = game.room_by_str(room_str)
+        current_door = current_room.doors[door_index]
+        
+        # Add this door's destination door to the list of doors to check
+        # Unless this door has been dummied out by the map-friendly room randomizer, in which case it has no destination door.
+        unless current_door.destination_room_metadata_ram_pointer == 0
+          dest_door = current_door.destination_door
+          doors_and_entities_to_check << dest_door.door_str
+        end
+        
+        if @room_reqs[room_str]
+          possible_path_ends = @room_reqs[room_str][:doors][door_index]
+          possible_path_ends.each do |path_end, path_reqs|
+            if check_reqs(path_reqs)
+              if path_end =~ /^e(\h\h)$/
+                # Entity
+                entity_str = "#{room_str}_#{$1}"
+                accessible_locations << entity_str
+              else
+                # Door
+                door_index = path_end.to_i(16)
+                door = current_room.doors[door_index]
+                next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
+                dest_door = door.destination_door
+                doors_and_entities_to_check << dest_door.door_str
+              end
+            end
+          end
+        end
+      else
+        raise "Invalid door or entity str: #{door_or_entity_str.inspect}"
+      end
+      
+      
+      
+      
+      if @warp_connections[door_or_entity_str]
+        connected_door_str = @warp_connections[door_or_entity_str]
+        doors_and_entities_to_check << connected_door_str
       end
       
       # Handle the darkness seal.
@@ -455,7 +519,7 @@ class DoorCompletabilityChecker
         end
         if dos_darkness_seal_unlocked && accessible_doors.include?("00-05-0C_000")
           # Player can access the darkness seal room, and has also unlocked the darkness seal.
-          doors_to_check << "00-05-0C_001"
+          doors_and_entities_to_check << "00-05-0C_001"
         end
       end
       
@@ -464,9 +528,17 @@ class DoorCompletabilityChecker
         if !por_throne_room_stairway_accessible && accessible_doors.include?("00-0B-00_000") # Player has access to the 5-portrait room.
           studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all?{|door_str| accessible_doors.include?(door_str)}
           if studio_portrait_unlocked # The studio portrait is unlocked.
-            doors_to_check << "00-09-03_001" # Give access to the stairway room leading to the Throne Room.
+            doors_and_entities_to_check << "00-09-03_001" # Give access to the stairway room leading to the Throne Room.
             por_throne_room_stairway_accessible = true
           end
+        end
+      end
+      
+      if GAME == "por"
+        if @return_portraits[door_or_entity_str]
+          # If the current door we're on is a door in a return portrait room, we need to add the enter portrait to the list of locations to check.
+          enter_portrait_entity_str = @return_portraits[door_or_entity_str]
+          doors_and_entities_to_check << enter_portrait_entity_str
         end
       end
       
@@ -475,8 +547,8 @@ class DoorCompletabilityChecker
         newly_unlocked_world_map_door_strs = []
         
         # Normal world map unlocks, not hardcoded.
-        if @world_map_unlocks[door_str]
-          newly_unlocked_world_map_door_strs += @world_map_unlocks[door_str].split(",").map{|str| str.strip}
+        if @world_map_unlocks[door_or_entity_str]
+          newly_unlocked_world_map_door_strs += @world_map_unlocks[door_or_entity_str].split(",").map{|str| str.strip}
         end
         
         if !barlowe_accessible && accessible_doors.include?("02-00-06_000")
@@ -531,7 +603,7 @@ class DoorCompletabilityChecker
         
         if world_map_accessible
           # If the world map is already accessible, we add them to the list of doors to check.
-          doors_to_check += newly_unlocked_world_map_door_strs
+          doors_and_entities_to_check += newly_unlocked_world_map_door_strs
           currently_unlocked_world_map_areas += newly_unlocked_world_map_door_strs
           currently_unlocked_world_map_areas.uniq!
         else
@@ -552,49 +624,11 @@ class DoorCompletabilityChecker
               end
               
               # When we first unlock the world map, add the world map areas that we unlocked earlier to the currently accessible rooms.
-              doors_to_check += currently_unlocked_world_map_areas
+              doors_and_entities_to_check += currently_unlocked_world_map_areas
               
               world_map_accessible = true
               break
             end
-          end
-        end
-      end
-      
-      if door_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h)$/
-        room_str = $1
-        door_index = $2.to_i(16)
-      else
-        raise "Invalid door str: #{door_str.inspect}"
-      end
-      current_room = game.room_by_str(room_str)
-      current_door = current_room.doors[door_index]
-      
-      # Add this door's destination door to the list of doors to check
-      # Unless this door has been dummied out by the map-friendly room randomizer, in which case it has no destination door.
-      unless current_door.destination_room_metadata_ram_pointer == 0
-        dest_door = current_door.destination_door
-        doors_to_check << dest_door.door_str
-      end
-      
-      if @room_reqs[room_str].nil?
-        next
-      end
-      
-      possible_path_ends = @room_reqs[room_str][:doors][door_index]
-      possible_path_ends.each do |path_end, path_reqs|
-        if check_reqs(path_reqs)
-          if path_end =~ /^e(\h\h)$/
-            # Entity
-            entity_str = "#{room_str}_#{$1}"
-            accessible_locations << entity_str
-          else
-            # Door
-            door_index = path_end.to_i(16)
-            door = current_room.doors[door_index]
-            next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map-friendly room randomizer.
-            dest_door = door.destination_door
-            doors_to_check << dest_door.door_str
           end
         end
       end
@@ -715,6 +749,29 @@ class DoorCompletabilityChecker
     # Remove burnt paradise's creature requirement.
     game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
     # TODO: Once portraits are accounted for in the room rando logic, modify the logic here.
+  end
+  
+  def add_return_portrait(return_portrait_room_str, enter_portrait_entity_str)
+    # Create a mapping of doors in return portrait rooms to the enter portrait entity locations they lead to.
+    
+    # Add the e prefix to the entity string to further distinguish it from a door string.
+    enter_portrait_entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h)$/
+    room_str, entity_index = $1, $2
+    enter_portrait_entity_str = "#{room_str}_e#{entity_index}"
+    
+    case return_portrait_room_str
+    when "05-00-21" # Nation of Fools
+      door_indexes = [0, 1, 2]
+    when "06-00-20" # Burnt Paradise main entrance
+      door_indexes = [0, 1]
+    else
+      door_indexes = [0]
+    end
+    
+    door_indexes.each do |door_index|
+      return_portrait_door_str = "#{return_portrait_room_str}_%03X" % door_index
+      @return_portraits[return_portrait_door_str] = enter_portrait_entity_str
+    end
   end
   
   def set_current_location_by_entity(entity_str)

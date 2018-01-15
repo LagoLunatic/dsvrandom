@@ -852,6 +852,11 @@ module PickupRandomizer
         end
         
         return_portrait.write_to_rom()
+        
+        if room_rando?
+          # Tell the room rando logic about this return portrait.
+          checker.add_return_portrait(return_portrait.room.room_str, location)
+        end
       end
       
       

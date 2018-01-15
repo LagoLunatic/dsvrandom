@@ -530,6 +530,29 @@ class Randomizer
     
     options_completed += 2
     
+    if GAME == "por" && !options[:randomize_portraits] && room_rando?
+      # Room rando needs to have a list of return portraits.
+      # If portrait rando is on, that list gets incrementally created as portraits are placed.
+      # But when portrait rando is off, we need to create the whole thing here first.
+      
+      # Main return portraits.
+      checker.add_return_portrait("09-00-00", "00-00-05_00")
+      checker.add_return_portrait("01-00-1A", "00-01-00_00")
+      checker.add_return_portrait("03-00-00", "00-04-12_00")
+      checker.add_return_portrait("05-00-21", "00-06-01_00")
+      checker.add_return_portrait("07-00-00", "00-08-01_02")
+      checker.add_return_portrait("04-00-00", "00-0B-00_01")
+      checker.add_return_portrait("02-00-07", "00-0B-00_02")
+      checker.add_return_portrait("06-00-20", "00-0B-00_03")
+      checker.add_return_portrait("08-01-06", "00-0B-00_04")
+      
+      # Bonus return portraits at the end of some areas.
+      checker.add_return_portrait("02-02-16", "00-0B-00_02")
+      checker.add_return_portrait("04-01-07", "00-0B-00_01")
+      checker.add_return_portrait("06-00-06", "00-0B-00_03")
+      checker.add_return_portrait("08-00-08", "00-0B-00_04")
+    end
+    
     if options[:randomize_pickups]
       yield [options_completed, "Placing progression pickups..."]
       reset_rng()
