@@ -184,12 +184,27 @@ module DoorRandomizer
       end
     end
     
+    
+    doors_to_line_up = []
+    
     queued_door_changes.each do |door, changes|
       changes.each do |attribute_name, new_value|
         door.send("#{attribute_name}=", new_value)
       end
       
+      unless doors_to_line_up.include?(door.destination_door)
+        doors_to_line_up << door
+      end
+      
       door.write_to_rom()
+    end
+    
+    lined_up_door_strs = []
+    doors_to_line_up.each do |door|
+      next if lined_up_door_strs.include?(door.destination_door.door_str)
+      lined_up_door_strs << door.door_str
+      
+      line_up_door(door)
     end
   end
   
