@@ -540,6 +540,11 @@ module DoorRandomizer
   def get_subsectors(sector, include_transitions: false)
     subsectors = []
     
+    @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
+    
     remaining_rooms_to_check = sector.rooms.dup
     remaining_rooms_to_check -= @transition_rooms unless include_transitions
     while remaining_rooms_to_check.any?
