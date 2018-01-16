@@ -56,4 +56,18 @@ module StartingItemsRandomizer
       room.write_entities_to_rom()
     end
   end
+  
+  def add_bonus_item_to_starting_room(pickup_global_id)
+    entity = @starting_room.add_new_entity()
+    
+    entity.x_pos = @starting_x_pos
+    entity.y_pos = @starting_y_pos
+    
+    @coll = RoomCollision.new(@starting_room, game.fs)
+    floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
+    entity.y_pos = floor_y - 0x18
+    
+    location = "#{@starting_room.room_str}_%02X" % (@starting_room.entities.length-1)
+    change_entity_location_to_pickup_global_id(location, pickup_global_id)
+  end
 end
