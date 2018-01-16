@@ -440,6 +440,8 @@ class Randomizer
       end
     end
     
+    options_completed += 2 # Initialization
+    
     @red_wall_souls = []
     if GAME == "dos"
       if options[:randomize_red_walls]
@@ -570,8 +572,6 @@ class Randomizer
       # Pickup flags 160-16D and 170-17D exist but are used by no-damage blue chests so we don't use those. 16E, 16F, 17E, and 17F could probably be used by the randomizer safely but currently are not.
     end
     
-    options_completed += 2
-    
     if GAME == "por" && !options[:randomize_portraits] && room_rando?
       # Room rando needs to have a list of return portraits.
       # If portrait rando is on, that list gets incrementally created as portraits are placed.
@@ -622,7 +622,6 @@ class Randomizer
       yield [options_completed, "Randomizing other pickups..."]
       reset_rng()
       place_non_progression_pickups()
-      options_completed += 1
     end
     
     if options[:randomize_enemy_stats]
@@ -650,7 +649,6 @@ class Randomizer
       yield [options_completed, "Placing starting items..."]
       reset_rng()
       randomize_starting_items()
-      options_completed += 1
     end
     
     if options[:randomize_enemy_ai]
