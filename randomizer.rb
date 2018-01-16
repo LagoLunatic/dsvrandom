@@ -595,6 +595,18 @@ class Randomizer
       checker.add_return_portrait("08-00-08", "00-0B-00_04")
     end
     
+    if options[:randomize_starting_room]
+      reset_rng()
+      add_starter_items_to_randomized_starting_room()
+    elsif GAME == "por" && room_rando?
+      # Even if starting room rando is off, we need to check for the possibility of the player not being able to access Wind+Vincent, and in that case give them Lizard Tail.
+      
+      accessible_doors = checker.get_accessible_doors()
+      if !accessible_doors.include?("00-01-06_000") || !accessible_doors.include?("00-01-09_000")
+        add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+      end
+    end
+    
     if options[:randomize_pickups]
       yield [options_completed, "Placing progression pickups..."]
       reset_rng()
@@ -638,11 +650,6 @@ class Randomizer
         yield [options_completed+percent*7, "Placing enemies..."]
       end
       options_completed += 7
-    end
-    
-    if options[:randomize_starting_room]
-      reset_rng()
-      add_starter_items_to_randomized_starting_room()
     end
     
     if options[:bonus_starting_items]
