@@ -780,6 +780,7 @@ module DoorRandomizer
       next if room.area.name == "Ecclesia"
       next if room.area.name == "Nest of Evil"
       next if room.area.name == "Large Cavern"
+      next if room.area.name == "Unused Boss Rush"
       
       room.entities.each do |entity|
         if entity.is_boss_door? && entity.var_a == 0
