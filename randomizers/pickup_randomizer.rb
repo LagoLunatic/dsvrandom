@@ -215,26 +215,7 @@ module PickupRandomizer
         # This is problematic because the portrait randomizer will traditionally never place a portrait back to Dracula's castle, making it inaccessible.
         # So we need to avoid randomizing the portrait in Dracula's castle that leads to this starting area.
         # We do this by placing the portrait at its original location and registering it with the logic.
-        starting_portrait_location_in_castle = case starting_portrait_name
-        when :portraitcityofhaze
-          "00-01-00_00"
-        when :portraitsandygrave
-          "00-04-12_00"
-        when :portraitnationoffools
-          "00-06-01_00"
-        when :portraitforestofdoom
-          "00-08-01_02"
-        when :portrait13thstreet
-          "00-0B-00_02"
-        when :portraitforgottencity
-          "00-0B-00_01"
-        when :portraitburntparadise
-          "00-0B-00_03"
-        when :portraitdarkacademy
-          "00-0B-00_04"
-        when :portraitnestofevil
-          "00-00-05_00"
-        end
+        starting_portrait_location_in_castle = PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION[starting_portrait_name]
         change_entity_location_to_pickup_global_id(starting_portrait_location_in_castle, starting_portrait_name)
         checker.add_item(starting_portrait_name)
         @locations_randomized_to_have_useful_pickups << starting_portrait_location_in_castle
