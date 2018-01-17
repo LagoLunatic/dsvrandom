@@ -30,6 +30,10 @@ class DoorCompletabilityChecker
     load_room_reqs()
     @current_items = []
     @return_portraits = {}
+    @required_boss_room_doors_to_unlock_regular_portraits = {
+      :portrait13thstreet    => "04-01-08_001", # Mummy Man
+      :portraitburntparadise => "08-00-04_000", # The Creature
+    }
     if @ooe_nonlinear
       @world_map_areas_unlocked_from_beginning = [
         "02-00-03_000",
@@ -392,28 +396,27 @@ class DoorCompletabilityChecker
     end
     
     if GAME == "por"
+      locked_accessible_portraits = []
       @current_items.each do |pickup_global_id|
         if PickupRandomizer::PORTRAIT_NAMES.include?(pickup_global_id)
-          portrait_data = PickupRandomizer::PORTRAIT_NAME_TO_DATA[pickup_global_id]
-          area_index = portrait_data[:var_a]
-          room_index = portrait_data[:var_b] & 0x3F
-          sector_index = (portrait_data[:var_b] >> 6) & 0xF
-          case area_index
-          when 5 # Nation of Fools
-            door_index = 1
-          when 6 # Burnt Paradise
-            if check_reqs([[:small_height]])
-              door_index = 0
-            else
-              # The player needs at least small height to reach either door in the first room of Burnt Paradise.
-              # Don't count Burnt Paradise as being reachable if the player can't reach any doors in it yet.
-              next
-            end
-          else
-            door_index = 0
+          portrait_name = pickup_global_id
+          
+          required_door_for_this_portrait = @required_boss_room_doors_to_unlock_regular_portraits[portrait_name]
+          if required_door_for_this_portrait
+            # Can't count 13th street/burnt paradise as accessible by default.
+            # In the middle of the main door crawling logic we will repeatedly check to see if the bosses needed to unlock these are reachable yet.
+            locked_accessible_portraits << portrait_name
+            next
           end
           
-          doors_and_entities_to_check << "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
+          dest_door_str = get_destination_of_portrait(portrait_name)
+          
+          if dest_door_str == false
+            # Can't access any doors in the destination room.
+            next
+          end
+          
+          doors_and_entities_to_check << dest_door_str
         end
       end
     end
@@ -521,6 +524,26 @@ class DoorCompletabilityChecker
           # Player can access the darkness seal room, and has also unlocked the darkness seal.
           doors_and_entities_to_check << "00-05-0C_001"
         end
+      end
+      
+      if GAME == "por" && locked_accessible_portraits.any?
+        portraits_to_unlock = []
+        locked_accessible_portraits.each do |portrait_name|
+          required_door_for_this_portrait = @required_boss_room_doors_to_unlock_regular_portraits[portrait_name]
+          if required_door_for_this_portrait == door_or_entity_str
+            # Can reach the boss needed to unlock this portrait.
+            dest_door_str = get_destination_of_portrait(portrait_name)
+            
+            if dest_door_str == false
+              # Can't access any doors in the destination room. Do nothing.
+            else
+              doors_and_entities_to_check << dest_door_str
+              portraits_to_unlock << portrait_name # Can't delete this portrait from the locked_accessible_portraits array in the middle of a loop. Delete it after.
+            end
+          end
+        end
+        
+        locked_accessible_portraits -= portraits_to_unlock # Now delete the unlocked portraits from locked_accessible_portraits.
       end
       
       # Handle the Studio Portrait warp to the Throne Room stairway in PoR.
@@ -723,7 +746,7 @@ class DoorCompletabilityChecker
         when :portraitsandygrave
           "03-00-0C_001" # Astarte
         when :portraitnationoffools
-          "05-02-0C_000" # Legion (TODO make sure logic works properly since legion has a weird room)
+          "05-02-0C_000" # Legion
         when :portraitforestofdoom
           "07-00-0E_000" # Dagon
         when :portraitdarkacademy
@@ -744,11 +767,11 @@ class DoorCompletabilityChecker
   def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
     # Remove 13th street's mummy requirement.
     game.fs.write(0x02078FC4+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    # TODO: Once portraits are accounted for in the room rando logic, modify the logic here.
+    @required_boss_room_doors_to_unlock_regular_portraits.delete(:portrait13thstreet) # Remove the logic's check for this unlock
     
     # Remove burnt paradise's creature requirement.
     game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    # TODO: Once portraits are accounted for in the room rando logic, modify the logic here.
+    @required_boss_room_doors_to_unlock_regular_portraits.delete(:portraitburntparadise) # Remove the logic's check for this unlock
   end
   
   def add_return_portrait(return_portrait_room_str, enter_portrait_entity_str)
@@ -772,6 +795,29 @@ class DoorCompletabilityChecker
       return_portrait_door_str = "#{return_portrait_room_str}_%03X" % door_index
       @return_portraits[return_portrait_door_str] = enter_portrait_entity_str
     end
+  end
+  
+  def get_destination_of_portrait(portrait_name)
+    portrait_data = PickupRandomizer::PORTRAIT_NAME_TO_DATA[portrait_name]
+    area_index = portrait_data[:var_a]
+    room_index = portrait_data[:var_b] & 0x3F
+    sector_index = (portrait_data[:var_b] >> 6) & 0xF
+    case area_index
+    when 5 # Nation of Fools
+      door_index = 1
+    when 6 # Burnt Paradise
+      if check_reqs([[:small_height]])
+        door_index = 0
+      else
+        # The player needs at least small height to reach either door in the first room of Burnt Paradise.
+        # Don't count Burnt Paradise as being reachable if the player can't reach any doors in it yet.
+        return false
+      end
+    else
+      door_index = 0
+    end
+    
+    return "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
   end
   
   def set_current_location_by_entity(entity_str)
