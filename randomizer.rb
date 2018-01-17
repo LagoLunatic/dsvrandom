@@ -1082,6 +1082,15 @@ class Randomizer
       game.fs.write(0x022E8880, [0xE3A01001].pack("V")) # mov r1, 1h
     end
     
+    if GAME == "por" && options[:randomize_area_connections]
+      # Some bosses (e.g. Stella) connect directly to a transition room.
+      # This means the boss door gets placed in whatever transition room gets connected to the boss by the area randomizer.
+      # But almost all transition room hiders have a higher Z-position than boss doors, hiding the boss door.
+      # We want the boss door to be visible as a warning for the boss. So change all boss doors to have a higher Z-pos.
+      # Boss doors normally have 0x4F80 Z-pos, we raise it to 0x65A0 (which has the side effect of putting it on top of the player too, who is at 0x5B00).
+      game.fs.write(0x020718CC, [0x65A0].pack("V"))
+    end
+    
     if GAME == "ooe" && options[:always_dowsing]
       game.apply_armips_patch("ooe_always_dowsing")
     end
