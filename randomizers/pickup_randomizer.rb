@@ -27,7 +27,7 @@ module PickupRandomizer
     :portraitnestofevil => {subtype: 0x86, var_a: 9, var_b: 0},
   }
   PORTRAIT_NAMES = PORTRAIT_NAME_TO_DATA.keys
-  PORTRAIT_VAR_A_TO_NAME = PORTRAIT_NAME_TO_DATA.map do |name, data|
+  AREA_INDEX_TO_PORTRAIT_NAME = PORTRAIT_NAME_TO_DATA.map do |name, data|
     [data[:var_a], name]
   end.to_h
   PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION = {
@@ -205,6 +205,39 @@ module PickupRandomizer
           @rooms_that_already_have_an_event << room_str
           break
         end
+      end
+    end
+    
+    if GAME == "por" && options[:randomize_starting_room] && options[:randomize_portraits]
+      starting_portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[@starting_room.area_index]
+      if starting_portrait_name
+        # The starting room randomizer started the player in a portrait.
+        # This is problematic because the portrait randomizer will traditionally never place a portrait back to Dracula's castle, making it inaccessible.
+        # So we need to avoid randomizing the portrait in Dracula's castle that leads to this starting area.
+        # We do this by placing the portrait at its original location and registering it with the logic.
+        starting_portrait_location_in_castle = case starting_portrait_name
+        when :portraitcityofhaze
+          "00-01-00_00"
+        when :portraitsandygrave
+          "00-04-12_00"
+        when :portraitnationoffools
+          "00-06-01_00"
+        when :portraitforestofdoom
+          "00-08-01_02"
+        when :portrait13thstreet
+          "00-0B-00_02"
+        when :portraitforgottencity
+          "00-0B-00_01"
+        when :portraitburntparadise
+          "00-0B-00_03"
+        when :portraitdarkacademy
+          "00-0B-00_04"
+        when :portraitnestofevil
+          "00-00-05_00"
+        end
+        change_entity_location_to_pickup_global_id(starting_portrait_location_in_castle, starting_portrait_name)
+        checker.add_item(starting_portrait_name)
+        @locations_randomized_to_have_useful_pickups << starting_portrait_location_in_castle
       end
     end
     
@@ -1178,7 +1211,7 @@ module PickupRandomizer
     entity = get_entity_by_location_str(location)
     
     if GAME == "por" && entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
-      portrait_name = PORTRAIT_VAR_A_TO_NAME[entity.var_a]
+      portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[entity.var_a]
       return portrait_name
     else
       raise "Not a portrait: #{location}"
