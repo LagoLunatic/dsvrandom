@@ -112,6 +112,8 @@ module StartingRoomRandomizer
     @starting_room_door_index = room.doors.index(door)
     @starting_x_pos = x_pos
     @starting_y_pos = y_pos
+    
+    puts "Starting room selected: #{@starting_room.room_str}"
   end
   
   def add_starter_items_to_randomized_starting_room
