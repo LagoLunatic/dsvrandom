@@ -598,6 +598,13 @@ class Randomizer
     if options[:randomize_starting_room]
       reset_rng()
       add_starter_items_to_randomized_starting_room()
+    elsif GAME == "dos" && room_rando?
+      # Even if starting room rando is off, we need to check for the possibility of the player not being able to access the drawbridge room, and in that case give them Magic Seal 1.
+      
+      accessible_doors = checker.get_accessible_doors()
+      if !accessible_doors.include?("00-00-15_000")
+        add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
+      end
     elsif GAME == "por" && room_rando?
       # Even if starting room rando is off, we need to check for the possibility of the player not being able to access Wind+Vincent, and in that case give them Lizard Tail.
       
