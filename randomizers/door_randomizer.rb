@@ -997,6 +997,24 @@ module DoorRandomizer
         is_solid = coll[x*0x10,y*0x10].is_solid?
         tiles << {is_solid: is_solid, i: i, x: x, y: y}
       end
+      
+      # Keep track of gaps that extend all the way to the top/bottom of the room so we can ignore these gaps later.
+      bottom_y_of_top_edge_gap = -1
+      (0..door.room.height*SCREEN_HEIGHT_IN_TILES-1).each do |y|
+        if coll[x*0x10,y*0x10].is_solid?
+          break
+        else
+          bottom_y_of_top_edge_gap = y
+        end
+      end
+      top_y_of_bottom_edge_gap = door.room.height*SCREEN_HEIGHT_IN_TILES
+      (0..door.room.height*SCREEN_HEIGHT_IN_TILES-1).reverse_each do |y|
+        if coll[x*0x10,y*0x10].is_solid?
+          break
+        else
+          top_y_of_bottom_edge_gap = y
+        end
+      end
     when :up, :down
       if door.direction == :up
         y = 0
@@ -1014,6 +1032,25 @@ module DoorRandomizer
         is_solid = coll[x*0x10,y*0x10].is_solid?
         tiles << {is_solid: is_solid, i: i, x: x, y: y}
       end
+      
+      
+      # Keep track of gaps that extend all the way to the left/right of the room so we can ignore these gaps later.
+      right_x_of_left_edge_gap = -1
+      (0..door.room.width*SCREEN_WIDTH_IN_TILES-1).each do |x|
+        if coll[x*0x10,y*0x10].is_solid?
+          break
+        else
+          right_x_of_left_edge_gap = x
+        end
+      end
+      left_x_of_right_edge_gap = door.room.width*SCREEN_WIDTH_IN_TILES
+      (0..door.room.width*SCREEN_WIDTH_IN_TILES-1).reverse_each do |x|
+        if coll[x*0x10,y*0x10].is_solid?
+          break
+        else
+          left_x_of_right_edge_gap = x
+        end
+      end
     end
     
     chunks = tiles.chunk{|tile| tile[:is_solid]}
@@ -1022,9 +1059,25 @@ module DoorRandomizer
     # Try to limit to gaps that aren't touching the edge of the room if possible.
     case door.direction
     when :left, :right
-      gaps_not_on_room_edge = gaps.reject{|tiles| tiles.first[:y] == 0 || tiles.last[:y] == door.room.height*SCREEN_HEIGHT_IN_TILES-1}
+      gaps_not_on_room_edge = gaps.reject do |tiles|
+        if tiles.first[:y] <= bottom_y_of_top_edge_gap
+          true
+        elsif tiles.last[:y] >= top_y_of_bottom_edge_gap
+          true
+        else
+          false
+        end
+      end
     when :up, :down
-      gaps_not_on_room_edge = gaps.reject{|tiles| tiles.first[:x] == 0 || tiles.last[:x] == door.room.width*SCREEN_WIDTH_IN_TILES-1}
+      gaps_not_on_room_edge = gaps.reject do |tiles|
+        if tiles.first[:x] <= right_x_of_left_edge_gap
+          true
+        elsif tiles.last[:x] >= left_x_of_right_edge_gap
+          true
+        else
+          false
+        end
+      end
     end
     if gaps_not_on_room_edge.any?
       gaps = gaps_not_on_room_edge
