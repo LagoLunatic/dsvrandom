@@ -1002,6 +1002,11 @@ module DoorRandomizer
         y = 0
       else
         y = door.y_pos*SCREEN_HEIGHT_IN_TILES - 1
+        
+        if GAME == "por" && door.room.room_str == "03-01-01"
+          # One specific room in sandy grave doesn't have any tiles at the very bottom row. Instead we use the row second closest to the bottom.
+          y -= 1
+        end
       end
       
       x_start = door.x_pos*SCREEN_WIDTH_IN_TILES
