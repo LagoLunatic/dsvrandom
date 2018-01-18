@@ -1018,23 +1018,19 @@ module DoorRandomizer
     
     chunks = tiles.chunk{|tile| tile[:is_solid]}
     gaps = chunks.select{|is_solid, tiles| !is_solid}.map{|is_solid, tiles| tiles}
-    size_of_biggest_gap = gaps.map{|tiles| tiles.length}.max
-    all_biggest_gaps = gaps.select{|tiles| tiles.length == size_of_biggest_gap}
-    if all_biggest_gaps.size == 1
-      tiles_in_biggest_gap = all_biggest_gaps[0]
-    else
-      case door.direction
-      when :left, :right
-        biggest_gaps_not_on_room_edge = all_biggest_gaps.reject{|tiles| tiles.first[:y] == 0 || tiles.last[:y] == door.room.height*SCREEN_HEIGHT_IN_TILES-1}
-      when :up, :down
-        biggest_gaps_not_on_room_edge = all_biggest_gaps.reject{|tiles| tiles.first[:x] == 0 || tiles.last[:x] == door.room.width*SCREEN_WIDTH_IN_TILES-1}
-      end
-      if biggest_gaps_not_on_room_edge.any?
-        tiles_in_biggest_gap = biggest_gaps_not_on_room_edge.first
-      else
-        tiles_in_biggest_gap = all_biggest_gaps.first
-      end
+    
+    # Try to limit to gaps that aren't touching the edge of the room if possible.
+    case door.direction
+    when :left, :right
+      gaps_not_on_room_edge = gaps.reject{|tiles| tiles.first[:y] == 0 || tiles.last[:y] == door.room.height*SCREEN_HEIGHT_IN_TILES-1}
+    when :up, :down
+      gaps_not_on_room_edge = gaps.reject{|tiles| tiles.first[:x] == 0 || tiles.last[:x] == door.room.width*SCREEN_WIDTH_IN_TILES-1}
     end
+    if gaps_not_on_room_edge.any?
+      gaps = gaps_not_on_room_edge
+    end
+    
+    tiles_in_biggest_gap = gaps.max_by{|tiles| tiles.length}
     first_tile_i = tiles_in_biggest_gap.first[:i]
     last_tile_i = tiles_in_biggest_gap.last[:i]
     
