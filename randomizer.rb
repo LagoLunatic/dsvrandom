@@ -1149,6 +1149,13 @@ class Randomizer
     if @needs_infinite_magical_tickets
       room_rando_give_infinite_magical_tickets()
     end
+    
+    if GAME == "dos"
+      game.apply_armips_patch("dos_fix_map_explore_bug")
+    end
+    if GAME == "por"
+      game.apply_armips_patch("por_fix_map_explore_bug")
+    end
   end
   
   def dos_implement_magical_tickets
