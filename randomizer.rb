@@ -430,7 +430,7 @@ class Randomizer
       end
     end
     
-    if options[:randomize_pickups]
+    if GAME == "ooe" && options[:randomize_pickups]
       # Glyph given by Barlowe.
       # We randomize this, but only to a starter physical weapon glyph, not to any glyph.
       reset_rng()
