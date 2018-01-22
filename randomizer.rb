@@ -813,10 +813,6 @@ class Randomizer
       game.fs.write(0x0219EF40, [0xE3A00000].pack("V")) # mov r0, 0h
     end
     
-    if options[:add_magical_tickets] && GAME == "dos"
-      dos_implement_magical_tickets()
-    end
-    
     if GAME == "por" && room_rando?
       # Modify several split doors, where there are two different gaps in the level design, to only have one gap instead.
       # This is because the logic doesn't support multi-gap doors.
@@ -859,7 +855,30 @@ class Randomizer
     if !game.fs.has_free_space_overlay?
       game.add_new_overlay()
     end
-    # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used (e.g. for the DoS magic ticket patch).
+    
+    # Now apply any ASM patches that go in the free space overlay first.
+    
+    if options[:add_magical_tickets] && GAME == "dos"
+      dos_implement_magical_tickets()
+    end
+    
+    if GAME == "por" && options[:randomize_portraits]
+      # We apply a patch in portrait randomizer that will show a text popup when the player tries to enter the Forest of Doom early.
+      # Without this patch there is no indication as to why you can't enter the portrait, as the normal event doesn't work outside the sector the portrait is normally in.
+      game.apply_armips_patch("por_show_popup_for_locked_portrait")
+      game.text_database.text_list[0x4BE].decoded_string = "You must beat Stella and talk to Wind\\nto unlock the Forest of Doom."
+      game.text_database.write_to_rom()
+    end
+    
+    # Fix the bugs where an incorrect map tile would get revealed when going through doors in the room randomizer (or sliding puzzle in vanilla DoS).
+    if GAME == "dos"
+      game.apply_armips_patch("dos_fix_map_explore_bug")
+    end
+    if GAME == "por"
+      game.apply_armips_patch("por_fix_map_explore_bug")
+    end
+    
+    # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
     new_overlay_size = new_overlay_file[:size]
@@ -1003,14 +1022,6 @@ class Randomizer
       game.fs.write(0x0207B9C0, [0x5380].pack("V"))
     end
     
-    if GAME == "por" && options[:randomize_portraits]
-      # We also apply a patch in portrait randomizer that will show a text popup when the player tries to enter the Forest of Doom early.
-      # Without this patch there is no indication as to why you can't enter the portrait, as the normal event doesn't work outside the sector the portrait is normally in.
-      game.apply_armips_patch("por_show_popup_for_locked_portrait")
-      game.text_database.text_list[0x4BE].decoded_string = "You must beat Stella and talk to Wind\\nto unlock the Forest of Doom."
-      game.text_database.write_to_rom()
-    end
-    
     if GAME == "por" && (options[:randomize_portraits] || options[:por_short_mode])
       game.areas.each do |area|
         map = game.get_map(area.area_index, 0)
@@ -1148,13 +1159,6 @@ class Randomizer
     
     if @needs_infinite_magical_tickets
       room_rando_give_infinite_magical_tickets()
-    end
-    
-    if GAME == "dos"
-      game.apply_armips_patch("dos_fix_map_explore_bug")
-    end
-    if GAME == "por"
-      game.apply_armips_patch("por_fix_map_explore_bug")
     end
   end
   
