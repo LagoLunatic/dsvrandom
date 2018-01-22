@@ -115,15 +115,6 @@ module PickupRandomizer
       entity_hider.write_to_rom()
       checker.add_item(0x73) # glyph sleeve
       
-      # Glyph given by Barlowe. We randomize this, but only to a starter physical weapon glyph, not to any glyph.
-      possible_starter_weapons = [0x01, 0x04, 0x07, 0x0A, 0x0D, 0x10, 0x13, 0x16]
-      pickup_global_id = possible_starter_weapons.sample(random: rng)
-      game.fs.load_overlay(42)
-      game.fs.write(0x022C3980, [0xE3A01000].pack("V"))
-      game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
-      checker.add_item(pickup_global_id)
-      @ooe_starter_glyph_id = pickup_global_id # Tell the skill stat randomizer what the start glyph is so it doesn't randomize it
-      
       # Room in the Final Approach that has two overlapping chests both containing diamonds.
       # We don't want these to overlap as the player could easily think it's just one item and not see the one beneath it.
       # Move one a bit to the left and the other a bit to the right. Also give one a different pickup flag.

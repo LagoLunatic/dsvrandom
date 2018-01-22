@@ -436,6 +436,19 @@ class Randomizer
       end
     end
     
+    if options[:randomize_pickups]
+      # Glyph given by Barlowe.
+      # We randomize this, but only to a starter physical weapon glyph, not to any glyph.
+      reset_rng()
+      possible_starter_weapons = [0x01, 0x04, 0x07, 0x0A, 0x0D, 0x10, 0x13, 0x16]
+      pickup_global_id = possible_starter_weapons.sample(random: rng)
+      game.fs.load_overlay(42)
+      game.fs.write(0x022C3980, [0xE3A01000].pack("V"))
+      game.fs.write(0x022C3980, [pickup_global_id+1].pack("C"))
+      checker.add_item(pickup_global_id)
+      @ooe_starter_glyph_id = pickup_global_id # Tell other randomization options what this glyph is so they can handle it properly
+    end
+    
     options_completed += 2 # Initialization
     
     @red_wall_souls = []
