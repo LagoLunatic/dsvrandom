@@ -290,41 +290,35 @@ class Randomizer
     num = x
     num = x.round unless float_mode
     
-    if num < range.begin || num > range.end
+    if num < range.begin
       # Retry until we get a value within the range.
-      return rand_range_weighted(range, average: average)
+      # Since this failed attempt at a number was too low, limit the next one to the lower half of the available range.
+      new_range_end = (range.end-range.begin)/2 + range.begin
+      new_range = (range.begin..new_range_end)
+      if !new_range.include?(average)
+        new_range = (range.begin..average)
+        new_range = (new_range.begin..new_range.end) unless float_mode
+      end
+      return rand_range_weighted(new_range, average: average)
+    elsif num > range.end
+      # Retry until we get a value within the range.
+      # Since this failed attempt at a number was too high, limit the next one to the upper half of the available range.
+      new_range_begin = (range.end-range.begin)/2 + range.begin
+      new_range = (new_range_begin..range.end)
+      if !new_range.include?(average)
+        new_range = (average..range.end)
+        new_range = (new_range.begin..new_range.end) unless float_mode
+      end
+      return rand_range_weighted(new_range, average: average)
     else
       return num
     end
   end
   
   def named_rand_range_weighted(name)
-    #p name
-    #p @difficulty_settings[name]
     range, average = @difficulty_settings[name]
     rand_range_weighted(range, average: average)
   end
-  
-  ## Gets a random number within a range, but weighted low.
-  ## The higher the low_weight argument the more strongly low weighted it is. Examples:
-  ## 0 -> 50%
-  ## 1 -> 33%
-  ## 2 -> 21%
-  ## 3 -> 11.5%
-  ## 4 -> 6.5%
-  ## 5 -> 3.5%
-  #def rand_range_weighted_low(range, low_weight: 1)
-  #  random_float = 1 - rand()
-  #  low_weight.times do
-  #    random_float = Math.sqrt(random_float)
-  #  end
-  #  random_float = 1 - random_float
-  #  return (random_float * (range.max + 1 - range.min) + range.min).floor
-  #end
-  #
-  #def rand_range_weighted_very_low(range)
-  #  return rand_range_weighted_low(range, low_weight: 2)
-  #end
   
   def room_rando?
     options[:randomize_rooms_map_friendly] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
