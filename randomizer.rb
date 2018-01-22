@@ -1112,6 +1112,13 @@ class Randomizer
       game.fs.write(0x020718CC, [0x65A0].pack("V"))
     end
     
+    if GAME == "dos" && options[:randomize_starting_room]
+      # If a soul candle gets placed in a starting save room, it will appear behind the save point's graphics.
+      # We need to raise the sould candle's Z-pos from 5200 to 5600 so it appears on top of the save point.
+      game.fs.write(0x021A4444, [0x56].pack("C"))
+      # Note that this also affects other candles besides soul candles. Hopefully it doesn't make them look weird in any rooms.
+    end
+    
     if GAME == "ooe" && options[:always_dowsing]
       game.apply_armips_patch("ooe_always_dowsing")
     end
