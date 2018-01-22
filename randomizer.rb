@@ -270,7 +270,7 @@ class Randomizer
   
   # Gets a random number with a range, but weighted towards a certain average.
   # It uses a normal distribution and rejects values outside the correct range.
-  # Standard deviation is 1/4th the size of the range.
+  # Standard deviation is 1/5th the size of the range.
   def rand_range_weighted(range, average: (range.begin+range.end)/2)
     if average < range.begin || average > range.end
       raise "Bad random range! Average #{average} not within range #{range}."
@@ -297,7 +297,7 @@ class Randomizer
       new_range = (range.begin..new_range_end)
       if !new_range.include?(average)
         new_range = (range.begin..average)
-        new_range = (new_range.begin..new_range.end) unless float_mode
+        new_range = (new_range.begin.to_i..new_range.end.to_i) unless float_mode
       end
       return rand_range_weighted(new_range, average: average)
     elsif num > range.end
@@ -307,7 +307,7 @@ class Randomizer
       new_range = (new_range_begin..range.end)
       if !new_range.include?(average)
         new_range = (average..range.end)
-        new_range = (new_range.begin..new_range.end) unless float_mode
+        new_range = (new_range.begin.to_i..new_range.end.to_i) unless float_mode
       end
       return rand_range_weighted(new_range, average: average)
     else
