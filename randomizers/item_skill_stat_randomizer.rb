@@ -133,8 +133,8 @@ module ItemSkillStatRandomizer
           elsif item["Equippable by"].value == 1 && progress_item
             # Don't randomize Jonathan's glitch progress weapons (Cinquedia, Axe, etc) to be for Charlotte because Charlotte may not be accessible with "Don't randomize Change Cube".
           else
-            # 1/8 chance to be a weapon for Charlotte, otherwise for Jonathan.
-            item["Equippable by"].value = [1, 1, 1, 1, 1, 1, 1, 2].sample(random: rng)
+            # 1/4 chance to be a weapon for Charlotte, otherwise for Jonathan.
+            item["Equippable by"].value = [1, 1, 1, 2].sample(random: rng)
           end
           
           if item["Equippable by"].value == 1
