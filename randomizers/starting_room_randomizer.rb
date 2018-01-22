@@ -1,7 +1,12 @@
 
 module StartingRoomRandomizer
   def randomize_starting_room
-    game.fix_top_screen_on_new_game()
+    if GAME == "por"
+      game.apply_armips_patch("por_fix_top_screen_on_new_game")
+    end
+    if GAME == "ooe"
+      game.apply_armips_patch("ooe_fix_top_screen_on_new_game")
+    end
     
     rooms = []
     game.each_room do |room|
