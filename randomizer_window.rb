@@ -445,6 +445,7 @@ class RandomizerWindow < Qt::Dialog
     max_val += 7 if options_hash[:randomize_enemies]
     max_val += 30 if options_hash[:randomize_rooms_map_friendly]
     max_val += 2 # Initialization
+    max_val += 1 # Applying tweaks and finishing up
     @progress_dialog = ProgressDialog.new("Randomizing", "Initializing...", max_val)
     @progress_dialog.execute do
       begin
@@ -558,6 +559,7 @@ class ProgressDialog < Qt::ProgressDialog
     self.windowModality = Qt::ApplicationModal
     self.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
     self.setFixedSize(self.size);
+    self.autoReset = false
     connect(self, SIGNAL("canceled()"), self, SLOT("cancel_thread()"))
     self.show
   end
