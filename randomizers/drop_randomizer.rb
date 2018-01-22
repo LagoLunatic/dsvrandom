@@ -116,7 +116,7 @@ module DropRandomizer
       
       enemy["Item 1"] = 0
       enemy["Item 2"] = 0
-      enemy["Soul"] = 0 if GAME == "dos"
+      enemy["Soul"] = 0xFF if GAME == "dos"
       
       # Don't remove the glyph from enemies that use glyphs to attack, or they won't be able to attack.
       next if enemy.name.include?("Demon") && enemy.name != "Demon"
