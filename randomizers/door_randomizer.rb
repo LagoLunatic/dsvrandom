@@ -819,7 +819,12 @@ module DoorRandomizer
         
         # Don't add a boss door when two boss rooms are connected to each other, that would result in overlapping boss doors.
         if boss_rooms.include?(dest_room)
-          next
+          if GAME == "dos" && dest_room.room_str == "00-05-07"
+            # Special exception for Gergoth's boss room connecting back in on another lower part of his tower.
+            # We do add the boss door in this case.
+          else
+            next
+          end
         end
         
         gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
