@@ -20,6 +20,7 @@ require_relative 'randomizers/starting_items_randomizer'
 require_relative 'randomizers/skill_sprites_randomizer'
 require_relative 'randomizers/enemy_anim_speed_randomizer'
 require_relative 'randomizers/red_wall_randomizer'
+require_relative 'randomizers/map_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -39,6 +40,7 @@ class Randomizer
   include SkillSpriteRandomizer
   include EnemyAnimSpeedRandomizer
   include RedWallRandomizer
+  include MapRandomizer
   
   attr_reader :options,
               :seed,
