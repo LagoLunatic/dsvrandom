@@ -582,7 +582,7 @@ module MapRandomizer
         
         new_wooden_door = dest_room.add_new_entity()
         new_wooden_door.x_pos = door.dest_x
-        new_wooden_door.y_pos = door.dest_y + gap_end_offset
+        new_wooden_door.y_pos = door.dest_y + gap_end_offset - 0x20
         if door.direction == :left
           new_wooden_door.x_pos += 0xF0
         end
