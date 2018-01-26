@@ -580,12 +580,30 @@ module MapRandomizer
         gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
         gap_end_offset = gap_end_index * 0x10 + 0x10
         
-        new_wooden_door = dest_room.add_new_entity()
-        new_wooden_door.x_pos = door.dest_x
-        new_wooden_door.y_pos = door.dest_y + gap_end_offset - 0x20
+        door_x = door.dest_x
         if door.direction == :left
-          new_wooden_door.x_pos += 0xF0
+          door_x += 0xF0
         end
+        door_y = door.dest_y + gap_end_offset
+        
+        dest_room.sector.load_necessary_overlay()
+        coll = RoomCollision.new(dest_room, game.fs)
+        floor_tile_x = door_x
+        if door.direction == :left
+          floor_tile_x -= 0x10
+        else
+          floor_tile_x += 0x10
+        end
+        if !coll[floor_tile_x,door_y].is_solid?
+          # The door wouldn't have a solid tile as ground right before it.
+          # This is bad since it would softlock the player when they touch the door and control is taken away from them.
+          # So don't add a wooden door here.
+          next
+        end
+        
+        new_wooden_door = dest_room.add_new_entity()
+        new_wooden_door.x_pos = door_x
+        new_wooden_door.y_pos = door_y - 0x20
         
         new_wooden_door.type = 2
         new_wooden_door.subtype = WOODEN_DOOR_SUBTYPE
