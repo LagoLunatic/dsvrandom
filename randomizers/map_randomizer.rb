@@ -73,6 +73,8 @@ module MapRandomizer
     remove_useless_transition_rooms(map_spots, map_width, map_height, placed_transition_rooms)
     
     connect_doors_based_on_map(map_spots, map_width, map_height)
+    
+    replace_wooden_doors(placed_transition_rooms)
   end
   
   def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
@@ -265,6 +267,8 @@ module MapRandomizer
     # Transition rooms are only useful if they connect properly on both the left and right.
     # Otherwise they not only useless but also can bug the game out since they're not designed to have only 1 door.
     # So we remove any transition rooms we placed, but never connected a second room to.
+    removed_transition_rooms = []
+    
     placed_transition_rooms.each do |transition_room|
       has_unmatched_doors = false
       x = transition_room.room_xpos_on_map
@@ -284,7 +288,14 @@ module MapRandomizer
         transition_room.room_xpos_on_map = 63
         transition_room.room_ypos_on_map = 47
         transition_room.write_to_rom()
+        
+        removed_transition_rooms << transition_room
       end
+    end
+    
+    # Also updated the list of placed transition rooms so it doesn't include these anymore.
+    removed_transition_rooms.each do |removed_transition_room|
+      placed_transition_rooms.delete(removed_transition_room)
     end
   end
   
@@ -545,7 +556,42 @@ module MapRandomizer
     end
     
     doors_to_line_up.each do |door|
-      #line_up_door(door)
+      #line_up_door(door) # TODO?
+    end
+  end
+  
+  def replace_wooden_doors(placed_transition_rooms)
+    # Remove all existing wooden doors.
+    game.each_room do |room|
+      room.entities.each do |entity|
+        if entity.is_wooden_door?
+          entity.type = 0
+          entity.write_to_rom()
+        end
+      end
+    end
+    
+    # Add replacement wooden doors in the proper places.
+    placed_transition_rooms.each do |transition_room|
+      transition_room.doors.each do |door|
+        dest_door = door.destination_door
+        dest_room = dest_door.room
+        
+        gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
+        gap_end_offset = gap_end_index * 0x10 + 0x10
+        
+        new_wooden_door = dest_room.add_new_entity()
+        new_wooden_door.x_pos = door.dest_x
+        new_wooden_door.y_pos = door.dest_y + gap_end_offset
+        if door.direction == :left
+          new_wooden_door.x_pos += 0xF0
+        end
+        
+        new_wooden_door.type = 2
+        new_wooden_door.subtype = WOODEN_DOOR_SUBTYPE
+        
+        new_wooden_door.write_to_rom()
+      end
     end
   end
   
