@@ -318,15 +318,17 @@ module MapRandomizer
             right_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
-            tile_x = 0
-            tile_start_y = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
-            (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
-              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
+            unless @transition_rooms.include?(room)
+              tile_x = 0
+              tile_start_y = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
+              (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
+                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+                coll_layer.tiles[tile_i].horizontal_flip = false
+              end
+              coll_layer.write_to_rom()
             end
-            coll_layer.write_to_rom()
             
             left_door.destination_room_metadata_ram_pointer = 0
             left_door.x_pos = room.width + 1
@@ -362,20 +364,17 @@ module MapRandomizer
             left_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
-            if room.room_str == "00-02-21"
-              puts right_door.door_str
-              p left_dest_door
-              p [x,y]
+            unless @transition_rooms.include?(room)
+              tile_x = room.width*SCREEN_WIDTH_IN_TILES-1
+              tile_start_y = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
+              (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
+                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+                coll_layer.tiles[tile_i].horizontal_flip = false
+              end
+              coll_layer.write_to_rom()
             end
-            tile_x = room.width*SCREEN_WIDTH_IN_TILES-1
-            tile_start_y = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
-            (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
-              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
-            end
-            coll_layer.write_to_rom()
             
             right_door.destination_room_metadata_ram_pointer = 0
             right_door.x_pos = room.width + 1
@@ -411,15 +410,17 @@ module MapRandomizer
             down_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
-            tile_y = 0
-            tile_start_x = up_door.x_pos*SCREEN_WIDTH_IN_TILES
-            (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
-              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
+            unless @transition_rooms.include?(room)
+              tile_y = 0
+              tile_start_x = up_door.x_pos*SCREEN_WIDTH_IN_TILES
+              (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
+                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+                coll_layer.tiles[tile_i].horizontal_flip = false
+              end
+              coll_layer.write_to_rom()
             end
-            coll_layer.write_to_rom()
             
             up_door.destination_room_metadata_ram_pointer = 0
             up_door.x_pos = room.width + 1
@@ -455,15 +456,17 @@ module MapRandomizer
             up_dest_door.write_to_rom()
           else
             # No matching door. Block this door off.
-            tile_y = room.height*SCREEN_HEIGHT_IN_TILES-1
-            tile_start_x = down_door.x_pos*SCREEN_WIDTH_IN_TILES
-            (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
-              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
+            unless @transition_rooms.include?(room)
+              tile_y = room.height*SCREEN_HEIGHT_IN_TILES-1
+              tile_start_x = down_door.x_pos*SCREEN_WIDTH_IN_TILES
+              (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
+                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+                coll_layer.tiles[tile_i].horizontal_flip = false
+              end
+              coll_layer.write_to_rom()
             end
-            coll_layer.write_to_rom()
             
             down_door.destination_room_metadata_ram_pointer = 0
             down_door.x_pos = room.width + 1
