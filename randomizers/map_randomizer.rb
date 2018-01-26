@@ -5,6 +5,8 @@ module MapRandomizer
     
     @transition_rooms = game.get_transition_rooms()
     
+    @rooms_unused_by_map_rando = []
+    
     maps_rendered = 0
     
     castle_rooms = []
@@ -18,7 +20,8 @@ module MapRandomizer
       end
     end
     
-    randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, @starting_room)
+    starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow
+    randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
     randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00"))
   end
   
@@ -102,6 +105,7 @@ module MapRandomizer
       transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
     end
     failed_room_counts = Hash.new(0)
+    unplaced_sector_rooms = []
     transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
     puts "Total sector rooms available to place: #{sector_rooms.size}"
     puts "Transition rooms to place: #{transition_rooms_in_this_sector.size}"
@@ -158,6 +162,7 @@ module MapRandomizer
         if failed_room_counts[room] > 2
           # Already skipped this room a lot. Don't give it any more chances.
           #print 'X'
+          unplaced_sector_rooms << room
           next
         else
           failed_room_counts[room] += 1
@@ -216,6 +221,9 @@ module MapRandomizer
       #regenerate_map(maps_rendered)
       #maps_rendered += 1
     end
+    
+    # Keep track of the rooms we never used.
+    @rooms_unused_by_map_rando += unplaced_sector_rooms
     
     puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
     puts "Successfully placed transition rooms: #{num_placed_transition_rooms}"
