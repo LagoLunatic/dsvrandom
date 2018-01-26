@@ -6,6 +6,7 @@ class CompletabilityChecker
               :current_items,
               :defs,
               :preferences,
+              :inaccessible_doors,
               :enemy_locations,
               :event_locations,
               :easter_egg_locations,
@@ -54,6 +55,8 @@ class CompletabilityChecker
     if @enable_glitches
       @defs.merge!(@glitch_defs)
     end
+    
+    @inaccessible_doors = []
     
     @preferences = {}
     if yaml["Preferences"]
