@@ -1114,6 +1114,11 @@ class Randomizer
       game.fs.write(0x020718CC, [0x65A0].pack("V"))
     end
     
+    if GAME == "por" && options[:randomize_portraits] && room_rando?
+      # Room rando can make it hard to know where to go to find portraits, so reveal all portrait tiles on the map by default.
+      game.apply_armips_patch("por_reveal_all_portraits_on_map")
+    end
+    
     if GAME == "dos" && options[:randomize_starting_room]
       # If a soul candle gets placed in a starting save room, it will appear behind the save point's graphics.
       # We need to raise the sould candle's Z-pos from 5200 to 5600 so it appears on top of the save point.
