@@ -1695,7 +1695,7 @@ Rooms:
     002-001: 
     002-e00: height
     002-e01: big height | malphas & puppet master
-    002-e02: big height | height & black panther | malphas & flying armor & puppet master | malphas & puppet master & skeleton ape # malphas + puppet master + skeleton ape is extremely precise and difficult to do
+    002-e02: big height | height & black panther | malphas & flying armor & puppet master # "malphas & puppet master & skeleton ape" is also possible, but is extremely precise and difficult to do so it's not required by the logic.
     e00-000: height
     e00-001: 
     e00-002: 
@@ -2150,7 +2150,7 @@ Rooms:
     000-001: 
     001-000: height
   00-06-04:
-    000-001: medium height | height & distance
+    000-001: medium height | height & distance # It's actually possible to reach the door behind the waterfall with just puppet master, but requires such precise timing with the fall that it's not required by the logic.
     000-002: 
     000-003: height | distance
     000-004: height | distance
