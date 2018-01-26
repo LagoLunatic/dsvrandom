@@ -1237,9 +1237,9 @@ Rooms:
   00-08-0D:
     000-e00: 
     e00-000: 
-  00-08-0E: # cog room. machinery removed.
-    000-001: 
-    001-000: 
+  00-08-0E: # Room with the gate that the cog opens up.
+    000-001: cog
+    001-000: cog
   00-08-0F:
     000-001: 
     001-000: 

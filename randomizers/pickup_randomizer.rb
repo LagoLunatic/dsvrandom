@@ -91,11 +91,6 @@ module PickupRandomizer
       use_pickup_flag(pickup_flag)
       item_a.write_to_rom()
       item_b.write_to_rom()
-      
-      if room_rando?
-        # The gate that needs the cog is removed in room rando, so don't place the cog anywhere.
-        checker.add_item(0x4E) # cog
-      end
     when "ooe"
       checker.add_item(0xE6) # casual clothes
       checker.add_item(0x6F) # lizard tail
