@@ -22,7 +22,7 @@ module MapRandomizer
     
     starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow
     randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
-    randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00"))
+    #randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) # TODO abyss doesn't randomize properly since it's so small
   end
   
   def randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room)
