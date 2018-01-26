@@ -6,6 +6,10 @@ module EnemyAnimSpeedRandomizer
         # Wallman can't be defeated if he gets sped up.
         next
       end
+      if ["Whip's Memory", "Stella", "Loretta", "Albus"].include?(enemy_dna.name)
+        # Don't randomize the enemies that share a sprite with a player or it will randomize the player's animation speed too.
+        next
+      end
       
       speed_mult = named_rand_range_weighted(:enemy_anim_speed_mult_range)
       delay_mult = 1.0 / speed_mult
