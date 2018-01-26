@@ -1706,9 +1706,9 @@ Rooms:
     e02-001: 
     e02-002: 
 #Condemned Tower & Mine of Judgment:
-  00-05-00: # room that normally needs the tower key. for now I remove that gate, but might add it back later.
-    000-001: 
-    001-000: 
+  00-05-00: # Room that needs the Tower Key to unlock the door here.
+    000-001: tower key
+    001-000: tower key
   00-05-01:
     000-001: 
     001-000: 
