@@ -794,6 +794,11 @@ module DoorRandomizer
       next if room.area.name == "Large Cavern"
       next if room.area.name == "Unused Boss Rush"
       
+      if options[:randomize_rooms_map_friendly] && @rooms_unused_by_map_rando.include?(room)
+        # Skip rooms not used by the map friendly room randomizer.
+        next
+      end
+      
       room.entities.each do |entity|
         if entity.is_boss_door? && entity.var_a == 0
           # Boss door outside a boss room. Remove it.
