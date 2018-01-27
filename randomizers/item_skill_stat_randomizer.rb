@@ -124,7 +124,12 @@ module ItemSkillStatRandomizer
           unless [9, 0xA, 0xB].include?(item["Swing Anim"])
             # Only randomize swing anim if it wasn't originally a throwing/firing weapon.
             # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
-            item["Swing Anim"] = rng.rand(0..0xC)
+            available_swing_anims = (0..0xC).to_a
+            if item.name == "Whip"
+              # If the whip turns into a projectile weapon Julius can't break Balore blocks, so ban those swing anims.
+              available_swing_anims -= [0x9, 0xA, 0xB]
+            end
+            item["Swing Anim"] = available_swing_anims.sample(random: rng)
           end
           item["Super Anim"] = rng.rand(0..0xE) unless progress_item
         when "por"
