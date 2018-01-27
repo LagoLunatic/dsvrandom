@@ -661,7 +661,7 @@ module MapRandomizer
             left_door = room_doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
             if left_door && tile_x > 0 && map_spots[tile_x-1][tile_y]
               dest_room = map_spots[tile_x-1][tile_y]
-              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+              if check_rooms_can_be_connected(room, dest_room)
                 y_in_dest_room = tile_y - dest_room.room_ypos_on_map
                 #p unreachable_subroom_doors.map{|x| x.door_str} if room.sector_index == 5
                 dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
@@ -677,7 +677,7 @@ module MapRandomizer
             right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
             if right_door && tile_x < map_width-1 && map_spots[tile_x+1][tile_y]
               dest_room = map_spots[tile_x+1][tile_y]
-              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+              if check_rooms_can_be_connected(room, dest_room)
                 y_in_dest_room = tile_y - dest_room.room_ypos_on_map
                 dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
@@ -692,7 +692,7 @@ module MapRandomizer
             up_door = room_doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
             if up_door && tile_y > 0 && map_spots[tile_x][tile_y-1]
               dest_room = map_spots[tile_x][tile_y-1]
-              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+              if check_rooms_can_be_connected(room, dest_room)
                 x_in_dest_room = tile_x - dest_room.room_xpos_on_map
                 dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
@@ -707,7 +707,7 @@ module MapRandomizer
             down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
             if down_door && tile_y < map_height-1 && map_spots[tile_x][tile_y+1]
               dest_room = map_spots[tile_x][tile_y+1]
-              if dest_room.sector_index == room.sector_index || @transition_rooms.include?(dest_room) || @transition_rooms.include?(room)
+              if check_rooms_can_be_connected(room, dest_room)
                 x_in_dest_room = tile_x - dest_room.room_xpos_on_map
                 dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
                 up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
@@ -744,6 +744,19 @@ module MapRandomizer
     end
     
     return valid_spots
+  end
+  
+  def check_rooms_can_be_connected(room_a, room_b)
+    if room_a.sector_index == room_b.sector_index
+      return true
+    end
+    if @transition_rooms.include?(room_a) && !@transition_rooms.include?(room_b)
+      return true
+    end
+    if @transition_rooms.include?(room_b) && !@transition_rooms.include?(room_a)
+      return true
+    end
+    return false
   end
   
   def update_room_positions_on_maps
