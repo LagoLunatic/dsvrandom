@@ -386,6 +386,10 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
              <widget class="QCheckBox" name="randomize_rooms_map_friendly">
               <property name="text">
@@ -398,6 +402,7 @@
          </layout>
          <zorder></zorder>
          <zorder></zorder>
+         <zorder>horizontalLayoutWidget</zorder>
         </widget>
        </item>
       </layout>
@@ -472,8 +477,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>436</height>
+            <width>78</width>
+            <height>22</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
