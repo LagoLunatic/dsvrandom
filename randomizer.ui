@@ -604,7 +604,7 @@
           <item row="1" column="0">
            <widget class="QCheckBox" name="unlock_boss_doors">
             <property name="toolTip">
-             <string>You don't need to own a certain magic seal to open boss doors.</string>
+             <string>You don't need magic seals to open boss doors.</string>
             </property>
             <property name="text">
              <string>Unlock boss doors</string>
