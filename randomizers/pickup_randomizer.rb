@@ -485,6 +485,14 @@ module PickupRandomizer
       yield(progression_pickups_placed)
     end
     
+    if room_rando? && false
+      File.open("accessible_doors.txt", "w") do |f|
+        accessible_doors.each do |accessible_door|
+          f.puts accessible_door
+        end
+      end
+    end
+    
     spoiler_log.puts "All progression pickups placed successfully."
   end
   

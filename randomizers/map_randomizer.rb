@@ -132,6 +132,8 @@ module MapRandomizer
     num_placed_transition_rooms = 0
     on_starting_room = (sector_index == 0)
     while true
+      debug = false
+      #debug = (sector_index == 0xB)
       if on_starting_room
         on_starting_room = false
         room = area_starting_room
@@ -143,6 +145,8 @@ module MapRandomizer
         room = select_next_room_to_place(sector_rooms)
       end
       sector_rooms.delete(room)
+      
+      puts "Trying to place room: #{room.room_str}" if debug
       
       if room == area_starting_room && GAME == "dos" && area_starting_room.sector_index == 0xB
         # Placing the first room, in the Abyss.
@@ -162,7 +166,7 @@ module MapRandomizer
         valid_spots = get_valid_positions_for_room(room, map_spots, map_width, map_height, transition_room_to_allow_connecting_to: transition_room_to_start_sector, unreachable_subroom_doors: unreachable_subroom_doors)
       end
       
-      #p valid_spots.size if sector_index == 5 && valid_spots.size > 0
+      puts "Valid spots: #{valid_spots}" if debug
       
       if valid_spots.empty?
         if failed_room_counts[room] > 2
@@ -188,6 +192,8 @@ module MapRandomizer
       end
       
       chosen_spot = valid_spots.sample(random: rng)
+      
+      puts "Successfully placed #{room.room_str} at #{chosen_spot}" if debug
       
       #if @transition_rooms.include?(room)
       #  puts "PLACING TRANSITION #{room.room_str}. in unplaced_transition_rooms?: #{unplaced_transition_rooms.include?(room)} chosen spot: #{chosen_spot.inspect}, valid spots: #{valid_spots.inspect}"
