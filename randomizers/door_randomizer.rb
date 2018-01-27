@@ -551,20 +551,31 @@ module DoorRandomizer
       current_subsector = []
       current_room = remaining_rooms_to_check.first
       while true
+        remaining_rooms_to_check.delete(current_room)
+        
         if options[:randomize_rooms_map_friendly] && @rooms_unused_by_map_rando.include?(current_room)
           # Skip rooms not used by the map friendly room randomizer.
-          remaining_rooms_to_check.delete(current_room)
-          
           remaining_subsector_rooms = current_subsector & remaining_rooms_to_check
           break if remaining_subsector_rooms.empty?
           current_room = remaining_subsector_rooms.first
           
           next
         end
-        current_subsector << current_room
-        remaining_rooms_to_check.delete(current_room)
+        
         current_room_doors = current_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
         current_room_doors = current_room_doors.reject{|door| door.destination_room_metadata_ram_pointer == 0} # Door dummied out by the map-friendly room randomizer.
+        
+        if current_room_doors.empty?
+          # Unused room with no door. Don't add it to the list of rooms in the subsector.
+          remaining_subsector_rooms = current_subsector & remaining_rooms_to_check
+          break if remaining_subsector_rooms.empty?
+          current_room = remaining_subsector_rooms.first
+          
+          next
+        end
+        
+        current_subsector << current_room
+        
         connected_rooms = current_room_doors.map{|door| door.destination_door.room}.uniq
         connected_rooms = connected_rooms & sector.rooms
         if GAME == "dos" && current_room.sector.name == "Condemned Tower & Mine of Judgment"
