@@ -966,7 +966,7 @@ end
 
 class RoomRandoSubroom < Room
   def initialize(room, subroom_index)
-    attrs = %w(area_index sector_index room_index room_xpos_on_map room_ypos_on_map layers room_metadata_ram_pointer sector)
+    attrs = %w(area_index sector_index room_index room_xpos_on_map room_ypos_on_map layers room_metadata_ram_pointer sector entities)
     
     attrs.each do |attr_name|
       instance_variable_set("@#{attr_name}", room.instance_variable_get("@#{attr_name}"))

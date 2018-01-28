@@ -22,7 +22,8 @@ module DoorRandomizer
       
       all_area_subsectors = []
       area.sectors.each do |sector|
-        all_area_subsectors += get_subsectors(sector, include_transitions: true)
+        subsectors = get_subsectors(sector, include_transitions: true)
+        all_area_subsectors += subsectors
       end
       
       remaining_transitions = {
@@ -94,7 +95,7 @@ module DoorRandomizer
       on_first = true
       while true
         debug = false
-        #debug = (area.area_index == 0)
+        #debug = (area.area_index == 5)
         
         if on_first
           inside_transition_door = starting_transition
@@ -305,8 +306,6 @@ module DoorRandomizer
       # The center-left and center-right parts of Burnt Paradise. These only have a few left/right doors, so it screws up if we prioritize up/down doors.
       prioritize_up_down = false
     end
-    
-    subsector_rooms = checker.convert_rooms_to_subrooms(subsector_rooms)
     
     #if sector.sector_index == 2
     #  puts "On subsector: #{subsector_index}"
@@ -540,20 +539,34 @@ module DoorRandomizer
   def get_subsectors(sector, include_transitions: false)
     subsectors = []
     
+    debug = false
+    #debug = (sector.area_index == 5 && sector.sector_index == 2)
+    
     @transition_rooms = game.get_transition_rooms()
     @transition_rooms.reject! do |room|
       FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
     end
     
-    remaining_rooms_to_check = sector.rooms.dup
+    transition_room_strs = @transition_rooms.map{|room| room.room_str}
+    if options[:randomize_rooms_map_friendly]
+      room_strs_unused_by_map_rando = @rooms_unused_by_map_rando.map{|room| room.room_str}
+    end
+    
+    # First convert the rooms to subrooms.
+    sector_subrooms = checker.convert_rooms_to_subrooms(sector.rooms)
+    
+    remaining_rooms_to_check = sector_subrooms.dup
     remaining_rooms_to_check -= @transition_rooms unless include_transitions
     while remaining_rooms_to_check.any?
       current_subsector = []
+      puts "STARTING NEW SUBSECTOR" if debug
       current_room = remaining_rooms_to_check.first
       while true
+        puts "Current room: #{current_room.room_str}" if debug
+        
         remaining_rooms_to_check.delete(current_room)
         
-        if options[:randomize_rooms_map_friendly] && @rooms_unused_by_map_rando.include?(current_room)
+        if options[:randomize_rooms_map_friendly] && room_strs_unused_by_map_rando.include?(current_room)
           # Skip rooms not used by the map friendly room randomizer.
           remaining_subsector_rooms = current_subsector & remaining_rooms_to_check
           break if remaining_subsector_rooms.empty?
@@ -576,8 +589,10 @@ module DoorRandomizer
         
         current_subsector << current_room
         
-        connected_rooms = current_room_doors.map{|door| door.destination_door.room}.uniq
-        connected_rooms = connected_rooms & sector.rooms
+        connected_dest_door_strs = current_room_doors.map{|door| door.destination_door.door_str}
+        connected_rooms = sector_subrooms.select do |room|
+          (room.doors.map{|d| d.door_str} & connected_dest_door_strs).any?
+        end
         if GAME == "dos" && current_room.sector.name == "Condemned Tower & Mine of Judgment"
           # Need to split Condemned Tower from Mine of Judgement into separate subsectors.
           if current_room.room_ypos_on_map >= 0x17
@@ -588,9 +603,17 @@ module DoorRandomizer
             connected_rooms.reject!{|room| room.room_ypos_on_map >= 0x17}
           end
         end
-        connected_rooms -= @transition_rooms unless include_transitions
+        unless include_transitions
+          connected_rooms.reject!{|connected_room| transition_room_strs.include?(connected_room.room_str)}
+        end
         current_subsector += connected_rooms
         current_subsector.uniq!
+        
+        puts "Current subsector so far: #{current_subsector.map{|room| room.room_str}}" if debug
+        puts "Remaining rooms to check: #{remaining_rooms_to_check.map{|room| room.room_str}}" if debug
+        
+        puts "A: #{current_subsector.map{|x| x.class.to_s}.join(", ")}" if debug
+        puts "B: #{remaining_rooms_to_check.map{|x| x.class.to_s}.join(", ")}" if debug
         
         remaining_subsector_rooms = current_subsector & remaining_rooms_to_check
         break if remaining_subsector_rooms.empty?

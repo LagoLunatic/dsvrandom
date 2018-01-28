@@ -521,6 +521,8 @@ class Randomizer
           sum_of_all_subsector_enemy_attacks = 0
           num_enemies_in_subsector = 0
           
+          rooms_in_subsector.uniq!{|subroom| subroom.room_str} # Don't count entities in rooms with subrooms multiple times in a single subsector.
+          
           rooms_in_subsector.each do |room|
             room.entities.select{|e| e.is_common_enemy?}.each do |enemy|
               num_enemies_in_subsector += 1
