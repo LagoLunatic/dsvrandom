@@ -1110,6 +1110,6 @@ module MapRandomizer
       end
     end
     
-    map.write_to_rom()
+    map.write_to_rom(allow_changing_num_tiles: true)
   end
 end
