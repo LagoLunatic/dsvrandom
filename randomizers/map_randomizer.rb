@@ -1,9 +1,10 @@
 
 module MapRandomizer
   def randomize_doors_no_overlap(&block)
-    # TEST SEED: GrandGraveSoup
-    
     @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
     
     @rooms_unused_by_map_rando = []
     
@@ -400,19 +401,17 @@ module MapRandomizer
             
             left_door.write_to_rom()
             right_dest_door.write_to_rom()
-          else
+          elsif !@transition_rooms.include?(room)
             # No matching door. Block this door off.
-            unless @transition_rooms.include?(room)
-              tile_x = 0
-              tile_start_y = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
-              (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
-                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-                coll_layer.tiles[tile_i].horizontal_flip = false
-              end
-              coll_layer.write_to_rom()
+            tile_x = 0
+            tile_start_y = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
+            (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
             end
+            coll_layer.write_to_rom()
             
             left_door.destination_room_metadata_ram_pointer = 0
             left_door.x_pos = room.width + 1
@@ -441,19 +440,17 @@ module MapRandomizer
             
             right_door.write_to_rom()
             left_dest_door.write_to_rom()
-          else
+          elsif !@transition_rooms.include?(room)
             # No matching door. Block this door off.
-            unless @transition_rooms.include?(room)
-              tile_x = room.width*SCREEN_WIDTH_IN_TILES-1
-              tile_start_y = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
-              (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
-                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-                coll_layer.tiles[tile_i].horizontal_flip = false
-              end
-              coll_layer.write_to_rom()
+            tile_x = room.width*SCREEN_WIDTH_IN_TILES-1
+            tile_start_y = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
+            (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
             end
+            coll_layer.write_to_rom()
             
             right_door.destination_room_metadata_ram_pointer = 0
             right_door.x_pos = room.width + 1
@@ -482,19 +479,17 @@ module MapRandomizer
             
             up_door.write_to_rom()
             down_dest_door.write_to_rom()
-          else
+          elsif !@transition_rooms.include?(room)
             # No matching door. Block this door off.
-            unless @transition_rooms.include?(room)
-              tile_y = 0
-              tile_start_x = up_door.x_pos*SCREEN_WIDTH_IN_TILES
-              (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
-                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-                coll_layer.tiles[tile_i].horizontal_flip = false
-              end
-              coll_layer.write_to_rom()
+            tile_y = 0
+            tile_start_x = up_door.x_pos*SCREEN_WIDTH_IN_TILES
+            (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
             end
+            coll_layer.write_to_rom()
             
             up_door.destination_room_metadata_ram_pointer = 0
             up_door.x_pos = room.width + 1
@@ -523,19 +518,17 @@ module MapRandomizer
             
             down_door.write_to_rom()
             up_dest_door.write_to_rom()
-          else
+          elsif !@transition_rooms.include?(room)
             # No matching door. Block this door off.
-            unless @transition_rooms.include?(room)
-              tile_y = room.height*SCREEN_HEIGHT_IN_TILES-1
-              tile_start_x = down_door.x_pos*SCREEN_WIDTH_IN_TILES
-              (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
-                next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-                tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-                coll_layer.tiles[tile_i].horizontal_flip = false
-              end
-              coll_layer.write_to_rom()
+            tile_y = room.height*SCREEN_HEIGHT_IN_TILES-1
+            tile_start_x = down_door.x_pos*SCREEN_WIDTH_IN_TILES
+            (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
+              next if coll[tile_x*0x10,tile_y*0x10].is_solid?
+              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+              coll_layer.tiles[tile_i].horizontal_flip = false
             end
+            coll_layer.write_to_rom()
             
             down_door.destination_room_metadata_ram_pointer = 0
             down_door.x_pos = room.width + 1
@@ -857,7 +850,8 @@ module MapRandomizer
   end
   
   def regenerate_all_maps
-    if GAME == "dos"
+    case GAME
+    when "dos"
       # Fix warps.
       map = game.get_map(0, 0)
       map.warp_rooms.each do |warp|
@@ -872,6 +866,14 @@ module MapRandomizer
       
       regenerate_map(0, 0)
       regenerate_map(0, 0xB)
+    when "por"
+      (0..9).each do |area_index|
+        regenerate_map(area_index, 0)
+      end
+    when "ooe"
+      (0..0x12).each do |area_index|
+        regenerate_map(area_index, 0)
+      end
     end
   end
   
@@ -879,6 +881,27 @@ module MapRandomizer
     map = game.get_map(area_index, map_sector_index)
     area = game.areas[area_index]
     
+    @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
+    
+    if GAME == "dos"
+      regenerate_map_dos(map, area)
+    else
+      regenerate_map_por_ooe(map, area)
+    end
+    
+    #p [area_index, map_sector_index]
+    filename = "./logs/maptest %02X-%02X.png" % [area_index, map_sector_index]
+    if filename_num
+      filename = "./logs/maptest %02X-%02X #{filename_num}.png" % [area_index, map_sector_index]
+    end
+    hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
+    renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
+  end
+  
+  def regenerate_map_dos(map, area)
     map.tiles.each do |tile|
       tile.is_blank = true
       
@@ -909,7 +932,7 @@ module MapRandomizer
       end
       
       if left_tile && left_tile.sector_index && (left_tile.sector_index != sector_index || left_tile.room_index != room_index)
-        left_room = game.areas[0].sectors[left_tile.sector_index].rooms[left_tile.room_index]
+        left_room = area.sectors[left_tile.sector_index].rooms[left_tile.room_index]
         y_in_dest_room = y - left_room.room_ypos_on_map
         room_doors = left_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
         right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
@@ -921,7 +944,7 @@ module MapRandomizer
         end
       end
       if top_tile && top_tile.sector_index && (top_tile.sector_index != sector_index || top_tile.room_index != room_index)
-        top_room = game.areas[0].sectors[top_tile.sector_index].rooms[top_tile.room_index]
+        top_room = area.sectors[top_tile.sector_index].rooms[top_tile.room_index]
         x_in_dest_room = x - top_room.room_xpos_on_map
         room_doors = top_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
         down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
@@ -960,12 +983,133 @@ module MapRandomizer
       end
     end
     map.write_to_rom()
+  end
+  
+  def regenerate_map_por_ooe(map, area)
+    map.tiles.clear() # Empty the array of vanilla map tiles.
     
-    p [area_index, map_sector_index]
-    filename = "./logs/maptest %02X-%02X.png" % [area_index, map_sector_index]
-    if filename_num
-      filename = "./logs/maptest %02X-%02X #{filename_num}.png" % [area_index, map_sector_index]
+    max_x = 0
+    max_y = 0
+    area.sectors.each do |sector|
+      sector.rooms.each do |room|
+        room_right_x = room.room_xpos_on_map + room.width - 1
+        if room_right_x > max_x
+          max_x = room_right_x
+        end
+        room_bottom_y = room.room_ypos_on_map + room.height - 1
+        if room_bottom_y > max_y
+          max_y = room_bottom_y
+        end
+      end
     end
-    renderer.render_map(map, scale=3, hardcoded_transition_rooms=@transition_rooms).save(filename)
+    
+    (0..max_y).each do |y|
+      (0..max_x).each do |x|
+        sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
+        
+        if sector_index
+          room = area.sectors[sector_index].rooms[room_index]
+          
+          tile = MapTile.new([0, y, x], 0)
+          map.tiles << tile
+          
+          tile.sector_index = sector_index
+          tile.room_index = room_index
+          
+          tile.is_save = room.entities.any?{|e| e.is_save_point?}
+          tile.is_warp = room.entities.any?{|e| e.is_warp_point?}
+          tile.is_transition = @transition_rooms.include?(room)
+          
+          tile_x_off = (x - room.room_xpos_on_map) * SCREEN_WIDTH_IN_PIXELS
+          tile_y_off = (y - room.room_ypos_on_map) * SCREEN_HEIGHT_IN_PIXELS
+          if GAME == "por"
+            tile.is_entrance = room.entities.find do |e|
+              e.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(e.subtype) &&
+                (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
+                (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
+            end
+          else # OoE
+            tile.is_entrance = room.entities.find do |e|
+              e.is_special_object? && e.subtype == 0x2B &&
+                (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
+                (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
+            end
+          end
+        end
+      end
+    end
+    
+    # Now go through the tiles again and generate the lines delineating rooms.
+    map.tiles.each do |tile|
+      sector_index = tile.sector_index
+      room_index = tile.room_index
+      x = tile.x_pos
+      y = tile.y_pos
+      room = area.sectors[sector_index].rooms[room_index]
+      
+      left_tile = map.tiles.find{|t| t.x_pos == x-1 && t.y_pos == y}
+      top_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y-1}
+      right_tile = map.tiles.find{|t| t.x_pos == x+1 && t.y_pos == y}
+      bottom_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y+1}
+      
+      if left_tile.nil?
+        tile.left_wall = true
+      elsif left_tile.sector_index != sector_index || left_tile.room_index != room_index
+        left_room = area.sectors[left_tile.sector_index].rooms[left_tile.room_index]
+        y_in_dest_room = y - left_room.room_ypos_on_map
+        room_doors = left_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+        if right_door
+          tile.left_wall = false
+          tile.left_door = true
+        else
+          tile.left_wall = true
+        end
+      end
+      if top_tile.nil?
+        tile.top_wall = true
+      elsif top_tile.sector_index != sector_index || top_tile.room_index != room_index
+        top_room = area.sectors[top_tile.sector_index].rooms[top_tile.room_index]
+        x_in_dest_room = x - top_room.room_xpos_on_map
+        room_doors = top_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+        if down_door
+          tile.top_wall = false
+          tile.top_door = true
+        else
+          tile.top_wall = true
+        end
+      end
+      if right_tile.nil?
+        tile.right_wall = true
+      elsif right_tile.sector_index != sector_index || right_tile.room_index != room_index
+        right_room = area.sectors[right_tile.sector_index].rooms[right_tile.room_index]
+        y_in_dest_room = y - right_room.room_ypos_on_map
+        room_doors = right_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        left_door = room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+        if left_door
+          tile.right_wall = false
+          tile.right_door = true
+        else
+          tile.right_wall = true
+        end
+      end
+      if bottom_tile.nil?
+        tile.bottom_wall = true
+      elsif bottom_tile.sector_index != sector_index || bottom_tile.room_index != room_index
+        bottom_room = area.sectors[bottom_tile.sector_index].rooms[bottom_tile.room_index]
+        x_in_dest_room = x - bottom_room.room_xpos_on_map
+        room_doors = bottom_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+        up_door = room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+        if up_door
+          tile.bottom_wall = false
+          tile.bottom_door = true
+        else
+          tile.bottom_wall = true
+        end
+      end
+    end
+    
+    map.write_to_rom()
   end
 end
