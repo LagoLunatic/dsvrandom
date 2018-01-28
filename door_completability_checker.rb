@@ -87,7 +87,7 @@ class DoorCompletabilityChecker
       @defs.merge!(@glitch_defs)
     end
     
-    @inaccessible_doors = yaml["Inaccessible doors"] || {}
+    @inaccessible_doors = yaml["Inaccessible doors"] || []
     
     @progress_important_rooms = yaml["Progress important rooms"]
     @progress_important_rooms.map! do |room_str|
