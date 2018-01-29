@@ -566,7 +566,7 @@ module DoorRandomizer
         
         remaining_rooms_to_check.delete(current_room)
         
-        if options[:randomize_rooms_map_friendly] && room_strs_unused_by_map_rando.include?(current_room)
+        if options[:randomize_rooms_map_friendly] && room_strs_unused_by_map_rando.include?(current_room.room_str)
           # Skip rooms not used by the map friendly room randomizer.
           remaining_subsector_rooms = current_subsector & remaining_rooms_to_check
           break if remaining_subsector_rooms.empty?
