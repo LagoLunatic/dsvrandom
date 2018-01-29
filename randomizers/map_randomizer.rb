@@ -10,20 +10,38 @@ module MapRandomizer
     
     maps_rendered = 0
     
-    castle_rooms = []
-    abyss_rooms = []
-    game.each_room do |room|
-      case room.sector_index
-      when 0..9
-        castle_rooms << room
-      when 0xA..0xB
-        abyss_rooms << room
+    case GAME
+    when "dos"
+      castle_rooms = []
+      abyss_rooms = []
+      game.each_room do |room|
+        case room.sector_index
+        when 0..9
+          castle_rooms << room
+        when 0xA..0xB
+          abyss_rooms << room
+        end
+      end
+      
+      starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow for starting room rando to work
+      randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
+      #randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) # TODO abyss doesn't randomize properly since it's so small
+    when "por"
+    when "ooe"
+      game.areas.each do |area|
+        next if area.area_index == 1 # Wygol
+        next if area.area_index == 2 # Ecclesia
+        next if area.area_index == 0x13 # Epilogue/Boss rush/Practice mode
+        
+        rooms = []
+        area.sectors.each do |sector|
+          rooms += sector.rooms
+        end
+        
+        starting_room = area.sectors[0].rooms[0] # TODO
+        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room)
       end
     end
-    
-    starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow
-    randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
-    #randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) # TODO abyss doesn't randomize properly since it's so small
     
     replace_outer_boss_doors()
   end
@@ -33,6 +51,8 @@ module MapRandomizer
     unplaced_transition_rooms = game.get_transition_rooms()
     placed_transition_rooms = []
     unreachable_subroom_doors = []
+    
+    puts "ON AREA: %02X" % area_rooms.first.area_index
     
     sectors_done = 0
     total_sectors = 10
@@ -79,7 +99,7 @@ module MapRandomizer
   end
   
   def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
-    puts "ON SECTOR: #{sector_index}"
+    puts "ON SECTOR: %02X" % sector_index
     
     sector_rooms.select! do |room|
       next if room.layers.empty?
@@ -1031,7 +1051,7 @@ module MapRandomizer
           else # OoE
             tile.is_entrance = room.entities.find do |e|
               e.is_special_object? && e.subtype == 0x2B &&
-                (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
+                (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS).include?(e.x_pos) &&
                 (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
             end
           end
