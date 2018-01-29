@@ -1021,10 +1021,12 @@ module MapRandomizer
     area.sectors.each do |sector|
       sector.rooms.each do |room|
         room_x = room.room_xpos_on_map
+        room_y = room.room_ypos_on_map
+        next if room_x == 63 || room_y == 47 # Dummied out room
+        
         if room_x < min_x
           min_x = room_x
         end
-        room_y = room.room_ypos_on_map
         if room_y < min_y
           min_y = room_y
         end
@@ -1044,9 +1046,11 @@ module MapRandomizer
     if min_x > 0 || min_y > 0
       area.sectors.each do |sector|
         sector.rooms.each do |room|
-          room.room_xpos_on_map -= min_x
-          room.room_ypos_on_map -= min_y
-          room.write_to_rom()
+          unless room.room_xpos_on_map == 63 || room.room_ypos_on_map == 47 # Skip dummied out rooms
+            room.room_xpos_on_map -= min_x
+            room.room_ypos_on_map -= min_y
+            room.write_to_rom()
+          end
         end
       end
       
