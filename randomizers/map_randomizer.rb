@@ -126,7 +126,13 @@ module MapRandomizer
       sectors_for_area.delete(0xA)
     end
     
-    sectors_for_area.each do |sector_index, sector_rooms|
+    starting_room_sector = area_starting_room.sector_index
+    sector_place_order = [starting_room_sector]
+    sector_place_order += (sectors_for_area.keys - [starting_room_sector]).shuffle(random: rng)
+    
+    sector_place_order.each do |sector_index|
+      sector_rooms = sectors_for_area[sector_index]
+      
       randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
     
       sectors_done += 1
