@@ -38,7 +38,44 @@ module MapRandomizer
           rooms += sector.rooms
         end
         
-        starting_room = area.sectors[0].rooms[0] # TODO
+        starting_room = case area.name
+        when "Dracula's Castle"
+          area.sectors[0xC].rooms[0]
+        when "Training Hall"
+          area.sectors[0].rooms[0]
+        when "Ruvas Forest"
+          area.sectors[0].rooms[0]
+        when "Argila Swamp"
+          area.sectors[0].rooms[3]
+        when "Kalidus Channel"
+          area.sectors[0].rooms[0] # TODO need to do something about kalidus's alternate entrance
+        when "Somnus Reef"
+          area.sectors[0].rooms[0]
+        when "Minera Prison Island"
+          area.sectors[0].rooms[0]
+        when "Lighthouse"
+          area.sectors[0].rooms[0]
+        when "Tymeo Mountains"
+          area.sectors[0].rooms[0]
+        when "Tristis Pass"
+          area.sectors[0].rooms[0]
+        when "Large Cavern"
+          area.sectors[0].rooms[0]
+        when "Giant's Dwelling"
+          area.sectors[0].rooms[0]
+        when "Mystery Manor"
+          area.sectors[0].rooms[0xC]
+        when "Misty Forest Road"
+          area.sectors[0].rooms[8]
+        when "Oblivion Ridge"
+          area.sectors[1].rooms[6]
+        when "Skeleton Cave"
+          area.sectors[0].rooms[0]
+        when "Monastery"
+          area.sectors[1].rooms[0]
+        else
+          raise "Invalid area"
+        end
         randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room)
       end
     end
