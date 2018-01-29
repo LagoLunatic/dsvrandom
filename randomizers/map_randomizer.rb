@@ -1008,10 +1008,21 @@ module MapRandomizer
   def regenerate_map_por_ooe(map, area)
     map.tiles.clear() # Empty the array of vanilla map tiles.
     
+    min_x = 9999
+    min_y = 9999
     max_x = 0
     max_y = 0
     area.sectors.each do |sector|
       sector.rooms.each do |room|
+        room_x = room.room_xpos_on_map
+        if room_x < min_x
+          min_x = room_x
+        end
+        room_y = room.room_ypos_on_map
+        if room_y < min_y
+          min_y = room_y
+        end
+        
         room_right_x = room.room_xpos_on_map + room.width - 1
         if room_right_x > max_x
           max_x = room_right_x
@@ -1022,6 +1033,28 @@ module MapRandomizer
         end
       end
     end
+    
+    # Push the map up into the top left corner if it's not already.
+    if min_x > 0 || min_y > 0
+      area.sectors.each do |sector|
+        sector.rooms.each do |room|
+          room.room_xpos_on_map -= min_x
+          room.room_ypos_on_map -= min_y
+          room.write_to_rom()
+        end
+      end
+      
+      max_x -= min_x
+      max_y -= min_y
+      min_x = 0
+      min_y = 0
+    end
+    
+    # Visually center the map.
+    x_offset_in_tiles = (64 - max_x) / 2
+    y_offset_in_tiles = (48 - max_y) / 2
+    map.draw_x_offset = x_offset_in_tiles / 2 # These properties are in terms of pairs of 2 tiles, so divide by 2 again.
+    map.draw_y_offset = y_offset_in_tiles / 2
     
     (0..max_y).each do |y|
       (0..max_x).each do |x|
