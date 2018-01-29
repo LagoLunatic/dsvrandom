@@ -150,6 +150,8 @@ module MapRandomizer
   def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
     puts "ON SECTOR: %02X" % sector_index
     
+    area_index = area_starting_room.area_index
+    
     sector_rooms.select! do |room|
       next if room.layers.empty?
       next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
@@ -295,6 +297,8 @@ module MapRandomizer
         end
       end
       
+      recenter_map_spots(map_spots, map_width, map_height)
+      
       #if @transition_rooms.include?(room)
       #  regenerate_map()
       #  gets
@@ -302,6 +306,8 @@ module MapRandomizer
       
       #regenerate_map(maps_rendered)
       #maps_rendered += 1
+      #regenerate_map(area_index, sector_index)
+      #gets
     end
     
     # Keep track of the rooms we never used.
@@ -413,6 +419,63 @@ module MapRandomizer
       end
       
       return up_dest_door
+    end
+  end
+  
+  def recenter_map_spots(map_spots, map_width, map_height)
+    min_x = map_width
+    min_y = map_height
+    max_x = 0
+    max_y = 0
+    map_spots.each_with_index do |col, x|
+      col.each_with_index do |room, y|
+        if room
+          room_x = room.room_xpos_on_map
+          room_y = room.room_ypos_on_map
+          next if room_x == 63 || room_y == 47 # Dummied out room
+          
+          if room_x < min_x
+            min_x = room_x
+          end
+          if room_y < min_y
+            min_y = room_y
+          end
+          
+          room_right_x = room.room_xpos_on_map + room.width - 1
+          if room_right_x > max_x
+            max_x = room_right_x
+          end
+          room_bottom_y = room.room_ypos_on_map + room.height - 1
+          if room_bottom_y > max_y
+            max_y = room_bottom_y
+          end
+        end
+      end
+    end
+    
+    used_map_width = max_x - min_x + 1
+    used_map_height = max_y - min_y + 1
+    desired_topleft_x = (map_width - used_map_width) / 2
+    desired_topleft_y = (map_height - used_map_height) / 2
+    needed_x_offset = desired_topleft_x - min_x
+    needed_y_offset = desired_topleft_y - min_y
+    
+    # Rotate the map spots array to offset all spots by the desired amount.
+    map_spots.rotate!(-needed_x_offset)
+    map_spots.each do |col|
+      col.rotate!(-needed_y_offset)
+    end
+    
+    done_rooms = []
+    map_spots.each_with_index do |col, x|
+      col.each_with_index do |room, y|
+        if room && !done_rooms.include?(room)
+          room.room_xpos_on_map = x
+          room.room_ypos_on_map = y
+          room.write_to_rom()
+          done_rooms << room
+        end
+      end
     end
   end
   
