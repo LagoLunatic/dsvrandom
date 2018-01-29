@@ -200,7 +200,7 @@ module MapRandomizer
     
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
-    on_starting_room = (sector_index == 0)
+    on_starting_room = (sector_index == area_starting_room.sector_index)
     while true
       debug = false
       #debug = (sector_index == 0xB)
