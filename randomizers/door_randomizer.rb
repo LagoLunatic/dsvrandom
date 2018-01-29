@@ -552,8 +552,12 @@ module DoorRandomizer
       room_strs_unused_by_map_rando = @rooms_unused_by_map_rando.map{|room| room.room_str}
     end
     
-    # First convert the rooms to subrooms.
-    sector_subrooms = checker.convert_rooms_to_subrooms(sector.rooms)
+    if room_rando?
+      # First convert the rooms to subrooms.
+      sector_subrooms = checker.convert_rooms_to_subrooms(sector.rooms)
+    else
+      sector_subrooms = sector.rooms
+    end
     
     remaining_rooms_to_check = sector_subrooms.dup
     remaining_rooms_to_check -= @transition_rooms unless include_transitions
