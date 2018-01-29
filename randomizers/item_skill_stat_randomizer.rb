@@ -128,6 +128,10 @@ module ItemSkillStatRandomizer
             if item.name == "Whip"
               # If the whip turns into a projectile weapon Julius can't break Balore blocks, so ban those swing anims.
               available_swing_anims -= [0x9, 0xA, 0xB]
+              if !options[:no_touch_screen]
+                # If the no touch screen option is off, only the whip swing anim works to break Balore blocks.
+                available_swing_anims = [0xC]
+              end
             end
             item["Swing Anim"] = available_swing_anims.sample(random: rng)
           end
