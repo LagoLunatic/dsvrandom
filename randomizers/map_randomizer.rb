@@ -47,8 +47,14 @@ module MapRandomizer
   end
   
   def randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room)
+    @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
+    
+    area_index = area_rooms.first.area_index
     map_spots = Array.new(map_width) { Array.new(map_height) }
-    unplaced_transition_rooms = game.get_transition_rooms()
+    unplaced_transition_rooms = @transition_rooms.select{|room| room.area_index == area_index}
     placed_transition_rooms = []
     unreachable_subroom_doors = []
     
