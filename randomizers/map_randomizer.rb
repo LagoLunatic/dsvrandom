@@ -166,7 +166,10 @@ module MapRandomizer
       sector_rooms = sectors_for_area[sector_index]
       
       orig_sector_rooms              = sector_rooms.dup
-      orig_map_spots                 = Marshal.load(Marshal.dump(map_spots))
+      orig_map_spots                 = Array.new(map_width) { Array.new(map_height) }
+      map_spots.each_with_index do |col, x|
+        orig_map_spots[x] = col.dup
+      end
       orig_unplaced_transition_rooms = unplaced_transition_rooms.dup
       orig_placed_transition_rooms   = placed_transition_rooms.dup
       orig_unreachable_subroom_doors = unreachable_subroom_doors.dup
