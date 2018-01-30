@@ -514,32 +514,34 @@ class Randomizer
     end
     
     # Calculate the average difficulty of common enemies in each subsector.
-    @enemy_difficulty_by_subsector = {}
-    game.areas.each do |area|
-      area.sectors.each do |sector|
-        subsectors = get_subsectors(sector)
-        subsectors.each do |rooms_in_subsector|
-          sum_of_all_subsector_enemy_attacks = 0
-          num_enemies_in_subsector = 0
-          
-          rooms_in_subsector.uniq!{|subroom| subroom.room_str} # Don't count entities in rooms with subrooms multiple times in a single subsector.
-          
-          rooms_in_subsector.each do |room|
-            room.entities.select{|e| e.is_common_enemy?}.each do |enemy|
-              num_enemies_in_subsector += 1
-              
-              enemy_dna = @original_enemy_dnas[enemy.subtype]
-              sum_of_all_subsector_enemy_attacks += enemy_dna["Attack"]
+    if options[:randomize_starting_room]
+      @enemy_difficulty_by_subsector = {}
+      game.areas.each do |area|
+        area.sectors.each do |sector|
+          subsectors = get_subsectors(sector)
+          subsectors.each do |rooms_in_subsector|
+            sum_of_all_subsector_enemy_attacks = 0
+            num_enemies_in_subsector = 0
+            
+            rooms_in_subsector.uniq!{|subroom| subroom.room_str} # Don't count entities in rooms with subrooms multiple times in a single subsector.
+            
+            rooms_in_subsector.each do |room|
+              room.entities.select{|e| e.is_common_enemy?}.each do |enemy|
+                num_enemies_in_subsector += 1
+                
+                enemy_dna = @original_enemy_dnas[enemy.subtype]
+                sum_of_all_subsector_enemy_attacks += enemy_dna["Attack"]
+              end
             end
+            
+            if num_enemies_in_subsector == 0
+              average_enemy_attack = 0
+            else
+              average_enemy_attack = sum_of_all_subsector_enemy_attacks.to_f / num_enemies_in_subsector
+            end
+            
+            @enemy_difficulty_by_subsector[rooms_in_subsector] = average_enemy_attack
           end
-          
-          if num_enemies_in_subsector == 0
-            average_enemy_attack = 0
-          else
-            average_enemy_attack = sum_of_all_subsector_enemy_attacks.to_f / num_enemies_in_subsector
-          end
-          
-          @enemy_difficulty_by_subsector[rooms_in_subsector] = average_enemy_attack
         end
       end
     end
