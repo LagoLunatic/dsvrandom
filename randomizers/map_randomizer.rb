@@ -288,13 +288,51 @@ module MapRandomizer
               if valid_placement
                 #inside_door_strs_connecting_to_adjacent_rooms = [] # TODO inside_doors_connecting_to_adjacent_rooms.map{|door| door.door_str}
                 
+                number_of_spots_opened_up = 0
+                room_doors.each do |door|
+                  case door.direction
+                  when :left
+                    check_x = x_to_place_room_at - 1
+                    check_y = y_to_place_room_at + door.y_pos
+                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+                      number_of_spots_opened_up += 1
+                    end
+                  when :right
+                    check_x = x_to_place_room_at + room.width
+                    check_y = y_to_place_room_at + door.y_pos
+                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+                      number_of_spots_opened_up += 1
+                    end
+                  when :up
+                    check_x = x_to_place_room_at + door.x_pos
+                    check_y = y_to_place_room_at - 1
+                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+                      number_of_spots_opened_up += 1
+                    end
+                  when :down
+                    check_x = x_to_place_room_at + door.x_pos
+                    check_y = y_to_place_room_at + room.height
+                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+                      number_of_spots_opened_up += 1
+                    end
+                  end
+                end
+                
+                number_of_spots_closed_up = 0
+                open_spots.each do |x, y, direction, dest_room|
+                  if (x_to_place_room_at..x_to_place_room_at+room.width-1).include?(x) && (y_to_place_room_at..y_to_place_room_at+room.height-1).include?(y)
+                    number_of_spots_closed_up += 1
+                  end
+                end
+                
                 valid_room_positions << {
                   room: room,
                   x: x_to_place_room_at,
                   y: y_to_place_room_at,
                   #inside_door_strs_connecting_to_adjacent_rooms: inside_door_strs_connecting_to_adjacent_rooms,
-                  # number_of_spots_opened_up TODO
-                  # number_of_spots_closed_up TODO
+                  number_of_spots_opened_up: number_of_spots_opened_up,
+                  number_of_spots_closed_up: number_of_spots_closed_up,
+                  diff_in_num_spots: number_of_spots_opened_up - number_of_spots_closed_up,
                 }
               end
             end
@@ -329,6 +367,19 @@ module MapRandomizer
           # Unless there's only special rooms we can place, then we don't have much choice.
           possible_room_positions = valid_room_positions
         end
+        
+        possible_room_positions_that_add_spots = possible_room_positions.select do |room_positions|
+          room_positions[:diff_in_num_spots] >= 1
+        end
+        possible_room_positions_that_keep_same_num_spots = possible_room_positions.select do |room_positions|
+          room_positions[:diff_in_num_spots] == 0
+        end
+        if possible_room_positions_that_add_spots.any?
+          possible_room_positions = possible_room_positions_that_add_spots
+        elsif possible_room_positions_that_keep_same_num_spots.any?
+          possible_room_positions = possible_room_positions_that_keep_same_num_spots
+        end
+        
         
         chosen_room_position = possible_room_positions.sample(random: rng)
         
