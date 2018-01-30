@@ -50,6 +50,7 @@ class RandomizerWindow < Qt::Dialog
     skip_emblem_drawing
     dont_randomize_change_cube
     por_short_mode
+    always_show_drop_percentages
     open_world_map
     always_dowsing
   )

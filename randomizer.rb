@@ -1167,6 +1167,10 @@ class Randomizer
       game.apply_armips_patch("#{GAME}_reveal_bestiary")
     end
     
+    if GAME == "por" && options[:always_show_drop_percentages]
+      game.apply_armips_patch("por_always_show_drop_percentages")
+    end
+    
     if GAME == "dos"
       # When you walk over an item you already have 9 of, the game plays a sound effect every 0.5 seconds.
       # We change it to play once a second so it's less annoying.
