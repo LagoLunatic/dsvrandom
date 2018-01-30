@@ -195,8 +195,10 @@ module MapRandomizer
     end
     
     transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
-    puts "Total sector rooms available to place: #{sector_rooms.size}"
-    puts "Transition rooms to place: #{transition_rooms_in_this_sector.size}"
+    total_sector_rooms = sector_rooms.size
+    total_sector_transition_rooms = transition_rooms_in_this_sector.size
+    puts "Total sector rooms available to place: #{total_sector_rooms}"
+    puts "Transition rooms to place: #{total_sector_transition_rooms}"
     #puts "Which non-transition rooms to place: #{sector_rooms.map{|x| x.room_str}.join(", ")}"
     #puts "Which transition rooms to place: #{transition_rooms_in_this_sector.map{|x| x.room_str}.join(", ")}"
     sector_rooms += transition_rooms_in_this_sector
@@ -210,7 +212,7 @@ module MapRandomizer
     # 1. rooms that open up more door connection spots than they close.
     #   however, this should only be the #1 priotity as long as the current number of open spots are few. when there are a lot, ignore this priotity.
     # 2. transition rooms, boss rooms, and progress important rooms.
-    #   however, these rooms should only be prioritized once a decent percentage of the available rooms for this sector have been placed.
+    #   however, these rooms should only be placed once a decent percentage of the available rooms for this sector have been placed.
     # 3. other rooms.
     
     # TODO: keep list of all open spots and just add and delete from this list instead of recalculating it from scratch every loop to improve performance.
@@ -220,7 +222,7 @@ module MapRandomizer
     on_starting_room = (sector_index == area_starting_room.sector_index)
     while true
       debug = false
-      debug = true#(sector_index == 0xB)
+      #debug = true#(sector_index == 0xB)
       if on_starting_room
         on_starting_room = false
         
@@ -305,7 +307,30 @@ module MapRandomizer
           break
         end
         
-        chosen_room_position = valid_room_positions.sample(random: rng)
+        special_room_positions = valid_room_positions.select do |room_position|
+          room = room_position[:room]
+          if @transition_rooms.include?(room)
+            true
+          elsif checker.progress_important_rooms.include?(room)
+            true
+          else
+            false
+          end
+          # TODO boss rooms
+        end
+        nonspecial_room_positions = valid_room_positions - special_room_positions
+        if special_room_positions.any? && (num_placed_non_transition_rooms >= 15 || (num_placed_non_transition_rooms.to_f / total_sector_rooms) >= 0.50)
+          # Start placing special rooms once a decent number of normal rooms have been placed.
+          possible_room_positions = special_room_positions
+        elsif nonspecial_room_positions.any?
+          # If a decent number of normal rooms haven't been placed yet, don't start placing special rooms.
+          possible_room_positions = nonspecial_room_positions
+        else
+          # Unless there's only special rooms we can place, then we don't have much choice.
+          possible_room_positions = valid_room_positions
+        end
+        
+        chosen_room_position = possible_room_positions.sample(random: rng)
         
         
         
