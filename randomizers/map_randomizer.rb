@@ -27,6 +27,40 @@ module MapRandomizer
       randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
       #randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) # TODO abyss doesn't randomize properly since it's so small
     when "por"
+      game.areas.each do |area|
+        next if area.area_index >= 0xA
+        
+        rooms = []
+        area.sectors.each do |sector|
+          rooms += sector.rooms
+        end
+        
+        starting_room = case area.name
+        when "Dracula's Castle"
+          area.sectors[0].rooms[0]
+        when "City of Haze"
+          area.sectors[0].rooms[0x1A]
+        when "13th Street"
+          area.sectors[0].rooms[7]
+        when "Sandy Grave"
+          area.sectors[0].rooms[0]
+        when "Forgotten City"
+          area.sectors[0].rooms[0]
+        when "Nation of Fools"
+          area.sectors[0].rooms[0x21]
+        when "Burnt Paradise"
+          area.sectors[0].rooms[0x20]
+        when "Forest of Doom"
+          area.sectors[0].rooms[0]
+        when "Dark Academy"
+          area.sectors[1].rooms[6]
+        when "Nest of Evil"
+          area.sectors[0].rooms[0]
+        else
+          raise "Invalid area"
+        end
+        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room)
+      end
     when "ooe"
       game.areas.each do |area|
         next if area.area_index == 1 # Wygol
