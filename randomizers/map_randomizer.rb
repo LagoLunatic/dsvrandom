@@ -129,10 +129,10 @@ module MapRandomizer
     placed_transition_rooms = []
     unreachable_subroom_doors = []
     
-    puts "ON AREA: %02X" % area_rooms.first.area_index
+    puts "ON AREA: %02X" % area_index
     
-    sectors_done = 0
-    total_sectors = 10
+    #sectors_done = 0
+    #total_sectors = 10
     
     area_rooms.each do |room|
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
@@ -1266,10 +1266,12 @@ module MapRandomizer
     end
     
     #p [area_index, map_sector_index]
-    filename = "./logs/maptest %02X-%02X.png" % [area_index, map_sector_index]
+    filename = "./logs/maptest %02X" % area_index
+    filename += "-%02X" % map_sector_index if GAME == "dos"
     if filename_num
-      filename = "./logs/maptest %02X-%02X #{filename_num}.png" % [area_index, map_sector_index]
+      filename += " #{filename_num}" % [area_index, map_sector_index]
     end
+    filename += ".png"
     hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
     renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
   end
