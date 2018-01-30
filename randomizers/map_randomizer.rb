@@ -483,6 +483,11 @@ module MapRandomizer
       #gets
     end
     
+    unplaced_progress_important_rooms = sector_rooms & checker.progress_important_rooms
+    if unplaced_progress_important_rooms.any?
+      raise "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
+    end
+    
     # Keep track of the rooms we never used.
     @rooms_unused_by_map_rando += sector_rooms
     
