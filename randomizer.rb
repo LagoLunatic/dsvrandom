@@ -196,10 +196,6 @@ class Randomizer
       raise "No seed given"
     end
     
-    if options[:randomize_rooms_map_friendly] && GAME != "dos"
-      raise "The map-friendly room randomizer currently only supports DoS."
-    end
-    
     if room_rando?
       @checker = DoorCompletabilityChecker.new(
         game,
