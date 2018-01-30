@@ -1,11 +1,6 @@
 
 module MapRandomizer
   def randomize_doors_no_overlap(&block)
-    @transition_rooms = game.get_transition_rooms()
-    @transition_rooms.reject! do |room|
-      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
-    end
-    
     @rooms_unused_by_map_rando = []
     
     maps_rendered = 0
@@ -118,11 +113,6 @@ module MapRandomizer
   end
   
   def randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room)
-    @transition_rooms = game.get_transition_rooms()
-    @transition_rooms.reject! do |room|
-      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
-    end
-    
     area_index = area_rooms.first.area_index
     map_spots = Array.new(map_width) { Array.new(map_height) }
     unplaced_transition_rooms = @transition_rooms.select{|room| room.area_index == area_index}
@@ -1253,11 +1243,6 @@ module MapRandomizer
   def regenerate_map(area_index, map_sector_index, filename_num=nil)
     map = game.get_map(area_index, map_sector_index)
     area = game.areas[area_index]
-    
-    @transition_rooms = game.get_transition_rooms()
-    @transition_rooms.reject! do |room|
-      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
-    end
     
     if GAME == "dos"
       regenerate_map_dos(map, area)

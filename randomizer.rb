@@ -247,6 +247,11 @@ class Randomizer
     @glyphs_placed_as_event_glyphs = []
     
     load_randomizer_constants()
+    
+    @transition_rooms = game.get_transition_rooms()
+    @transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
   end
   
   def load_randomizer_constants

@@ -3,11 +3,6 @@ module DoorRandomizer
   class NotAllRoomsAreConnectedError < StandardError ; end
   
   def randomize_transition_doors
-    @transition_rooms = game.get_transition_rooms()
-    @transition_rooms.reject! do |room|
-      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
-    end
-    
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
     game.areas.each do |area|
@@ -212,11 +207,6 @@ module DoorRandomizer
   def randomize_non_transition_doors
     # We make sure every room in an area is accessible. This is to prevent infinite loops of a small number of rooms that connect to each other with no way to progress.
     # Loop through each room. search for remaining rooms that have a matching door. But the room we find must also have remaining doors in it besides the one we swap with so it's not a dead end, or a loop. If there are no rooms that meet those conditions, then we go with the more lax condition of just having a matching door, allowing dead ends.
-    
-    @transition_rooms = game.get_transition_rooms()
-    @transition_rooms.reject! do |room|
-      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
-    end
     
     # Make a list of doors that lead into transition rooms so we can tell these apart from regular doors.
     transition_doors = []
@@ -541,11 +531,6 @@ module DoorRandomizer
     
     debug = false
     #debug = (sector.area_index == 5 && sector.sector_index == 2)
-    
-    @transition_rooms = game.get_transition_rooms()
-    @transition_rooms.reject! do |room|
-      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
-    end
     
     transition_room_strs = @transition_rooms.map{|room| room.room_str}
     if options[:randomize_rooms_map_friendly]
