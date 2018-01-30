@@ -151,17 +151,60 @@ module MapRandomizer
     end
     
     starting_room_sector = area_starting_room.sector_index
-    sector_place_order = [starting_room_sector]
-    sector_place_order += (sectors_for_area.keys - [starting_room_sector]).shuffle(random: rng)
+    remaining_sectors_to_place = sectors_for_area.keys
+    redo_counts_per_sector = Hash.new(0)
     
-    sector_place_order.each do |sector_index|
+    on_starting_sector = true
+    while true
+      if on_starting_sector
+        on_starting_sector = false
+        sector_index = starting_room_sector
+      else
+        sector_index = remaining_sectors_to_place.sample(random: rng)
+      end
+      
       sector_rooms = sectors_for_area[sector_index]
       
-      randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
-    
-      sectors_done += 1
-      percent_done = sectors_done.to_f / total_sectors
+      orig_sector_rooms              = sector_rooms.dup
+      orig_map_spots                 = Marshal.load(Marshal.dump(map_spots))
+      orig_unplaced_transition_rooms = unplaced_transition_rooms.dup
+      orig_placed_transition_rooms   = placed_transition_rooms.dup
+      orig_unreachable_subroom_doors = unreachable_subroom_doors.dup
+      
+      result = randomize_doors_no_overlap_for_sector(
+        sector_index, sector_rooms,
+        map_spots, map_width, map_height,
+        area_starting_room,
+        unplaced_transition_rooms, placed_transition_rooms,
+        unreachable_subroom_doors
+      )
+      
+      if result == :redo
+        if redo_counts_per_sector[sector_index] > 5
+          raise "Map randomizer had to redo sector #{sector_index} more than 5 times."
+        end
+        
+        sector_rooms              = orig_sector_rooms
+        map_spots                 = orig_map_spots
+        unplaced_transition_rooms = orig_unplaced_transition_rooms
+        placed_transition_rooms   = orig_placed_transition_rooms
+        unreachable_subroom_doors = orig_unreachable_subroom_doors
+        redo_counts_per_sector[sector_index] += 1
+        puts "Map rando is redoing sector #{sector_index} (time #{redo_counts_per_sector[sector_index]})"
+        redo
+      end
+      
+      remaining_sectors_to_place.delete(sector_index)
+      
+      #regenerate_map(area_index, sector_index)
+      
+      #sectors_done += 1
+      #percent_done = sectors_done.to_f / total_sectors
       #yield percent_done
+      
+      if remaining_sectors_to_place.empty?
+        break
+      end
     end
     
     remove_useless_transition_rooms(map_spots, map_width, map_height, placed_transition_rooms)
@@ -174,6 +217,7 @@ module MapRandomizer
   def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
     area_index = area_starting_room.area_index
     
+    puts
     puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index]
     
     sector_rooms.select! do |room|
@@ -203,6 +247,7 @@ module MapRandomizer
       end
       
       transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
+      puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str}"
     end
     
     transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
@@ -228,12 +273,20 @@ module MapRandomizer
     
     # TODO: keep list of all open spots and just add and delete from this list instead of recalculating it from scratch every loop to improve performance.
     
+    # TODO: currently it places 2 transition rooms in the current sector to give the next sector somewhere to connect to.
+    # but that doesn't work so well. so instead:
+    # in the next sector, start out by attempting to place a transition room at every spot, and then placing rooms in this next sector connected to it.
+    # whichever spot for the transition room results in the most placable sector rooms, go with that spot.
+    # or alternatively:
+    # start out the next sector by placing a transition room at one random spot. then place as many rooms as possible connected there.
+    # but if some progress-important rooms didn't get placed, throw an error. and if barely any normal rooms got placed, also throw an error. then retry that sector until there's no more errors.
+    
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
     on_starting_room = (sector_index == area_starting_room.sector_index)
     while true
       debug = false
-      #debug = true#(sector_index == 0xB)
+      #debug = true#(sector_index == 1)
       if on_starting_room
         on_starting_room = false
         
@@ -247,7 +300,11 @@ module MapRandomizer
       else
         break if sector_rooms.empty?
         
-        open_spots = get_open_spots(map_spots, map_width, map_height, unreachable_subroom_doors: unreachable_subroom_doors, transition_room_to_allow_connecting_to: transition_room_to_start_sector)
+        open_spots = get_open_spots(
+          map_spots, map_width, map_height,
+          unreachable_subroom_doors: unreachable_subroom_doors,
+          transition_room_to_allow_connecting_to: transition_room_to_start_sector
+        )
         
         p "open_spots: #{open_spots}" if debug
         
@@ -356,6 +413,8 @@ module MapRandomizer
           break
         end
         
+        #p valid_room_positions.map{|x| x[:room].room_str + " opened: #{x[:number_of_spots_opened_up]}, closed: #{x[:number_of_spots_closed_up]}"}
+        
         special_room_positions = valid_room_positions.select do |room_position|
           room = room_position[:room]
           if @transition_rooms.include?(room)
@@ -422,7 +481,11 @@ module MapRandomizer
       
       room_x = chosen_room_position[:x]
       room_y = chosen_room_position[:y]
-      puts "Successfully placed #{room.room_str} at (#{room_x},#{room_y})" if debug
+      
+      if @transition_rooms.include?(room)
+        is_transition_str = " (transition)"
+      end
+      puts "Successfully placed #{room.room_str}#{is_transition_str} at (#{room_x},#{room_y})" if debug
       
       room.room_xpos_on_map = room_x
       room.room_ypos_on_map = room_y
@@ -475,7 +538,8 @@ module MapRandomizer
     
     unplaced_progress_important_rooms = sector_rooms & checker.progress_important_rooms
     if unplaced_progress_important_rooms.any?
-      raise "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
+      #raise "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
+      return :redo
     end
     
     # Keep track of the rooms we never used.
