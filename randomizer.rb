@@ -1126,6 +1126,17 @@ class Randomizer
       game.apply_armips_patch("por_reveal_all_portraits_on_map")
     end
     
+    if GAME == "por" && room_rando?
+      # In room rando, get rid of the left wall of the sisters boss fight and replace it with a boss door instead.
+      # If the player entered the room from the left they would get stuck in the wall otherwise.
+      entity = game.entity_by_str("00-0B-01_01")
+      entity.subtype = BOSS_DOOR_SUBTYPE
+      entity.y_pos = 0xB0
+      entity.var_a = 1
+      entity.var_b = 0xE
+      entity.write_to_rom()
+    end
+    
     if GAME == "dos" && options[:randomize_starting_room]
       # If a soul candle gets placed in a starting save room, it will appear behind the save point's graphics.
       # We need to raise the sould candle's Z-pos from 5200 to 5600 so it appears on top of the save point.
