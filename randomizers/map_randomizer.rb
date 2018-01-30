@@ -337,12 +337,18 @@ module MapRandomizer
             #room_doors_to_attach.shuffle!(random: rng)
             room_doors_to_attach.each do |door|
               case direction
-              when :left, :right
+              when :left
                 x_to_place_room_at = x
                 y_to_place_room_at = y - door.y_pos
-              when :up, :down
+              when :right
+                x_to_place_room_at = x - room.width + 1
+                y_to_place_room_at = y - door.y_pos
+              when :up
                 x_to_place_room_at = x - door.x_pos
                 y_to_place_room_at = y
+              when :down
+                x_to_place_room_at = x - door.x_pos
+                y_to_place_room_at = y - room.height + 1
               end
               
               valid_placement = true
