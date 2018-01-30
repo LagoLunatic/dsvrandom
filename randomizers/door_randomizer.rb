@@ -1155,6 +1155,7 @@ module DoorRandomizer
   end
   
   def block_off_tiles(room, tiles)
+    room.sector.load_necessary_overlay()
     coll_layer = room.layers.first
     coll_tileset = CollisionTileset.new(coll_layer.collision_tileset_pointer, game.fs)
     solid_tile = coll_tileset.tiles.find{|tile| tile.is_solid?}
