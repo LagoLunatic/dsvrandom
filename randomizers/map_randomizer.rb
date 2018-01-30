@@ -182,9 +182,9 @@ module MapRandomizer
   end
   
   def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
-    puts "ON SECTOR: %02X" % sector_index
-    
     area_index = area_starting_room.area_index
+    
+    puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index]
     
     sector_rooms.select! do |room|
       next if room.layers.empty?
@@ -192,6 +192,27 @@ module MapRandomizer
       next if @transition_rooms.include?(room)
       
       true
+    end
+    
+    if sector_index != area_starting_room.sector_index
+      open_transition_rooms = placed_transition_rooms.select do |room|
+        x = room.room_xpos_on_map
+        y = room.room_ypos_on_map
+        if x > 0 && map_spots[x-1][y].nil?
+          true
+        elsif x < map_width-1 && map_spots[x+1][y].nil?
+          true
+        else
+          false
+        end
+      end
+      
+      if open_transition_rooms.empty?
+        puts "No transition room to use as a base!"
+        return
+      end
+      
+      transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
     end
     
     transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
@@ -236,7 +257,7 @@ module MapRandomizer
       else
         break if sector_rooms.empty?
         
-        open_spots = get_open_spots(map_spots, map_width, map_height, unreachable_subroom_doors: unreachable_subroom_doors)#, transition_room_to_allow_connecting_to: transition_room_to_start_sector)
+        open_spots = get_open_spots(map_spots, map_width, map_height, unreachable_subroom_doors: unreachable_subroom_doors, transition_room_to_allow_connecting_to: transition_room_to_start_sector)
         
         p "open_spots: #{open_spots}" if debug
         
@@ -919,7 +940,7 @@ module MapRandomizer
           y_in_dest_room = y - dest_room.room_ypos_on_map
           dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
           right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
-          if right_dest_door #&& !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
+          if right_dest_door && !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
             open_spots << [x, y, :left, dest_room]
           end
         end
@@ -930,7 +951,7 @@ module MapRandomizer
           y_in_dest_room = y - dest_room.room_ypos_on_map
           dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
           left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
-          if left_dest_door #&& !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
+          if left_dest_door && !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
             open_spots << [x, y, :right, dest_room]
           end
         end
