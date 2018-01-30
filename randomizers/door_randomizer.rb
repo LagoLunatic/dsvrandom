@@ -1143,6 +1143,10 @@ module DoorRandomizer
       gaps = gaps_not_on_room_edge
     end
     
+    if gaps.empty?
+      raise "Door #{door.door_str} has no gaps."
+    end
+    
     tiles_in_biggest_gap = gaps.max_by{|tiles| tiles.length}
     first_tile_i = tiles_in_biggest_gap.first[:i]
     last_tile_i = tiles_in_biggest_gap.last[:i]

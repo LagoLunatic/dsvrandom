@@ -863,7 +863,7 @@ module MapRandomizer
     end
     
     doors_to_line_up.each do |door|
-      #line_up_door(door) # TODO?
+      line_up_door(door)
     end
   end
   
