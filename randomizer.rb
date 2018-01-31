@@ -49,7 +49,8 @@ class Randomizer
               :spoiler_log,
               :game,
               :checker,
-              :renderer
+              :renderer,
+              :tiled
   
   DIFFICULTY_RANGES = {
     :item_price_range               => 100..25000,
@@ -769,7 +770,7 @@ class Randomizer
   end
   
   def apply_pre_randomization_tweaks
-    tiled = TMXInterface.new
+    @tiled = TMXInterface.new
     
     if GAME == "ooe" && options[:open_world_map]
       game.apply_armips_patch("ooe_nonlinear")

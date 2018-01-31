@@ -1,6 +1,8 @@
 
 module MapRandomizer
   def randomize_doors_no_overlap(&block)
+    add_extra_helper_rooms()
+    
     @rooms_unused_by_map_rando = []
     
     maps_rendered = 0
@@ -110,6 +112,17 @@ module MapRandomizer
     end
     
     replace_outer_boss_doors()
+  end
+  
+  def add_extra_helper_rooms
+    case GAME
+    when "por"
+      sector = game.areas[0].sectors[9]
+      sector.add_new_room()
+      room = sector.rooms[-1]
+      filename = "./dsvrandom/roomedits/por_map_rando_00-09-04.tmx"
+      tiled.read(filename, room)
+    end
   end
   
   def randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room)

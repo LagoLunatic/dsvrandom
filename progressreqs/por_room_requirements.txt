@@ -1284,6 +1284,9 @@ Rooms:
     e02-001: 
     e03-000: 
     e03-001: 
+  00-09-04: # newly added room to help with map rando
+    000-001: 
+    001-000: 
 #Master's Keep: # DONE
   00-0A-00:
     000-001: 
