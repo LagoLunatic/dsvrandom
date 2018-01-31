@@ -561,6 +561,12 @@ module EnemyRandomizer
         enemy.x_pos = room_width - 0x80
       end
       
+      if enemy.room.entities.find{|e| e.is_special_object? && [0x34, 0x35].include?(e.subtype)}
+        # There are cogs in this room.
+        # Cogs don't let you stand on them if they're in the same room as a hanged bones/skeleton tree.
+        return :redo
+      end
+      
       enemy.var_a = rng.rand(0..0x40) # Length
       enemy.var_b = 0
       enemy.y_pos = 0x20
