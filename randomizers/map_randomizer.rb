@@ -176,7 +176,7 @@ module MapRandomizer
         sector_index = remaining_sectors_to_place.sample(random: rng)
       end
       
-      sector_rooms = sectors_for_area[sector_index]
+      sector_rooms = sectors_for_area[sector_index].reject{|room| @transition_rooms.include?(room)}
       
       orig_sector_rooms              = sector_rooms.dup
       orig_map_spots                 = Array.new(map_width) { Array.new(map_height) }
