@@ -220,7 +220,8 @@ module MapRandomizer
       
       remaining_sectors_to_place.delete(sector_index)
       
-      #regenerate_map(area_index, sector_index, should_recenter_map: false)
+      regenerate_map(area_index, sector_index, should_recenter_map: false)
+      gets
       
       #sectors_done += 1
       #percent_done = sectors_done.to_f / total_sectors
@@ -315,36 +316,44 @@ module MapRandomizer
           unreachable_subroom_doors: unreachable_subroom_doors
         )
         
+        total_number_of_open_spots = open_spots.size
+        
         p "open_spots: #{open_spots}" if debug
-        
-        open_spots.select!{|x,y,dir,dest_room| [:left, :right].include?(dir)}
-        
-        room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
-        
-        open_spots.each do |x, y, dir, dest_room|
-          next unless [:left, :right].include?(dir)
-          
-          number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x_to_place_room_at, y_to_place_room_at)
-          
-          diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
-          
-          if (total_number_of_open_spots + diff_in_num_spots) > 0 # Don't allow positions that would block off literally every open spot.
-          end
-        end
-        
         if open_spots.empty?
           puts "No open spots on the map to place the starting transition room!"
           break
         end
         
-        # TODO: instead of picking a totally random spot, choose the most open spot that will allow for the biggest area to place this sector in.
-        x, y, _, _ = open_spots.sample(random: rng)
+        room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
         
-        chosen_room_position = {
-          room: room,
-          x: x,
-          y: y,
-        }
+        valid_room_positions = []
+        open_spots.each do |x, y, dir, dest_room|
+          next unless [:left, :right].include?(dir)
+          
+          number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x, y)
+          
+          diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
+          
+          if (total_number_of_open_spots + diff_in_num_spots) > 0 # Don't allow positions that would block off literally every open spot.
+            valid_room_positions << {
+              room: room,
+              x: x,
+              y: y,
+              #inside_door_strs_connecting_to_adjacent_rooms: inside_door_strs_connecting_to_adjacent_rooms,
+              number_of_spots_opened_up: number_of_spots_opened_up,
+              number_of_spots_closed_up: number_of_spots_closed_up,
+              diff_in_num_spots: diff_in_num_spots,
+            }
+          end
+        end
+        
+        puts "Number of valid room positions: #{valid_room_positions.size}" if debug
+        if valid_room_positions.empty?
+          puts "No valid room positions!"
+          break
+        end
+        
+        chosen_room_position = valid_room_positions.sample(random: rng)
       else
         break if sector_rooms.empty?
         
