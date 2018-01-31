@@ -306,6 +306,7 @@ module MapRandomizer
           map_spots, map_width, map_height,
           unreachable_subroom_doors: unreachable_subroom_doors
         )
+        open_spots.select!{|x,y,dir,dest_room| [:left, :right].include?(dir)}
         
         p "open_spots: #{open_spots}" if debug
         
