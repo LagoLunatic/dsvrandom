@@ -314,9 +314,23 @@ module MapRandomizer
           map_spots, map_width, map_height,
           unreachable_subroom_doors: unreachable_subroom_doors
         )
-        open_spots.select!{|x,y,dir,dest_room| [:left, :right].include?(dir)}
         
         p "open_spots: #{open_spots}" if debug
+        
+        open_spots.select!{|x,y,dir,dest_room| [:left, :right].include?(dir)}
+        
+        room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
+        
+        open_spots.each do |x, y, dir, dest_room|
+          next unless [:left, :right].include?(dir)
+          
+          number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x_to_place_room_at, y_to_place_room_at)
+          
+          diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
+          
+          if (total_number_of_open_spots + diff_in_num_spots) > 0 # Don't allow positions that would block off literally every open spot.
+          end
+        end
         
         if open_spots.empty?
           puts "No open spots on the map to place the starting transition room!"
@@ -394,42 +408,7 @@ module MapRandomizer
               if valid_placement
                 #inside_door_strs_connecting_to_adjacent_rooms = [] # TODO inside_doors_connecting_to_adjacent_rooms.map{|door| door.door_str}
                 
-                number_of_spots_opened_up = 0
-                room_doors.each do |door|
-                  case door.direction
-                  when :left
-                    check_x = x_to_place_room_at - 1
-                    check_y = y_to_place_room_at + door.y_pos
-                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
-                      number_of_spots_opened_up += 1
-                    end
-                  when :right
-                    check_x = x_to_place_room_at + room.width
-                    check_y = y_to_place_room_at + door.y_pos
-                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
-                      number_of_spots_opened_up += 1
-                    end
-                  when :up
-                    check_x = x_to_place_room_at + door.x_pos
-                    check_y = y_to_place_room_at - 1
-                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
-                      number_of_spots_opened_up += 1
-                    end
-                  when :down
-                    check_x = x_to_place_room_at + door.x_pos
-                    check_y = y_to_place_room_at + room.height
-                    if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
-                      number_of_spots_opened_up += 1
-                    end
-                  end
-                end
-                
-                number_of_spots_closed_up = 0
-                open_spots.each do |x, y, direction, dest_room|
-                  if (x_to_place_room_at..x_to_place_room_at+room.width-1).include?(x) && (y_to_place_room_at..y_to_place_room_at+room.height-1).include?(y)
-                    number_of_spots_closed_up += 1
-                  end
-                end
+                number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x_to_place_room_at, y_to_place_room_at)
                 
                 diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
                 
@@ -594,6 +573,47 @@ module MapRandomizer
     @rooms_unused_by_map_rando += sector_rooms
     
     puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
+  end
+  
+  def get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x_to_place_room_at, y_to_place_room_at)
+    number_of_spots_opened_up = 0
+    room_doors.each do |door|
+      case door.direction
+      when :left
+        check_x = x_to_place_room_at - 1
+        check_y = y_to_place_room_at + door.y_pos
+        if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+          number_of_spots_opened_up += 1
+        end
+      when :right
+        check_x = x_to_place_room_at + room.width
+        check_y = y_to_place_room_at + door.y_pos
+        if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+          number_of_spots_opened_up += 1
+        end
+      when :up
+        check_x = x_to_place_room_at + door.x_pos
+        check_y = y_to_place_room_at - 1
+        if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+          number_of_spots_opened_up += 1
+        end
+      when :down
+        check_x = x_to_place_room_at + door.x_pos
+        check_y = y_to_place_room_at + room.height
+        if (1..map_width-1).include?(check_x) && (1..map_height-1).include?(check_y) && map_spots[check_x][check_y].nil?
+          number_of_spots_opened_up += 1
+        end
+      end
+    end
+    
+    number_of_spots_closed_up = 0
+    open_spots.each do |x, y, direction, dest_room|
+      if (x_to_place_room_at..x_to_place_room_at+room.width-1).include?(x) && (y_to_place_room_at..y_to_place_room_at+room.height-1).include?(y)
+        number_of_spots_closed_up += 1
+      end
+    end
+    
+    return [number_of_spots_opened_up, number_of_spots_closed_up]
   end
   
   def select_next_room_to_place(rooms)
