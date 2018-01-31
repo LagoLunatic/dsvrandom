@@ -183,8 +183,8 @@ module MapRandomizer
       )
       
       if result == :redo
-        if redo_counts_per_sector[sector_index] > 5
-          raise "Map randomizer had to redo sector #{sector_index} more than 5 times."
+        if redo_counts_per_sector[sector_index] > 15
+          raise "Map randomizer had to redo area %02X sector %02X more than 15 times." % [area_index, sector_index]
         end
         
         sector_rooms              = orig_sector_rooms
@@ -199,7 +199,7 @@ module MapRandomizer
       
       remaining_sectors_to_place.delete(sector_index)
       
-      #regenerate_map(area_index, sector_index)
+      regenerate_map(area_index, sector_index)
       
       #sectors_done += 1
       #percent_done = sectors_done.to_f / total_sectors
@@ -250,7 +250,7 @@ module MapRandomizer
       end
       
       transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
-      puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str}"
+      puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})"
     end
     
     transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
@@ -269,7 +269,7 @@ module MapRandomizer
     
     # TODO: the priority for different types of rooms should be like this:
     # 1. rooms that open up more door connection spots than they close.
-    #   however, this should only be the #1 priotity as long as the current number of open spots are few. when there are a lot, ignore this priotity.
+    #   however, this should only be the #1 priority as long as the current number of open spots are few. when there are a lot, ignore this priotity.
     # 2. transition rooms, boss rooms, and progress important rooms.
     #   however, these rooms should only be placed once a decent percentage of the available rooms for this sector have been placed.
     # 3. other rooms.
@@ -284,12 +284,17 @@ module MapRandomizer
     # start out the next sector by placing a transition room at one random spot. then place as many rooms as possible connected there.
     # but if some progress-important rooms didn't get placed, throw an error. and if barely any normal rooms got placed, also throw an error. then retry that sector until there's no more errors.
     
+    # TODO: problem... some sectors only work if they start in a specific direction.
+    # for example, the throne room sector in PoR only works if it's attached on the left of a transition room.
+    # if it's attached on the right of one, then no possible configuration of rooms in the throne room will lead to the dracula fight room being placed.
+    # solution: manually add new rooms to these sectors to allow for them to work from either direction.
+    
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
     on_starting_room = (sector_index == area_starting_room.sector_index)
     while true
       debug = false
-      #debug = true#(sector_index == 1)
+      #debug = (sector_index == 9)
       if on_starting_room
         on_starting_room = false
         
@@ -422,7 +427,7 @@ module MapRandomizer
           break
         end
         
-        #p valid_room_positions.map{|x| x[:room].room_str + " opened: #{x[:number_of_spots_opened_up]}, closed: #{x[:number_of_spots_closed_up]}"}
+        p valid_room_positions.map{|x| x[:room].room_str + " opened: #{x[:number_of_spots_opened_up]}, closed: #{x[:number_of_spots_closed_up]}"} if debug
         
         special_room_positions = valid_room_positions.select do |room_position|
           room = room_position[:room]
@@ -1324,7 +1329,7 @@ module MapRandomizer
     end
     
     #p [area_index, map_sector_index]
-    filename = "./logs/maptest %02X" % area_index
+    filename = "./logs/maptest #{GAME} %02X" % area_index
     filename += "-%02X" % map_sector_index if GAME == "dos"
     if filename_num
       filename += " #{filename_num}" % [area_index, map_sector_index]
