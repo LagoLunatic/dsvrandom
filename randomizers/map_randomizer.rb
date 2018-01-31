@@ -195,7 +195,7 @@ module MapRandomizer
         unreachable_subroom_doors
       )
       
-      if result == :redo
+      if result == :mustredo || (result == :shouldredo && redo_counts_per_sector[sector_index] <= 7)
         if redo_counts_per_sector[sector_index] > 15
           raise "Map randomizer had to redo area %02X sector %02X more than 15 times." % [area_index, sector_index]
         end
@@ -572,7 +572,13 @@ module MapRandomizer
     unplaced_progress_important_rooms = sector_rooms & checker.progress_important_rooms
     if unplaced_progress_important_rooms.any?
       puts "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
-      return :redo
+      return :mustredo
+    end
+    
+    ratio_unplaced_rooms = sector_rooms.size.to_f / total_sector_rooms
+    if ratio_unplaced_rooms > 0.75
+      puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector."
+      return :shouldredo
     end
     
     # Keep track of the rooms we never used.
