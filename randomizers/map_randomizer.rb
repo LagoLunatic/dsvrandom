@@ -714,7 +714,7 @@ module MapRandomizer
         if room
           room_x = room.room_xpos_on_map
           room_y = room.room_ypos_on_map
-          next if room_x == 63 || room_y == 47 # Dummied out room
+          next if room_x == 63 || room_y == 47 || @rooms_unused_by_map_rando.include?(room) # Dummied out room
           
           if room_x < min_x
             min_x = room_x
@@ -1469,7 +1469,7 @@ module MapRandomizer
       sector.rooms.each do |room|
         room_x = room.room_xpos_on_map
         room_y = room.room_ypos_on_map
-        next if room_x == 63 || room_y == 47 # Dummied out room
+        next if room_x == 63 || room_y == 47 || @rooms_unused_by_map_rando.include?(room) # Dummied out room
         
         if room_x < min_x
           min_x = room_x
