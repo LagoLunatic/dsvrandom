@@ -212,7 +212,7 @@ module MapRandomizer
       
       remaining_sectors_to_place.delete(sector_index)
       
-      regenerate_map(area_index, sector_index)
+      #regenerate_map(area_index, sector_index)
       
       #sectors_done += 1
       #percent_done = sectors_done.to_f / total_sectors
@@ -1343,7 +1343,9 @@ module MapRandomizer
     
     #p [area_index, map_sector_index]
     filename = "./logs/maptest #{GAME} %02X" % area_index
-    filename += "-%02X" % map_sector_index if GAME == "dos"
+    if GAME == "dos" && map_sector_index == 0xB
+      filename += "-abyss" % map_sector_index
+    end
     if filename_num
       filename += " #{filename_num}" % [area_index, map_sector_index]
     end
