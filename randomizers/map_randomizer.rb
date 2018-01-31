@@ -205,6 +205,14 @@ module MapRandomizer
         unplaced_transition_rooms = orig_unplaced_transition_rooms
         placed_transition_rooms   = orig_placed_transition_rooms
         unreachable_subroom_doors = orig_unreachable_subroom_doors
+        
+        orig_sector_rooms.each do |room|
+          # Any rooms that got placed need to be moved back off the map.
+          room.room_xpos_on_map = 63
+          room.room_ypos_on_map = 47
+          room.write_to_rom()
+        end
+        
         redo_counts_per_sector[sector_index] += 1
         puts "Map rando is redoing sector #{sector_index} (time #{redo_counts_per_sector[sector_index]})"
         redo
