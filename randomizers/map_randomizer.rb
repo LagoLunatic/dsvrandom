@@ -212,7 +212,7 @@ module MapRandomizer
       
       remaining_sectors_to_place.delete(sector_index)
       
-      #regenerate_map(area_index, sector_index)
+      #regenerate_map(area_index, sector_index, should_recenter_map: false)
       
       #sectors_done += 1
       #percent_done = sectors_done.to_f / total_sectors
@@ -308,6 +308,7 @@ module MapRandomizer
     while true
       debug = false
       #debug = (sector_index == 9)
+      #debug = true
       if on_starting_room
         on_starting_room = false
         
@@ -565,7 +566,7 @@ module MapRandomizer
     
     unplaced_progress_important_rooms = sector_rooms & checker.progress_important_rooms
     if unplaced_progress_important_rooms.any?
-      #raise "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
+      puts "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
       return :redo
     end
     
@@ -1331,14 +1332,14 @@ module MapRandomizer
     end
   end
   
-  def regenerate_map(area_index, map_sector_index, filename_num=nil)
+  def regenerate_map(area_index, map_sector_index, filename_num=nil, should_recenter_map: true)
     map = game.get_map(area_index, map_sector_index)
     area = game.areas[area_index]
     
     if GAME == "dos"
       regenerate_map_dos(map, area)
     else
-      regenerate_map_por_ooe(map, area)
+      regenerate_map_por_ooe(map, area, should_recenter_map: should_recenter_map)
     end
     
     #p [area_index, map_sector_index]
@@ -1438,7 +1439,7 @@ module MapRandomizer
     map.write_to_rom()
   end
   
-  def regenerate_map_por_ooe(map, area)
+  def regenerate_map_por_ooe(map, area, should_recenter_map: true)
     map.tiles.clear() # Empty the array of vanilla map tiles.
     
     min_x = 9999
@@ -1469,29 +1470,31 @@ module MapRandomizer
       end
     end
     
-    # Push the map up into the top left corner if it's not already.
-    if min_x > 0 || min_y > 0
-      area.sectors.each do |sector|
-        sector.rooms.each do |room|
-          unless room.room_xpos_on_map == 63 || room.room_ypos_on_map == 47 # Skip dummied out rooms
-            room.room_xpos_on_map -= min_x
-            room.room_ypos_on_map -= min_y
-            room.write_to_rom()
+    if should_recenter_map
+      # Push the map up into the top left corner if it's not already.
+      if min_x > 0 || min_y > 0
+        area.sectors.each do |sector|
+          sector.rooms.each do |room|
+            unless room.room_xpos_on_map == 63 || room.room_ypos_on_map == 47 # Skip dummied out rooms
+              room.room_xpos_on_map -= min_x
+              room.room_ypos_on_map -= min_y
+              room.write_to_rom()
+            end
           end
         end
+        
+        max_x -= min_x
+        max_y -= min_y
+        min_x = 0
+        min_y = 0
       end
       
-      max_x -= min_x
-      max_y -= min_y
-      min_x = 0
-      min_y = 0
+      # Visually center the map.
+      x_offset_in_tiles = (64 - max_x) / 2
+      y_offset_in_tiles = (48 - max_y) / 2
+      map.draw_x_offset = x_offset_in_tiles / 2 # These properties are in terms of pairs of 2 tiles, so divide by 2 again.
+      map.draw_y_offset = y_offset_in_tiles / 2
     end
-    
-    # Visually center the map.
-    x_offset_in_tiles = (64 - max_x) / 2
-    y_offset_in_tiles = (48 - max_y) / 2
-    map.draw_x_offset = x_offset_in_tiles / 2 # These properties are in terms of pairs of 2 tiles, so divide by 2 again.
-    map.draw_y_offset = y_offset_in_tiles / 2
     
     (0..max_y).each do |y|
       (0..max_x).each do |x|
