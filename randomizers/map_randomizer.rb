@@ -245,35 +245,12 @@ module MapRandomizer
     end
     
     if sector_index != area_starting_room.sector_index
-      open_transition_rooms = placed_transition_rooms.select do |room|
-        x = room.room_xpos_on_map
-        y = room.room_ypos_on_map
-        if x > 0 && map_spots[x-1][y].nil?
-          true
-        elsif x < map_width-1 && map_spots[x+1][y].nil?
-          true
-        else
-          false
-        end
-      end
-      
-      if open_transition_rooms.empty?
-        puts "No transition room to use as a base!"
-        return
-      end
-      
-      transition_room_to_start_sector = open_transition_rooms.sample(random: rng)
+      transition_room_to_start_sector = unplaced_transition_rooms.sample(random: rng)
       puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})"
     end
     
-    transition_rooms_in_this_sector = unplaced_transition_rooms.sample(2, random: rng)
     total_sector_rooms = sector_rooms.size
-    total_sector_transition_rooms = transition_rooms_in_this_sector.size
     puts "Total sector rooms available to place: #{total_sector_rooms}"
-    puts "Transition rooms to place: #{total_sector_transition_rooms}"
-    #puts "Which non-transition rooms to place: #{sector_rooms.map{|x| x.room_str}.join(", ")}"
-    #puts "Which transition rooms to place: #{transition_rooms_in_this_sector.map{|x| x.room_str}.join(", ")}"
-    sector_rooms += transition_rooms_in_this_sector
     
     # Method: Go through all open spaces that would connect to a place door, and find rooms that would fit in those spots.
     # Then select one of those rooms at random and place it.
@@ -305,10 +282,11 @@ module MapRandomizer
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
     on_starting_room = (sector_index == area_starting_room.sector_index)
+    on_starting_transition_room = !on_starting_room
     while true
       debug = false
       #debug = (sector_index == 9)
-      #debug = true
+      debug = true
       if on_starting_room
         on_starting_room = false
         
@@ -319,6 +297,31 @@ module MapRandomizer
           x: map_width/2, # Place at the center of the map.
           y: map_height/2,
         }
+      elsif on_starting_transition_room
+        on_starting_transition_room = false
+        
+        room = transition_room_to_start_sector
+        
+        open_spots = get_open_spots(
+          map_spots, map_width, map_height,
+          unreachable_subroom_doors: unreachable_subroom_doors
+        )
+        
+        p "open_spots: #{open_spots}" if debug
+        
+        if open_spots.empty?
+          puts "No open spots on the map to place the starting transition room!"
+          break
+        end
+        
+        # TODO: instead of picking a totally random spot, choose the most open spot that will allow for the biggest area to place this sector in.
+        x, y, _, _ = open_spots.sample(random: rng)
+        
+        chosen_room_position = {
+          room: room,
+          x: x,
+          y: y,
+        }
       else
         break if sector_rooms.empty?
         
@@ -328,15 +331,14 @@ module MapRandomizer
           transition_room_to_allow_connecting_to: transition_room_to_start_sector
         )
         
+        total_number_of_open_spots = open_spots.size
+        
         p "open_spots: #{open_spots}" if debug
         
         if open_spots.empty?
           puts "No open spots on the map!"
           break
         end
-        
-        #open_spots.shuffle!(random: rng)
-        #sector_rooms.shuffle!(random: rng)
         
         valid_room_positions = []
         open_spots.each do |x, y, direction, dest_room|
@@ -353,7 +355,6 @@ module MapRandomizer
               next
             end
             
-            #room_doors_to_attach.shuffle!(random: rng)
             room_doors_to_attach.each do |door|
               case direction
               when :left
@@ -421,15 +422,19 @@ module MapRandomizer
                   end
                 end
                 
-                valid_room_positions << {
-                  room: room,
-                  x: x_to_place_room_at,
-                  y: y_to_place_room_at,
-                  #inside_door_strs_connecting_to_adjacent_rooms: inside_door_strs_connecting_to_adjacent_rooms,
-                  number_of_spots_opened_up: number_of_spots_opened_up,
-                  number_of_spots_closed_up: number_of_spots_closed_up,
-                  diff_in_num_spots: number_of_spots_opened_up - number_of_spots_closed_up,
-                }
+                diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
+                
+                if (total_number_of_open_spots + diff_in_num_spots) > 0 # Don't allow positions that would block off literally every open spot.
+                  valid_room_positions << {
+                    room: room,
+                    x: x_to_place_room_at,
+                    y: y_to_place_room_at,
+                    #inside_door_strs_connecting_to_adjacent_rooms: inside_door_strs_connecting_to_adjacent_rooms,
+                    number_of_spots_opened_up: number_of_spots_opened_up,
+                    number_of_spots_closed_up: number_of_spots_closed_up,
+                    diff_in_num_spots: diff_in_num_spots,
+                  }
+                end
               end
             end
           end
@@ -550,7 +555,7 @@ module MapRandomizer
       end
       
       
-      #recenter_map_spots(map_spots, map_width, map_height)
+      recenter_map_spots(map_spots, map_width, map_height)
       
       #if @transition_rooms.include?(room)
       #  regenerate_map()
@@ -574,7 +579,6 @@ module MapRandomizer
     @rooms_unused_by_map_rando += sector_rooms
     
     puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
-    puts "Successfully placed transition rooms: #{num_placed_transition_rooms}"
   end
   
   def select_next_room_to_place(rooms)
