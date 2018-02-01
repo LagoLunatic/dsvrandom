@@ -279,6 +279,11 @@ module PickupRandomizer
             # Don't start placing villagers until Albus is accessible.
             valid_pickups -= RANDOMIZABLE_VILLAGER_NAMES
           end
+          
+          if valid_pickups.empty?
+            # But if the only things left to place are villagers, we have no choice but to place them before Albus is accessible.
+            valid_pickups = pickups_by_locations.keys
+          end
         end
         
         pickup_global_id = valid_pickups.sample(random: rng)
