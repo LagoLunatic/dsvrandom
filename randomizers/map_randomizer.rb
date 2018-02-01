@@ -287,7 +287,7 @@ module MapRandomizer
     while true
       debug = false
       #debug = (sector_index == 9)
-      debug = true
+      #debug = true
       if on_starting_room
         on_starting_room = false
         
@@ -407,8 +407,6 @@ module MapRandomizer
               end
               
               if valid_placement
-                #inside_door_strs_connecting_to_adjacent_rooms = [] # TODO inside_doors_connecting_to_adjacent_rooms.map{|door| door.door_str}
-                
                 number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x_to_place_room_at, y_to_place_room_at)
                 
                 diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
@@ -418,7 +416,7 @@ module MapRandomizer
                     room: room,
                     x: x_to_place_room_at,
                     y: y_to_place_room_at,
-                    #inside_door_strs_connecting_to_adjacent_rooms: inside_door_strs_connecting_to_adjacent_rooms,
+                    inside_door_str_used_to_attach: door.door_str,
                     number_of_spots_opened_up: number_of_spots_opened_up,
                     number_of_spots_closed_up: number_of_spots_closed_up,
                     diff_in_num_spots: diff_in_num_spots,
@@ -496,22 +494,22 @@ module MapRandomizer
         end
       end
       
-      # TODO get this subroom stuff working again
-      #door_strs_accessible_in_this_room = chosen_room_position[:inside_door_strs_connecting_to_adjacent_rooms]
-      #subrooms_in_room = checker.subrooms_doors_only[room.room_str]
-      #if subrooms_in_room
-      #  subrooms_in_room.each do |door_indexes_in_subroom|
-      #    door_strs_in_subroom = door_indexes_in_subroom.map{|door_index| "#{room.room_str}_%03X" % door_index}
-      #    #p "SUBROOM: #{door_strs_in_subroom}"
-      #    if (door_strs_in_subroom & door_strs_accessible_in_this_room).empty?
-      #      # None of the doors in this subroom are connected on the map yet. So mark all the doors in this subroom as being inaccessible.
-      #      unreachable_subroom_doors += door_strs_in_subroom
-      #      #puts "ROOM #{room.room_str} HAS INACCESSIBLE SUBROOMS"
-      #      
-      #      # TODO: what about if we gain access to this subroom via a room placed later in the logic?
-      #    end
-      #  end
-      #end
+      inside_door_str_used_to_attach = chosen_room_position[:inside_door_str_used_to_attach]
+      subrooms_in_room = checker.subrooms_doors_only[room.room_str]
+      if subrooms_in_room
+        subrooms_in_room.each do |door_indexes_in_subroom|
+          door_strs_in_subroom = door_indexes_in_subroom.map{|door_index| "#{room.room_str}_%03X" % door_index}
+          if !door_strs_in_subroom.include?(inside_door_str_used_to_attach)
+            # This subroom is not the subroom we just connected this room with. So mark all the doors in this subroom as being inaccessible.
+            unreachable_subroom_doors.concat(door_strs_in_subroom)
+          else
+            # This subroom IS the subroom we just connected this room with. So unmark all the doors in this subroom as being inaccessible.
+            door_strs_in_subroom.each do |door_str|
+              unreachable_subroom_doors.delete(door_str)
+            end
+          end
+        end
+      end
       
       if unplaced_transition_rooms.include?(room)
         unplaced_transition_rooms.delete(room)
