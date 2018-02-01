@@ -218,6 +218,9 @@ module MapRandomizer
         redo
       end
       
+      # Keep track of the rooms we never used.
+      @rooms_unused_by_map_rando += sector_rooms
+      
       remaining_sectors_to_place.delete(sector_index)
       
       regenerate_map(area_index, sector_index, should_recenter_map: false)
@@ -545,9 +548,6 @@ module MapRandomizer
       puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector."
       return :shouldredo
     end
-    
-    # Keep track of the rooms we never used.
-    @rooms_unused_by_map_rando += sector_rooms
     
     puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
   end
