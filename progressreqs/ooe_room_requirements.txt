@@ -141,8 +141,9 @@ World map unlocks:
   0D-00-09_000: 0B-00-00_000 # giant -> tristis
   0F-00-00_000: 11-00-00_000 # misty -> skeleton
 Progress important rooms:
-  # TODO
   - 00-0B-00 # Final boss fight
+  - 02-00-06 # Barlowe boss fight
+  - 0E-00-09 # Albus boss fight
 Subrooms:
   03-00-01:
     -
