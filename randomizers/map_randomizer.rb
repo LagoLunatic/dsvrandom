@@ -221,7 +221,7 @@ module MapRandomizer
       remaining_sectors_to_place.delete(sector_index)
       
       regenerate_map(area_index, sector_index, should_recenter_map: false)
-      gets
+      #gets
       
       #sectors_done += 1
       #percent_done = sectors_done.to_f / total_sectors
@@ -275,18 +275,10 @@ module MapRandomizer
     
     # TODO: keep list of all open spots and just add and delete from this list instead of recalculating it from scratch every loop to improve performance.
     
-    # TODO: currently it places 2 transition rooms in the current sector to give the next sector somewhere to connect to.
-    # but that doesn't work so well. so instead:
-    # in the next sector, start out by attempting to place a transition room at every spot, and then placing rooms in this next sector connected to it.
-    # whichever spot for the transition room results in the most placable sector rooms, go with that spot.
-    # or alternatively:
-    # start out the next sector by placing a transition room at one random spot. then place as many rooms as possible connected there.
-    # but if some progress-important rooms didn't get placed, throw an error. and if barely any normal rooms got placed, also throw an error. then retry that sector until there's no more errors.
-    
-    # TODO: problem... some sectors only work if they start in a specific direction.
-    # for example, the throne room sector in PoR only works if it's attached on the left of a transition room.
-    # if it's attached on the right of one, then no possible configuration of rooms in the throne room will lead to the dracula fight room being placed.
-    # solution: manually add new rooms to these sectors to allow for them to work from either direction.
+    # TODO: don't place all rooms in a sector at once. this can lead to not enough open spots being left to place the next transition room and sector with it.
+    # instead go through and place SOME normal rooms, as well as boss rooms and progress important rooms.
+    # go through each sector to ensure some rooms from every sector get placed.
+    # then go BACK through each sector (again in random order) and try to place any rooms that didn't get placed.
     
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
@@ -482,28 +474,6 @@ module MapRandomizer
         
         
         chosen_room_position = possible_room_positions.sample(random: rng)
-        
-        
-        
-        
-        
-        
-        # TODO BELOW STUFF
-        
-        #if @transition_rooms.include?(room)
-        #  valid_spots = get_valid_positions_for_room(
-        #    room, map_spots, map_width, map_height,
-        #    limit_connections_to_sector: sector_index,
-        #    transition_room_to_allow_connecting_to: transition_room_to_start_sector,
-        #    unreachable_subroom_doors: unreachable_subroom_doors
-        #  )
-        #else
-        #  valid_spots = get_valid_positions_for_room(
-        #    room, map_spots, map_width, map_height,
-        #    transition_room_to_allow_connecting_to: transition_room_to_start_sector,
-        #    unreachable_subroom_doors: unreachable_subroom_doors
-        #  )
-        #end
       end
       
       room = chosen_room_position[:room]
@@ -623,37 +593,6 @@ module MapRandomizer
     end
     
     return [number_of_spots_opened_up, number_of_spots_closed_up]
-  end
-  
-  def select_next_room_to_place(rooms)
-    # so this function causes problems... if there's a progress important room it will just keep returning that 4 times until it gives up for good on that room.
-    # even if the reason is as simple as there being no matching direction doors at the moment.
-    
-    rooms_by_num_doors = rooms.group_by do |room|
-      room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-      room_doors.size
-    end
-    
-    rooms_with_several_doors = rooms_by_num_doors.select{|num_doors, rooms| num_doors >= 3}
-    
-    progress_important_rooms = rooms & checker.progress_important_rooms
-    
-    transition_rooms = rooms & @transition_rooms
-    
-    if rooms_with_several_doors.any?
-      max_num_doors = rooms_by_num_doors.keys.max
-      rooms_with_max_doors = rooms_by_num_doors[max_num_doors]
-      rooms_to_choose_from = rooms_with_max_doors
-    elsif progress_important_rooms.any?
-      rooms_to_choose_from = progress_important_rooms
-    elsif transition_rooms.any?
-      rooms_to_choose_from = transition_rooms
-    else
-      rooms_to_choose_from = rooms
-    end
-    
-    room = rooms_to_choose_from.sample(random: rng)
-    return room
   end
   
   def remove_useless_transition_rooms(map_spots, map_width, map_height, placed_transition_rooms)
@@ -1118,130 +1057,6 @@ module MapRandomizer
     return open_spots
   end
   
-  def get_valid_positions_for_room(room, map_spots, map_width, map_height, limit_connections_to_sector: nil, transition_room_to_allow_connecting_to: nil, unreachable_subroom_doors: [])
-    valid_spots = []
-    transition_rooms_not_allowed_to_connect_to = @transition_rooms - [transition_room_to_allow_connecting_to]
-    
-    (map_width-room.width+1).times do |room_x|
-      (map_height-room.height+1).times do |room_y|
-        debug = false
-        
-        # Don't place rooms right on the edge of the map
-        next if room_x == 0
-        next if room_y == 0
-        next if room_x + room.width - 1 == map_width - 1
-        next if room_y + room.height - 1 == map_height - 1
-        
-        spot_is_free = true
-        
-        (room_x..room_x+room.width-1).each do |tile_x|
-          (room_y..room_y+room.height-1).each do |tile_y|
-            if !map_spots[tile_x][tile_y].nil?
-              # Spot occupied, don't place another room overlapping it.
-              spot_is_free = false
-            end
-          end
-        end
-        
-        next unless spot_is_free
-            
-        adjacent_rooms = []
-        inside_doors_connecting_to_adjacent_rooms = []
-        
-        room.width.times do |x_in_room|
-          room.height.times do |y_in_room|
-            tile_x = room_x + x_in_room
-            tile_y = room_y + y_in_room
-            room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-            
-            left_door = room_doors.find{|door| door.direction == :left && door.y_pos == y_in_room}
-            if left_door && tile_x > 0 && map_spots[tile_x-1][tile_y]
-              dest_room = map_spots[tile_x-1][tile_y]
-              if check_rooms_can_be_connected(room, dest_room)
-                y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-                #p unreachable_subroom_doors.map{|x| x.door_str} if room.sector_index == 5
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
-                right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
-                if right_dest_door && !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
-                  adjacent_rooms << dest_room
-                  inside_doors_connecting_to_adjacent_rooms << left_door
-                  #puts "connected to the left: #{dest_room.room_str}" if debug
-                end
-              end
-            end
-            
-            right_door = room_doors.find{|door| door.direction == :right && door.y_pos == y_in_room}
-            if right_door && tile_x < map_width-1 && map_spots[tile_x+1][tile_y]
-              dest_room = map_spots[tile_x+1][tile_y]
-              if check_rooms_can_be_connected(room, dest_room)
-                y_in_dest_room = tile_y - dest_room.room_ypos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
-                left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
-                if left_dest_door && !transition_rooms_not_allowed_to_connect_to.include?(dest_room)
-                  adjacent_rooms << dest_room
-                  inside_doors_connecting_to_adjacent_rooms << right_door
-                  #puts "connected to the right: #{dest_room.room_str}" if debug
-                end
-              end
-            end
-            
-            up_door = room_doors.find{|door| door.direction == :up && door.x_pos == x_in_room}
-            if up_door && tile_y > 0 && map_spots[tile_x][tile_y-1]
-              dest_room = map_spots[tile_x][tile_y-1]
-              if check_rooms_can_be_connected(room, dest_room)
-                x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
-                down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
-                if down_dest_door
-                  adjacent_rooms << dest_room
-                  inside_doors_connecting_to_adjacent_rooms << up_door
-                  #puts "connected up: #{dest_room.room_str}" if debug
-                end
-              end
-            end
-            
-            down_door = room_doors.find{|door| door.direction == :down && door.x_pos == x_in_room}
-            if down_door && tile_y < map_height-1 && map_spots[tile_x][tile_y+1]
-              dest_room = map_spots[tile_x][tile_y+1]
-              if check_rooms_can_be_connected(room, dest_room)
-                x_in_dest_room = tile_x - dest_room.room_xpos_on_map
-                dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
-                up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
-                if up_dest_door
-                  adjacent_rooms << dest_room
-                  inside_doors_connecting_to_adjacent_rooms << down_door
-                  #puts "connected down: #{dest_room.room_str}" if debug
-                end
-              end
-            end
-            
-            #if (tile_x < map_width-1 && map_spots[tile_x+1][tile_y]) ||
-            #   (tile_x > 0 && map_spots[tile_x-1][tile_y]) ||
-            #   (tile_y < map_height-1 && map_spots[tile_x][tile_y+1]) ||
-            #   (tile_y > 0 && map_spots[tile_x][tile_y-1])
-            #  # Spot is connected to another room, allow placing a room here.
-            #  spot_is_connected = true
-            #end
-          end
-        end
-        
-        if limit_connections_to_sector && !@transition_rooms.include?(room)
-          adjacent_rooms.select! do |adjacent_room|
-            adjacent_room.sector_index == limit_connections_to_sector || adjacent_room == transition_room_to_allow_connecting_to
-          end
-        end
-        
-        next if adjacent_rooms.empty?
-        
-        inside_door_strs_connecting_to_adjacent_rooms = inside_doors_connecting_to_adjacent_rooms.map{|door| door.door_str}
-        
-        valid_spots << [room_x, room_y, inside_door_strs_connecting_to_adjacent_rooms]
-      end
-    end
-    
-    return valid_spots
-  end
-  
   def check_rooms_can_be_connected(room_a, room_b)
     if room_a.sector_index == room_b.sector_index
       return true
@@ -1253,103 +1068,6 @@ module MapRandomizer
       return true
     end
     return false
-  end
-  
-  def update_room_positions_on_maps
-    unvisited_rooms = []
-    game.each_room do |room|
-      next if (0xA..0x10).include?(room.sector_index)
-      unvisited_rooms << room
-    end
-    current_room = unvisited_rooms.first
-    (unvisited_rooms-[current_room]).each do |room|
-      room.room_xpos_on_map = 0
-      room.room_ypos_on_map = 0
-    end
-    rooms_to_do = [current_room]
-    done_rooms = []
-    while true
-      unvisited_rooms.delete(current_room)
-      rooms_to_do.delete(current_room)
-      
-      curr_x = current_room.room_xpos_on_map
-      curr_y = current_room.room_ypos_on_map
-      
-      room_doors = current_room.doors.reject do |door|
-        checker.inaccessible_doors.include?(door.door_str)
-      end
-      room_doors.uniq!{|door| door.destination_door.room}
-      room_doors.each do |door|
-        dest_door = door.destination_door
-        dest_room = dest_door.room
-        
-        door_x = door.x_pos
-        door_x = -1 if door_x == 0xFF
-        door_y = door.y_pos
-        door_y = -1 if door_y == 0xFF
-        dest_door_x = dest_door.x_pos
-        dest_door_x = -1 if dest_door_x == 0xFF
-        dest_door_y = dest_door.y_pos
-        dest_door_y = -1 if dest_door_y == 0xFF
-        
-        new_x = curr_x + door_x - dest_door_x
-        new_y = curr_y + door_y - dest_door_y
-        case door.direction
-        when :left
-          new_x += 1
-        when :right
-          new_x -= 1
-        when :up
-          new_y += 1
-        when :down
-          new_y -= 1
-        end
-        dest_room.room_xpos_on_map = new_x
-        dest_room.room_ypos_on_map = new_y
-        
-        rooms_to_do << dest_room
-      end
-      
-      current_room.write_to_rom()
-      done_rooms << current_room
-      
-      puts current_room.room_str
-      if !unvisited_rooms.find{|x| x.room_str == "00-01-00"}
-        puts "!!!"
-      end
-      
-      rooms_to_do = rooms_to_do.uniq & unvisited_rooms
-      break if rooms_to_do.empty?
-      current_room = rooms_to_do.first
-    end
-    puts "undone rooms: #{unvisited_rooms.size}"
-    unvisited_rooms.each_with_index do |room, i|
-      room.room_xpos_on_map = 0#i
-      room.room_ypos_on_map = 0
-      puts "  #{room.room_str}"
-    end
-    
-    min_x = done_rooms.map{|room| room.room_xpos_on_map}.min
-    if min_x < 1
-      offset = 1 - min_x
-      done_rooms.each do |room|
-        room.room_xpos_on_map += offset
-        room.room_xpos_on_map = room.room_xpos_on_map % 64 # TODO
-        room.write_to_rom()
-      end
-    end
-    min_y = done_rooms.map{|room| room.room_ypos_on_map}.min
-    if min_y < 1
-      offset = 1 - min_y
-      done_rooms.each do |room|
-        room.room_ypos_on_map += offset
-        room.room_ypos_on_map = room.room_ypos_on_map % 0x30 # TODO
-        room.write_to_rom()
-      end
-    end
-    
-    #regenerate_map()
-    #gets
   end
   
   def regenerate_all_maps
@@ -1390,7 +1108,6 @@ module MapRandomizer
       regenerate_map_por_ooe(map, area, should_recenter_map: should_recenter_map)
     end
     
-    #p [area_index, map_sector_index]
     filename = "./logs/maptest #{GAME} %02X" % area_index
     if GAME == "dos" && map_sector_index == 0xB
       filename += "-abyss" % map_sector_index
