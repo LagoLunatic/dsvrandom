@@ -1097,6 +1097,12 @@ class Randomizer
     end
     
     if GAME == "por"
+      # The conditions for unlocking the second tier of portraits is different in Richter/Sisters/Old Axe Armor mode compared to Jonathan mode.
+      # The logic only takes Jonathan mode into account, so change the second tier of portraits to always use the Jonathan mode conditions even in the other modes.
+      game.fs.write(0x02078F98, [0xE3A01000].pack("V"))
+    end
+    
+    if GAME == "por"
       # Fix a bug in the base game where you have a couple seconds after picking up the cog where you can use a magical ticket to skip fighting Legion.
       # To do this we make Legion's horizontal boss doors turn on global flag 2 (in the middle of a boss fight, prevents magical ticket use) as soon as you enter the room, in the same line that it was turning on global flag 1.
       game.fs.load_overlay(98)
