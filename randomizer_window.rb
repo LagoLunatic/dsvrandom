@@ -467,7 +467,7 @@ class RandomizerWindow < Qt::Dialog
         Qt.execute_in_main_thread do
           if @progress_dialog
             @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
-            @progress_dialog.hide()
+            @progress_dialog.reset()
             @progress_dialog = nil
           end
           
@@ -479,7 +479,7 @@ class RandomizerWindow < Qt::Dialog
       Qt.execute_in_main_thread do
         if @progress_dialog
           @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
-          @progress_dialog.hide()
+          @progress_dialog.reset()
           @progress_dialog = nil
         end
         
@@ -529,7 +529,7 @@ class RandomizerWindow < Qt::Dialog
       Qt.execute_in_main_thread do
         if @progress_dialog
           @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
-          @progress_dialog.close()
+          @progress_dialog.reset()
           @progress_dialog = nil
         end
         
@@ -575,7 +575,6 @@ class ProgressDialog < Qt::ProgressDialog
   end
   
   def cancel_thread
-    puts "Cancelled."
     @thread.kill
     self.close()
   end
