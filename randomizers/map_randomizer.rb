@@ -1,5 +1,20 @@
 
 module MapRandomizer
+  DOS_WARP_ROOM_STRS = [
+    "00-00-18",
+    "00-01-3E",
+    "00-02-24",
+    "00-03-23",
+    "00-04-17",
+    "00-05-1E",
+    "00-05-1F",
+    "00-06-20",
+    "00-07-10",
+    "00-08-21",
+    "00-09-1F",
+    "00-0B-23",
+  ]
+  
   def randomize_doors_no_overlap(&block)
     add_extra_helper_rooms()
     
@@ -1091,26 +1106,15 @@ module MapRandomizer
   def regenerate_all_maps
     case GAME
     when "dos"
-      # Fix warps.
-      map = game.get_map(0, 0)
-      map.warp_rooms.each do |warp|
-        next if warp.sector_index == 0xB # Abyss
-        
-        sector_rooms = game.areas[0].sectors[warp.sector_index].rooms
-        room = sector_rooms.find{|room| room.entities.any?{|e| e.is_special_object? && e.subtype == 0x31}}
-        warp.x_pos_in_tiles = room.room_xpos_on_map
-        warp.y_pos_in_tiles = room.room_ypos_on_map
-      end
-      map.write_to_rom()
-      
-      regenerate_map(0, 0)
-      regenerate_map(0, 0xB)
+      regenerate_map(0, 0) # Castle
+      regenerate_map(0, 0xB) # Abyss
     when "por"
       (0..9).each do |area_index|
         regenerate_map(area_index, 0)
       end
     when "ooe"
       (0..0x12).each do |area_index|
+        next if area_index == 1 # Skip Wygol
         regenerate_map(area_index, 0)
       end
     end
@@ -1139,6 +1143,20 @@ module MapRandomizer
   end
   
   def regenerate_map_dos(map, area)
+    unless map.is_abyss
+      # Fix warps.
+      map.warp_rooms.each_with_index do |warp, warp_index|
+        if warp_index == 0xB # Abyss
+          warp.x_pos_in_tiles = 54
+          warp.y_pos_in_tiles = 42
+        else
+          room = game.room_by_str(DOS_WARP_ROOM_STRS[warp_index])
+          warp.x_pos_in_tiles = room.room_xpos_on_map
+          warp.y_pos_in_tiles = room.room_ypos_on_map
+        end
+      end
+    end
+    
     map.tiles.each do |tile|
       tile.is_blank = true
       
