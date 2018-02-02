@@ -144,6 +144,7 @@ Progress important rooms:
   - 00-0B-00 # Final boss fight
   - 02-00-06 # Barlowe boss fight
   - 0E-00-09 # Albus boss fight
+  - 11-00-08 # Event where you rescue George
 Subrooms:
   03-00-01:
     -
