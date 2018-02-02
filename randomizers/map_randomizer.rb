@@ -417,7 +417,7 @@ module MapRandomizer
               valid_placement = true
               (x_to_place_room_at..x_to_place_room_at+room.width-1).each do |x_to_check|
                 (y_to_place_room_at..y_to_place_room_at+room.height-1).each do |y_to_check|
-                  if x_to_check >= map_width-1 || y_to_check >= map_height-1 || map_spots[x_to_check][y_to_check]
+                  if !(1..map_width-1).include?(x_to_check) || !(1..map_height-1).include?(y_to_check) || map_spots[x_to_check][y_to_check]
                     valid_placement = false
                     break
                   end
