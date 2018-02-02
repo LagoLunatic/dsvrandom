@@ -166,8 +166,19 @@ module MapRandomizer
     starting_room_sector = area_starting_room.sector_index
     remaining_sectors_to_place = sectors_for_area.keys
     redo_counts_per_sector = Hash.new(0)
+    unplaced_rooms_for_each_sector = {}
+    sectors_for_area.keys.each do |sector_index|
+      unplaced_rooms_for_each_sector[sector_index] = sectors_for_area[sector_index].select do |room|
+        next if room.layers.empty?
+        next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
+        next if @transition_rooms.include?(room)
+        
+        true
+      end
+    end
     
     on_starting_sector = true
+    placement_mode = :placing_skeleton
     while true
       if on_starting_sector
         on_starting_sector = false
@@ -176,9 +187,9 @@ module MapRandomizer
         sector_index = remaining_sectors_to_place.sample(random: rng)
       end
       
-      sector_rooms = sectors_for_area[sector_index].reject{|room| @transition_rooms.include?(room)}
+      unplaced_sector_rooms = unplaced_rooms_for_each_sector[sector_index]
       
-      orig_sector_rooms              = sector_rooms.dup
+      orig_unplaced_sector_rooms     = unplaced_sector_rooms.dup
       orig_map_spots                 = Array.new(map_width) { Array.new(map_height) }
       map_spots.each_with_index do |col, x|
         orig_map_spots[x] = col.dup
@@ -188,11 +199,12 @@ module MapRandomizer
       orig_unreachable_subroom_doors = unreachable_subroom_doors.dup
       
       result = randomize_doors_no_overlap_for_sector(
-        sector_index, sector_rooms,
+        sector_index, unplaced_sector_rooms,
         map_spots, map_width, map_height,
         area_starting_room,
         unplaced_transition_rooms, placed_transition_rooms,
-        unreachable_subroom_doors
+        unreachable_subroom_doors,
+        placement_mode
       )
       
       if result == :mustredo || (result == :shouldredo && redo_counts_per_sector[sector_index] <= 7)
@@ -200,13 +212,13 @@ module MapRandomizer
           raise "Map randomizer had to redo area %02X sector %02X more than 15 times." % [area_index, sector_index]
         end
         
-        sector_rooms              = orig_sector_rooms
+        unplaced_sector_rooms     = orig_unplaced_sector_rooms
         map_spots                 = orig_map_spots
         unplaced_transition_rooms = orig_unplaced_transition_rooms
         placed_transition_rooms   = orig_placed_transition_rooms
         unreachable_subroom_doors = orig_unreachable_subroom_doors
         
-        (orig_sector_rooms + orig_unplaced_transition_rooms).each do |room|
+        (orig_unplaced_sector_rooms + orig_unplaced_transition_rooms).each do |room|
           # Any rooms that got placed need to be moved back off the map.
           room.room_xpos_on_map = 63
           room.room_ypos_on_map = 47
@@ -219,7 +231,7 @@ module MapRandomizer
       end
       
       # Keep track of the rooms we never used.
-      @rooms_unused_by_map_rando += sector_rooms
+      @rooms_unused_by_map_rando += unplaced_sector_rooms
       
       remaining_sectors_to_place.delete(sector_index)
       
@@ -231,7 +243,14 @@ module MapRandomizer
       #yield percent_done
       
       if remaining_sectors_to_place.empty?
-        break
+        if placement_mode == :placing_skeleton
+          # Finished placing the skeleton. Now place the dead ends for all sectors.
+          placement_mode = :placing_dead_ends
+          remaining_sectors_to_place = sectors_for_area.keys
+        else
+          # Finished placing the dead ends too.
+          break
+        end
       end
     end
     
@@ -242,26 +261,18 @@ module MapRandomizer
     replace_wooden_doors(placed_transition_rooms)
   end
   
-  def randomize_doors_no_overlap_for_sector(sector_index, sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors)
+  def randomize_doors_no_overlap_for_sector(sector_index, unplaced_sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors, placement_mode)
     area_index = area_starting_room.area_index
     
     puts
     puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index]
     
-    sector_rooms.select! do |room|
-      next if room.layers.empty?
-      next if room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}.empty?
-      next if @transition_rooms.include?(room)
-      
-      true
-    end
-    
-    if sector_index != area_starting_room.sector_index
+    if sector_index != area_starting_room.sector_index && placement_mode == :placing_skeleton
       transition_room_to_start_sector = unplaced_transition_rooms.sample(random: rng)
       puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})"
     end
     
-    total_sector_rooms = sector_rooms.size
+    total_sector_rooms = unplaced_sector_rooms.size
     puts "Total sector rooms available to place: #{total_sector_rooms}"
     
     # Method: Go through all open spaces that would connect to a place door, and find rooms that would fit in those spots.
@@ -285,8 +296,13 @@ module MapRandomizer
     
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
-    on_starting_room = (sector_index == area_starting_room.sector_index)
-    on_starting_transition_room = !on_starting_room
+    if placement_mode == :placing_skeleton
+      on_starting_room = (sector_index == area_starting_room.sector_index)
+      on_starting_transition_room = !on_starting_room
+    else
+      on_starting_room = false
+      on_starting_transition_room = false
+    end
     while true
       debug = false
       #debug = (sector_index == 9)
@@ -350,7 +366,7 @@ module MapRandomizer
         
         chosen_room_position = valid_room_positions.sample(random: rng)
       else
-        break if sector_rooms.empty?
+        break if unplaced_sector_rooms.empty?
         
         open_spots = get_open_spots(
           map_spots, map_width, map_height,
@@ -369,8 +385,8 @@ module MapRandomizer
         
         valid_room_positions = []
         open_spots.each do |x, y, direction, dest_room|
-          puts "on spot #{[x, y, direction]} - going to check sector_rooms: #{sector_rooms.size}" if debug
-          sector_rooms.each do |room|
+          puts "on spot #{[x, y, direction]} - going to check unplaced_sector_rooms: #{unplaced_sector_rooms.size}" if debug
+          unplaced_sector_rooms.each do |room|
             #puts "checking room: #{room.room_str}" if debug
             
             next unless check_rooms_can_be_connected(room, dest_room)
@@ -438,47 +454,51 @@ module MapRandomizer
         
         p valid_room_positions.map{|x| x[:room].room_str + " opened: #{x[:number_of_spots_opened_up]}, closed: #{x[:number_of_spots_closed_up]}"} if debug
         
-        special_room_positions = valid_room_positions.select do |room_position|
-          room = room_position[:room]
-          if @transition_rooms.include?(room)
-            true
-          elsif checker.progress_important_rooms.include?(room)
-            true
-          else
-            false
+        if placement_mode == :placing_skeleton
+          # Only placing the skeleton of the sector for now.
+          
+          possible_room_positions = valid_room_positions.select do |room_position|
+            room = room_position[:room]
+            if @transition_rooms.include?(room)
+              true
+            elsif checker.progress_important_rooms.include?(room)
+              true
+            elsif room_position[:diff_in_num_spots] >= 1
+              true
+            else
+              false
+            end
+            # TODO boss rooms
           end
-          # TODO boss rooms
-        end
-        nonspecial_room_positions = valid_room_positions - special_room_positions
-        if special_room_positions.any? && (num_placed_non_transition_rooms >= 15 || (num_placed_non_transition_rooms.to_f / total_sector_rooms) >= 0.50)
-          # Start placing special rooms once a decent number of normal rooms have been placed.
-          possible_room_positions = special_room_positions
-        elsif nonspecial_room_positions.any?
-          # If a decent number of normal rooms haven't been placed yet, don't start placing special rooms.
-          possible_room_positions = nonspecial_room_positions
+          
+          if possible_room_positions.empty?
+            # If there are no important rooms or rooms that increase the number of available doors, use a room that keeps the number of doors the same.
+            possible_room_positions = valid_room_positions.select do |room_position|
+              if room_position[:diff_in_num_spots] == 0
+                true
+              else
+                false
+              end
+            end
+          end
+          
+          # TODO: prioritize long rooms over normal rooms that are not long.
         else
-          # Unless there's only special rooms we can place, then we don't have much choice.
+          # Filling in the remaining rooms like dead ends.
+          
           possible_room_positions = valid_room_positions
         end
         
-        possible_room_positions_that_add_spots = possible_room_positions.select do |room_positions|
-          room_positions[:diff_in_num_spots] >= 1
+        if possible_room_positions.empty?
+          puts "No possible room positions."
+          break
         end
-        possible_room_positions_that_keep_same_num_spots = possible_room_positions.select do |room_positions|
-          room_positions[:diff_in_num_spots] == 0
-        end
-        if possible_room_positions_that_add_spots.any?
-          possible_room_positions = possible_room_positions_that_add_spots
-        elsif possible_room_positions_that_keep_same_num_spots.any?
-          possible_room_positions = possible_room_positions_that_keep_same_num_spots
-        end
-        
         
         chosen_room_position = possible_room_positions.sample(random: rng)
       end
       
       room = chosen_room_position[:room]
-      sector_rooms.delete(room)
+      unplaced_sector_rooms.delete(room)
       
       room_x = chosen_room_position[:x]
       room_y = chosen_room_position[:y]
@@ -537,14 +557,14 @@ module MapRandomizer
       #gets
     end
     
-    unplaced_progress_important_rooms = sector_rooms & checker.progress_important_rooms
+    unplaced_progress_important_rooms = unplaced_sector_rooms & checker.progress_important_rooms
     if unplaced_progress_important_rooms.any?
       puts "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
       return :mustredo
     end
     
-    ratio_unplaced_rooms = sector_rooms.size.to_f / total_sector_rooms
-    if ratio_unplaced_rooms > 0.75
+    ratio_unplaced_rooms = unplaced_sector_rooms.size.to_f / total_sector_rooms
+    if ratio_unplaced_rooms > 0.75 # TODO this ratio should be adjusted for the skeleton-placing logic
       puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector."
       return :shouldredo
     end
