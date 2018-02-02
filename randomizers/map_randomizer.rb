@@ -227,7 +227,7 @@ module MapRandomizer
           raise "Map randomizer had to redo area %02X sector %02X more than 15 times." % [area_index, sector_index]
         end
         
-        unplaced_sector_rooms     = orig_unplaced_sector_rooms
+        unplaced_rooms_for_each_sector[sector_index] = orig_unplaced_sector_rooms
         map_spots                 = orig_map_spots
         unplaced_transition_rooms = orig_unplaced_transition_rooms
         placed_transition_rooms   = orig_placed_transition_rooms
