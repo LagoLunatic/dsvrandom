@@ -449,17 +449,23 @@ module MapRandomizer
                 
                 diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
                 
-                if (total_number_of_open_spots + diff_in_num_spots) > 0 # Don't allow positions that would block off literally every open spot.
-                  valid_room_positions << {
-                    room: room,
-                    x: x_to_place_room_at,
-                    y: y_to_place_room_at,
-                    inside_door_str_used_to_attach: door.door_str,
-                    number_of_spots_opened_up: number_of_spots_opened_up,
-                    number_of_spots_closed_up: number_of_spots_closed_up,
-                    diff_in_num_spots: diff_in_num_spots,
-                  }
+                # Keep track of which placements would result in no more spots being open.
+                if (total_number_of_open_spots + diff_in_num_spots) > 0
+                  would_block_off_all_open_spots = false
+                else
+                  would_block_off_all_open_spots = true
                 end
+                
+                valid_room_positions << {
+                  room: room,
+                  x: x_to_place_room_at,
+                  y: y_to_place_room_at,
+                  inside_door_str_used_to_attach: door.door_str,
+                  number_of_spots_opened_up: number_of_spots_opened_up,
+                  number_of_spots_closed_up: number_of_spots_closed_up,
+                  diff_in_num_spots: diff_in_num_spots,
+                  would_block_off_all_open_spots: would_block_off_all_open_spots,
+                }
               end
             end
           end
@@ -472,6 +478,15 @@ module MapRandomizer
         end
         
         p valid_room_positions.map{|x| x[:room].room_str + " opened: #{x[:number_of_spots_opened_up]}, closed: #{x[:number_of_spots_closed_up]}"} if debug
+        
+        every_room_pos_would_block_off_all_spots = valid_room_positions.all?{|room_position| room_position[:would_block_off_all_open_spots]}
+        unless every_room_pos_would_block_off_all_spots
+          # Don't allow positions that would block off literally every open spot.
+          # Unless all the room positions we can use would do that, then this is going to be the final room we place anyway, so allow it.
+          valid_room_positions.reject! do |room_position|
+            room_position[:would_block_off_all_open_spots]
+          end
+        end
         
         if placement_mode == :placing_skeleton
           # Only placing the skeleton of the sector for now.
