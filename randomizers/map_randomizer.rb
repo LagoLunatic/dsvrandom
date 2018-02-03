@@ -961,6 +961,13 @@ module MapRandomizer
               tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
               coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
               coll_layer.tiles[tile_i].horizontal_flip = false
+              
+              # If there are any jumpthrough platforms immediately above the downdoor we're blocking off, delete those platforms.
+              # If we don't delete them and the player tries to fall through one, it kind of bugs out the physics and the player teleports around a little bit.
+              if coll[tile_x*0x10,(tile_y-1)*0x10].is_jumpthrough_platform?
+                tile_i = tile_x + (tile_y-1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = 0
+              end
             end
             coll_layer.write_to_rom()
             
