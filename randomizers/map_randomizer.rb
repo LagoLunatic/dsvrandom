@@ -271,6 +271,8 @@ module MapRandomizer
       end
     end
     
+    @rooms_unused_by_map_rando += unplaced_transition_rooms
+    
     remove_useless_transition_rooms(map_spots, map_width, map_height, placed_transition_rooms)
     
     connect_doors_based_on_map(map_spots, map_width, map_height)
