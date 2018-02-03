@@ -162,19 +162,8 @@ module MapRandomizer
     sectors_for_area = area_rooms.group_by{|room| room.sector_index}
     
     if GAME == "dos" && sectors_for_area[0xA]
-      # Menace. Don't try to connect this room since it has no doors, just place it first at the normal position since the center of the Abyss map doesn't like other tiles being there anyway.
-      room = sectors_for_area[0xA].first
-      room_x = 7
-      room_y = 10
-      room.room_xpos_on_map = room_x
-      room.room_ypos_on_map = room_y
-      room.write_to_rom()
-      (room_x..room_x+room.width-1).each do |tile_x|
-        (room_y..room_y+room.height-1).each do |tile_y|
-          map_spots[tile_x][tile_y] = room
-        end
-      end
-      
+      # Menace. Don't try to connect this room since it has no doors.
+      menace_room = sectors_for_area[0xA].first
       sectors_for_area.delete(0xA)
     end
     
@@ -268,6 +257,41 @@ module MapRandomizer
           # Finished placing the dead ends too.
           break
         end
+      end
+    end
+    
+    if menace_room
+      valid_spots = []
+      map_width.times do |x|
+        map_height.times do |y|
+          valid_placement = true
+          (x..x+menace_room.width-1).each do |x_to_check|
+            (y..y+menace_room.height-1).each do |y_to_check|
+              if !(0..map_width-1).include?(x_to_check) || !(0..map_height-1).include?(y_to_check) || map_spots[x_to_check][y_to_check]
+                valid_placement = false
+              end
+            end
+          end
+          
+          if valid_placement
+            valid_spots << [x,y]
+          end
+        end
+      end
+      
+      if valid_spots.any?
+        # Place the Menace room at a random open spot.
+        room_x, room_y = valid_spots.sample(random: rng)
+        menace_room.room_xpos_on_map = room_x
+        menace_room.room_ypos_on_map = room_y
+        menace_room.write_to_rom()
+        (room_x..room_x+menace_room.width-1).each do |tile_x|
+          (room_y..room_y+menace_room.height-1).each do |tile_y|
+            map_spots[tile_x][tile_y] = menace_room
+          end
+        end
+      else
+        # Do nothing. Leave the Menace room off the map.
       end
     end
     
