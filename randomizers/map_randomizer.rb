@@ -1091,13 +1091,20 @@ module MapRandomizer
   end
   
   def check_rooms_can_be_connected(room_a, room_b)
+    if GAME == "por" && !options[:randomize_starting_room] && [room_a.room_str, room_b.room_str].sort == ["00-00-00", "00-00-03"]
+      # Don't connect the default starting room of the game to the tall underground room. This can make the player not have access to any items at the start.
+      return false
+    end
+    if @transition_rooms.include?(room_a) && @transition_rooms.include?(room_b)
+      return false
+    end
     if room_a.sector_index == room_b.sector_index
       return true
     end
-    if @transition_rooms.include?(room_a) && !@transition_rooms.include?(room_b)
+    if @transition_rooms.include?(room_a)
       return true
     end
-    if @transition_rooms.include?(room_b) && !@transition_rooms.include?(room_a)
+    if @transition_rooms.include?(room_b)
       return true
     end
     return false
