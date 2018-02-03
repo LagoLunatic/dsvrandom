@@ -245,8 +245,10 @@ module MapRandomizer
         redo
       end
       
-      # Keep track of the rooms we never used.
-      @rooms_unused_by_map_rando += unplaced_sector_rooms
+      if placement_mode != :placing_skeleton
+        # Keep track of the rooms we never used.
+        @rooms_unused_by_map_rando += unplaced_sector_rooms
+      end
       
       remaining_sectors_to_place.delete(sector_index)
       
