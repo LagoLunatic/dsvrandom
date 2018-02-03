@@ -37,7 +37,7 @@ module MapRandomizer
       
       starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow for starting room rando to work
       randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
-      #randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) # TODO abyss doesn't randomize properly since it's so small
+      randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00"))
     when "por"
       game.areas.each do |area|
         next if area.area_index >= 0xA
@@ -379,7 +379,7 @@ module MapRandomizer
         
         puts "Number of valid room positions: #{valid_room_positions.size}" if debug
         if valid_room_positions.empty?
-          puts "No valid room positions!"
+          #puts "No valid room positions!"
           break
         end
         
@@ -473,7 +473,7 @@ module MapRandomizer
         
         puts "Number of valid room positions: #{valid_room_positions.size}" if debug
         if valid_room_positions.empty?
-          puts "No valid room positions!"
+          #puts "No valid room positions!"
           break
         end
         
