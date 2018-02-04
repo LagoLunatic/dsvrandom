@@ -1127,8 +1127,8 @@ class Randomizer
       game.fs.write(0x022E8988, [0xE3E00000].pack("V")) # mvn r0, 0h
     end
     
-    if GAME == "por" && options[:randomize_starting_room]
-      # If the starting room is randomized, we need to lower the drawbridge by default or the player can't ever reach the first few rooms of the entrance.
+    if GAME == "por" && (options[:randomize_starting_room] || options[:randomize_rooms_map_friendly])
+      # If the starting room (or map) is randomized, we need to lower the drawbridge by default or the player can't ever reach the first few rooms of the entrance.
       # Do this by making the drawbridge think the game mode is Richter mode, since it automatically lowers itself in that case.
       game.fs.load_overlay(78)
       game.fs.write(0x022E8880, [0xE3A01001].pack("V")) # mov r1, 1h
