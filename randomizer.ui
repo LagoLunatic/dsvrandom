@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>668</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -296,12 +296,33 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
+             <widget class="QCheckBox" name="randomize_rooms_map_friendly">
+              <property name="text">
+               <string>Rooms and Areas (Map-friendly)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_starting_room">
+              <property name="toolTip">
+               <string>Randomizes which room you start in.</string>
+              </property>
+              <property name="text">
+               <string>Starting Room</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
              <widget class="QCheckBox" name="randomize_room_connections">
               <property name="toolTip">
                <string>Randomizes which rooms within an area connect to each other.</string>
               </property>
               <property name="text">
-               <string>Room Connections</string>
+               <string>Room Connections (Not map-friendly)</string>
               </property>
              </widget>
             </item>
@@ -311,21 +332,7 @@
                <string>Randomizes which areas connect to each other.</string>
               </property>
               <property name="text">
-               <string>Area Connections</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_17">
-            <item>
-             <widget class="QCheckBox" name="randomize_starting_room">
-              <property name="toolTip">
-               <string>Randomizes which room you start in.</string>
-              </property>
-              <property name="text">
-               <string>Starting Room</string>
+               <string>Area Connections (Not map-friendly)</string>
               </property>
              </widget>
             </item>
@@ -383,17 +390,6 @@
               </property>
               <property name="text">
                <string>Skill Sprites</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
-            <item>
-             <widget class="QCheckBox" name="randomize_rooms_map_friendly">
-              <property name="text">
-               <string>Rooms and Areas (Map-friendly)</string>
               </property>
              </widget>
             </item>
@@ -832,14 +828,14 @@
   <tabstop>randomize_enemy_anim_speed</tabstop>
   <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_red_walls</tabstop>
+  <tabstop>randomize_rooms_map_friendly</tabstop>
+  <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_room_connections</tabstop>
   <tabstop>randomize_area_connections</tabstop>
-  <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_skill_sprites</tabstop>
-  <tabstop>randomize_rooms_map_friendly</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>
