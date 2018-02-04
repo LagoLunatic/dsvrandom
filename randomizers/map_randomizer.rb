@@ -37,13 +37,26 @@ module MapRandomizer
         end
       end
       
+      total_num_sectors = 11
+      num_sectors_done = 0
+      
       starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow for starting room rando to work
-      randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room)
-      randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00"))
+      randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room) do |num_sectors_done_for_area|
+        num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+        percent_done = num_sectors_done / total_num_sectors
+        yield percent_done
+      end
+      randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) do |num_sectors_done_for_area|
+        num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+        percent_done = num_sectors_done / total_num_sectors
+        yield percent_done
+      end
     when "por"
-      game.areas.each do |area|
-        next if area.area_index >= 0xA
-        
+      areas_to_randomize = (0..9).map{|area_index| game.areas[area_index]}
+      total_num_sectors = areas_to_randomize.inject(0){|sum, area| sum += area.sectors.size}
+      num_sectors_done = 0
+      
+      areas_to_randomize.each do |area|
         rooms = []
         area.sectors.each do |sector|
           rooms += sector.rooms
@@ -73,14 +86,18 @@ module MapRandomizer
         else
           raise "Invalid area"
         end
-        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room)
+        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room) do |num_sectors_done_for_area|
+          num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+          percent_done = num_sectors_done / total_num_sectors
+          yield percent_done
+        end
       end
     when "ooe"
-      game.areas.each do |area|
-        next if area.area_index == 1 # Wygol
-        next if area.area_index == 2 # Ecclesia
-        next if area.area_index == 0x13 # Epilogue/Boss rush/Practice mode
-        
+      areas_to_randomize = ([0] + (3..0x12).to_a).map{|area_index| game.areas[area_index]} # Don't randomize Wygol or Ecclesia
+      total_num_sectors = areas_to_randomize.inject(0){|sum, area| sum += area.sectors.size}
+      num_sectors_done = 0
+      
+      areas_to_randomize.each do |area|
         rooms = []
         area.sectors.each do |sector|
           rooms += sector.rooms
@@ -124,7 +141,11 @@ module MapRandomizer
         else
           raise "Invalid area"
         end
-        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room)
+        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room) do |num_sectors_done_for_area|
+          num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+          percent_done = num_sectors_done / total_num_sectors
+          yield percent_done
+        end
       end
     end
     
@@ -171,8 +192,7 @@ module MapRandomizer
     
     puts "ON AREA: %02X" % area_index
     
-    #sectors_done = 0
-    #total_sectors = 10
+    num_sectors_done = 0
     
     area_rooms.each do |room|
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
@@ -261,9 +281,8 @@ module MapRandomizer
       regenerate_map(area_index, sector_index, should_recenter_map: false)
       #gets
       
-      #sectors_done += 1
-      #percent_done = sectors_done.to_f / total_sectors
-      #yield percent_done
+      num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+      yield num_sectors_done
       
       if remaining_sectors_to_place.empty?
         if placement_mode == :placing_skeleton
