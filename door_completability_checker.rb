@@ -30,9 +30,10 @@ class DoorCompletabilityChecker
     load_room_reqs()
     @current_items = []
     @return_portraits = {}
-    @required_boss_room_doors_to_unlock_regular_portraits = {
-      :portrait13thstreet    => "04-01-08_001", # Mummy Man
-      :portraitburntparadise => "08-00-04_000", # The Creature
+    @required_accessible_doors_to_unlock_regular_portraits = {
+      :portraitforestofdoom  => ["00-08-0F_000", "00-01-06_000"], # Stella and Wind
+      :portrait13thstreet    => ["04-01-08_001"], # Mummy Man
+      :portraitburntparadise => ["08-00-04_000"], # The Creature
     }
     if @ooe_nonlinear
       @world_map_areas_unlocked_from_beginning = [
@@ -401,9 +402,9 @@ class DoorCompletabilityChecker
         if PickupRandomizer::PORTRAIT_NAMES.include?(pickup_global_id)
           portrait_name = pickup_global_id
           
-          required_door_for_this_portrait = @required_boss_room_doors_to_unlock_regular_portraits[portrait_name]
-          if required_door_for_this_portrait
-            # Can't count 13th street/burnt paradise as accessible by default.
+          required_doors_for_this_portrait = @required_accessible_doors_to_unlock_regular_portraits[portrait_name]
+          if required_doors_for_this_portrait
+            # Can't count 13th street/burnt paradise/forest of doom as accessible by default.
             # In the middle of the main door crawling logic we will repeatedly check to see if the bosses needed to unlock these are reachable yet.
             locked_accessible_portraits << portrait_name
             next
@@ -529,9 +530,9 @@ class DoorCompletabilityChecker
       if GAME == "por" && locked_accessible_portraits.any?
         portraits_to_unlock = []
         locked_accessible_portraits.each do |portrait_name|
-          required_door_for_this_portrait = @required_boss_room_doors_to_unlock_regular_portraits[portrait_name]
-          if required_door_for_this_portrait == door_or_entity_str
-            # Can reach the boss needed to unlock this portrait.
+          required_doors_for_this_portrait = @required_accessible_doors_to_unlock_regular_portraits[portrait_name]
+          if required_doors_for_this_portrait.include?(door_or_entity_str) && (required_doors_for_this_portrait - accessible_doors).empty?
+            # Can reach all the doors needed to unlock this portrait.
             dest_door_str = get_destination_of_portrait(portrait_name)
             
             if dest_door_str == false
@@ -767,11 +768,11 @@ class DoorCompletabilityChecker
   def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
     # Remove 13th street's mummy requirement.
     game.fs.write(0x02078FC4+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    @required_boss_room_doors_to_unlock_regular_portraits.delete(:portrait13thstreet) # Remove the logic's check for this unlock
+    @required_accessible_doors_to_unlock_regular_portraits.delete(:portrait13thstreet) # Remove the logic's check for this unlock
     
     # Remove burnt paradise's creature requirement.
     game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    @required_boss_room_doors_to_unlock_regular_portraits.delete(:portraitburntparadise) # Remove the logic's check for this unlock
+    @required_accessible_doors_to_unlock_regular_portraits.delete(:portraitburntparadise) # Remove the logic's check for this unlock
   end
   
   def move_por_white_barrier_location(new_room_str, path_begin_door, path_end_door)
