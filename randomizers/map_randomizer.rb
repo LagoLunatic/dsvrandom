@@ -244,12 +244,7 @@ module MapRandomizer
         placed_transition_rooms   = orig_placed_transition_rooms
         unreachable_subroom_doors = orig_unreachable_subroom_doors
         
-        (orig_unplaced_sector_rooms + orig_unplaced_transition_rooms).each do |room|
-          # Any rooms that got placed need to be moved back off the map.
-          room.room_xpos_on_map = 63
-          room.room_ypos_on_map = 47
-          room.write_to_rom()
-        end
+        update_room_positions_based_on_map_spots(map_spots, area_rooms)
         
         redo_counts_per_sector[sector_index] += 1
         puts "Map rando is redoing sector #{sector_index} (time #{redo_counts_per_sector[sector_index]})"
@@ -384,7 +379,7 @@ module MapRandomizer
     end
     while true
       debug = false
-      #debug = (sector_index == 9)
+      #debug = (sector_index == 5)
       #debug = true
       if on_starting_room
         on_starting_room = false
@@ -669,11 +664,11 @@ module MapRandomizer
       recenter_map_spots(map_spots, map_width, map_height)
       
       #if @transition_rooms.include?(room)
-      #  regenerate_map()
+      #  regenerate_map(area_index, sector_index)
       #  gets
       #end
       
-      #regenerate_map(maps_rendered)
+      #regenerate_map(area_index, sector_index, maps_rendered)
       #maps_rendered += 1
       
       #regenerate_map(area_index, sector_index)
@@ -863,6 +858,27 @@ module MapRandomizer
     map_spots.rotate!(-needed_x_offset)
     map_spots.each do |col|
       col.rotate!(-needed_y_offset)
+    end
+    
+    done_rooms = []
+    map_spots.each_with_index do |col, x|
+      col.each_with_index do |room, y|
+        if room && !done_rooms.include?(room)
+          room.room_xpos_on_map = x
+          room.room_ypos_on_map = y
+          room.write_to_rom()
+          done_rooms << room
+        end
+      end
+    end
+  end
+  
+  def update_room_positions_based_on_map_spots(map_spots, all_area_rooms)
+    all_area_rooms.each do |room|
+      # Move all rooms off the edge of the map in case they're not on the map_spots array at all.
+      room.room_xpos_on_map = 63
+      room.room_ypos_on_map = 47
+      room.write_to_rom()
     end
     
     done_rooms = []
