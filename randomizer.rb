@@ -761,12 +761,16 @@ class Randomizer
     yield [options_completed, "Applying tweaks..."]
     apply_tweaks()
   rescue StandardError => e
-    spoiler_log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
+    if spoiler_log
+      spoiler_log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
+    end
     raise e
   ensure
-    spoiler_log.puts
-    spoiler_log.puts
-    spoiler_log.close()
+    if spoiler_log
+      spoiler_log.puts
+      spoiler_log.puts
+      spoiler_log.close()
+    end
   end
   
   def apply_pre_randomization_tweaks
