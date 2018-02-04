@@ -14,6 +14,7 @@ module MapRandomizer
     "00-09-1F",
     "00-0B-23",
   ]
+  CONDEMNED_TOWER_ROOM_INDEXES = (0..0xC).to_a + [0x19, 0x1A, 0x1C, 0x1E]
   
   def randomize_doors_no_overlap(&block)
     add_extra_helper_rooms()
@@ -1183,6 +1184,22 @@ module MapRandomizer
       return false
     end
     if @transition_rooms.include?(room_a) && @transition_rooms.include?(room_b)
+      return false
+    end
+    if GAME == "dos" && room_a.sector_index == 5 && room_b.sector_index == 5
+      # Condemned Tower/Mine of Judgement. Don't interconnect these two.
+      if CONDEMNED_TOWER_ROOM_INDEXES.include?(room_a.room_index) && CONDEMNED_TOWER_ROOM_INDEXES.include?(room_b.room_index)
+        # Both Condemned Tower.
+        return true
+      end
+      if !CONDEMNED_TOWER_ROOM_INDEXES.include?(room_a.room_index) && !CONDEMNED_TOWER_ROOM_INDEXES.include?(room_b.room_index)
+        # Both Mine of Judgement.
+        return true
+      end
+      if [room_a.room_str, room_b.room_str].sort == ["00-05-0C", "00-05-18"]
+        # The connector rooms with the up/down doors.
+        return true
+      end
       return false
     end
     if room_a.sector_index == room_b.sector_index
