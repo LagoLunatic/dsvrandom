@@ -127,6 +127,23 @@ module MapRandomizer
     end
     
     replace_outer_boss_doors()
+    
+    if GAME == "por"
+      # Add the white barrier to the transition room before the Throne Room.
+      transition_for_throne_room = game.room_by_str("00-0A-17")
+      barrier = transition_for_throne_room.add_new_entity()
+      barrier.type = 2
+      barrier.subtype = 0x81
+      barrier.write_to_rom()
+      
+      # Remove the white barrier from the room that originally had it (and the event and font loader too).
+      orig_white_barrier_room = game.room_by_str("00-0A-01")
+      [1, 3, 4].each do |entity_index|
+        entity = orig_white_barrier_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+    end
   end
   
   def add_extra_helper_rooms
@@ -311,7 +328,21 @@ module MapRandomizer
     puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index]
     
     if sector_index != area_starting_room.sector_index && placement_mode == :placing_skeleton
-      transition_room_to_start_sector = unplaced_transition_rooms.sample(random: rng)
+      if GAME == "por" && area_index == 0
+        # We need to make sure a Master's Keep transition room connects to the Throne Room so we can put the white barrier in that transition room.
+        transition_for_throne_room = game.room_by_str("00-0A-17")
+        if sector_index == 9
+          unless unplaced_transition_rooms.include?(transition_for_throne_room)
+            raise "Transition for Throne Room (00-0A-17) has already been placed."
+          end
+          transition_room_to_start_sector = transition_for_throne_room
+        else
+          transition_room_to_start_sector = (unplaced_transition_rooms - [transition_for_throne_room]).sample(random: rng)
+        end
+      else
+        transition_room_to_start_sector = unplaced_transition_rooms.sample(random: rng)
+      end
+      
       puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})"
     end
     
@@ -383,6 +414,12 @@ module MapRandomizer
         valid_room_positions = []
         open_spots.each do |x, y, dir, dest_room|
           next unless [:left, :right].include?(dir)
+          
+          if GAME == "por" && area_index == 0 && sector_index == 9
+            # When placing the transition to the Throne Room, we need to make sure the open spot faces left.
+            # This is because when we add the white barrier, it only works on the left side of the room.
+            next unless dir == :right
+          end
           
           number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x, y)
           
@@ -622,7 +659,7 @@ module MapRandomizer
     end
     
     ratio_unplaced_rooms = unplaced_sector_rooms.size.to_f / total_sector_rooms
-    if ratio_unplaced_rooms > 0.75 # TODO this ratio should be adjusted for the skeleton-placing logic
+    if ratio_unplaced_rooms > 0.75
       puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector."
       return :shouldredo
     end
