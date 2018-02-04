@@ -638,7 +638,7 @@ class DoorCompletabilityChecker
         if !world_map_accessible
           @world_map_exits.each do |entry_point|
             if accessible_doors.include?(entry_point)
-              if entry_point == "09-00-00_000" && !check_reqs([[:magnes] | [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
+              if entry_point == "09-00-00_000" && !check_reqs([[:magnes], [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
                 # Can't get past the spikes in the first room of lighthouse without taking damage.
                 next
               elsif entry_point == "06-01-00_000" && !check_reqs([[:serpent_scale]])
