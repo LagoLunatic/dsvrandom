@@ -1169,7 +1169,7 @@ class Randomizer
       game.fs.write(0x020718CC, [0x65A0].pack("V"))
     end
     
-    if GAME == "por" && options[:randomize_portraits] && room_rando?
+    if GAME == "por" && options[:randomize_portraits] && options[:randomize_room_connections]
       # Room rando can make it hard to know where to go to find portraits, so reveal all portrait tiles on the map by default.
       game.apply_armips_patch("por_reveal_all_portraits_on_map")
     end
