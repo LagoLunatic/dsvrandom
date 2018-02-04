@@ -18,6 +18,7 @@ module MapRandomizer
   
   def randomize_doors_no_overlap(&block)
     add_extra_helper_rooms()
+    remove_all_wooden_doors()
     
     @rooms_unused_by_map_rando = []
     
@@ -1084,7 +1085,7 @@ module MapRandomizer
     end
   end
   
-  def replace_wooden_doors(placed_transition_rooms)
+  def remove_all_wooden_doors
     # Remove all existing wooden doors.
     game.each_room do |room|
       room.entities.each do |entity|
@@ -1094,7 +1095,9 @@ module MapRandomizer
         end
       end
     end
-    
+  end
+  
+  def replace_wooden_doors(placed_transition_rooms)
     # Add replacement wooden doors in the proper places.
     placed_transition_rooms.each do |transition_room|
       transition_room.doors.each do |door|
