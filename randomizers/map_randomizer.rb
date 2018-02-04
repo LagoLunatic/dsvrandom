@@ -145,6 +145,9 @@ module MapRandomizer
         entity.type = 0
         entity.write_to_rom()
       end
+      
+      # Tell the logic where the white barrier was moved to.
+      checker.move_por_white_barrier_location("00-0A-17", 1, 0)
     end
   end
   

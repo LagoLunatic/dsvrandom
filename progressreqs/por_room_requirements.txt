@@ -1293,7 +1293,7 @@ Rooms:
     001-000: 
   00-0A-01: # Room with magic barrier blocking the way to the Throne Room.
     000-001: 
-    001-000: false
+    001-000: false # White barrier for the non-map randomizer.
   00-0A-02:
     000-001: 
     000-002: 
@@ -1419,7 +1419,7 @@ Rooms:
     001-000: 
   00-0A-17:
     000-001: 
-    001-000: 
+    001-000: # White barrier for the map randomizer.
   00-0A-18:
     000-001: 
     001-000: height

@@ -774,6 +774,11 @@ class DoorCompletabilityChecker
     @required_boss_room_doors_to_unlock_regular_portraits.delete(:portraitburntparadise) # Remove the logic's check for this unlock
   end
   
+  def move_por_white_barrier_location(new_room_str, path_begin_door, path_end_door)
+    @room_reqs["00-0A-01"][:doors][1]["000"] = nil # Unset the default white barrier req
+    @room_reqs[new_room_str][:doors][path_begin_door]["%03X" % path_end_door] = false # Set the new location
+  end
+  
   def add_return_portrait(return_portrait_room_str, enter_portrait_entity_str)
     # Create a mapping of doors in return portrait rooms to the enter portrait entity locations they lead to.
     
