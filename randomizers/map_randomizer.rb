@@ -625,6 +625,7 @@ module MapRandomizer
       room_x = chosen_room_position[:x]
       room_y = chosen_room_position[:y]
       
+      is_transition_str = ""
       if @transition_rooms.include?(room)
         is_transition_str = " (transition)"
       end
