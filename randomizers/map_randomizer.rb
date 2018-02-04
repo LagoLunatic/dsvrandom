@@ -748,7 +748,7 @@ module MapRandomizer
       y = transition_room.room_ypos_on_map
       
       transition_room.doors.each do |door|
-        matching_dest_door = find_matching_dest_door_on_map(door.direction, map_spots, map_width, map_height, x, y)
+        matching_dest_door = find_matching_dest_door_on_map(transition_room, door.direction, map_spots, map_width, map_height, x, y)
         if matching_dest_door.nil?
           has_unmatched_doors = true
           break
@@ -772,41 +772,49 @@ module MapRandomizer
     end
   end
   
-  def find_matching_dest_door_on_map(direction, map_spots, map_width, map_height, x, y)
+  def find_matching_dest_door_on_map(room, direction, map_spots, map_width, map_height, x, y)
     case direction
     when :left
       if x > 0 && map_spots[x-1][y]
         dest_room = map_spots[x-1][y]
-        y_in_dest_room = y - dest_room.room_ypos_on_map
-        dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-        right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+        if check_rooms_can_be_connected(room, dest_room)
+          y_in_dest_room = y - dest_room.room_ypos_on_map
+          dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+          right_dest_door = dest_room_doors.find{|door| door.direction == :right && door.y_pos == y_in_dest_room}
+        end
       end
       
       return right_dest_door
     when :right
       if x < map_width-1 && map_spots[x+1][y]
         dest_room = map_spots[x+1][y]
-        y_in_dest_room = y - dest_room.room_ypos_on_map
-        dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-        left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+        if check_rooms_can_be_connected(room, dest_room)
+          y_in_dest_room = y - dest_room.room_ypos_on_map
+          dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+          left_dest_door = dest_room_doors.find{|door| door.direction == :left && door.y_pos == y_in_dest_room}
+        end
       end
       
       return left_dest_door
     when :up
       if y > 0 && map_spots[x][y-1]
         dest_room = map_spots[x][y-1]
-        x_in_dest_room = x - dest_room.room_xpos_on_map
-        dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-        down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+          if check_rooms_can_be_connected(room, dest_room)
+          x_in_dest_room = x - dest_room.room_xpos_on_map
+          dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+          down_dest_door = dest_room_doors.find{|door| door.direction == :down && door.x_pos == x_in_dest_room}
+        end
       end
       
       return down_dest_door
     when :down
       if y < map_height-1 && map_spots[x][y+1]
         dest_room = map_spots[x][y+1]
-        x_in_dest_room = x - dest_room.room_xpos_on_map
-        dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-        up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+        if check_rooms_can_be_connected(room, dest_room)
+          x_in_dest_room = x - dest_room.room_xpos_on_map
+          dest_room_doors = dest_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+          up_dest_door = dest_room_doors.find{|door| door.direction == :up && door.x_pos == x_in_dest_room}
+        end
       end
       
       return up_dest_door
@@ -871,8 +879,6 @@ module MapRandomizer
   end
   
   def connect_doors_based_on_map(map_spots, map_width, map_height)
-    # TODO: don't connect doors from different sectors that just happen to overlap
-    
     done_doors = []
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
@@ -908,7 +914,7 @@ module MapRandomizer
         if left_door && !done_doors.include?(left_door)
           done_doors << left_door
           
-          right_dest_door = find_matching_dest_door_on_map(:left, map_spots, map_width, map_height, x, y)
+          right_dest_door = find_matching_dest_door_on_map(room, :left, map_spots, map_width, map_height, x, y)
           
           if right_dest_door
             # Connect these two doors that are touching on the map.
@@ -947,7 +953,7 @@ module MapRandomizer
         if right_door && !done_doors.include?(right_door)
           done_doors << right_door
           
-          left_dest_door = find_matching_dest_door_on_map(:right, map_spots, map_width, map_height, x, y)
+          left_dest_door = find_matching_dest_door_on_map(room, :right, map_spots, map_width, map_height, x, y)
           
           if left_dest_door
             # Connect these two doors that are touching on the map.
@@ -986,7 +992,7 @@ module MapRandomizer
         if up_door && !done_doors.include?(up_door)
           done_doors << up_door
           
-          down_dest_door = find_matching_dest_door_on_map(:up, map_spots, map_width, map_height, x, y)
+          down_dest_door = find_matching_dest_door_on_map(room, :up, map_spots, map_width, map_height, x, y)
           
           if down_dest_door
             # Connect these two doors that are touching on the map.
@@ -1025,7 +1031,7 @@ module MapRandomizer
         if down_door && !done_doors.include?(down_door)
           done_doors << down_door
           
-          up_dest_door = find_matching_dest_door_on_map(:down, map_spots, map_width, map_height, x, y)
+          up_dest_door = find_matching_dest_door_on_map(room, :down, map_spots, map_width, map_height, x, y)
           
           if up_dest_door
             # Connect these two doors that are touching on the map.
