@@ -470,7 +470,8 @@ module ItemSkillStatRandomizer
       
       if GAME == "dos"
         max_soul_scaling_type = 4
-        if skill.name == "Persephone"
+        if skill.name == "Persephone" || skill.name == "Axe Armor"
+          # Persephone and Axe Armor don't have functional hitboxes at level 4+.
           max_soul_scaling_type = 2
         end
         soul_scaling_type = rng.rand(0..max_soul_scaling_type)
