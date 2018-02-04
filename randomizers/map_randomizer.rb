@@ -1211,6 +1211,24 @@ module MapRandomizer
     if @transition_rooms.include?(room_a) && @transition_rooms.include?(room_b)
       return false
     end
+    
+    
+    # Don't let the Mine of Judgement start sector 5 by connecting to the transition room.
+    if room_b.sector_index == 5 && @transition_rooms.include?(room_a)
+      if CONDEMNED_TOWER_ROOM_INDEXES.include?(room_b.room_index)
+        return true
+      else
+        return false
+      end
+    end
+    if room_a.sector_index == 5 && @transition_rooms.include?(room_b)
+      if CONDEMNED_TOWER_ROOM_INDEXES.include?(room_a.room_index)
+        return true
+      else
+        return false
+      end
+    end
+    
     if GAME == "dos" && room_a.sector_index == 5 && room_b.sector_index == 5
       # Condemned Tower/Mine of Judgement. Don't interconnect these two.
       if CONDEMNED_TOWER_ROOM_INDEXES.include?(room_a.room_index) && CONDEMNED_TOWER_ROOM_INDEXES.include?(room_b.room_index)
@@ -1227,6 +1245,7 @@ module MapRandomizer
       end
       return false
     end
+    
     if room_a.sector_index == room_b.sector_index
       return true
     end
