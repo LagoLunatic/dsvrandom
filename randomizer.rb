@@ -1207,6 +1207,17 @@ class Randomizer
       game.fs.write(0x021C7518, [0xE1A00000].pack("V")) # Same as above, but this is for if the player watched the cutscene instead of skipping it.
     end
     
+    if GAME == "dos" && options[:randomize_rooms_map_friendly]
+      # The game doesn't let you explore the center of the Abyss map because that's where Menace's room normally is.
+      # We need to allow exploring the center since other rooms can get placed there by the map rando.
+      game.fs.write(0x02023264, [0xE1A00000].pack("V"))
+      
+      # Also, the position of the Abyss warp room on the Abyss map is hardcoded. So we must update that as well.
+      room = game.room_by_str("00-0B-23")
+      game.fs.write(0x02024C9C, [room.room_xpos_on_map].pack("C"))
+      game.fs.write(0x02024CA4, [room.room_ypos_on_map].pack("C"))
+    end
+    
     if options[:remove_area_names]
       game.each_room do |room|
         room.entities.each do |entity|
