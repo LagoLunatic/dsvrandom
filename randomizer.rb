@@ -611,22 +611,41 @@ class Randomizer
       checker.add_return_portrait("08-00-08", "00-0B-00_04")
     end
     
-    if options[:randomize_starting_room]
-      reset_rng()
-      add_starter_items_to_randomized_starting_room()
-    elsif GAME == "dos" && room_rando?
-      # Even if starting room rando is off, we need to check for the possibility of the player not being able to access the drawbridge room, and in that case give them Magic Seal 1.
-      
-      accessible_doors = checker.get_accessible_doors()
-      if !accessible_doors.include?("00-00-15_000")
-        add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
-      end
-    elsif GAME == "por" && room_rando?
-      # Even if starting room rando is off, we need to check for the possibility of the player not being able to access Wind+Vincent, and in that case give them Lizard Tail.
-      
-      accessible_doors = checker.get_accessible_doors()
-      if !accessible_doors.include?("00-01-06_000") || !accessible_doors.include?("00-01-09_000")
-        add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+    if room_rando?
+      # We need to put certain items the logic assumes the player starts with in the player's starting room if they can't reach them.
+      case GAME
+      when "dos"
+        # If the player can't access the drawbridge room give them Magic Seal 1.
+        accessible_doors = checker.get_accessible_doors()
+        if !accessible_doors.include?("00-00-15_000")
+          #add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
+          # (Commented out because room rando unlocks all boss doors.)
+        end
+      when "por"
+        # If the player can't access Wind or Vincent give them Lizard Tail.
+        accessible_doors = checker.get_accessible_doors()
+        if !accessible_doors.include?("00-01-06_000") || !accessible_doors.include?("00-01-09_000")
+          add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+        end
+        
+        # If the player can't access the drawbridge room, give them the Call Cube and either the Change Cube or Skill cube.
+        if !accessible_doors.include?("00-00-01_000")
+          add_bonus_item_to_starting_room(0x1AD) # Call Cube
+          if options[:dont_randomize_change_cube]
+            add_bonus_item_to_starting_room(0x1AC) # Change Cube
+          else
+            add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+          end
+        end
+      when "ooe"
+        if options[:randomize_starting_room]
+          # Put the glyph Barlowe would normally give you at the start in the randomized starting room.
+          if @ooe_starter_glyph_id
+            add_bonus_item_to_starting_room(@ooe_starter_glyph_id)
+          else
+            add_bonus_item_to_starting_room(1) # Confodere
+          end
+        end
       end
     end
     

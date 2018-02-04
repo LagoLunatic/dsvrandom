@@ -124,29 +124,4 @@ module StartingRoomRandomizer
     
     puts "Starting room selected: #{@starting_room.room_str}"
   end
-  
-  def add_starter_items_to_randomized_starting_room
-    case GAME
-    when "dos"
-      # Put Magic Seal 1 in the starting room, since the logic assumes you start with it.
-      #add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
-      # (Commented out because room rando unlocks all boss doors.)
-    when "por"
-      # Put the Call Cube, Lizard Tail, and either the Change Cube or the Skill Cube in the starting room, since the logic assumes you start with these.
-      add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
-      add_bonus_item_to_starting_room(0x1AD) # Call Cube
-      if options[:dont_randomize_change_cube]
-        add_bonus_item_to_starting_room(0x1AC) # Change Cube
-      else
-        add_bonus_item_to_starting_room(0x1AE) # Skill Cube
-      end
-    when "ooe"
-      # Put the glyph Barlowe would normally give you at the start in the randomized starting room.
-      if @ooe_starter_glyph_id
-        add_bonus_item_to_starting_room(@ooe_starter_glyph_id)
-      else
-        add_bonus_item_to_starting_room(1) # Confodere
-      end
-    end
-  end
 end
