@@ -163,7 +163,12 @@ module ItemSkillStatRandomizer
           if item.name == "Heaven's Sword" || item.name == "Tori"
             item["Special Effect"] = [1, 5, 6, 7].sample(random: rng)
           elsif rng.rand <= 0.50 # 50% chance to have a special effect
-            item["Special Effect"] = rng.rand(1..7)
+            if item["Item ID"] == 0x6B # Richter's Vampire Killer
+              # Heaven's Sword and Illusion Fist effects don't work so well with it, and Richter can't switch to any other weapon, so don't allow those 2 special effects.
+              item["Special Effect"] = [1, 2, 3, 4, 7].sample(random: rng)
+            else
+              item["Special Effect"] = rng.rand(1..7)
+            end
           else
             item["Special Effect"] = 0
           end
