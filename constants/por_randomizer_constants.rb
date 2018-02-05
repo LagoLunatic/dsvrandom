@@ -77,12 +77,12 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EC018 => 0x0001,
   },
   85 => { # Tower of Death
-    0x022EDBE4 => 0x0001,
-    0x022EFBDC => 0x0001,
+    0x022EDBE4 => 0x0023,
+    0x022EFBDC => 0x0330,
     0x022F1BD4 => 0x0001,
   },
   86 => { # Tower of Death
-    0x022EE958 => 0x0001,
+    0x022EE958 => 0x00D6,
     0x022F0950 => 0x0001,
   },
   87 => { # The Throne Room
@@ -91,11 +91,11 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   },
   88 => { # Master's Keep
     0x022EB014 => 0x0001,
-    0x022ED00C => 0x0001,
+    0x022ED00C => 0x0006,
     0x022EF004 => 0x0001,
   },
   89 => { # Master's Keep
-    0x022EBCD0 => 0x0004,
+    0x022EBCD0 => 0x0177,
     0x022EDCC8 => 0x0001,
   },
   90 => { # Master's Keep
@@ -166,13 +166,13 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EE814 => 0x0002,
   },
   99 => { # Forest of Doom
-    0x022EADF0 => 0x0001,
+    0x022EADF0 => 0x02D9,
     0x022ECDE8 => 0x0048,
     0x022EEDE0 => 0x0001,
     0x022F0DD8 => 0x0001,
   },
   100 => { # Forest of Doom
-    0x022EABC0 => 0x0001,
+    0x022EABC0 => 0x0098,
     0x022ECBB8 => 0x00EA,
     0x022EEBB0 => 0x000B,
   },
@@ -182,16 +182,16 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EE630 => 0x0008,
   },
   109 => { # Dark Academy
-    0x022EBEE4 => 0x0001,
+    0x022EBEE4 => 0x0109,
     0x022EDEDC => 0x0001,
     0x022EFED4 => 0x00DF,
   },
   110 => { # Dark Academy
-    0x022EAA5C => 0x0001,
+    0x022EAA5C => 0x0220,
     0x022ECA54 => 0x0001,
   },
   111 => { # Dark Academy
-    0x022EC3E0 => 0x0001,
+    0x022EC3E0 => 0x0237,
   },
   112 => { # Dark Academy
     0x022EB524 => 0x0001,
