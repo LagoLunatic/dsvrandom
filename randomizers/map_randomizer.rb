@@ -926,9 +926,7 @@ module MapRandomizer
         # Choose the solid tile to use to block off doors we remove.
         room.sector.load_necessary_overlay()
         coll_layer = room.layers.first
-        coll_tileset = CollisionTileset.new(coll_layer.collision_tileset_pointer, game.fs)
-        solid_tile = coll_tileset.tiles.find{|tile| tile.is_solid?}
-        solid_tile_index_on_tileset = coll_tileset.tiles.index(solid_tile)
+        solid_tile_index_on_tileset = SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET[room.overlay_id][coll_layer.collision_tileset_pointer]
         coll = RoomCollision.new(room, game.fs)
         
         x_in_room = x - room.room_xpos_on_map
