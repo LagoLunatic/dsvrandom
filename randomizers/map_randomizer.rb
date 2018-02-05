@@ -339,7 +339,9 @@ module MapRandomizer
     
     connect_doors_based_on_map(map_spots, map_width, map_height)
     
-    replace_wooden_doors(placed_transition_rooms)
+    if area_index == 0 # Castle
+      replace_wooden_doors(placed_transition_rooms)
+    end
   end
   
   def randomize_doors_no_overlap_for_sector(sector_index, unplaced_sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors, placement_mode)
