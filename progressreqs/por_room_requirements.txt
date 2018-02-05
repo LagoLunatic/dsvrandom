@@ -90,6 +90,10 @@ Warp connections:
   # None.
 Progress important rooms:
   - 00-09-01 # Final boss fight
+  - 00-0B-00 # Big portrait room
+  - 00-01-06 # Wind
+  - 00-01-09 # Vincent
+  - 00-08-0F # Stella fight (necessary to unlock Forest of Doom)
 Subrooms:
   05-02-0C: # Legion's room.
     -
