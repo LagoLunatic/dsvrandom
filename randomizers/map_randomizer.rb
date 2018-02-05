@@ -198,7 +198,7 @@ module MapRandomizer
       # Move the rooms off the edge of the map before they're placed so they don't interfere.
       room.room_xpos_on_map = 63
       room.room_ypos_on_map = 47
-      room.write_to_rom()
+      room.write_extra_data_to_rom()
     end
     
     sectors_for_area = area_rooms.group_by{|room| room.sector_index}
@@ -278,7 +278,9 @@ module MapRandomizer
       
       remaining_sectors_to_place.delete(sector_index)
       
-      regenerate_map(area_index, sector_index, should_recenter_map: false)
+      #recenter_map_spots(map_spots, map_width, map_height)
+      
+      #regenerate_map(area_index, sector_index, should_recenter_map: false)
       #gets
       
       num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
@@ -320,7 +322,7 @@ module MapRandomizer
         room_x, room_y = valid_spots.sample(random: rng)
         menace_room.room_xpos_on_map = room_x
         menace_room.room_ypos_on_map = room_y
-        menace_room.write_to_rom()
+        menace_room.write_extra_data_to_rom()
         (room_x..room_x+menace_room.width-1).each do |tile_x|
           (room_y..room_y+menace_room.height-1).each do |tile_y|
             map_spots[tile_x][tile_y] = menace_room
@@ -647,7 +649,7 @@ module MapRandomizer
       
       room.room_xpos_on_map = room_x
       room.room_ypos_on_map = room_y
-      room.write_to_rom()
+      room.write_extra_data_to_rom()
       (room_x..room_x+room.width-1).each do |tile_x|
         (room_y..room_y+room.height-1).each do |tile_y|
           map_spots[tile_x][tile_y] = room
@@ -774,7 +776,7 @@ module MapRandomizer
         map_spots[x][y] = nil
         transition_room.room_xpos_on_map = 63
         transition_room.room_ypos_on_map = 47
-        transition_room.write_to_rom()
+        transition_room.write_extra_data_to_rom()
         
         removed_transition_rooms << transition_room
       end
@@ -885,7 +887,7 @@ module MapRandomizer
         if room && !done_rooms.include?(room)
           room.room_xpos_on_map = x
           room.room_ypos_on_map = y
-          room.write_to_rom()
+          room.write_extra_data_to_rom()
           done_rooms << room
         end
       end
@@ -897,7 +899,7 @@ module MapRandomizer
       # Move all rooms off the edge of the map in case they're not on the map_spots array at all.
       room.room_xpos_on_map = 63
       room.room_ypos_on_map = 47
-      room.write_to_rom()
+      room.write_extra_data_to_rom()
     end
     
     done_rooms = []
@@ -906,7 +908,7 @@ module MapRandomizer
         if room && !done_rooms.include?(room)
           room.room_xpos_on_map = x
           room.room_ypos_on_map = y
-          room.write_to_rom()
+          room.write_extra_data_to_rom()
           done_rooms << room
         end
       end
@@ -1479,7 +1481,7 @@ module MapRandomizer
             unless room.room_xpos_on_map == 63 || room.room_ypos_on_map == 47 # Skip dummied out rooms
               room.room_xpos_on_map -= min_x
               room.room_ypos_on_map -= min_y
-              room.write_to_rom()
+              room.write_extra_data_to_rom()
             end
           end
         end
