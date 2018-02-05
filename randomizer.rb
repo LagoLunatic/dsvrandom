@@ -427,6 +427,11 @@ class Randomizer
           possible_max_up_ids.delete(max_up_id)
           @max_up_items << max_up_id
         end
+        
+        # In the alternate game modes like Richter mode, max ups should still appear but not other items.
+        # We need to tell the game what the new max up item IDs are for it to do this.
+        game.fs.replace_arm_shifted_immediate_integer(0x021DD8C0, @max_up_items[0]) # HP Max Up
+        game.fs.replace_arm_shifted_immediate_integer(0x021DD8C8, @max_up_items[1]) # MP Max Up
       when "ooe"
         possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
         possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
