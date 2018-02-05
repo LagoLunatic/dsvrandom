@@ -1165,7 +1165,7 @@ class Randomizer
       game.fs.write(0x022E8880, [0xE3A01001].pack("V")) # mov r1, 1h
     end
     
-    if GAME == "por" && options[:randomize_area_connections]
+    if GAME == "por" && (options[:randomize_area_connections] || options[:randomize_rooms_map_friendly])
       # Some bosses (e.g. Stella) connect directly to a transition room.
       # This means the boss door gets placed in whatever transition room gets connected to the boss by the area randomizer.
       # But almost all transition room hiders have a higher Z-position than boss doors, hiding the boss door.
