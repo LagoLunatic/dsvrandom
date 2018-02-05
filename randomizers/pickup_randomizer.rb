@@ -452,7 +452,7 @@ module PickupRandomizer
         pickup_str = "villager #{pickup_global_id}"
       elsif PORTRAIT_NAMES.include?(pickup_global_id)
         # Portrait
-        pickup_str = "portrait #{pickup_global_id}"
+        pickup_str = "portrait #{pickup_global_id.to_s[8..-1]}" # Add a space between portrait and the area name
       else
         pickup_name = checker.defs.invert[pickup_global_id].to_s
         pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
