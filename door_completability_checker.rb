@@ -35,6 +35,7 @@ class DoorCompletabilityChecker
       :portrait13thstreet    => ["04-01-08_001"], # Mummy Man
       :portraitburntparadise => ["08-00-04_000"], # The Creature
     }
+    @post_brauner_teleport_dest_door = "00-09-03_001"
     if @ooe_nonlinear
       @world_map_areas_unlocked_from_beginning = [
         "02-00-03_000",
@@ -552,7 +553,7 @@ class DoorCompletabilityChecker
         if !por_throne_room_stairway_accessible && accessible_doors.include?("00-0B-00_000") # Player has access to the 5-portrait room.
           studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all?{|door_str| accessible_doors.include?(door_str)}
           if studio_portrait_unlocked # The studio portrait is unlocked.
-            doors_and_entities_to_check << "00-09-03_001" # Give access to the stairway room leading to the Throne Room.
+            doors_and_entities_to_check << @post_brauner_teleport_dest_door # Give access to the stairway room leading to the Throne Room.
             por_throne_room_stairway_accessible = true
           end
         end
@@ -778,6 +779,10 @@ class DoorCompletabilityChecker
   def move_por_white_barrier_location(new_room_str, path_begin_door, path_end_door)
     @room_reqs["00-0A-01"][:doors][1]["000"] = nil # Unset the default white barrier req
     @room_reqs[new_room_str][:doors][path_begin_door]["%03X" % path_end_door] = false # Set the new location
+  end
+  
+  def set_post_brauner_teleport_dest_door(door_str)
+    @post_brauner_teleport_dest_door = door_str
   end
   
   def add_return_portrait(return_portrait_room_str, enter_portrait_entity_str)

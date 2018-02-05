@@ -499,6 +499,33 @@ class Randomizer
       end
       regenerate_all_maps()
       options_completed += 75
+      
+      if GAME == "por" && @rooms_unused_by_map_rando.include?(game.room_by_str("00-09-03"))
+        # If the big stairway room to the throne didn't get placed, we need to use a replacement when the player beats Brauner.
+        rooms_in_throne_room = game.areas[0].sectors[9].rooms - @rooms_unused_by_map_rando
+        dracula_room = game.room_by_str("00-09-01")
+        rooms_in_throne_room_besides_dracula = rooms_in_throne_room - [dracula_room]
+        if rooms_in_throne_room_besides_dracula.any?
+          post_brauner_teleport_dest_room = rooms_in_throne_room_besides_dracula.sample(random: rng)
+        else
+          # If the only room in the Throne Room sector that got placed was Dracula's room itself then we teleport to the transition room before Dracula instead.
+          post_brauner_teleport_dest_room = dracula_room.doors.first.destination_room
+        end
+        
+        # Update the portrait in Brauner's room to bring you to this new room.
+        sector_index = post_brauner_teleport_dest_room.sector_index
+        room_index = post_brauner_teleport_dest_room.room_index
+        portrait_to_throne_room = game.entity_by_str("0B-00-00_00")
+        portrait_to_throne_room.var_b = ((sector_index & 0xF) << 6) | (room_index & 0x3F)
+        portrait_to_throne_room.write_to_rom()
+        
+        # Update the logic so it knows what room the Brauner portrait now leads to.
+        checker.set_post_brauner_teleport_dest_door("#{post_brauner_teleport_dest_room.room_str}_000")
+        
+        # Update the white barrier to check Brauner's boss death flag instead of the misc flag set by the event you see in the stairway room.
+        game.fs.load_overlay(88)
+        game.fs.write(0x022E8878, [0xE590176C, 0xE2111902].pack("VV"))
+      end
     else
       if options[:randomize_area_connections]
         yield [options_completed, "Connecting areas..."]
