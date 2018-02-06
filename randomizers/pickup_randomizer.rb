@@ -502,7 +502,7 @@ module PickupRandomizer
   end
   
   def place_non_progression_pickups
-    remaining_locations = checker.all_locations.keys - @locations_randomized_to_have_useful_pickups
+    remaining_locations = checker.get_accessible_locations() - @locations_randomized_to_have_useful_pickups
     remaining_locations.shuffle!(random: rng)
     
     if GAME == "ooe"
