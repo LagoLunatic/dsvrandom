@@ -938,6 +938,44 @@ class Randomizer
       end
     end
     
+    case GAME
+    when "por", "ooe"
+      game.each_room do |room|
+        room.entities.each_with_index do |entity, entity_index|
+          if entity.type == 8 && entity.byte_8 == 0
+            # This is an entity hider that removes all remaining entities in the room.
+            if entity_index == room.entities.size - 1
+              # If the entity hider is the last entity in the room we just remove it entirely since it's not doing anything and we can't have it remove 0 entities.
+              entity.type = 0
+              entity.write_to_rom()
+            else
+              # Otherwise, we need to change it to only remove the number of entities remaining in the vanilla game.
+              # This way, even if we add new entities to this room later, the new entity will show up.
+              entity.byte_8 = room.entities.size - entity_index - 1
+              entity.write_to_rom()
+            end
+          end
+        end
+      end
+    when "dos"
+      game.each_room do |room|
+        room.entities.each_with_index do |entity, entity_index|
+          if entity.type == 6
+            # This is an entity hider. In DoS, entity hiders always remove all remaining entities in the room.
+            if entity_index == room.entities.size - 1
+              # If the entity hider is the last entity in the room we just remove it entirely since it's not doing anything and we can't have it remove 0 entities.
+              entity.type = 0
+              entity.write_to_rom()
+            else
+              # Otherwise, there's no easy way to fix this problem like in PoR/OoE, since in DoS entity hiders always hide all remaining entities.
+              # So just do nothing and hope this isn't an issue. It probably won't be since it's only a few event rooms and boss rooms that use these anyway.
+              # TODO?
+            end
+          end
+        end
+      end
+    end
+    
     # Add a free space overlay so we can add entities as much as we want.
     if !game.fs.has_free_space_overlay?
       game.add_new_overlay()
