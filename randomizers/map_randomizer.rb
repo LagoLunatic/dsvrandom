@@ -1454,6 +1454,14 @@ module MapRandomizer
         
         tile.is_blank = false
         
+        # Give the tile a wall if it's on the very border of the map.
+        if x == 0
+          tile.left_wall = true
+        end
+        if y == 0
+          tile.top_wall = true
+        end
+        
         tile.is_save = room.entities.any?{|e| e.is_special_object? && e.subtype == 0x30}
         tile.is_warp = room.entities.any?{|e| e.is_special_object? && e.subtype == 0x31}
         
