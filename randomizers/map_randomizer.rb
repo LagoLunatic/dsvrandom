@@ -97,6 +97,10 @@ module MapRandomizer
       total_num_sectors = areas_to_randomize.inject(0){|sum, area| sum += area.sectors.size}
       num_sectors_done = 0
       
+      # We don't want anything to use the right door of the tall room above the Cerberus statue, so mark it as inaccessible.
+      # If anything connected to this door it could result in whole areas being placed behind the cerberus gate. We only want Dracula behind it.
+      checker.add_inaccessible_door(game.door_by_str("00-09-01_001"))
+      
       areas_to_randomize.each do |area|
         rooms = []
         area.sectors.each do |sector|
@@ -207,6 +211,12 @@ module MapRandomizer
       # Menace. Don't try to connect this room since it has no doors.
       menace_room = sectors_for_area[0xA].first
       sectors_for_area.delete(0xA)
+    end
+    
+    if GAME == "ooe" && area_index == 0
+      # Consider sector B, with Dracula, to be part of sector 9, the Forsaken Cloister with the Cerberus gate.
+      sectors_for_area[9] += sectors_for_area[0xB]
+      sectors_for_area.delete(0xB)
     end
     
     starting_room_sector = area_starting_room.sector_index
@@ -369,6 +379,11 @@ module MapRandomizer
       puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})"
     end
     
+    if GAME == "ooe" && area_index == 0 && sector_index == 9
+      transition_room_to_connect_to_dracula = unplaced_transition_rooms.sample(random: rng)
+      unplaced_sector_rooms << transition_room_to_connect_to_dracula
+    end
+    
     total_sector_rooms = unplaced_sector_rooms.size
     puts "Total sector rooms available to place: #{total_sector_rooms}"
     
@@ -402,7 +417,7 @@ module MapRandomizer
     end
     while true
       debug = false
-      #debug = (sector_index == 5)
+      #debug = (area_index == 0 && sector_index == 9)
       #debug = true
       if on_starting_room
         on_starting_room = false
@@ -471,10 +486,15 @@ module MapRandomizer
       else
         break if unplaced_sector_rooms.empty?
         
+        transition_rooms_to_allow_connecting_to = [transition_room_to_start_sector]
+        if transition_room_to_connect_to_dracula
+          transition_rooms_to_allow_connecting_to << transition_room_to_connect_to_dracula
+        end
+        
         open_spots = get_open_spots(
           map_spots, map_width, map_height,
           unreachable_subroom_doors: unreachable_subroom_doors,
-          transition_room_to_allow_connecting_to: transition_room_to_start_sector
+          transition_rooms_to_allow_connecting_to: transition_rooms_to_allow_connecting_to
         )
         
         total_number_of_open_spots = open_spots.size
@@ -493,6 +513,23 @@ module MapRandomizer
             #puts "checking room: #{room.room_str}" if debug
             
             next unless check_rooms_can_be_connected(room, dest_room)
+            
+            if GAME == "ooe" && area_index == 0 && sector_index == 9
+              # We want the transition to dracula to connect to the left of the tall room above the Cerberus Statue.
+              is_left_door_of_tall_room = (dest_room.room_str == "00-09-01" && direction == :right)
+              if room == transition_room_to_connect_to_dracula && !is_left_door_of_tall_room
+                # Don't let the transition to dracula to connect anywhere except that one door.
+                next
+              end
+              if room != transition_room_to_connect_to_dracula && is_left_door_of_tall_room
+                # Don't let any rooms besides that transition to dracula connect to that one door.
+                next
+              end
+              if dest_room == transition_room_to_connect_to_dracula && room.sector_index != 0xB
+                # Don't let rooms except ones in the dracula sector (B) connect to the dracula transition room.
+                next
+              end
+            end
             
             room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
             
@@ -687,14 +724,11 @@ module MapRandomizer
       recenter_map_spots(map_spots, map_width, map_height)
       
       #if @transition_rooms.include?(room)
-      #  regenerate_map(area_index, sector_index)
+      #  regenerate_map(area_index, sector_index, should_recenter_map: false)
       #  gets
       #end
       
-      #regenerate_map(area_index, sector_index, maps_rendered)
-      #maps_rendered += 1
-      
-      #regenerate_map(area_index, sector_index)
+      #regenerate_map(area_index, sector_index, should_recenter_map: false)
       #gets
     end
     
@@ -1187,8 +1221,8 @@ module MapRandomizer
     end
   end
   
-  def get_open_spots(map_spots, map_width, map_height, transition_room_to_allow_connecting_to: nil, unreachable_subroom_doors: [])
-    transition_rooms_not_allowed_to_connect_to = @transition_rooms - [transition_room_to_allow_connecting_to]
+  def get_open_spots(map_spots, map_width, map_height, transition_rooms_to_allow_connecting_to: [], unreachable_subroom_doors: [])
+    transition_rooms_not_allowed_to_connect_to = @transition_rooms - transition_rooms_to_allow_connecting_to
     
     open_spots = []
     map_width.times do |x|
