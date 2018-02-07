@@ -1346,6 +1346,18 @@ module MapRandomizer
     when "dos"
       regenerate_map(0, 0) # Castle
       regenerate_map(0, 0xB) # Abyss
+      
+      # Update the total number of map tiles used for calculating the percentage of the map that has been explored on the pause screen.
+      game.apply_armips_patch("dos_allow_changing_total_map_tiles")
+      castle_map = game.get_map(0, 0)
+      abyss_map = game.get_map(0, 0xB)
+      total_num_tiles = 0
+      [castle_map, abyss_map].each do |map|
+        map.tiles.each do |tile|
+          total_num_tiles += 1 unless tile.is_blank
+        end
+      end
+      game.fs.write(0x02026B68, [total_num_tiles].pack("V"))
     when "por"
       (0..9).each do |area_index|
         regenerate_map(area_index, 0)
