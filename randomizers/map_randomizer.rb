@@ -1358,6 +1358,13 @@ module MapRandomizer
         end
       end
       game.fs.write(0x02026B68, [total_num_tiles].pack("V"))
+      
+      # Get rid of all secret doors so they don't appear on the new map and look weird.
+      # A secret door with X and Y of FF is the end marker of the list, so just set the first secret door as the end marker.
+      first_secret_door = castle_map.secret_doors.first
+      first_secret_door.x_pos = 0xFF
+      first_secret_door.y_pos = 0xFF
+      first_secret_door.write_to_rom()
     when "por"
       (0..9).each do |area_index|
         regenerate_map(area_index, 0)
