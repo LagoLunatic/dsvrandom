@@ -41,7 +41,7 @@ module MapRandomizer
       num_sectors_done = 0
       
       starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow for starting room rando to work
-      randomize_doors_no_overlap_for_area(castle_rooms, 64, 45, starting_room) do |num_sectors_done_for_area|
+      randomize_doors_no_overlap_for_area(castle_rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
         num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
         percent_done = num_sectors_done / total_num_sectors
         yield percent_done
@@ -86,7 +86,7 @@ module MapRandomizer
         else
           raise "Invalid area"
         end
-        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room) do |num_sectors_done_for_area|
+        randomize_doors_no_overlap_for_area(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
           num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
           percent_done = num_sectors_done / total_num_sectors
           yield percent_done
@@ -145,7 +145,7 @@ module MapRandomizer
         else
           raise "Invalid area"
         end
-        randomize_doors_no_overlap_for_area(rooms, 64, 45, starting_room) do |num_sectors_done_for_area|
+        randomize_doors_no_overlap_for_area(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
           num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
           percent_done = num_sectors_done / total_num_sectors
           yield percent_done
