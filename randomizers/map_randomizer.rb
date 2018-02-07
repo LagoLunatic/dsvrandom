@@ -641,9 +641,6 @@ module MapRandomizer
         else
           # Filling in the remaining dead ends.
           
-          non_dead_end_room_positions = valid_room_positions.select do |room_position|
-            room_position[:diff_in_num_spots] >= 0
-          end
           area_entrance_room_positions = valid_room_positions.select do |room_position|
             GAME == "ooe" && room_position[:room].entities.find{|e| e.is_special_object? && e.subtype == 0x2B}
           end
@@ -654,13 +651,13 @@ module MapRandomizer
             room_position[:room].entities.find{|e| e.is_warp_point?}
           end
           
-          # Prioritize OoE area entrances, then save rooms, then warp rooms, then other dead ends.
+          # Prioritize OoE area entrances, then warp rooms, then save rooms, then other dead ends.
           if area_entrance_room_positions.any?
             possible_room_positions = area_entrance_room_positions
-          elsif save_room_positions.any?
-            possible_room_positions = save_room_positions
           elsif warp_room_positions.any?
             possible_room_positions = warp_room_positions
+          elsif save_room_positions.any?
+            possible_room_positions = save_room_positions
           else
             possible_room_positions = valid_room_positions
           end
