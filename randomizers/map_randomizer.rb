@@ -175,6 +175,25 @@ module MapRandomizer
       
       # Tell the logic where the white barrier was moved to.
       checker.move_por_white_barrier_location("00-0A-17", 1, 0)
+      
+      if @rooms_unused_by_map_rando.include?(game.room_by_str("00-09-03"))
+        # If the big stairway room to the throne didn't get placed, we need to use a replacement when the player beats Brauner.
+        post_brauner_teleport_dest_room = transition_for_throne_room
+        
+        # Update the portrait in Brauner's room to bring you to this new room.
+        sector_index = post_brauner_teleport_dest_room.sector_index
+        room_index = post_brauner_teleport_dest_room.room_index
+        portrait_to_throne_room = game.entity_by_str("0B-00-00_00")
+        portrait_to_throne_room.var_b = ((sector_index & 0xF) << 6) | (room_index & 0x3F)
+        portrait_to_throne_room.write_to_rom()
+        
+        # Update the logic so it knows what room the Brauner portrait now leads to.
+        checker.set_post_brauner_teleport_dest_door("#{post_brauner_teleport_dest_room.room_str}_000")
+        
+        # Update the white barrier to check Brauner's boss death flag instead of the misc flag set by the event you see in the stairway room.
+        game.fs.load_overlay(88)
+        game.fs.write(0x022E8878, [0xE590176C, 0xE2111902].pack("VV"))
+      end
     end
   end
   
