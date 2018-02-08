@@ -488,6 +488,8 @@ module MapRandomizer
           
           number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x, y)
           
+          next if number_of_spots_opened_up < 1 # Don't allow placing a transition room in a spot that doesn't actually have any open space at all on the other end.
+          
           diff_in_num_spots = number_of_spots_opened_up - number_of_spots_closed_up
           
           if (total_number_of_open_spots + diff_in_num_spots) > 0 # Don't allow positions that would block off literally every open spot.
