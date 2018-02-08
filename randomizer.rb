@@ -860,6 +860,20 @@ class Randomizer
       layer.write_to_rom()
     end
     
+    if GAME == "ooe"
+      # We need to unset the prerequisite event flag for certain events manually.
+      # The ooe_nonlinear patch does this but we might already have those rooms cached by now in memory so the changes won't get read in correctly.
+      # Also, we unset these event flags even if the nonlinear option is off just in case the player sequence breaks the game somehow.
+      game.each_room do |room|
+        room.entities.each do |entity|
+          if entity.is_special_object? && [0x69, 0x6B, 0x6C, 0x6F, 0x71, 0x74, 0x7E, 0x85].include?(entity.subtype)
+            entity.var_b = 0
+            entity.write_to_rom()
+          end
+        end
+      end
+    end
+    
     if GAME == "dos" && room_rando?
       # Remove the special code for the slide puzzle.
       game.fs.write(0x0202738C, [0xE3A00000, 0xE8BD41F0, 0xE12FFF1E].pack("V*"))
