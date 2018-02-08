@@ -453,6 +453,8 @@ module MapRandomizer
         open_spots.each do |x, y, dir, dest_room|
           next unless [:left, :right].include?(dir)
           
+          next unless check_rooms_can_be_connected(room, dest_room)
+          
           if GAME == "por" && area_index == 0 && sector_index == 9
             # When placing the transition to the Throne Room, we need to make sure the open spot faces left.
             # This is because when we add the white barrier, it only works on the left side of the room.
@@ -815,7 +817,7 @@ module MapRandomizer
       end
     end
     
-    # Also updated the list of placed transition rooms so it doesn't include these anymore.
+    # Also update the list of placed transition rooms so it doesn't include these anymore.
     removed_transition_rooms.each do |removed_transition_room|
       placed_transition_rooms.delete(removed_transition_room)
     end
@@ -1292,6 +1294,7 @@ module MapRandomizer
     
     
     # Don't let the Mine of Judgement start sector 5 by connecting to the transition room.
+    # Also don't let any other sector start by connecting to Mine of Judgement, since then it would be a pointless sector. And if that area is Garden of Madness the player has no way of unlocking the darkness gate.
     if GAME == "dos"
       if room_b.sector_index == 5 && @transition_rooms.include?(room_a)
         if CONDEMNED_TOWER_ROOM_INDEXES.include?(room_b.room_index)
