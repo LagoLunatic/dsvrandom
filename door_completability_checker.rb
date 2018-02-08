@@ -518,7 +518,7 @@ class DoorCompletabilityChecker
       
       # Handle the darkness seal.
       if GAME == "dos"
-        if has_mina_talisman && !dos_darkness_seal_unlocked && accessible_doors.include?("00-03-0E_000")
+        if has_mina_talisman && !dos_darkness_seal_unlocked && (accessible_doors.include?("00-03-0E_000") || accessible_doors.include?("00-03-0E_001"))
           # Player can access and complete the doppelganger event in the center of the castle.
           dos_darkness_seal_unlocked = true
         end
