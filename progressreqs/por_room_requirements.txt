@@ -93,7 +93,15 @@ Progress important rooms:
   - 00-0B-00 # Big portrait room
   - 00-01-06 # Wind
   - 00-01-09 # Vincent
-  - 00-08-0F # Stella fight (necessary to unlock Forest of Doom)
+  - 00-08-0F # Stella fight (to unlock Forest of Doom)
+  - 02-02-14 # Werewolf (to unlock the big portrait)
+  - 04-01-08 # Mummy Man (to unlock the big portrait)
+  - 06-00-05 # Medusa (to unlock the big portrait)
+  - 08-00-04 # The Creature (to unlock the big portrait)
+  - 01-02-0B # Dullahan (to unlock the big portrait in short mode)
+  - 03-00-0C # Astarte (to unlock the big portrait in short mode)
+  - 05-02-0C # Legion (to unlock the big portrait in short mode)
+  - 07-00-0E # Dagon (to unlock the big portrait in short mode)
 Subrooms:
   05-02-0C: # Legion's room.
     -
