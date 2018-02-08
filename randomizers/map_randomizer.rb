@@ -460,6 +460,10 @@ module MapRandomizer
             # This is because when we add the white barrier, it only works on the left side of the room.
             next unless dir == :right
           end
+          if GAME == "por" && area_index == 0 && dest_room.sector_index == 9
+            # Don't allow branching any other sectors off of the throne room, since they would be useless, and if the sector containing the big portrait does that there's no way to reach that portrait.
+            next
+          end
           
           number_of_spots_opened_up, number_of_spots_closed_up = get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x, y)
           
