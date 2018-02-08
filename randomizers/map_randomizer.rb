@@ -264,8 +264,8 @@ module MapRandomizer
       )
       
       if result == :mustredo || (result == :shouldredo && redo_counts_per_sector[sector_index] <= 7)
-        if redo_counts_per_sector[sector_index] > 15
-          raise "Map randomizer had to redo area %02X sector %02X more than 15 times." % [area_index, sector_index]
+        if redo_counts_per_sector[sector_index] > @max_map_rando_sector_redos
+          raise "Map randomizer had to redo area %02X sector %02X more than #{@max_map_rando_sector_redos} times." % [area_index, sector_index]
         end
         
         unplaced_rooms_for_each_sector[sector_index] = orig_unplaced_sector_rooms
@@ -417,7 +417,7 @@ module MapRandomizer
     end
     while true
       debug = false
-      #debug = (area_index == 0 && sector_index == 9)
+      #debug = (area_index == 0 && sector_index == 5)
       #debug = true
       if on_starting_room
         on_starting_room = false
