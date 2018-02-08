@@ -155,6 +155,8 @@ module MapRandomizer
     
     replace_outer_boss_doors()
     
+    remove_map_rando_unfriendly_events()
+    
     if GAME == "por"
       # Add the white barrier to the transition room before the Throne Room.
       transition_for_throne_room = game.room_by_str("00-0A-17")
@@ -1220,6 +1222,18 @@ module MapRandomizer
         new_wooden_door.subtype = WOODEN_DOOR_SUBTYPE
         
         new_wooden_door.write_to_rom()
+      end
+    end
+  end
+  
+  def remove_map_rando_unfriendly_events
+    case GAME
+    when "dos"
+      # If the right wall of flying armor's room is blocked off Yoko can't enter the room, softlocking the game.
+      if checker.inaccessible_doors.include?("00-00-0B_001")
+        flying_armor_event = game.entity_by_str("00-00-0B_06")
+        flying_armor_event.type = 0
+        flying_armor_event.write_to_rom()
       end
     end
   end
