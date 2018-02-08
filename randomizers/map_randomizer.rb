@@ -1190,6 +1190,11 @@ module MapRandomizer
         dest_door = door.destination_door
         dest_room = dest_door.room
         
+        if dest_room.entities.find{|e| e.is_boss?}
+          # Don't add wooden doors on top of boss doors. The player could use the wooden door to walk straight through the boss door.
+          next
+        end
+        
         gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
         gap_end_offset = gap_end_index * 0x10 + 0x10
         
