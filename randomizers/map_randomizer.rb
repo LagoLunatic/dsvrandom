@@ -1092,6 +1092,7 @@ module MapRandomizer
               tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
               coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
               coll_layer.tiles[tile_i].horizontal_flip = false
+              coll_layer.tiles[tile_i].vertical_flip = false
             end
             coll_layer.write_to_rom()
             
@@ -1131,6 +1132,7 @@ module MapRandomizer
               tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
               coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
               coll_layer.tiles[tile_i].horizontal_flip = false
+              coll_layer.tiles[tile_i].vertical_flip = false
             end
             coll_layer.write_to_rom()
             
@@ -1170,6 +1172,7 @@ module MapRandomizer
               tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
               coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
               coll_layer.tiles[tile_i].horizontal_flip = false
+              coll_layer.tiles[tile_i].vertical_flip = false
             end
             coll_layer.write_to_rom()
             
@@ -1209,6 +1212,7 @@ module MapRandomizer
               tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
               coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
               coll_layer.tiles[tile_i].horizontal_flip = false
+              coll_layer.tiles[tile_i].vertical_flip = false
               
               # If there are any jumpthrough platforms immediately above the downdoor we're blocking off, delete those platforms.
               # If we don't delete them and the player tries to fall through one, it kind of bugs out the physics and the player teleports around a little bit.

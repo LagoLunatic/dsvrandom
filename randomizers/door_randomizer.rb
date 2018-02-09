@@ -1148,6 +1148,7 @@ module DoorRandomizer
       tile_i = tile[:x] + tile[:y]*SCREEN_WIDTH_IN_TILES*coll_layer.width
       coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
       coll_layer.tiles[tile_i].horizontal_flip = false
+      coll_layer.tiles[tile_i].vertical_flip = false
     end
     coll_layer.write_to_rom()
   end
