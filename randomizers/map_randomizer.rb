@@ -652,14 +652,29 @@ module MapRandomizer
             room = room_position[:room]
             if @transition_rooms.include?(room)
               true
-            elsif checker.progress_important_rooms.include?(room)
+            elsif checker.progress_important_rooms.include?(room) && room_position[:diff_in_num_spots] >= 0 # Progress rooms that aren't dead ends.
               true
             elsif room_position[:diff_in_num_spots] >= 1
+              true
+            elsif room.entities.find{|e| e.is_save_point?} && room_position[:diff_in_num_spots] >= 0 # Save rooms with doors on both sides.
+              true
+            elsif room.entities.find{|e| e.is_warp_point?} && room_position[:diff_in_num_spots] >= 0 # Warp rooms with doors on both sides.
               true
             else
               false
             end
             # TODO boss rooms
+          end
+          
+          if possible_room_positions.empty?
+            possible_room_positions = valid_room_positions.select do |room_position|
+              room = room_position[:room]
+              if checker.progress_important_rooms.include?(room) # Progress rooms that are dead ends.
+                true
+              else
+                false
+              end
+            end
           end
           
           if possible_room_positions.empty?
