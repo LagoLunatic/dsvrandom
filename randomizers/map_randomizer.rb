@@ -41,13 +41,19 @@ module MapRandomizer
       num_sectors_done = 0
       
       starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow for starting room rando to work
-      randomize_doors_no_overlap_for_area(castle_rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
-        num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+      
+      num_sectors_done_before_area = num_sectors_done
+      randomize_doors_no_overlap_for_area_with_redos(castle_rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
+        num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
         percent_done = num_sectors_done / total_num_sectors
         yield percent_done
       end
-      randomize_doors_no_overlap_for_area(abyss_rooms, 18, 25, game.room_by_str("00-0B-00")) do |num_sectors_done_for_area|
-        num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+      
+      starting_room = game.room_by_str("00-0B-00")
+      
+      num_sectors_done_before_area = num_sectors_done
+      randomize_doors_no_overlap_for_area_with_redos(abyss_rooms, 18, 25, starting_room) do |num_sectors_done_for_area|
+        num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
         percent_done = num_sectors_done / total_num_sectors
         yield percent_done
       end
@@ -86,8 +92,10 @@ module MapRandomizer
         else
           raise "Invalid area"
         end
-        randomize_doors_no_overlap_for_area(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
-          num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+        
+        num_sectors_done_before_area = num_sectors_done
+        randomize_doors_no_overlap_for_area_with_redos(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
+          num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
           percent_done = num_sectors_done / total_num_sectors
           yield percent_done
         end
@@ -152,8 +160,10 @@ module MapRandomizer
         else
           raise "Invalid area"
         end
-        randomize_doors_no_overlap_for_area(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
-          num_sectors_done += 0.5 # Only increment by 0.5 because each sector is split into the skeleton and dead-end halves.
+        
+        num_sectors_done_before_area = num_sectors_done
+        randomize_doors_no_overlap_for_area_with_redos(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
+          num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
           percent_done = num_sectors_done / total_num_sectors
           yield percent_done
         end
@@ -212,6 +222,29 @@ module MapRandomizer
       room = sector.rooms[-1]
       filename = "./dsvrandom/roomedits/por_map_rando_00-09-04.tmx"
       tiled.read(filename, room)
+    end
+  end
+  
+  def randomize_doors_no_overlap_for_area_with_redos(area_rooms, map_width, map_height, area_starting_room)
+    area_index = area_rooms.first.area_index
+    orig_rooms_unused_by_map_rando = @rooms_unused_by_map_rando.dup
+    redo_counts_for_area = 0
+    while true
+      result = randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room) do |num_sectors_done_for_area|
+        yield num_sectors_done_for_area
+      end
+      
+      if result == :redo
+        if redo_counts_for_area > @max_map_rando_area_redos
+          raise "Map randomizer had to redo area %02X more than #{@max_map_rando_area_redos} times." % area_index
+        end
+        
+        @rooms_unused_by_map_rando = orig_rooms_unused_by_map_rando.dup
+        redo_counts_for_area += 1
+        puts "Map rando is redoing area #{area_index} (time #{redo_counts_for_area})"
+      else
+        break
+      end
     end
   end
   
@@ -293,7 +326,8 @@ module MapRandomizer
       
       if result == :mustredo || (result == :shouldredo && redo_counts_per_sector[sector_index] <= 7)
         if redo_counts_per_sector[sector_index] > @max_map_rando_sector_redos
-          raise "Map randomizer had to redo area %02X sector %02X more than #{@max_map_rando_sector_redos} times." % [area_index, sector_index]
+          return :redo
+          #raise "Map randomizer had to redo area %02X sector %02X more than #{@max_map_rando_sector_redos} times." % [area_index, sector_index]
         end
         
         unplaced_rooms_for_each_sector[sector_index] = orig_unplaced_sector_rooms
