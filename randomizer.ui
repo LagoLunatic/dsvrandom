@@ -297,6 +297,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <widget class="QCheckBox" name="randomize_rooms_map_friendly">
+              <property name="toolTip">
+               <string>Randomly generates a new map and connects the rooms to match the map.</string>
+              </property>
               <property name="text">
                <string>Rooms and Areas (Map-friendly)</string>
               </property>
@@ -319,7 +322,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_room_connections">
               <property name="toolTip">
-               <string>Randomizes which rooms within an area connect to each other.</string>
+               <string>Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)</string>
               </property>
               <property name="text">
                <string>Room Connections (Not map-friendly)</string>
@@ -473,7 +476,7 @@
             <x>0</x>
             <y>0</y>
             <width>590</width>
-            <height>465</height>
+            <height>436</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
