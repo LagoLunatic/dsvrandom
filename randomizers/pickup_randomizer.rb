@@ -724,7 +724,7 @@ module PickupRandomizer
     if GAME == "ooe"
       valid_ids -= (0x6F..0x74).to_a
     end
-    return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a)
+    return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
   end
   
   def get_unplaced_non_progression_projectile_glyph
