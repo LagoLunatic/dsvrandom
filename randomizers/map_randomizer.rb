@@ -1486,7 +1486,7 @@ module MapRandomizer
     area = game.areas[area_index]
     
     if GAME == "dos"
-      regenerate_map_dos(map, area)
+      regenerate_map_dos(map, area, should_recenter_map: should_recenter_map)
     else
       regenerate_map_por_ooe(map, area, should_recenter_map: should_recenter_map)
     end
@@ -1503,7 +1503,7 @@ module MapRandomizer
     renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
   end
   
-  def regenerate_map_dos(map, area)
+  def regenerate_map_dos(map, area, should_recenter_map: true)
     unless map.is_abyss
       # Fix warps.
       map.warp_rooms.each_with_index do |warp, warp_index|
@@ -1516,6 +1516,10 @@ module MapRandomizer
           warp.y_pos_in_tiles = room.room_ypos_on_map
         end
       end
+    end
+    
+    if should_recenter_map
+      recenter_map(map, area)
     end
     
     map.tiles.each do |tile|
@@ -1612,62 +1616,12 @@ module MapRandomizer
   def regenerate_map_por_ooe(map, area, should_recenter_map: true)
     map.tiles.clear() # Empty the array of vanilla map tiles.
     
-    min_x = 9999
-    min_y = 9999
-    max_x = 0
-    max_y = 0
-    area.sectors.each do |sector|
-      sector.rooms.each do |room|
-        room_x = room.room_xpos_on_map
-        room_y = room.room_ypos_on_map
-        next if room_x == 63 || room_y == 47 || @rooms_unused_by_map_rando.include?(room) # Dummied out room
-        
-        if room_x < min_x
-          min_x = room_x
-        end
-        if room_y < min_y
-          min_y = room_y
-        end
-        
-        room_right_x = room.room_xpos_on_map + room.width - 1
-        if room_right_x > max_x
-          max_x = room_right_x
-        end
-        room_bottom_y = room.room_ypos_on_map + room.height - 1
-        if room_bottom_y > max_y
-          max_y = room_bottom_y
-        end
-      end
-    end
-    
     if should_recenter_map
-      # Push the map up into the top left corner if it's not already.
-      if min_x > 0 || min_y > 0
-        area.sectors.each do |sector|
-          sector.rooms.each do |room|
-            unless room.room_xpos_on_map == 63 || room.room_ypos_on_map == 47 # Skip dummied out rooms
-              room.room_xpos_on_map -= min_x
-              room.room_ypos_on_map -= min_y
-              room.write_extra_data_to_rom()
-            end
-          end
-        end
-        
-        max_x -= min_x
-        max_y -= min_y
-        min_x = 0
-        min_y = 0
-      end
-      
-      # Visually center the map.
-      x_offset_in_tiles = (64 - max_x) / 2
-      y_offset_in_tiles = (48 - max_y) / 2
-      map.draw_x_offset = x_offset_in_tiles / 2 # These properties are in terms of pairs of 2 tiles, so divide by 2 again.
-      map.draw_y_offset = y_offset_in_tiles / 2
+      recenter_map(map, area)
     end
     
-    (0..max_y).each do |y|
-      (0..max_x).each do |x|
+    (0...60).each do |y|
+      (0...44).each do |x|
         sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
         
         if sector_index
@@ -1774,5 +1728,65 @@ module MapRandomizer
     end
     
     map.write_to_rom(allow_changing_num_tiles: true)
+  end
+  
+  def recenter_map(map, area)
+    area_rooms = []
+    area.sectors.each do |sector|
+      if GAME == "dos"
+        next if sector.sector_index == 0xA # Menace
+        next if sector.sector_index == 0xB && !map.is_abyss
+        next if sector.sector_index != 0xB && map.is_abyss
+      end
+      area_rooms += sector.rooms
+    end
+    
+    min_x = 9999
+    min_y = 9999
+    max_x = 0
+    max_y = 0
+    area_rooms.each do |room|
+      room_x = room.room_xpos_on_map
+      room_y = room.room_ypos_on_map
+      next if room_x == 63 || room_y == 47 || @rooms_unused_by_map_rando.include?(room) # Dummied out room
+      
+      if room_x < min_x
+        min_x = room_x
+      end
+      if room_y < min_y
+        min_y = room_y
+      end
+      
+      room_right_x = room.room_xpos_on_map + room.width - 1
+      if room_right_x > max_x
+        max_x = room_right_x
+      end
+      room_bottom_y = room.room_ypos_on_map + room.height - 1
+      if room_bottom_y > max_y
+        max_y = room_bottom_y
+      end
+    end
+    
+    # Push the map up into the top left corner if it's not already.
+    if min_x > 0 || min_y > 0
+      area_rooms.each do |room|
+        unless room.room_xpos_on_map == 63 || room.room_ypos_on_map == 47 # Skip dummied out rooms
+          room.room_xpos_on_map -= min_x
+          room.room_ypos_on_map -= min_y
+          room.write_extra_data_to_rom()
+        end
+      end
+      
+      max_x -= min_x
+      max_y -= min_y
+      min_x = 0
+      min_y = 0
+    end
+    
+    # Visually center the map.
+    x_offset_in_tiles = (64 - max_x) / 2
+    y_offset_in_tiles = (48 - max_y) / 2
+    map.draw_x_offset = x_offset_in_tiles
+    map.draw_y_offset = y_offset_in_tiles
   end
 end
