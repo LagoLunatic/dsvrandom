@@ -362,8 +362,11 @@ class DoorCompletabilityChecker
   end
   
   def get_accessible_locations_and_doors
-    accessible_locations = []
-    accessible_doors = []
+    # Use a hashes instead of arrays for these because it improves performance of checking if a specific thing is accessible.
+    # (Only within this method, they still get returned as arrays.)
+    accessible_locations = {}
+    accessible_doors = {}
+    
     doors_and_entities_to_check = []
     
     doors_and_entities_to_check << @starting_location # Player can always use a magical ticket to access their starting location.
@@ -378,8 +381,10 @@ class DoorCompletabilityChecker
       por_throne_room_stairway_accessible = false
     when "ooe"
       # OoE-specific variables for dealing with the world map.
-      currently_unlocked_world_map_areas = []
-      currently_unlocked_world_map_areas += @world_map_areas_unlocked_from_beginning
+      currently_unlocked_world_map_areas = {}
+      @world_map_areas_unlocked_from_beginning.each do |world_map_door_str|
+        currently_unlocked_world_map_areas[world_map_door_str] = true
+      end
       world_map_accessible = false
       castle_accessible = false
       barlowe_accessible = false
@@ -442,9 +447,9 @@ class DoorCompletabilityChecker
         room_str = $1
         entity_index = $2.to_i(16)
         
-        next if accessible_locations.include?(door_or_entity_str)
+        next if accessible_locations[door_or_entity_str]
         entity_location_str = "#{room_str}_%02X" % entity_index # Remove the e prefix for the entity.
-        accessible_locations << entity_location_str
+        accessible_locations[entity_location_str] = true
         
         current_room = game.room_by_str(room_str)
         current_entity = current_room.entities[entity_index]
@@ -456,7 +461,7 @@ class DoorCompletabilityChecker
               if path_end =~ /^e(\h\h)$/
                 # Entity. This code shouldn't ever run since the room reqs don't include entity->entity paths, but put it here anyway for future-proofing.
                 entity_str = "#{room_str}_#{$1}"
-                accessible_locations << entity_str
+                accessible_locations[entity_str] = true
               else
                 # Door
                 door_index = path_end.to_i(16)
@@ -472,8 +477,8 @@ class DoorCompletabilityChecker
         room_str = $1
         door_index = $2.to_i(16)
         
-        next if accessible_doors.include?(door_or_entity_str)
-        accessible_doors << door_or_entity_str
+        next if accessible_doors[door_or_entity_str]
+        accessible_doors[door_or_entity_str] = true
         
         current_room = game.room_by_str(room_str)
         current_door = current_room.doors[door_index]
@@ -492,7 +497,7 @@ class DoorCompletabilityChecker
               if path_end =~ /^e(\h\h)$/
                 # Entity
                 entity_str = "#{room_str}_#{$1}"
-                accessible_locations << entity_str
+                accessible_locations[entity_str] = true
               else
                 # Door
                 door_index = path_end.to_i(16)
@@ -518,11 +523,11 @@ class DoorCompletabilityChecker
       
       # Handle the darkness seal.
       if GAME == "dos"
-        if has_mina_talisman && !dos_darkness_seal_unlocked && (accessible_doors.include?("00-03-0E_000") || accessible_doors.include?("00-03-0E_001"))
+        if has_mina_talisman && !dos_darkness_seal_unlocked && (accessible_doors["00-03-0E_000"] || accessible_doors["00-03-0E_001"])
           # Player can access and complete the doppelganger event in the center of the castle.
           dos_darkness_seal_unlocked = true
         end
-        if dos_darkness_seal_unlocked && accessible_doors.include?("00-05-0C_000")
+        if dos_darkness_seal_unlocked && accessible_doors["00-05-0C_000"]
           # Player can access the darkness seal room, and has also unlocked the darkness seal.
           doors_and_entities_to_check << "00-05-0C_001"
         end
@@ -532,7 +537,7 @@ class DoorCompletabilityChecker
         portraits_to_unlock = []
         locked_accessible_portraits.each do |portrait_name|
           required_doors_for_this_portrait = @required_accessible_doors_to_unlock_regular_portraits[portrait_name]
-          if required_doors_for_this_portrait.include?(door_or_entity_str) && (required_doors_for_this_portrait - accessible_doors).empty?
+          if required_doors_for_this_portrait.include?(door_or_entity_str) && (required_doors_for_this_portrait - accessible_doors.keys).empty?
             # Can reach all the doors needed to unlock this portrait.
             dest_door_str = get_destination_of_portrait(portrait_name)
             
@@ -550,8 +555,8 @@ class DoorCompletabilityChecker
       
       # Handle the Studio Portrait warp to the Throne Room stairway in PoR.
       if GAME == "por"
-        if !por_throne_room_stairway_accessible && accessible_doors.include?("00-0B-00_000") # Player has access to the 5-portrait room.
-          studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all?{|door_str| accessible_doors.include?(door_str)}
+        if !por_throne_room_stairway_accessible && accessible_doors["00-0B-00_000"] # Player has access to the 5-portrait room.
+          studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all?{|door_str| accessible_doors[door_str]}
           if studio_portrait_unlocked # The studio portrait is unlocked.
             doors_and_entities_to_check << @post_brauner_teleport_dest_door # Give access to the stairway room leading to the Throne Room.
             por_throne_room_stairway_accessible = true
@@ -576,19 +581,19 @@ class DoorCompletabilityChecker
           newly_unlocked_world_map_door_strs += @world_map_unlocks[door_or_entity_str].split(",").map{|str| str.strip}
         end
         
-        if !barlowe_accessible && accessible_doors.include?("02-00-06_000")
+        if !barlowe_accessible && accessible_doors["02-00-06_000"]
           barlowe_accessible = true
         end
-        if !albus_fight_accessible && accessible_doors.include?("0E-00-09_000")
+        if !albus_fight_accessible && accessible_doors["0E-00-09_000"]
           albus_fight_accessible = true
         end
-        if !oblivion_ridge_event_accessible && accessible_doors.include?("10-00-00_000")
+        if !oblivion_ridge_event_accessible && accessible_doors["10-00-00_000"]
           oblivion_ridge_event_accessible = true
         end
-        if !wygol_accessible && accessible_doors.include?("12-00-14_000")
+        if !wygol_accessible && accessible_doors["12-00-14_000"]
           wygol_accessible = true
         end
-        if !george_accessible && accessible_doors.include?("11-00-08_000")
+        if !george_accessible && accessible_doors["11-00-08_000"]
           george_accessible = true
         end
         
@@ -629,17 +634,19 @@ class DoorCompletabilityChecker
         if world_map_accessible
           # If the world map is already accessible, we add them to the list of doors to check.
           doors_and_entities_to_check += newly_unlocked_world_map_door_strs
-          currently_unlocked_world_map_areas += newly_unlocked_world_map_door_strs
-          currently_unlocked_world_map_areas.uniq!
+          newly_unlocked_world_map_door_strs.each do |world_map_door_str|
+            currently_unlocked_world_map_areas[world_map_door_str] = true
+          end
         else
           # Otherwise we add them to a temporary list which will be added to our doors to check whenever we get access to the world map.
-          currently_unlocked_world_map_areas += newly_unlocked_world_map_door_strs
-          currently_unlocked_world_map_areas.uniq!
+          newly_unlocked_world_map_door_strs.each do |world_map_door_str|
+            currently_unlocked_world_map_areas[world_map_door_str] = true
+          end
         end
         
         if !world_map_accessible
           @world_map_exits.each do |entry_point|
-            if accessible_doors.include?(entry_point)
+            if accessible_doors[entry_point]
               if entry_point == "09-00-00_000" && !check_reqs([[:magnes], [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
                 # Can't get past the spikes in the first room of lighthouse without taking damage.
                 next
@@ -649,7 +656,7 @@ class DoorCompletabilityChecker
               end
               
               # When we first unlock the world map, add the world map areas that we unlocked earlier to the currently accessible rooms.
-              doors_and_entities_to_check += currently_unlocked_world_map_areas
+              doors_and_entities_to_check += currently_unlocked_world_map_areas.keys
               
               world_map_accessible = true
               break
@@ -660,10 +667,11 @@ class DoorCompletabilityChecker
     end
     
     if wygol_accessible
-      accessible_doors << "01-01-00_000" # Technically not a real door, Wygol has no doors. This is just a hack to keep track of whether we can access Nikolai.
+      accessible_doors["01-01-00_000"] = true # Technically not a real door, Wygol has no doors. This is just a hack to keep track of whether we can access Nikolai.
     end
     
-    accessible_locations.uniq!
+    accessible_locations = accessible_locations.keys
+    accessible_doors = accessible_doors.keys
     
     return [accessible_locations, accessible_doors]
   end
