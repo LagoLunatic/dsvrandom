@@ -22,6 +22,8 @@ module MapRandomizer
     
     @rooms_unused_by_map_rando = []
     
+    @map_rando_debug = false
+    
     maps_rendered = 0
     
     case GAME
@@ -40,7 +42,7 @@ module MapRandomizer
       total_num_sectors = 11
       num_sectors_done = 0
       
-      starting_room = game.areas[0].sectors[0].rooms[1] # TODO dummy starting room for DoS, need to select a proper one somehow for starting room rando to work
+      starting_room = game.areas[0].sectors[0].rooms[1]
       
       num_sectors_done_before_area = num_sectors_done
       randomize_doors_no_overlap_for_area_with_redos(castle_rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
@@ -49,7 +51,7 @@ module MapRandomizer
         yield percent_done
       end
       
-      starting_room = game.room_by_str("00-0B-00")
+      starting_room = game.areas[0].sectors[0xB].rooms[1]
       
       num_sectors_done_before_area = num_sectors_done
       randomize_doors_no_overlap_for_area_with_redos(abyss_rooms, 18, 25, starting_room) do |num_sectors_done_for_area|
@@ -132,7 +134,7 @@ module MapRandomizer
         when "Argila Swamp"
           area.sectors[0].rooms[3]
         when "Kalidus Channel"
-          area.sectors[0].rooms[0] # TODO need to do something about kalidus's alternate entrance
+          area.sectors[0].rooms[0]
         when "Somnus Reef"
           area.sectors[0].rooms[0]
         when "Minera Prison Island"
@@ -241,7 +243,7 @@ module MapRandomizer
         
         @rooms_unused_by_map_rando = orig_rooms_unused_by_map_rando.dup
         redo_counts_for_area += 1
-        puts "Map rando is redoing area #{area_index} (time #{redo_counts_for_area})"
+        puts "Map rando is redoing area #{area_index} (time #{redo_counts_for_area})" if @map_rando_debug
       else
         break
       end
@@ -255,7 +257,7 @@ module MapRandomizer
     placed_transition_rooms = []
     unreachable_subroom_doors = []
     
-    puts "ON AREA: %02X" % area_index
+    puts "ON AREA: %02X" % area_index if @map_rando_debug
     
     num_sectors_done = 0
     
@@ -339,7 +341,7 @@ module MapRandomizer
         update_room_positions_based_on_map_spots(map_spots, area_rooms)
         
         redo_counts_per_sector[sector_index] += 1
-        puts "Map rando is redoing sector #{sector_index} (time #{redo_counts_per_sector[sector_index]})"
+        puts "Map rando is redoing sector #{sector_index} (time #{redo_counts_per_sector[sector_index]})" if @map_rando_debug
         redo
       end
       
@@ -419,8 +421,8 @@ module MapRandomizer
   def randomize_doors_no_overlap_for_sector(sector_index, unplaced_sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors, placement_mode)
     area_index = area_starting_room.area_index
     
-    puts
-    puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index]
+    puts if @map_rando_debug
+    puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index] if @map_rando_debug
     
     if sector_index != area_starting_room.sector_index && placement_mode == :placing_skeleton
       if GAME == "por" && area_index == 0
@@ -438,7 +440,7 @@ module MapRandomizer
         transition_room_to_start_sector = unplaced_transition_rooms.sample(random: rng)
       end
       
-      puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})"
+      puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})" if @map_rando_debug
     end
     
     if GAME == "ooe" && area_index == 0 && sector_index == 9
@@ -447,26 +449,10 @@ module MapRandomizer
     end
     
     total_sector_rooms = unplaced_sector_rooms.size
-    puts "Total sector rooms available to place: #{total_sector_rooms}"
+    puts "Total sector rooms available to place: #{total_sector_rooms}" if @map_rando_debug
     
     # Method: Go through all open spaces that would connect to a place door, and find rooms that would fit in those spots.
     # Then select one of those rooms at random and place it.
-    
-    # TODO: don't place a room in a given spot if doing so would waste more open door spots than it adds (room's walls overlap more unused doors than this room's number of doors that would touch an empty spot)
-    
-    # TODO: the priority for different types of rooms should be like this:
-    # 1. rooms that open up more door connection spots than they close.
-    #   however, this should only be the #1 priority as long as the current number of open spots are few. when there are a lot, ignore this priotity.
-    # 2. transition rooms, boss rooms, and progress important rooms.
-    #   however, these rooms should only be placed once a decent percentage of the available rooms for this sector have been placed.
-    # 3. other rooms.
-    
-    # TODO: keep list of all open spots and just add and delete from this list instead of recalculating it from scratch every loop to improve performance.
-    
-    # TODO: don't place all rooms in a sector at once. this can lead to not enough open spots being left to place the next transition room and sector with it.
-    # instead go through and place SOME normal rooms, as well as boss rooms and progress important rooms.
-    # go through each sector to ensure some rooms from every sector get placed.
-    # then go BACK through each sector (again in random order) and try to place any rooms that didn't get placed.
     
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
@@ -505,7 +491,7 @@ module MapRandomizer
         
         p "open_spots: #{open_spots}" if debug
         if open_spots.empty?
-          puts "No open spots on the map to place the starting transition room!"
+          puts "No open spots on the map to place the starting transition room!" if @map_rando_debug
           break
         end
         
@@ -572,7 +558,7 @@ module MapRandomizer
         p "open_spots: #{open_spots}" if debug
         
         if open_spots.empty?
-          puts "No open spots on the map!"
+          puts "No open spots on the map!" if @map_rando_debug
           break
         end
         
@@ -721,8 +707,6 @@ module MapRandomizer
               end
             end
           end
-          
-          # TODO: prioritize long rooms over normal rooms that are not long.
         else
           # Filling in the remaining dead ends.
           
@@ -749,7 +733,7 @@ module MapRandomizer
         end
         
         if possible_room_positions.empty?
-          puts "No possible room positions."
+          puts "No possible room positions." if @map_rando_debug
           break
         end
         
@@ -816,17 +800,17 @@ module MapRandomizer
     
     unplaced_progress_important_rooms = unplaced_sector_rooms & checker.progress_important_rooms
     if unplaced_progress_important_rooms.any?
-      puts "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ")
+      puts "Map randomizer failed to place progress important rooms: " + unplaced_progress_important_rooms.map{|room| room.room_str}.join(", ") if @map_rando_debug
       return :mustredo
     end
     
     ratio_unplaced_rooms = unplaced_sector_rooms.size.to_f / total_sector_rooms
     if ratio_unplaced_rooms > 0.75
-      puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector."
+      puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector." if @map_rando_debug
       return :shouldredo
     end
     
-    puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}"
+    puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}" if @map_rando_debug
   end
   
   def get_num_spots_opened_and_closed_for_placement(room, room_doors, map_spots, map_width, map_height, open_spots, x_to_place_room_at, y_to_place_room_at)
