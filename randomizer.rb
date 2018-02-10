@@ -913,12 +913,6 @@ class Randomizer
       searchlights.write_to_rom()
       game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
       
-      # The right entrance to the Lighthouse has a wall that blocks it at first.
-      # If the player enters the Lighthouse from the right they'll get softlocked there.
-      # So we remove the line of code where the elevator creates that wall.
-      game.fs.load_overlay(53)
-      game.fs.write(0x022C331C, [0xE3A00000].pack("V"))
-      
       # Modify the level design of three Tymeo rooms where they have a platform at the bottom door, but only on either the left or right edge of the screen.
       # If the upwards door connected to one of these downwards doors doesn't have a platform on the same side of the screen, the player won't be able to get up.
       # So we place a large platform across the center of the bottom of these three rooms so the player can walk across it.
@@ -992,6 +986,13 @@ class Randomizer
     end
     if GAME == "por"
       game.apply_armips_patch("por_fix_map_explore_bug")
+    end
+    
+    if GAME == "ooe" && room_rando?
+      # Fix softlocks that happen when entering the Lighthouse from the wrong door.
+      # If entering from the bottom right there's a wall that blocks it. That is removed.
+      # If entering from the top there are the breakable ceilings, so the player is teleported down to the bottom in that case.
+      game.apply_armips_patch("ooe_fix_lighthouse_other_entrances")
     end
     
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
