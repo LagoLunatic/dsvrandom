@@ -20,7 +20,6 @@ RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
 PATH_BLOCKING_BREAKABLE_WALLS = [
   {var_a: 2, var_b: 0},
   {var_a: 0, var_b: 0},
-  {var_a: 0, var_b: 3},
   {var_a: 3, var_b: 3},
   {var_a: 3, var_b: 4},
   {var_a: 8, var_b: 0},
