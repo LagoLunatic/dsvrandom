@@ -35,6 +35,8 @@ module StartingRoomRandomizer
       
       next if room.entities.find{|e| e.is_boss?}
       
+      next if @rooms_unused_by_map_rando.include?(room)
+      
       # Limit to rooms where the player can access at least 3 item locations. Otherwise the player could be stuck right at the start with no items.
       room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
       room_doors.select!{|door| door.direction == :left || door.direction == :right}

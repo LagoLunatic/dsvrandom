@@ -507,6 +507,8 @@ class Randomizer
       regenerate_all_maps()
       options_completed += 75
     else
+      @rooms_unused_by_map_rando = [] # Initialize this so some other options that use it don't get an error.
+      
       if options[:randomize_area_connections]
         yield [options_completed, "Connecting areas..."]
         reset_rng()

@@ -271,11 +271,9 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_area_connections.enabled = false
       @ui.randomize_room_connections.checked = false
       @ui.randomize_room_connections.enabled = false
-      @ui.randomize_starting_room.checked = false
-      @ui.randomize_starting_room.enabled = false
     end
     
-    if @settings[:randomize_area_connections] || @settings[:randomize_room_connections] || @settings[:randomize_starting_room]
+    if @settings[:randomize_area_connections] || @settings[:randomize_room_connections]
       @ui.randomize_rooms_map_friendly.checked = false
       @ui.randomize_rooms_map_friendly.enabled = false
     end
