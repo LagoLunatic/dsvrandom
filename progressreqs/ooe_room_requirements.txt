@@ -145,8 +145,11 @@ Progress important rooms:
   - 00-09-01 # Tall room above Cerberus gate
   - 00-0B-00 # Final boss fight
   - 02-00-06 # Barlowe boss fight
+  - 06-01-09 # Lower Kalidus entrance, the lighthouse lets you enter from here
   - 0E-00-09 # Albus boss fight
+  - 10-00-00 # Albus at Oblivion Ridge, only necessary for linear mode
   - 11-00-08 # Event where you rescue George
+  - 12-00-14 # Event at end of Monastery, only necessary for linear mode
 Subrooms:
   03-00-01:
     -
