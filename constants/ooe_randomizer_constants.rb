@@ -45,10 +45,10 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022CBA08 => 0x00DB,
   },
   68 => { # Underground Labyrinth
-    0x022E1608 => 0x0001,
-    0x022E3600 => 0x0001,
-    0x022E55F8 => 0x0001,
-    0x022E75F0 => 0x0001,
+    0x022E1608 => 0x01C6,
+    0x022E3600 => 0x01C6,
+    0x022E55F8 => 0x01C6,
+    0x022E75F0 => 0x0078,
   },
   69 => { # Library
     0x022D2F80 => 0x0001,
@@ -60,7 +60,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022CA9C4 => 0x00E0,
   },
   71 => { # Barracks
-    0x022D3AA0 => 0x0001,
+    0x022D3AA0 => 0x01CC,
   },
   72 => { # Mechanical Tower
     0x022D9A70 => 0x0008,
@@ -73,7 +73,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022D29B0 => 0x007A,
   },
   77 => { # Forsaken Cloister
-    0x022C9EEC => 0x0001,
+    0x022C9EEC => 0x0275,
   },
   74 => { # Final Approach
     0x022D0FBC => 0x0001,
@@ -111,24 +111,24 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022C2FE0 => 0x0106,
   },
   46 => { # Kalidus Channel
-    0x022C5208 => 0x0001,
-    0x022C7200 => 0x0001,
+    0x022C5208 => 0x00C1,
+    0x022C7200 => 0x00D1,
   },
   47 => { # Kalidus Channel
     0x022C2FDC => 0x0001,
   },
   48 => { # Somnus Reef
-    0x022C2FDC => 0x0001,
-    0x022C4FD4 => 0x0001,
+    0x022C2FDC => 0x00C1,
+    0x022C4FD4 => 0x00D1,
   },
   49 => { # Somnus Reef
-    0x022C2FDC => 0x0001,
+    0x022C2FDC => 0x018C,
   },
   50 => { # Minera Prison Island
-    0x022CD220 => 0x0001,
+    0x022CD220 => 0x0270,
   },
   51 => { # Minera Prison Island
-    0x022CD830 => 0x0001,
+    0x022CD830 => 0x0113,
   },
   52 => { # Minera Prison Island
     0x022CB888 => 0x0001,
@@ -140,7 +140,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022C37E0 => 0x0001,
   },
   55 => { # Tymeo Mountains
-    0x022C3920 => 0x0001,
+    0x022C3920 => 0x00D0,
   },
   56 => { # Tristis Pass
     0x022C37E0 => 0x0001,
@@ -152,13 +152,13 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022C265C => 0x0001,
   },
   59 => { # Giant's Dwelling
-    0x022CEE6C => 0x0001,
+    0x022CEE6C => 0x0030,
     0x022D0E64 => 0x0001,
   },
   60 => { # Mystery Manor
-    0x022CBDB8 => 0x0001,
-    0x022CDDB0 => 0x0001,
-    0x022CFDA8 => 0x0001,
+    0x022CBDB8 => 0x0030,
+    0x022CDDB0 => 0x00B0,
+    0x022CFDA8 => 0x0105,
   },
   61 => { # Misty Forest Road
     0x022CCF9C => 0x0002,
@@ -168,8 +168,8 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022C46F8 => 0x0010,
   },
   63 => { # Oblivion Ridge
-    0x022CCABC => 0x0001,
-    0x022CEAB4 => 0x0001,
+    0x022CCABC => 0x00C0,
+    0x022CEAB4 => 0x00C0,
   },
   64 => { # Skeleton Cave
     0x022C9474 => 0x00D8,
