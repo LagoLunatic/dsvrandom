@@ -145,9 +145,6 @@ class RandomizerWindow < Qt::Dialog
     
     update_settings()
     
-    #@ui.randomize_rooms_map_friendly.checked = false
-    #@ui.randomize_rooms_map_friendly.hide()
-    
     self.resize(640, 1)
     
     self.show()
@@ -284,7 +281,7 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_starting_room.enabled = true
     end
     
-    if @settings[:randomize_pickups] && !@settings[:randomize_area_connections] && !@settings[:randomize_room_connections] && !@settings[:randomize_starting_room]
+    if @settings[:randomize_pickups] && !@settings[:randomize_area_connections] && !@settings[:randomize_room_connections]
       @ui.randomize_rooms_map_friendly.enabled = true
     end
     
