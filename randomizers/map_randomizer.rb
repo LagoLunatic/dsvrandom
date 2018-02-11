@@ -577,6 +577,12 @@ module MapRandomizer
             
             next unless check_rooms_can_be_connected(room, dest_room)
             
+            if GAME == "dos" && room.room_str == "00-01-20"
+              # Mini-Paranoia's room. Don't place it at all.
+              # It might work if attached to big Paranoia's room but that's more work to get the boss doors and such working and there's not much point.
+              next
+            end
+            
             if GAME == "ooe" && area_index == 0 && sector_index == 9
               # We want the transition to dracula to connect to the left of the tall room above the Cerberus Statue.
               is_left_door_of_tall_room = (dest_room.room_str == "00-09-01" && direction == :right)
