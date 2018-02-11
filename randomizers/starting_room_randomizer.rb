@@ -37,6 +37,10 @@ module StartingRoomRandomizer
       
       next if @rooms_unused_by_map_rando.include?(room)
       
+      rooms << room
+    end
+    
+    rooms_with_access_to_progress = rooms.select do |room|
       # Limit to rooms where the player can access at least 3 item locations. Otherwise the player could be stuck right at the start with no items.
       room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
       room_doors.select!{|door| door.direction == :left || door.direction == :right}
@@ -44,9 +48,10 @@ module StartingRoomRandomizer
       door_index = room.doors.index(door)
       checker.set_starting_room(room, door_index)
       accessible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
-      next if accessible_locations.size < 3
-      
-      rooms << room
+      accessible_locations.size > 3
+    end
+    if rooms_with_access_to_progress.any? # Only limit to rooms with access to progress if there actually are any like that.
+      rooms = rooms_with_access_to_progress
     end
     
     # Limit potential starting rooms by how powerful common enemies in their subsector are on average (in the base game, not after enemies are randomized).
@@ -62,6 +67,11 @@ module StartingRoomRandomizer
     possible_rooms = subsector_difficulty_for_each_room.select do |room, difficulty|
       difficulty <= @difficulty_settings[:starting_room_max_difficulty]
     end.keys
+    if possible_rooms.empty?
+      # If no rooms meet the difficulty threshold just use rooms with the lowest threshold.
+      min_difficulty = subsector_difficulty_for_each_room.values.min
+      possible_rooms = subsector_difficulty_for_each_room.select{|room, difficulty| difficulty == min_difficulty}.keys
+    end
     
     # TODO: for the bonus starting items option, use the new x/y pos from here.
     
