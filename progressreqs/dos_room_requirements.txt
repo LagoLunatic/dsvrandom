@@ -86,9 +86,22 @@ No progression locations:
 Warp connections:
   00-05-27_000: 00-0B-00_000
 Progress important rooms:
-  - 00-03-0E # doppelganger event that requires mina's talisman
-  - 00-05-27 # warp to abyss
-  - 00-0B-1F # warp to menace
+  - 00-03-0E # Doppelganger event that requires Mina's Talisman
+  - 00-05-27 # Warp to Abyss
+  - 00-0B-1F # Warp to Menace
+  
+  # In Julius mode all bosses before the mines (except Paranoia) must be dead to unlock the mines.
+  - 00-00-0B # Flying Armor
+  - 00-01-06 # Puppet Master
+  - 00-02-06 # Balore
+  - 00-03-0B # Dario
+  - 00-04-10 # Dmitrii
+  - 00-04-0F # Malphas
+  - 00-05-07 # Gergoth
+  - 00-06-16 # Rahab
+  - 00-07-0E # Bat Company
+  - 00-08-14 # Zephyr
+  - 00-09-01 # Aguni
 Subrooms:
   00-01-26:
     -
