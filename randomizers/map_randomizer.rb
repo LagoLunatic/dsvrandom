@@ -432,12 +432,19 @@ module MapRandomizer
           unless unplaced_transition_rooms.include?(transition_for_throne_room)
             raise "Transition for Throne Room (00-0A-17) has already been placed."
           end
-          transition_room_to_start_sector = transition_for_throne_room
+          possible_transition_rooms = [transition_for_throne_room]
         else
-          transition_room_to_start_sector = (unplaced_transition_rooms - [transition_for_throne_room]).sample(random: rng)
+          possible_transition_rooms = (unplaced_transition_rooms - [transition_for_throne_room])
         end
       else
-        transition_room_to_start_sector = unplaced_transition_rooms.sample(random: rng)
+        possible_transition_rooms = unplaced_transition_rooms
+      end
+      
+      possible_transition_rooms_from_same_sector = possible_transition_rooms.select{|room| room.sector_index == sector_index}
+      if possible_transition_rooms_from_same_sector.any?
+        transition_room_to_start_sector = possible_transition_rooms_from_same_sector.sample(random: rng)
+      else
+        transition_room_to_start_sector = possible_transition_rooms.sample(random: rng)
       end
       
       puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})" if @map_rando_debug
