@@ -583,6 +583,12 @@ module MapRandomizer
               next
             end
             
+            if GAME == "por" && room.room_str == "05-02-0C"
+              # Only allow placing Legion's room using the top door as the base.
+              # Otherwise Legion would almost certainly be inaccessible.
+              next unless direction == :up
+            end
+            
             if GAME == "ooe" && area_index == 0 && sector_index == 9
               # We want the transition to dracula to connect to the left of the tall room above the Cerberus Statue.
               is_left_door_of_tall_room = (dest_room.room_str == "00-09-01" && direction == :right)
