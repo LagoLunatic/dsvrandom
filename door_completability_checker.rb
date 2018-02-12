@@ -343,7 +343,7 @@ class DoorCompletabilityChecker
       all_locations = {}
       
       @room_reqs.each do |room_str, room_req|
-        # We only both checking door reqs since these alone should have all entities at the end.
+        # We only bother checking door reqs since these alone should have all entities at the end.
         door_reqs = room_req[:doors]
         
         door_reqs.each do |path_begin, path_ends|
@@ -648,6 +648,7 @@ class DoorCompletabilityChecker
         end
         
         if !world_map_accessible
+          # Check if we should unlock the world map.
           @world_map_exits.each do |entry_point|
             if accessible_doors[entry_point]
               if entry_point == "09-00-00_000" && !check_reqs([[:magnes], [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])

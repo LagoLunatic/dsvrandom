@@ -147,9 +147,23 @@ Progress important rooms:
   - 02-00-06 # Barlowe boss fight
   - 06-01-09 # Lower Kalidus entrance, the lighthouse lets you enter from here
   - 0E-00-09 # Albus boss fight
-  - 10-00-00 # Albus at Oblivion Ridge, only necessary for linear mode
   - 11-00-08 # Event where you rescue George
+  
+  - 10-00-00 # Albus at Oblivion Ridge, only necessary for linear mode
   - 12-00-14 # Event at end of Monastery, only necessary for linear mode
+  - 00-02-1B # Back exit of Castle, only necessary for linear mode
+  - 04-00-03 # Right exit of Ruvas, only necessary for linear mode
+  - 05-00-00 # Left exit of Argila, only necessary for linear mode
+  - 06-00-0A # Upper right exit of Kalidus, only necessary for linear mode
+  - 06-01-00 # Bottom left exit of Kalidus, only necessary for linear mode
+  - 07-00-0E # Right exit of Somnus, only necessary for linear mode
+  - 08-02-07 # Right exit of Minera, only necessary for linear mode
+  - 09-00-07 # Bottom exit of Lighthouse, only necessary for linear mode
+  - 0A-00-0A # Upper left exit of Tymeo, only necessary for linear mode
+  - 0A-00-13 # Upper right exit of Tymeo, only necessary for linear mode
+  - 0B-00-10 # Upper left exit of Tristis, only necessary for linear mode
+  - 0D-00-09 # Upper right exit of Giant's Dwelling, only necessary for linear mode
+  - 0F-00-00 # Left exit of Misty Forest Road, only necessary for linear mode
 Subrooms:
   03-00-01:
     -
