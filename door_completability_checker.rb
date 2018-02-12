@@ -725,13 +725,15 @@ class DoorCompletabilityChecker
     
     possibly_useful_pickups = all_progression_pickups - @current_items
     
-    currently_accessible_locations = get_accessible_locations()
+    # Subtract no_progression_locations since we don't want those messing up the numbers.
+    currently_accessible_locations = get_accessible_locations() - no_progression_locations
     
     pickups_by_locations = {}
     
     possibly_useful_pickups.each do |pickup_global_id|
       @current_items = orig_current_items + [pickup_global_id]
-      next_accessible_pickups = get_accessible_locations() - currently_accessible_locations
+      new_accessible_locations = get_accessible_locations() - no_progression_locations
+      next_accessible_pickups = new_accessible_locations - currently_accessible_locations
       
       pickups_by_locations[pickup_global_id] = next_accessible_pickups.length
     end
