@@ -1623,8 +1623,8 @@ module MapRandomizer
       recenter_map(map, area)
     end
     
-    (0...60).each do |y|
-      (0...44).each do |x|
+    (0...44).each do |y|
+      (0...60).each do |x|
         sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
         
         if sector_index
