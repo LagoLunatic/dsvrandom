@@ -556,7 +556,10 @@ class DoorCompletabilityChecker
       # Handle the Studio Portrait warp to the Throne Room stairway in PoR.
       if GAME == "por"
         if !por_throne_room_stairway_accessible && accessible_doors["00-0B-00_000"] # Player has access to the 5-portrait room.
-          studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all?{|door_str| accessible_doors[door_str]}
+          studio_portrait_unlocked = @required_boss_room_doors_to_unlock_studio_portrait.all? do |possible_door_strs|
+            # Consider the studio portrait unlocked if at least one door in each of the required boss rooms is accessible.
+            possible_door_strs.any?{|door_str| accessible_doors[door_str]}
+          end
           if studio_portrait_unlocked # The studio portrait is unlocked.
             doors_and_entities_to_check << @post_brauner_teleport_dest_door # Give access to the stairway room leading to the Throne Room.
             por_throne_room_stairway_accessible = true
@@ -745,31 +748,45 @@ class DoorCompletabilityChecker
     @removed_portraits = removed_portraits
     
     if removed_portraits.empty?
-      @required_boss_room_doors_to_unlock_studio_portrait = ["02-02-14_001", "04-01-08_001", "06-00-05_001", "08-00-04_000"] # Werewolf, Mummy Man, Medusa, and The Creature
+      required_boss_rooms_to_unlock_studio_portrait = ["02-02-14", "04-01-08", "06-00-05", "08-00-04"] # Werewolf, Mummy Man, Medusa, and The Creature
     else
       portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - removed_portraits
       
-      @required_boss_room_doors_to_unlock_studio_portrait = portraits_needed.map do |portrait_name|
+      required_boss_rooms_to_unlock_studio_portrait = portraits_needed.map do |portrait_name|
         case portrait_name
         when :portraitcityofhaze
-          "01-02-0B_001" # Dullahan
+          "01-02-0B" # Dullahan
         when :portraitsandygrave
-          "03-00-0C_001" # Astarte
+          "03-00-0C" # Astarte
         when :portraitnationoffools
-          "05-02-0C_000" # Legion
+          "05-02-0C" # Legion
         when :portraitforestofdoom
-          "07-00-0E_000" # Dagon
+          "07-00-0E" # Dagon
         when :portraitdarkacademy
-          "08-00-04_000" # The Creature
+          "08-00-04" # The Creature
         when :portraitburntparadise
-          "06-00-05_001" # Medusa
+          "06-00-05" # Medusa
         when :portraitforgottencity
-          "04-01-08_001" # Mummy Man
+          "04-01-08" # Mummy Man
         when :portrait13thstreet
-          "02-02-14_001" # Werewolf
+          "02-02-14" # Werewolf
         else
           raise "Invalid portrait name: #{portrait_name}"
         end
+      end
+    end
+    
+    # Convert the list of rooms to a list of all the doors in those rooms.
+    # This way the logic can check if ANY of the doors are accessible to know if the boss is accessible.
+    # Picking any individual door won't work if the map randomizer blocks off that specific door but a different door still lets the player access the boss.
+    @required_boss_room_doors_to_unlock_studio_portrait = required_boss_rooms_to_unlock_studio_portrait.map do |room_str|
+      if room_str == "05-02-0C"
+        # Legion. In this case it has to be the top door, the others won't work.
+        ["05-02-0C_000"]
+      else
+        room = game.room_by_str(room_str)
+        room_doors = room.doors.reject{|door| inaccessible_doors.include?(door.door_str)}
+        room_doors.map{|door| door.door_str}
       end
     end
   end
