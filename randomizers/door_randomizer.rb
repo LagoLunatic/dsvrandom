@@ -278,6 +278,8 @@ module DoorRandomizer
     end
     
     replace_outer_boss_doors()
+    
+    center_bosses_for_room_rando()
   end
   
   def randomize_non_transition_doors_for_subsector(subsector_rooms, subsector_index, area, sector, queued_door_changes, transition_doors)
@@ -904,6 +906,24 @@ module DoorRandomizer
           entity.write_to_rom()
         end
       end
+    end
+  end
+  
+  def center_bosses_for_room_rando
+    # Move some bosses to the center of their room so the player doesn't get hit by them as soon as they enter from the wrong side.
+    case GAME
+    when "dos"
+      abaddon = game.entity_by_str("00-0B-13_00")
+      abaddon.x_pos = 0x80
+      abaddon.write_to_rom()
+    when "por"
+      creature = game.entity_by_str("08-00-04_00")
+      creature.x_pos = 0x100
+      creature.write_to_rom()
+    when "ooe"
+      arthroverta = game.entity_by_str("12-00-13_00")
+      arthroverta.x_pos = 0x80
+      arthroverta.write_to_rom()
     end
   end
   

@@ -174,6 +174,8 @@ module MapRandomizer
     
     replace_outer_boss_doors()
     
+    center_bosses_for_room_rando()
+    
     remove_map_rando_unfriendly_events()
     
     if GAME == "por"
