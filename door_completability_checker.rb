@@ -31,9 +31,9 @@ class DoorCompletabilityChecker
     @current_items = []
     @return_portraits = {}
     @required_accessible_doors_to_unlock_regular_portraits = {
-      :portraitforestofdoom  => ["00-08-0F_000", "00-01-06_000"], # Stella and Wind
-      :portrait13thstreet    => ["04-01-08_001"], # Mummy Man
-      :portraitburntparadise => ["08-00-04_000"], # The Creature
+      :portraitforestofdoom  => [["00-08-0F_000", "00-08-0F_001"], ["00-01-06_000", "00-01-06_001"]], # Stella and Wind
+      :portrait13thstreet    => [["04-01-08_000", "04-01-08_001"]], # Mummy Man
+      :portraitburntparadise => [["08-00-04_000", "08-00-04_001"]], # The Creature
     }
     @post_brauner_teleport_dest_door = "00-09-03_001"
     if @ooe_nonlinear
@@ -539,7 +539,13 @@ class DoorCompletabilityChecker
         portraits_to_unlock = []
         locked_accessible_portraits.each do |portrait_name|
           required_doors_for_this_portrait = @required_accessible_doors_to_unlock_regular_portraits[portrait_name]
-          if required_doors_for_this_portrait.include?(door_or_entity_str) && (required_doors_for_this_portrait - accessible_doors.keys).empty?
+        
+          portrait_unlocked = required_doors_for_this_portrait.all? do |possible_door_strs|
+            # Consider the portrait unlocked if at least one door in each of the required rooms is accessible.
+            possible_door_strs.any?{|door_str| accessible_doors[door_str]}
+          end
+          
+          if portrait_unlocked
             # Can reach all the doors needed to unlock this portrait.
             dest_door_str = get_destination_of_portrait(portrait_name)
             
