@@ -217,6 +217,7 @@ module PickupRandomizer
     
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
+    on_first_item = true
     while true
       case GAME
       when "por"
@@ -387,15 +388,8 @@ module PickupRandomizer
         valid_accessible_locations += filtered_new_possible_locations
         
         possible_locations_to_choose_from = valid_accessible_locations
-      elsif filtered_new_possible_locations.empty?
+      elsif filtered_new_possible_locations.empty? && valid_previous_accessible_regions.any?
         # No new locations, so select an old location.
-        
-        if valid_previous_accessible_regions.empty?
-          item_names = checker.current_items.map do |global_id|
-            checker.defs.invert[global_id]
-          end.compact
-          raise "Bug: Failed to find any spots to place pickup.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
-        end
         
         if on_leftovers
           # Just placing a leftover progression pickup.
@@ -419,6 +413,25 @@ module PickupRandomizer
           
           possible_locations_to_choose_from = valid_previous_accessible_regions.last
           puts "No new locations, using previous accessible location, total available: #{valid_previous_accessible_regions.last.size}" if verbose
+        end
+      elsif filtered_new_possible_locations.empty? && valid_previous_accessible_regions.empty?
+        # No new locations, but there's no old locations either.
+        if on_first_item
+          # If we're placing the very first item yet there's no accessible spots, then the room/map randomizer must have resulted in a bad start.
+          # So we place the first progression item in the starting room.
+          entity = @starting_room.add_new_entity()
+          
+          entity.x_pos = @starting_x_pos
+          entity.y_pos = @starting_y_pos
+          
+          @coll = RoomCollision.new(@starting_room, game.fs)
+          floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
+          entity.y_pos = floor_y - 0x18
+          
+          location = "#{@starting_room.room_str}_%02X" % (@starting_room.entities.length-1)
+          possible_locations_to_choose_from = [location]
+        else
+          possible_locations_to_choose_from = []
         end
       elsif filtered_new_possible_locations.size <= 5 && valid_previous_accessible_regions.last && valid_previous_accessible_regions.last.size >= 15
         # There aren't many new locations unlocked by the last item we placed.
@@ -476,6 +489,8 @@ module PickupRandomizer
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
+      
+      on_first_item = false
       
       if room_rando? && GAME == "ooe"
         if accessible_doors.include?("01-01-00_000") && !checker.current_items.include?(:villagernikolai)
