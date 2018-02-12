@@ -396,6 +396,8 @@ class DoorCompletabilityChecker
       monastery_accessible = @ooe_nonlinear
       argila_accessible = @ooe_nonlinear
       somnus_accessible = @ooe_nonlinear
+      lighthouse_accessible = @ooe_nonlinear
+      lighthouse_past_spikes_accessible = false
       has_all_randomizable_villagers = false
       if (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES - @current_items).empty?
         has_all_randomizable_villagers = true
@@ -599,6 +601,9 @@ class DoorCompletabilityChecker
         if !george_accessible && accessible_doors["11-00-08_000"]
           george_accessible = true
         end
+        if !lighthouse_accessible && accessible_doors["08-02-07_000"]
+          lighthouse_accessible = true
+        end
         
         # Unlock the castle on the world map.
         if !castle_accessible && has_all_randomizable_villagers &&
@@ -626,6 +631,14 @@ class DoorCompletabilityChecker
         if wygol_accessible && george_accessible && !somnus_accessible
           newly_unlocked_world_map_door_strs << "07-00-00_000"
           somnus_accessible = true
+        end
+        
+        # Unlock the lighthouse, but only if the player can jump over the spikes.
+        if lighthouse_accessible && !lighthouse_past_spikes_accessible
+          if check_reqs([[:magnes], [:medium_height, :small_distance], [:distance], [:big_height], [:cat_tackle]])
+            newly_unlocked_world_map_door_strs << "09-00-00_000"
+            lighthouse_past_spikes_accessible = true
+          end
         end
         
         # Unlock monastery on the world map.

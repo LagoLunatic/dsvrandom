@@ -133,7 +133,6 @@ World map unlocks:
   06-00-0A_000: 08-00-00_000 # kalidus upper -> minera
   06-01-00_000: 0A-00-00_000 # kalidus lower -> tymeo
   07-00-0E_000: 0D-00-00_000 # somnus -> giant
-  08-02-07_000: 09-00-00_000 # minera -> lighthouse
   09-00-07_000: 06-00-00_000, 06-01-09_000 # lighthouse -> kalidus upper and lower
   0A-00-0A_000: 0F-00-08_000 # tymeo -> misty
   0A-00-13_000: 0F-00-08_000 # tymeo -> misty
