@@ -670,6 +670,7 @@ module PickupRandomizer
         "06-01-14",
         "00-05-02", # This great stairway room doesn't put you out of bounds, but does let you sequence break the button lock and needing height.
         "00-05-04", # This great stairway room doesn't put you out of bounds, but does let you sequence break needing height.
+        "05-02-0C", # Legion's room. If a portrait gets placed here the player won't be able to activate Legion because using a portrait doesn't set the pickup flag Legion checks.
       ]
       
       locations.select! do |location|
