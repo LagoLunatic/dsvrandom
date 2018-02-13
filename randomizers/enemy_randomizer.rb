@@ -98,6 +98,24 @@ module EnemyRandomizer
       @assets_for_each_enemy[0x50] += @assets_for_each_special_object[0x4B]
     end
     
+    if GAME == "dos"
+      # Remove a bunch of enemies from those two big rooms with about 25 enemies.
+      # Randomizing that many enemies in a single room always causes bugs, so just reduce the number to about 16.
+      big_chapel_room = game.room_by_str("00-04-15")
+      [0x12, 0x0D, 0x0E, 0x10, 0x16, 0x1A, 0x1D].each do |entity_index|
+        entity = big_chapel_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+      
+      big_hell_room = game.room_by_str("00-06-17")
+      [0x1C, 0x1D, 0x19, 0x18, 0x15, 0x16, 0x0F, 0x1A, 0x17].each do |entity_index|
+        entity = big_hell_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+    end
+    
     total_rooms = 0
     game.each_room do |room|
       total_rooms += 1
