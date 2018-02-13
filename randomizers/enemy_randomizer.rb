@@ -62,6 +62,7 @@ module EnemyRandomizer
       "Bone Pillar",
       "Fish Head",
       "Bone Ark",
+      "Fleaman",
     ]
     @resource_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
@@ -463,7 +464,7 @@ module EnemyRandomizer
     when "Killer Doll"
       enemy.var_b = rng.rand(0..1) # Direction
     when "Fleaman"
-      enemy.var_a = rng.rand(1..5)
+      enemy.var_a = rng.rand(1..5) # Number of flea men
     when "Bone Pillar", "Fish Head"
       enemy.var_a = rng.rand(1..8)
       
