@@ -1509,6 +1509,10 @@ module MapRandomizer
   end
   
   def regenerate_map_dos(map, area, should_recenter_map: true)
+    if should_recenter_map
+      recenter_map(map, area)
+    end
+    
     unless map.is_abyss
       # Fix warps.
       map.warp_rooms.each_with_index do |warp, warp_index|
@@ -1521,10 +1525,6 @@ module MapRandomizer
           warp.y_pos_in_tiles = room.room_ypos_on_map
         end
       end
-    end
-    
-    if should_recenter_map
-      recenter_map(map, area)
     end
     
     map.tiles.each do |tile|
