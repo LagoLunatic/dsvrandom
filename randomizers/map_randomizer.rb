@@ -1516,14 +1516,10 @@ module MapRandomizer
     unless map.is_abyss
       # Fix warps.
       map.warp_rooms.each_with_index do |warp, warp_index|
-        if warp_index == 0xB # Abyss
-          warp.x_pos_in_tiles = 54
-          warp.y_pos_in_tiles = 42
-        else
-          room = game.room_by_str(DOS_WARP_ROOM_STRS[warp_index])
-          warp.x_pos_in_tiles = room.room_xpos_on_map
-          warp.y_pos_in_tiles = room.room_ypos_on_map
-        end
+        next if warp_index == 0xB # Abyss, do later
+        room = game.room_by_str(DOS_WARP_ROOM_STRS[warp_index])
+        warp.x_pos_in_tiles = room.room_xpos_on_map
+        warp.y_pos_in_tiles = room.room_ypos_on_map
       end
     end
     
@@ -1543,6 +1539,7 @@ module MapRandomizer
       tile.sector_index = nil
       tile.room_index = nil
     end
+    blank_tiles = []
     map.tiles.each do |tile|
       x, y = tile.x_pos, tile.y_pos
       sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y, map.is_abyss)
@@ -1613,8 +1610,51 @@ module MapRandomizer
           tile.top_door = true
           tile.top_wall = false
         end
+      else
+        blank_tiles << tile
       end
     end
+    
+    unless map.is_abyss
+      # Fix abyss warp.
+      # Need to select a blank spot on the map to put it.
+      
+      blank_tiles_not_on_border = blank_tiles.select do |tile|
+        x, y = tile.x_pos, tile.y_pos
+        visible_x = x + map.draw_x_offset
+        visible_y = y + map.draw_y_offset
+        next if visible_x <= 2
+        next if visible_y <= 2
+        next if visible_x >= 61
+        next if visible_y >= 45
+        true
+      end
+      blank_tiles_not_surrounded = blank_tiles_not_on_border.select do |tile|
+        x, y = tile.x_pos, tile.y_pos
+        left_tile = map.tiles.find{|t| t.x_pos == x-1 && t.y_pos == y}
+        next if left_tile && !left_tile.is_blank
+        top_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y-1}
+        next if top_tile && !top_tile.is_blank
+        right_tile = map.tiles.find{|t| t.x_pos == x+1 && t.y_pos == y}
+        next if right_tile && !right_tile.is_blank
+        bottom_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y+1}
+        next if bottom_tile && !bottom_tile.is_blank
+        true
+      end
+      
+      if blank_tiles_not_surrounded.any?
+        random_blank_tile = blank_tiles_not_surrounded.sample(random: rng)
+      elsif blank_tiles_not_on_border.any?
+        random_blank_tile = blank_tiles_not_on_border.sample(random: rng)
+      else
+        random_blank_tile = blank_tiles.sample(random: rng)
+      end
+      
+      abyss_warp = map.warp_rooms[0xB]
+      abyss_warp.x_pos_in_tiles = random_blank_tile.x_pos
+      abyss_warp.y_pos_in_tiles = random_blank_tile.y_pos
+    end
+    
     map.write_to_rom()
   end
   
