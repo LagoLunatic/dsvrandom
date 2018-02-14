@@ -2672,12 +2672,12 @@ Rooms:
     000-e00: seal 4 # needed to get back out of the room
     e00-000: seal 4
   00-09-01: # aguni room
-    000-001: 
-    000-e06: 
-    001-000: 
-    001-e06: 
-    e06-000: 
-    e06-001: 
+    000-001: paranoia
+    000-e06: paranoia
+    001-000: paranoia
+    001-e06: paranoia
+    e06-000: paranoia
+    e06-001: paranoia
   00-09-02:
     000-e00: 
     000-e01: 
