@@ -1316,6 +1316,13 @@ class Randomizer
       room = game.room_by_str("00-0B-23")
       game.fs.write(0x02024C9C, [room.room_xpos_on_map].pack("C"))
       game.fs.write(0x02024CA4, [room.room_ypos_on_map].pack("C"))
+      
+      # Warp rooms have a bug when displaying the blinking position indicator on the map when you select them.
+      # If they're too close to the edge of the map, the position of the upper left corner of the blinking circle is negative.
+      # But the code reads the X and Y as unsigned bytes, causing the position to underflow.
+      # So change the code to read the positions as signed bytes instead.
+      game.fs.write(0x02021900, [0xE1D5C7D9].pack("V")) # ldrsb r12,[r5,79h] (X pos)
+      game.fs.write(0x020218D0, [0xE1D547DA].pack("V")) # ldrsb r4,[r5,7Ah] (Y pos)
     end
     
     if options[:remove_area_names]
