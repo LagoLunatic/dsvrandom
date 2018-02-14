@@ -1487,6 +1487,12 @@ module MapRandomizer
       first_secret_door.x_pos = 0xFF
       first_secret_door.y_pos = 0xFF
       first_secret_door.write_to_rom()
+      # And get rid of all secret rooms so those rooms DO appear on the map if the player has the appropriate map item.
+      # A secret room with a sector and room index of FF is the end marker of the list, so just set the first secret room as the end marker.
+      first_secret_room = castle_map.secret_rooms.first
+      first_secret_room.sector_index = 0xFF
+      first_secret_room.room_index = 0xFF
+      first_secret_room.write_to_rom()
     when "por"
       (0..9).each do |area_index|
         regenerate_map(area_index, 0)
