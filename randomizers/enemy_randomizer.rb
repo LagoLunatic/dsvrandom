@@ -848,6 +848,13 @@ class RoomCollision
     tile_index = x + y*room_width_in_tiles
     collision_tile = tiles[tile_index]
     
+    if collision_tile.is_slope?
+      layer_tile = collision_layer.tiles[tile_index]
+      collision_tile = collision_tile.dup
+      collision_tile.horizontal_flip = !collision_tile.horizontal_flip if layer_tile.horizontal_flip
+      collision_tile.vertical_flip   = !collision_tile.vertical_flip   if layer_tile.vertical_flip
+    end
+    
     collision_tile
   end
   

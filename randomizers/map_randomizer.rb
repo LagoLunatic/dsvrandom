@@ -1178,6 +1178,16 @@ module MapRandomizer
               coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
               coll_layer.tiles[tile_i].horizontal_flip = false
               coll_layer.tiles[tile_i].vertical_flip = false
+              
+              # If there are any up slopes immediately below the updoor we're blocking off, delete those slopes.
+              # If we don't delete them and the player manages to get on top of the slope under the blocked off door the player can be pushed out of bounds by the slope.
+              puts room.room_str
+              below_tile = coll[tile_x*0x10,(tile_y+1)*0x10]
+              puts room.room_str
+              if below_tile.is_slope? && !below_tile.vertical_flip
+                tile_i = tile_x + (tile_y+1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = 0
+              end
             end
             coll_layer.write_to_rom()
             
@@ -1221,7 +1231,14 @@ module MapRandomizer
               
               # If there are any jumpthrough platforms immediately above the downdoor we're blocking off, delete those platforms.
               # If we don't delete them and the player tries to fall through one, it kind of bugs out the physics and the player teleports around a little bit.
-              if coll[tile_x*0x10,(tile_y-1)*0x10].is_jumpthrough_platform?
+              above_tile = coll[tile_x*0x10,(tile_y-1)*0x10]
+              if above_tile.is_jumpthrough_platform?
+                tile_i = tile_x + (tile_y-1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
+                coll_layer.tiles[tile_i].index_on_tileset = 0
+              end
+              # If there are any down slopes immediately above the downdoor we're blocking off, delete those slopes.
+              # If we don't delete them and the player manages to get under the slope above the blocked off door the player can get stuck inside the slope.
+              if above_tile.is_slope? && above_tile.vertical_flip
                 tile_i = tile_x + (tile_y-1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
                 coll_layer.tiles[tile_i].index_on_tileset = 0
               end
