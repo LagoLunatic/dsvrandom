@@ -520,6 +520,11 @@ module PickupRandomizer
     remaining_locations = checker.get_accessible_locations() - @locations_randomized_to_have_useful_pickups
     remaining_locations.shuffle!(random: rng)
     
+    # In room rando, we want to do the accessible locations first.
+    # But we also want to place nonprogression stuff in the inaccessible locations just in case the player manages to reach an item in an inaccessible room or subroom somehow, we wouldn't want there to be a vanilla progression item there.
+    inaccessible_remaining_locations = checker.all_locations.keys - @locations_randomized_to_have_useful_pickups - remaining_locations
+    remaining_locations += inaccessible_remaining_locations
+    
     if GAME == "ooe"
       # Do event glyphs first. This is so they don't reuse a glyph already used by a glyph statue.
       # If the player got the one from the glyph statue first then the one in the event/puzzle wouldn't appear, breaking the event/puzzle.
