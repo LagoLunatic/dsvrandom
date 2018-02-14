@@ -889,6 +889,9 @@ class Randomizer
       game.fs.write(0x02306D70, [0xE3A00000].pack("V")) # mov r0, 0h
       # And modify the code of the floors to not care if Gergoth's boss death flag is set, and just always be in place.
       game.fs.write(0x0219EF40, [0xE3A00000].pack("V")) # mov r0, 0h
+      
+      # When starting a new game, don't unlock the Lost Village warp by default.
+      game.fs.write(0x021F6054, [0xE1A00000].pack("V"))
     end
     
     if GAME == "por" && room_rando?
