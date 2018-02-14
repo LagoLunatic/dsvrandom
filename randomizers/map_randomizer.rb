@@ -51,7 +51,7 @@ module MapRandomizer
         yield percent_done
       end
       
-      starting_room = game.areas[0].sectors[0xB].rooms[1]
+      starting_room = game.areas[0].sectors[0xB].rooms[0]
       
       num_sectors_done_before_area = num_sectors_done
       randomize_doors_no_overlap_for_area_with_redos(abyss_rooms, 18, 25, starting_room) do |num_sectors_done_for_area|
