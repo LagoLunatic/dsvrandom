@@ -1181,9 +1181,7 @@ module MapRandomizer
               
               # If there are any up slopes immediately below the updoor we're blocking off, delete those slopes.
               # If we don't delete them and the player manages to get on top of the slope under the blocked off door the player can be pushed out of bounds by the slope.
-              puts room.room_str
               below_tile = coll[tile_x*0x10,(tile_y+1)*0x10]
-              puts room.room_str
               if below_tile.is_slope? && !below_tile.vertical_flip
                 tile_i = tile_x + (tile_y+1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
                 coll_layer.tiles[tile_i].index_on_tileset = 0
