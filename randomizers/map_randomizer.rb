@@ -1796,9 +1796,8 @@ module MapRandomizer
     area_rooms = []
     area.sectors.each do |sector|
       if GAME == "dos"
-        next if sector.sector_index == 0xA # Menace
-        next if sector.sector_index == 0xB && !map.is_abyss
-        next if sector.sector_index != 0xB && map.is_abyss
+        next if [0xA, 0xB].include?(sector.sector_index) && !map.is_abyss
+        next if ![0xA, 0xB].include?(sector.sector_index) && map.is_abyss
       end
       area_rooms += sector.rooms
     end
