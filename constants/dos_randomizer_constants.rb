@@ -86,9 +86,9 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   9 => { # Cursed Clock Tower
     0x0207FAD0 => 0x0001,
     0x02081AC8 => 0x0001,
-    0x022F3240 => 0x0001,
-    0x022F5238 => 0x0001,
-    0x022F7230 => 0x0001,
+    0x022F3240 => 0x0154,
+    0x022F5238 => 0x0108,
+    0x022F7230 => 0x0005,
     0x022F9228 => 0x0090,
   },
   10 => { # The Pinnacle
@@ -98,7 +98,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EFABC => 0x0001,
     0x022F1AB4 => 0x0080,
     0x022F3AAC => 0x000A,
-    0x022F5AA4 => 0x0010,
+    0x022F5AA4 => 0x0022,
   },
   12 => { # Menace
     0x022DD044 => 0x0001,
