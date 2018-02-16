@@ -204,9 +204,23 @@ module PickupRandomizer
       if starting_portrait_name
         # The starting room randomizer started the player in a portrait.
         # This is problematic because the portrait randomizer will traditionally never place a portrait back to Dracula's castle, making it inaccessible.
-        # So we need to avoid randomizing the portrait in Dracula's castle that leads to this starting area.
-        # We do this by placing the portrait at its original location and registering it with the logic.
-        starting_portrait_location_in_castle = PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION[starting_portrait_name]
+        # So we need to place the starting portrait at a random location in Dracula's Castle and register it with the logic.
+        
+        # First pick a random valid location.
+        possible_portrait_locations = checker.all_locations.keys
+        possible_portrait_locations = filter_locations_valid_for_pickup(possible_portrait_locations, starting_portrait_name)
+        room_strs_unused_by_map_rando = @rooms_unused_by_map_rando.map{|room| room.room_str}
+        possible_portrait_locations.reject! do |location|
+          room_str = location[0,8]
+          room_strs_unused_by_map_rando.include?(room_str)
+        end
+        possible_portrait_locations.select! do |location|
+          area_index = location[0,2].to_i(16)
+          area_index == 0
+        end
+        starting_portrait_location_in_castle = possible_portrait_locations.sample(random: rng)
+        
+        # Then place the portrait.
         change_entity_location_to_pickup_global_id(starting_portrait_location_in_castle, starting_portrait_name)
         checker.add_item(starting_portrait_name)
         @locations_randomized_to_have_useful_pickups << starting_portrait_location_in_castle
