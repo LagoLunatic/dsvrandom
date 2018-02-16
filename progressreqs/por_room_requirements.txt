@@ -750,7 +750,7 @@ Rooms:
     000-001: 
     000-e07: 
     000-e08: 
-    000-e09: 
+    000-e09: small height # Even though you don't need height to reach it coming from the top, you might need to fall down to destroy the breakable wall, and then need height to get back up and get the item.
     001-000: small height
     001-e07: 
     001-e08: small height
@@ -759,7 +759,7 @@ Rooms:
     e07-001: 
     e08-000: 
     e08-001: 
-    e09-000: 
+    e09-000: small height
     e09-001: 
   00-04-0F:
     000-001: 
@@ -1993,10 +1993,10 @@ Rooms:
   02-02-06:
     000-001: 
     001-000: 
-  02-02-07: # not having slide could be problematic here, not in this room itself, but in whatever room gets linked to the small door here, since you'd need to slide to get in.
-    000-001: 
-    000-002: 
-    000-003: 
+  02-02-07: # Room that has a small door slightly elevated off the ground.
+    000-001: small # You need to be small to get into whatever door leads into this room via this door too, not just to get out.
+    000-002: small
+    000-003: small
     001-000: height 2 & small
     001-002: 
     001-003: 
@@ -2006,9 +2006,9 @@ Rooms:
     003-000: height 2 & small
     003-001: 
     003-002: 
-  02-02-08:
-    000-e00: 
-    e00-000: 
+  02-02-08: # Room that has a small door at floor level.
+    000-e00: small # Getting into this room via the door might only require slide, but if wherever the other door is is elevated off the ground you need frog/owl instead.
+    e00-000: slide
   02-02-09:
     000-e00: 
     e00-000: 
