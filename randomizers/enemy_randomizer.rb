@@ -170,6 +170,10 @@ module EnemyRandomizer
       if GAME == "por" && room.area_index == 2 && room.sector_index == 0 && room.room_index == 1
         @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
       end
+      # Don't allow Red Skeletons and Red Axe Armors in Nest of Evil since they can't be killed without certain weapons.
+      if GAME == "por" && room.area_index == 9
+        @allowed_enemies_for_room -= [0x1C, 0x46]
+      end
       # Don't allow Blood Skeletons in Large Cavern since they can't be killed.
       if GAME == "ooe" && room.area_index == 0xC
         @allowed_enemies_for_room -= [0x4B]
