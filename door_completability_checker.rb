@@ -878,6 +878,11 @@ class DoorCompletabilityChecker
     return "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
   end
   
+  def remove_final_approach_gate_requirement
+    # Remove the logic that it's impossible to get through the room with the big gate in the Final Approach.
+    @room_reqs["00-0A-01"][:doors][0]["001"] = nil
+  end
+  
   def set_current_location_by_entity(entity_str)
     entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h)$/
     @current_room = $1

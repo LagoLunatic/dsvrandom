@@ -216,6 +216,15 @@ module MapRandomizer
         game.fs.write(0x022E8878, [0xE590176C, 0xE2111902].pack("VV"))
       end
     end
+    
+    if GAME == "ooe"
+      # Unlike the regular room rando, we want to remove the huge gate in that one room of the Final Approach.
+      final_approach_gate = game.entity_by_str("00-0A-01_02")
+      final_approach_gate.type = 0
+      final_approach_gate.write_to_rom()
+      
+      checker.remove_final_approach_gate_requirement()
+    end
   end
   
   def add_extra_helper_rooms
