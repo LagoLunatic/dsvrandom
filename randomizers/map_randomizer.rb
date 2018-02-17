@@ -715,9 +715,9 @@ module MapRandomizer
           end
           
           if possible_room_positions.empty?
+            # If there are no rooms that increase the number of available doors or progress important rooms that keep the number of doors the same, use a normal room that keeps the number of doors the same.
             possible_room_positions = valid_room_positions.select do |room_position|
-              room = room_position[:room]
-              if checker.progress_important_rooms.include?(room) # Progress rooms that are dead ends.
+              if room_position[:diff_in_num_spots] == 0
                 true
               else
                 false
@@ -726,9 +726,10 @@ module MapRandomizer
           end
           
           if possible_room_positions.empty?
-            # If there are no important rooms or rooms that increase the number of available doors, use a room that keeps the number of doors the same.
+            # If there's no rooms that keep the number of doors the same, use a progress important room that is a dead end.
             possible_room_positions = valid_room_positions.select do |room_position|
-              if room_position[:diff_in_num_spots] == 0
+              room = room_position[:room]
+              if checker.progress_important_rooms.include?(room)
                 true
               else
                 false
