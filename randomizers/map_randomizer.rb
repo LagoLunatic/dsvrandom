@@ -610,6 +610,13 @@ module MapRandomizer
             
             room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
             
+            if GAME == "dos" && room.room_str == "00-05-07"
+              # If we're placing Gergoth's room, only allow attaching it via one of the top two doors.
+              # If we attached it via a different door and the top didn't coincidentally become attached later, the player would never be able to reach Gergoth.
+              # That's not a problem in Soma mode, but in Julius mode you'd never be able to unlock the darkness seal.
+              room_doors.select!{|door| ["00-05-07_000", "00-05-07_001"].include?(door.door_str)}
+            end
+            
             room_doors_to_attach = room_doors.select{|door| door.direction == direction}
             if room_doors_to_attach.empty?
               next
