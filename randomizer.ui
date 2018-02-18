@@ -739,8 +739,8 @@
          <property name="title">
           <string>Order of Ecclesia</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
            <widget class="QCheckBox" name="open_world_map">
             <property name="toolTip">
              <string>Make all areas except Dracula's Castle accessible from the start.</string>
@@ -753,7 +753,7 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QCheckBox" name="always_dowsing">
             <property name="toolTip">
              <string>Hidden blue chests always make a beeping sound.</string>
@@ -763,13 +763,26 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="0">
            <widget class="QCheckBox" name="gain_extra_attribute_points">
             <property name="toolTip">
              <string>Enemies grant 10x more AP when you kill them.</string>
             </property>
             <property name="text">
              <string>Gain Attribute Points faster</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="summons_gain_extra_exp">
+            <property name="toolTip">
+             <string>Your summons gain far more EXP every time they hit an enemy.</string>
+            </property>
+            <property name="text">
+             <string>Summons gain EXP faster</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -878,6 +891,8 @@
   <tabstop>always_show_drop_percentages</tabstop>
   <tabstop>open_world_map</tabstop>
   <tabstop>always_dowsing</tabstop>
+  <tabstop>gain_extra_attribute_points</tabstop>
+  <tabstop>summons_gain_extra_exp</tabstop>
  </tabstops>
  <resources/>
  <connections/>

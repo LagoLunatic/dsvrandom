@@ -1275,6 +1275,13 @@ class Randomizer
       game.apply_armips_patch("ooe_always_dowsing")
     end
     
+    if GAME == "ooe" && options[:summons_gain_extra_exp]
+      # Increase the rate that summons gain EXP.
+      # Normally they gain 3 EXP every time they hit an enemy, and need 0x7FFF to level up once.
+      # So we significantly increase that 3 per hit so they level up faster.
+      game.fs.write(0x0207D438, [64].pack("C"))
+    end
+    
     if options[:name_unnamed_skills]
       game.fix_unnamed_skills()
     end

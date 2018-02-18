@@ -54,6 +54,7 @@ class RandomizerWindow < Qt::Dialog
     open_world_map
     always_dowsing
     gain_extra_attribute_points
+    summons_gain_extra_exp
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
