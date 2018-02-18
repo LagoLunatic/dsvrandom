@@ -839,8 +839,10 @@ module DoorRandomizer
       if GAME == "dos" && boss_room.room_str == "00-03-0E"
         # Doppelganger event room
         boss_index = 0xE
+        num_boss_doors_on_each_side = 2
       else
         boss_index = boss_room.entities.find{|e| e.is_boss_door?}.var_b
+        num_boss_doors_on_each_side = 1
       end
       
       doors = boss_room.doors
@@ -868,20 +870,24 @@ module DoorRandomizer
         gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
         gap_end_offset = gap_end_index * 0x10 + 0x10
         
-        new_boss_door = Entity.new(dest_room, game.fs)
-        new_boss_door.x_pos = door.dest_x
-        new_boss_door.y_pos = door.dest_y + gap_end_offset
-        if door.direction == :left
-          new_boss_door.x_pos += 0xF0
+        num_boss_doors_on_each_side.times do |dup_boss_door_num|
+          new_boss_door = Entity.new(dest_room, game.fs)
+          new_boss_door.x_pos = door.dest_x
+          new_boss_door.y_pos = door.dest_y + gap_end_offset
+          if door.direction == :left
+            new_boss_door.x_pos += 0xF0 - dup_boss_door_num*0x10
+          else
+            new_boss_door.x_pos += dup_boss_door_num*0x10
+          end
+          
+          new_boss_door.type = 2
+          new_boss_door.subtype = BOSS_DOOR_SUBTYPE
+          new_boss_door.var_a = 0
+          new_boss_door.var_b = boss_index
+          
+          dest_room.entities << new_boss_door
+          dest_room.write_entities_to_rom()
         end
-        
-        new_boss_door.type = 2
-        new_boss_door.subtype = BOSS_DOOR_SUBTYPE
-        new_boss_door.var_a = 0
-        new_boss_door.var_b = boss_index
-        
-        dest_room.entities << new_boss_door
-        dest_room.write_entities_to_rom()
       end
     end
     
