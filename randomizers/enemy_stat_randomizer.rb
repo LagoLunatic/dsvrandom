@@ -11,8 +11,9 @@ module EnemyStatRandomizer
       else
         stat_mult_range_name = :enemy_stat_mult_range
       end
-      enemy_dna["HP"]               = (enemy_dna["HP"]              *named_rand_range_weighted(stat_mult_range_name)).round
-      enemy_dna["Attack"]           = (enemy_dna["Attack"]          *named_rand_range_weighted(stat_mult_range_name)).round
+      enemy_dna["HP"]     = (enemy_dna["HP"]     *named_rand_range_weighted(stat_mult_range_name)).round
+      enemy_dna["Attack"] = (enemy_dna["Attack"] *named_rand_range_weighted(stat_mult_range_name)).round
+      enemy_dna["Attack"] = 0xFF if enemy_dna["Attack"] > 0xFF
       
       case GAME
       when "dos"
@@ -20,6 +21,7 @@ module EnemyStatRandomizer
           enemy_dna["Defense"] += rng.rand(0..5)
         end
         enemy_dna["Defense"] = (enemy_dna["Defense"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["Defense"] = 0xFF if enemy_dna["Defense"] > 0xFF
       when "por", "ooe"
         if enemy_dna["Physical Defense"] == 0 && rng.rand() >= 0.50
           enemy_dna["Physical Defense"] += rng.rand(0..5)
@@ -44,16 +46,21 @@ module EnemyStatRandomizer
         end
         
         enemy_dna["Physical Defense"] = (enemy_dna["Physical Defense"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["Physical Defense"] = 0xFF if enemy_dna["Physical Defense"] > 0xFF
         enemy_dna["Magical Defense"]  = (enemy_dna["Magical Defense"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["Magical Defense"]  = 0xFF if enemy_dna["Magical Defense"] > 0xFF
       end
       
       case GAME
       when "dos"
         enemy_dna["MP"] = (enemy_dna["MP"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["MP"] = 0xFFFF if enemy_dna["MP"] > 0xFFFF
       when "por"
         enemy_dna["SP"] = (enemy_dna["SP"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["SP"] = 0xFF if enemy_dna["SP"] > 0xFF
       when "ooe"
         enemy_dna["AP"] = (enemy_dna["AP"]*named_rand_range_weighted(stat_mult_range_name)).round
+        enemy_dna["AP"] = 0xFF if enemy_dna["AP"] > 0xFF
       end
       
       enemy_dna["EXP"] = (enemy_dna["EXP"]*named_rand_range_weighted(stat_mult_range_name)).round
