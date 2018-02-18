@@ -754,9 +754,38 @@ module DoorRandomizer
     
     case GAME
     when "dos"
+      # Remove the water from the drawbridge room.
       drawbridge_room_waterlevel = game.entity_by_str("00-00-15_04")
       drawbridge_room_waterlevel.type = 0
       drawbridge_room_waterlevel.write_to_rom()
+      
+      # Remove the cutscene with Yoko before Flying Armor since it doesn't work properly if you don't have Yoko with you.
+      pre_flying_armor_room = game.room_by_str("00-00-0E")
+      [9, 0xA, 0xB].each do |entity_index|
+        entity = pre_flying_armor_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+      
+      # Remove the cutscene with Dmitrii because it doesn't work properly when you enter from the left side.
+      dmitrii_room = game.room_by_str("00-04-10")
+      [3, 4, 6, 7].each do |entity_index|
+        entity = dmitrii_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+      # And change Dmitrii to boss rush Dmitrii so he doesn't crash when there's no event.
+      dmitrii = dmitrii_room.entities[5]
+      dmitrii.var_a = 0
+      dmitrii.write_to_rom()
+      
+      # Remove the cutscene with Dario because it doesn't work properly when you enter from the left side.
+      dario_room = game.room_by_str("00-03-0B")
+      [2, 3, 4, 6].each do |entity_index|
+        entity = dario_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
     when "por"
       # The whole drill cart puzzle from City of Haze was removed.
       # So let's also remove the entity hider so that the enemies from the alternate game modes appear.
@@ -764,6 +793,7 @@ module DoorRandomizer
       drill_room_entity_hider.type = 0
       drill_room_entity_hider.write_to_rom()
     when "ooe"
+      # Remove the small gate in Forsaken Cloiser, but not the big gate in Final Approach.
       forsaken_cloister_gate = game.entity_by_str("00-09-06_00")
       forsaken_cloister_gate.type = 0
       forsaken_cloister_gate.write_to_rom()
