@@ -70,7 +70,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022F544C => 0x00C8,
     0x022F7444 => 0x0001,
     0x022F943C => 0x0001,
-    0x022FB434 => 0x0001,
+    0x022FB434 => 0x0070,
   },
   17 => { # Subterranean Hell
     0x0207DAD8 => 0x0010,

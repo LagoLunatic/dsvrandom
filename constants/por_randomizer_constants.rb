@@ -62,12 +62,12 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EC018 => 0x0001,
   },
   81 => { # Great Stairway
-    0x022EAD44 => 0x0001,
+    0x022EAD44 => 0x013A,
     0x022ECD3C => 0x0001,
   },
   82 => { # Great Stairway
     0x022EA020 => 0x0001,
-    0x022EC018 => 0x0001,
+    0x022EC018 => 0x0159,
     0x022EE010 => 0x0001,
   },
   83 => { # Great Stairway
@@ -179,7 +179,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EEBB0 => 0x000B,
   },
   101 => { # Forest of Doom
-    0x022EA640 => 0x0001,
+    0x022EA640 => 0x00E0,
     0x022EC638 => 0x0001,
     0x022EE630 => 0x0008,
   },
