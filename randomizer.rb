@@ -964,6 +964,15 @@ class Randomizer
       end
     end
     
+    if GAME == "ooe" && options[:gain_extra_attribute_points]
+      game.enemy_dnas.each do |enemy|
+        enemy["AP"] = 1 if enemy["AP"] < 1
+        enemy["AP"] *= 10
+        enemy["AP"] = 0xFF if enemy["AP"] > 0xFF
+        enemy.write_to_rom()
+      end
+    end
+    
     # Add a free space overlay so we can add entities as much as we want.
     if !game.fs.has_free_space_overlay?
       game.add_new_overlay()

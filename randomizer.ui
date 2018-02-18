@@ -763,6 +763,19 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="gain_extra_attribute_points">
+            <property name="toolTip">
+             <string>Enemies grant 10x more AP when you kill them.</string>
+            </property>
+            <property name="text">
+             <string>Gain Attribute Points faster</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

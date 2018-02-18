@@ -53,6 +53,7 @@ class RandomizerWindow < Qt::Dialog
     always_show_drop_percentages
     open_world_map
     always_dowsing
+    gain_extra_attribute_points
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {
