@@ -12,6 +12,8 @@ MAGICAL_TICKET_GLOBAL_ID = 0x7C
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x03, 0x06, 0x0B, 0x0F, 0x1B, 0x2B, 0x3E, 0x48, 0x60, 0x61, 0x65]
 
+STOLAS_UNFRIENDLY_ENEMY_IDS = []
+
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x78] - # Remove the final boss, Dracula. 
   [0x6D, 0x76] - # Also remove Brachyura and Eligor since they need their own huge rooms.

@@ -9,6 +9,8 @@ MAGICAL_TICKET_GLOBAL_ID = 0x2B # Actually Castle Map 0, this is repurposed as a
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x1A, 0x36, 0x40]
 
+STOLAS_UNFRIENDLY_ENEMY_IDS = [0x30] # Guillotiner bugs out and constantly teleports on top of the player before Stolas even summons him.
+
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x73, 0x74, 0x75] # Remove Menace, Soma, and Dracula.
 

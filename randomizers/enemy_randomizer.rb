@@ -497,12 +497,12 @@ module EnemyRandomizer
     when "Mud Demon"
       enemy.var_b = rng.rand(0..0x50) # Max rand spawn distance
     when "Stolas"
-      if @enemy_pool_for_room.any?
-        enemy_id_a = @enemy_pool_for_room.sample(random: rng)
-        enemy_id_b = @enemy_pool_for_room.sample(random: rng)
-      elsif (@allowed_enemies_for_room-@resource_intensive_enemy_ids).any?
-        enemy_id_a = (@allowed_enemies_for_room-@resource_intensive_enemy_ids).sample(random: rng)
-        enemy_id_b = (@allowed_enemies_for_room-@resource_intensive_enemy_ids).sample(random: rng)
+      if (@enemy_pool_for_room-STOLAS_UNFRIENDLY_ENEMY_IDS).any?
+        enemy_id_a = (@enemy_pool_for_room-STOLAS_UNFRIENDLY_ENEMY_IDS).sample(random: rng)
+        enemy_id_b = (@enemy_pool_for_room-STOLAS_UNFRIENDLY_ENEMY_IDS).sample(random: rng)
+      elsif (@allowed_enemies_for_room-@resource_intensive_enemy_ids-STOLAS_UNFRIENDLY_ENEMY_IDS).any?
+        enemy_id_a = (@allowed_enemies_for_room-@resource_intensive_enemy_ids-STOLAS_UNFRIENDLY_ENEMY_IDS).sample(random: rng)
+        enemy_id_b = (@allowed_enemies_for_room-@resource_intensive_enemy_ids-STOLAS_UNFRIENDLY_ENEMY_IDS).sample(random: rng)
         
         @enemy_pool_for_room << enemy_id_a
         @enemy_pool_for_room << enemy_id_b

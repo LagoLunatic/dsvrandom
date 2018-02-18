@@ -10,6 +10,8 @@ MAGICAL_TICKET_GLOBAL_ID = 0x45
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x09, 0x18, 0x24, 0x38, 0x49, 0x68]
 
+STOLAS_UNFRIENDLY_ENEMY_IDS = []
+
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x99, 0x9A] - # Remove Dracula and True Dracula.
   [0x88, 0x89] # Also remove Fake Grant and Sypha as they're placed together with Trevor.
