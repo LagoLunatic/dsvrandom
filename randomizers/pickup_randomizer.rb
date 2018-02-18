@@ -304,6 +304,7 @@ module PickupRandomizer
         pickup_global_id = valid_pickups.sample(random: rng)
         
         placing_currently_useless_pickup = true
+        puts "Placing currently useless pickup." if verbose
       else
         # All progression pickups placed.
         break
@@ -370,7 +371,7 @@ module PickupRandomizer
       
       filtered_new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
       puts "Filtered new possible locations: #{filtered_new_possible_locations.size}" if verbose
-      puts filtered_new_possible_locations.join(", ") if verbose
+      puts "  " + filtered_new_possible_locations.join(", ") if verbose
       
       valid_previous_accessible_regions = previous_accessible_locations.map do |previous_accessible_region|
         possible_locations = previous_accessible_region.dup
@@ -467,6 +468,8 @@ module PickupRandomizer
         end.compact
         raise "Bug: Failed to find any spots to place pickup.\nSeed: #{@seed}\n\nItems:\n#{item_names.join(", ")}"
       end
+      
+      #puts "Possible locations: #{possible_locations_to_choose_from.join(", ")}" if verbose
       
       location = possible_locations_to_choose_from.sample(random: rng)
       @locations_randomized_to_have_useful_pickups << location
