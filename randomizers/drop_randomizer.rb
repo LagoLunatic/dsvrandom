@@ -12,6 +12,14 @@ module DropRandomizer
       end
     end
     
+    if GAME == "dos"
+      # Doppelganger's description has 2 lines, but the enemy page only displays 1 line correctly.
+      # Cut off the second line.
+      description = game.text_database.text_list[TEXT_REGIONS["Soul Descriptions"].begin + 0x76]
+      description.decoded_string = "Switch souls and equipment \\nusing the {BUTTON X}."
+      game.text_database.write_to_rom()
+    end
+    
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy = game.enemy_dnas[enemy_id]
       
