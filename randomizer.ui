@@ -475,8 +475,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>436</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -766,7 +766,7 @@
           <item row="1" column="0">
            <widget class="QCheckBox" name="gain_extra_attribute_points">
             <property name="toolTip">
-             <string>Enemies grant 10x more AP when you kill them.</string>
+             <string>You gain 100x more AP when killing enemies or absorbing glyphs.</string>
             </property>
             <property name="text">
              <string>Gain Attribute Points faster</string>

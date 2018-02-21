@@ -965,12 +965,16 @@ class Randomizer
     end
     
     if GAME == "ooe" && options[:gain_extra_attribute_points]
+      # Make every enemy give 100x more AP than normal.
       game.enemy_dnas.each do |enemy|
         enemy["AP"] = 1 if enemy["AP"] < 1
-        enemy["AP"] *= 10
+        enemy["AP"] *= 100
         enemy["AP"] = 0xFF if enemy["AP"] > 0xFF
         enemy.write_to_rom()
       end
+      
+      # Make absorbing a glyph give 100 AP instead of 1.
+      game.fs.write(0x0206D994, [100].pack("C"))
     end
     
     # Add a free space overlay so we can add entities as much as we want.
