@@ -775,6 +775,9 @@ class Randomizer
       reset_rng()
       randomize_weapon_synths()
       options_completed += 1
+    else
+      reset_rng()
+      randomize_vanilla_weapon_synths_that_use_progression_souls()
     end
     
     if options[:randomize_shop]

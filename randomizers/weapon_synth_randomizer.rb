@@ -125,4 +125,22 @@ module WeaponSynthRandomizer
     colors = renderer.import_palette_from_palette_swatches_file("./dsvrandom/assets/synth grey souls palette_022C490C-07.png", 16)
     @renderer.save_palette(colors, palette_pointer, 7, 16)
   end
+  
+  def randomize_vanilla_weapon_synths_that_use_progression_souls
+    # Randomize only soul requirements that could result in softlocks because they use progression souls.
+    
+    available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE.to_a
+    available_souls.map!{|global_id| global_id - 0xCE}
+    
+    WEAPON_SYNTH_CHAIN_NAMES.each_index do |index|
+      chain = WeaponSynthChain.new(index, game.fs)
+      
+      chain.synths.each_with_index do |synth, i|
+        if checker.all_progression_pickups.include?(0xCE + synth.required_soul_id)
+          synth.required_soul_id = available_souls.sample(random: rng)
+          synth.write_to_rom()
+        end
+      end
+    end
+  end
 end
