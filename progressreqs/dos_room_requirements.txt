@@ -90,6 +90,9 @@ Progress important rooms:
   - 00-05-27 # Warp to Abyss
   - 00-0B-1F # Warp to Menace
   
+  - 00-00-0A # Hammer
+  - 00-00-03 # Yoko
+  
   # In Julius mode all bosses before the mines (except Paranoia) must be dead to unlock the mines.
   - 00-00-0B # Flying Armor
   - 00-01-06 # Puppet Master
