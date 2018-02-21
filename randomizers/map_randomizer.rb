@@ -1530,16 +1530,18 @@ module MapRandomizer
       regenerate_map_por_ooe(map, area, should_recenter_map: should_recenter_map)
     end
     
-    filename = "./logs/maptest #{GAME} %02X" % area_index
-    if GAME == "dos" && map_sector_index == 0xB
-      filename += "-abyss" % map_sector_index
+    if @map_rando_debug
+      filename = "./logs/maptest #{GAME} %02X" % area_index
+      if GAME == "dos" && map_sector_index == 0xB
+        filename += "-abyss" % map_sector_index
+      end
+      if filename_num
+        filename += " #{filename_num}" % [area_index, map_sector_index]
+      end
+      filename += ".png"
+      hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
+      renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
     end
-    if filename_num
-      filename += " #{filename_num}" % [area_index, map_sector_index]
-    end
-    filename += ".png"
-    hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
-    renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
   end
   
   def regenerate_map_dos(map, area, should_recenter_map: true)
