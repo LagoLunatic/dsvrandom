@@ -79,7 +79,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   },
   74 => { # Final Approach
     0x022D0FBC => 0x0001,
-    0x022D2FB4 => 0x0001,
+    0x022D2FB4 => 0x03E7,
   },
   75 => { # Final Approach
     0x022C8248 => 0x00D0,
@@ -133,7 +133,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022CD830 => 0x0113,
   },
   52 => { # Minera Prison Island
-    0x022CB888 => 0x0001,
+    0x022CB888 => 0x0270,
   },
   53 => { # Lighthouse
     0x022C58D4 => 0x000E,
@@ -155,7 +155,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   },
   59 => { # Giant's Dwelling
     0x022CEE6C => 0x0030,
-    0x022D0E64 => 0x0001,
+    0x022D0E64 => 0x00E4,
   },
   60 => { # Mystery Manor
     0x022CBDB8 => 0x0030,
@@ -179,7 +179,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   },
   78 => { # Monastery
     0x022D0568 => 0x0001,
-    0x022D2560 => 0x000F,
+    0x022D2560 => 0x0300,
     0x022D4558 => 0x0001,
   },
   79 => { # Monastery

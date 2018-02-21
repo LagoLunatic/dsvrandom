@@ -2145,10 +2145,11 @@ Rooms:
   0B-01-00:
     000-001: 
     001-000: 
-  0B-01-01:
+  0B-01-01: # Top waterfall room.
     000-e01: magnes
     e01-000: 
-  0B-01-02: # waterfall room.
+  0B-01-02: # Bottom waterfall room.
+    # The waterfall here is unfrozen by default in room rando to simplify the logic.
     000-001: 
     000-002: 
     000-003: 
