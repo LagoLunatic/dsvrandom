@@ -812,6 +812,15 @@ module EnemyRandomizer
       
       # If var A is nonzero, Tin Man will be able to fall off ledges - but long falls will crash the game, so disable this.
       enemy.var_a = 0
+    when "Mimic"
+      # If a Mimic isn't on the floor it's impossible for the player to open it, and therefore impossible to kill.
+      
+      y = coll.get_floor_y(enemy, allow_jumpthrough: false)
+      if y.nil?
+        # No floor
+        return :redo
+      end
+      enemy.y_pos = y
     when "Giant Skeleton"
       enemy.var_a = 0 # Common enemy Giant Skeleton.
       enemy.var_b = 0 # Faces the player when they enter the room.
