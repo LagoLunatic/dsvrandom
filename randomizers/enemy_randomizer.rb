@@ -757,8 +757,9 @@ module EnemyRandomizer
       enemy.var_a = rng.rand(1..4) # Max ghosts on screen at once.
     when "Skull Spider"
       # Move out of the floor TODO this doesn't work
-      # TODO the vars do something
       enemy.y_pos -= 0x08
+      
+      enemy.var_a = rng.rand(0x600..0x1800) # speed
     when "Skeleton Frisky"
       y = coll.get_floor_y(enemy, allow_jumpthrough: true)
       if y.nil?
