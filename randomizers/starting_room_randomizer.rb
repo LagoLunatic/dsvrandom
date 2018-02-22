@@ -73,8 +73,6 @@ module StartingRoomRandomizer
       possible_rooms = subsector_difficulty_for_each_room.select{|room, difficulty| difficulty == min_difficulty}.keys
     end
     
-    # TODO: for the bonus starting items option, use the new x/y pos from here.
-    
     room = possible_rooms.sample(random: rng)
     
     room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}

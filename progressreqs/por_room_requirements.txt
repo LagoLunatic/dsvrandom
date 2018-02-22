@@ -160,7 +160,7 @@ Inaccessible doors:
   
   - 07-01-03_001
   - 07-01-0A_000
-# TODO: inaccessible rooms?
+# Inaccessible rooms:
 #   00-02-12
 #   00-02-16
 #   00-04-00
@@ -175,7 +175,6 @@ Inaccessible doors:
 #   06-00-31
 #   06-01-09
 #   06-01-12
-# TODO: how should slide be handled? currently the room reqs assume you always have slide, but with area/room rando on you may not be able to access wind at the start of the game...
 Rooms:
 #Dracula's Castle:
 #Entrance: # DONE
@@ -3361,7 +3360,7 @@ Rooms:
     001-002: 
     002-000: small height
     002-001: 
-  06-00-20: # TODO: portrait room where you can't reach the doors from the portrait if you have no height. (this should already be taken account by hardcoded logic for non-room rando, but I need to check if that also applies to room rando logic too or not.)
+  06-00-20:
     000-001: small height
     001-000: small height
   06-00-21:
