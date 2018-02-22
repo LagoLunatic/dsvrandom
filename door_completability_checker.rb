@@ -418,14 +418,14 @@ class DoorCompletabilityChecker
             next
           end
           
-          dest_door_str = get_destination_of_portrait(portrait_name)
+          dest_door_strs = get_destination_of_portrait(portrait_name)
           
-          if dest_door_str == false
+          if dest_door_strs == false
             # Can't access any doors in the destination room.
             next
           end
           
-          doors_and_entities_to_check << dest_door_str
+          doors_and_entities_to_check += dest_door_strs
         end
       end
     end
@@ -547,12 +547,12 @@ class DoorCompletabilityChecker
           
           if portrait_unlocked
             # Can reach all the doors needed to unlock this portrait.
-            dest_door_str = get_destination_of_portrait(portrait_name)
+            dest_door_strs = get_destination_of_portrait(portrait_name)
             
-            if dest_door_str == false
+            if dest_door_strs == false
               # Can't access any doors in the destination room. Do nothing.
             else
-              doors_and_entities_to_check << dest_door_str
+              doors_and_entities_to_check += dest_door_strs
               portraits_to_unlock << portrait_name # Can't delete this portrait from the locked_accessible_portraits array in the middle of a loop. Delete it after.
             end
           end
@@ -862,20 +862,23 @@ class DoorCompletabilityChecker
     sector_index = (portrait_data[:var_b] >> 6) & 0xF
     case area_index
     when 5 # Nation of Fools
-      door_index = 1
+      door_indexes = [1, 2]
+      if check_reqs([[:double_jump, :puppet_master], [:jumpglitch, :puppet_master], [:quad_jump_height]])
+        door_indexes += [0]
+      end
     when 6 # Burnt Paradise
       if check_reqs([[:small_height]])
-        door_index = 0
+        door_indexes = [0, 1]
       else
         # The player needs at least small height to reach either door in the first room of Burnt Paradise.
         # Don't count Burnt Paradise as being reachable if the player can't reach any doors in it yet.
         return false
       end
     else
-      door_index = 0
+      door_indexes = [0]
     end
     
-    return "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]
+    return door_indexes.map{|door_index| "%02X-%02X-%02X_%03X" % [area_index, sector_index, room_index, door_index]}
   end
   
   def remove_final_approach_gate_requirement
