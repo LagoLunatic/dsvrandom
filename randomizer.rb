@@ -227,12 +227,6 @@ class Randomizer
       )
     end
     
-    if room_rando? || (GAME == "por" && options[:randomize_portraits])
-      @needs_infinite_magical_tickets = true
-    else
-      @needs_infinite_magical_tickets = false
-    end
-    
     @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(@int_seed)
     
@@ -344,6 +338,10 @@ class Randomizer
   
   def room_rando?
     options[:randomize_rooms_map_friendly] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+  end
+  
+  def needs_infinite_magical_tickets?
+    room_rando? || (GAME == "por" && options[:randomize_portraits])
   end
   
   def randomize
@@ -1352,7 +1350,7 @@ class Randomizer
       end
     end
     
-    if @needs_infinite_magical_tickets
+    if needs_infinite_magical_tickets?
       room_rando_give_infinite_magical_tickets()
     end
   end
@@ -1360,9 +1358,6 @@ class Randomizer
   def dos_implement_magical_tickets
     # Codes magical tickets in DoS, replacing Castle Map 0.
     
-    if !game.fs.has_free_space_overlay?
-      game.add_new_overlay()
-    end
     game.apply_armips_patch("dos_magical_ticket")
     
     item = game.items[0x2B] # Castle Map 0

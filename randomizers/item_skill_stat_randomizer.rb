@@ -275,7 +275,7 @@ module ItemSkillStatRandomizer
         next if item["Item ID"] == 0x61 # starting Vampire Killer
       end
       
-      if @needs_infinite_magical_tickets
+      if needs_infinite_magical_tickets?
         next if item.name == "Magical Ticket"
       end
       
@@ -356,7 +356,7 @@ module ItemSkillStatRandomizer
           end
           
           # If the player has an infinite magical ticket, don't bother letting any other items be magical tickets too.
-          if @needs_infinite_magical_tickets
+          if needs_infinite_magical_tickets?
             possible_types.delete(0xA)
           end
           

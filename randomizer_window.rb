@@ -480,7 +480,7 @@ class RandomizerWindow < Qt::Dialog
           @progress_dialog = nil
         end
         
-        write_to_rom(game)
+        write_to_rom(game, randomizer)
       end
     end
   rescue NDSFileSystem::InvalidFileError, Game::InvalidFileError => e
@@ -488,7 +488,7 @@ class RandomizerWindow < Qt::Dialog
     return
   end
   
-  def write_to_rom(game)
+  def write_to_rom(game, randomizer)
     FileUtils.mkdir_p(@ui.output_folder.text)
     game_with_caps = GAME.dup
     game_with_caps[0] = game_with_caps[0].upcase
@@ -530,7 +530,12 @@ class RandomizerWindow < Qt::Dialog
           @progress_dialog = nil
         end
         
-        Qt::MessageBox.information(self, "Done", "Randomization complete.\n\nOutput ROM:\n#{output_rom_filename}\n\nIf you get stuck, check the FAQ\nin the readme, and the progression\nspoiler log here: /logs/spoiler_log.txt")
+        msg = "Randomization complete.\n\n"
+        msg << "Output ROM:\n#{output_rom_filename}\n\n"
+        msg << "If you get stuck, check the FAQ in the readme,\nand the progression spoiler log here: /logs/spoiler_log.txt"
+        msg << "\n\nNote that you have an infinitely usable magical ticket in your inventory, so if you get trapped in a pit use that to return to your starting room." if randomizer.needs_infinite_magical_tickets?
+        
+        Qt::MessageBox.information(self, "Done", msg)
       end
     end
   end
