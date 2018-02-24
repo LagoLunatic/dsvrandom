@@ -860,7 +860,8 @@ module PickupRandomizer
       # Move the portrait to a short distance above the closest floor so it looks good and is enterable.
       coll = RoomCollision.new(entity.room, game.fs)
       floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
-      entity.y_pos = floor_y - 0x50
+      entity_original_y_pos = entity.y_pos
+      entity.y_pos = floor_y - 0x50 # Portraits should float 5 tiles off the ground.
       
       entity.write_to_rom()
       
@@ -869,13 +870,30 @@ module PickupRandomizer
       curr_sector_index = entity.room.sector_index
       curr_room_index = entity.room.room_index
       
-      # Update the return portrait.
+      # Find the return portrait.
       dest_area_index = entity.var_a
       dest_sector_index = (entity.var_b & 0x3C0) >> 6
       dest_room_index = entity.var_b & 0x3F
       dest_room = game.areas[dest_area_index].sectors[dest_sector_index].rooms[dest_room_index]
       dest_portrait = dest_room.entities.find{|entity| entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)}
       return_portraits = [dest_portrait]
+      
+      # Update the list of x/y positions the player returns at in the por_distinct_return_portrait_positions patch.
+      return_x = entity.x_pos
+      return_y = floor_y
+      game.fs.write(0x0230900C+dest_area_index*4, [return_x, return_y].pack("vv"))
+      
+      # If there's a small breakable wall containing this portrait we remove it.
+      # Not only does the breakable wall not hide the portrait, but when the player returns they would be put out of bounds by it.
+      breakable_wall_x_range = (entity.x_pos-8..entity.x_pos+8)
+      breakable_wall_y_range = (entity_original_y_pos-8..entity_original_y_pos+8)
+      breakable_wall_entity = entity.room.entities.find do |e|
+        e.is_special_object? && e.subtype == 0x3B && breakable_wall_x_range.include?(e.x_pos) && breakable_wall_y_range.include?(e.y_pos)
+      end
+      if breakable_wall_entity
+        breakable_wall_entity.type = 0
+        breakable_wall_entity.write_to_rom()
+      end
       
       # Also update the bonus return portrait at the end of some areas.
       case dest_area_index
@@ -907,6 +925,9 @@ module PickupRandomizer
         else
           puts "Unknown area to portrait into: %02X" % curr_area_index
         end
+        
+        # Set highest bit of var B to indicate that this is a return portrait to the por_distinct_return_portrait_positions patch.
+        return_portrait.var_b = 0x8000 | return_portrait.var_b
         
         return_portrait.write_to_rom()
         

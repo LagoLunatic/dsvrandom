@@ -1005,6 +1005,12 @@ class Randomizer
       game.apply_armips_patch("por_fix_map_explore_bug")
     end
     
+    # When portrait rando is on we need to be able to change the X/Y pos each return portrait places you at individually.
+    # This patch recodes how the X/Y dest pos work so that they can be easily changed by the pickup randomizer later.
+    if GAME == "por" && options[:randomize_portraits]
+      game.apply_armips_patch("por_distinct_return_portrait_positions")
+    end
+    
     if GAME == "ooe" && room_rando?
       # Fix softlocks that happen when entering the Lighthouse from the wrong door.
       # If entering from the bottom right there's a wall that blocks it. That is removed.
