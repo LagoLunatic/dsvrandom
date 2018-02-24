@@ -21,6 +21,7 @@ module MapRandomizer
     remove_all_wooden_doors()
     
     @rooms_unused_by_map_rando = []
+    @all_unreachable_subroom_doors = []
     
     @map_rando_debug = false
     
@@ -427,6 +428,8 @@ module MapRandomizer
     if area_index == 0 # Castle
       replace_wooden_doors(placed_transition_rooms)
     end
+    
+    @all_unreachable_subroom_doors += unreachable_subroom_doors
   end
   
   def randomize_doors_no_overlap_for_sector(sector_index, unplaced_sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors, placement_mode)
@@ -1580,16 +1583,31 @@ module MapRandomizer
       x, y = tile.x_pos, tile.y_pos
       sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y, map.is_abyss)
       
+      curr_tile_has_valid_room = check_if_tile_has_valid_room(x, y, area, map)
+      
       left_tile = map.tiles.find{|t| t.x_pos == x-1 && t.y_pos == y}
       top_tile = map.tiles.find{|t| t.x_pos == x && t.y_pos == y-1}
-      if left_tile && (left_tile.sector_index != sector_index || left_tile.room_index != room_index)
-        tile.left_wall = true
+      
+      if left_tile
+        left_tile_has_valid_room = check_if_tile_has_valid_room(x-1, y, area, map)
+        
+        if curr_tile_has_valid_room || left_tile_has_valid_room
+          if left_tile.sector_index != sector_index || left_tile.room_index != room_index || curr_tile_has_valid_room != left_tile_has_valid_room
+            tile.left_wall = true
+          end
+        end
       end
-      if top_tile && (top_tile.sector_index != sector_index || top_tile.room_index != room_index)
-        tile.top_wall = true
+      if top_tile
+        top_tile_has_valid_room = check_if_tile_has_valid_room(x, y-1, area, map)
+        
+        if curr_tile_has_valid_room || top_tile_has_valid_room
+          if top_tile.sector_index != sector_index || top_tile.room_index != room_index || curr_tile_has_valid_room != top_tile_has_valid_room
+            tile.top_wall = true
+          end
+        end
       end
       
-      if left_tile && left_tile.sector_index && (left_tile.sector_index != sector_index || left_tile.room_index != room_index)
+      if left_tile && left_tile.sector_index && (left_tile.sector_index != sector_index || left_tile.room_index != room_index) && curr_tile_has_valid_room && left_tile_has_valid_room
         left_room = area.sectors[left_tile.sector_index].rooms[left_tile.room_index]
         y_in_dest_room = y - left_room.room_ypos_on_map
         room_doors = left_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
@@ -1601,7 +1619,7 @@ module MapRandomizer
           tile.left_wall = true
         end
       end
-      if top_tile && top_tile.sector_index && (top_tile.sector_index != sector_index || top_tile.room_index != room_index)
+      if top_tile && top_tile.sector_index && (top_tile.sector_index != sector_index || top_tile.room_index != room_index) && curr_tile_has_valid_room && top_tile_has_valid_room
         top_room = area.sectors[top_tile.sector_index].rooms[top_tile.room_index]
         x_in_dest_room = x - top_room.room_xpos_on_map
         room_doors = top_room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
@@ -1614,7 +1632,7 @@ module MapRandomizer
         end
       end
       
-      if sector_index
+      if curr_tile_has_valid_room
         room = area.sectors[sector_index].rooms[room_index]
         
         tile.is_blank = false
@@ -1627,8 +1645,8 @@ module MapRandomizer
           tile.top_wall = true
         end
         
-        tile.is_save = room.entities.any?{|e| e.is_special_object? && e.subtype == 0x30}
-        tile.is_warp = room.entities.any?{|e| e.is_special_object? && e.subtype == 0x31}
+        tile.is_save = room.entities.any?{|e| e.is_special_object? && e.subtype == SAVE_POINT_SUBTYPE}
+        tile.is_warp = room.entities.any?{|e| e.is_special_object? && e.subtype == WARP_POINT_SUBTYPE}
         
         tile.sector_index = sector_index
         tile.room_index = room_index
@@ -1705,7 +1723,9 @@ module MapRandomizer
       (0...60).each do |x|
         sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
         
-        if sector_index
+        curr_tile_has_valid_room = check_if_tile_has_valid_room(x, y, area, map)
+        
+        if sector_index && curr_tile_has_valid_room
           room = area.sectors[sector_index].rooms[room_index]
           
           tile = MapTile.new([0, y, x], 0)
@@ -1868,5 +1888,38 @@ module MapRandomizer
     y_offset_in_tiles = (48 - max_y) / 2
     map.draw_x_offset = x_offset_in_tiles
     map.draw_y_offset = y_offset_in_tiles
+  end
+  
+  def check_if_tile_has_valid_room(x, y, area, map)
+    sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y, map.is_abyss)
+    
+    if sector_index.nil?
+      return false
+    end
+    
+    room = area.sectors[sector_index].rooms[room_index]
+    
+    if checker.subrooms_doors_only[room.room_str]
+      accessible_map_tile_indexes_in_room = []
+      
+      checker.subrooms_doors_only[room.room_str].each_with_index do |subroom_door_indexes, subroom_index|
+        subroom_is_inaccessible = subroom_door_indexes.all? do |door_index|
+          door_str = room.doors[door_index].door_str
+          @all_unreachable_subroom_doors.include?(door_str)
+        end
+        
+        unless subroom_is_inaccessible
+          accessible_map_tile_indexes_in_room += checker.subroom_map_tiles[room.room_str][subroom_index]
+        end
+      end
+      
+      curr_map_tile_index_in_room = (x-room.room_xpos_on_map) + (y-room.room_ypos_on_map) * room.width
+      
+      if !accessible_map_tile_indexes_in_room.include?(curr_map_tile_index_in_room)
+        return false
+      end
+    end
+    
+    return true
   end
 end

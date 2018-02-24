@@ -107,12 +107,33 @@ Progress important rooms:
 Subrooms:
   05-02-0C: # Legion's room.
     -
-      - 000
-      - e01
+      doors_and_entities:
+        - 000
+        - e01
+      map_tiles:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
     -
-      - 001
-      - 002
-      - 003
+      doors_and_entities:
+        - 001
+        - 002
+        - 003
+      map_tiles:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 5
+        - 6
+        - 7
+        - 8
 Inaccessible doors:
   - 05-01-01_002
   - 05-01-02_001

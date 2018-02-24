@@ -9,6 +9,7 @@ class DoorCompletabilityChecker
               :inaccessible_doors,
               :progress_important_rooms,
               :subrooms_doors_only,
+              :subroom_map_tiles,
               :enemy_locations,
               :event_locations,
               :easter_egg_locations,
@@ -125,10 +126,15 @@ class DoorCompletabilityChecker
     
     @subrooms = yaml["Subrooms"] || {}
     @subrooms_doors_only = {}
+    @subroom_map_tiles = {}
     @subrooms.each do |room_str, this_rooms_subrooms|
       @subrooms_doors_only[room_str] = []
+      @subroom_map_tiles[room_str] = []
       
-      this_rooms_subrooms.each do |list_of_doors_and_entities|
+      this_rooms_subrooms.each do |subroom_data|
+        list_of_doors_and_entities = subroom_data["doors_and_entities"]
+        map_tiles = subroom_data["map_tiles"]
+        
         subroom_doors = []
         
         list_of_doors_and_entities.each do |door_or_ent_str|
@@ -144,6 +150,8 @@ class DoorCompletabilityChecker
         end
         
         @subrooms_doors_only[room_str] << subroom_doors
+        
+        @subroom_map_tiles[room_str] << map_tiles
       end
     end
     
@@ -184,7 +192,9 @@ class DoorCompletabilityChecker
         next
       end
       
-      this_rooms_subrooms.each_with_index do |list_of_doors_and_entities, subroom_index|
+      this_rooms_subrooms.each_with_index do |subroom_data, subroom_index|
+        list_of_doors_and_entities = subroom_data["doors_and_entities"]
+        
         subroom = RoomRandoSubroom.new(room, subroom_index)
         subrooms << subroom
         
