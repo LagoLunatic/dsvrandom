@@ -1394,8 +1394,8 @@ class Randomizer
     room_index = @starting_room.room_index
     case GAME
     when "dos"
-      game.fs.write(0x02308920+0x14, [sector_index].pack("C"))
-      game.fs.write(0x02308920+0x18, [room_index].pack("C"))
+      game.fs.write(0x02308920+0x24, [sector_index].pack("C"))
+      game.fs.write(0x02308920+0x28, [room_index].pack("C"))
     when "por"
       game.fs.write(0x0203A280, [0xE3A00000].pack("V")) # Change mov to constant mov instead of register mov
       game.fs.write(0x0203A280, [area_index].pack("C"))
