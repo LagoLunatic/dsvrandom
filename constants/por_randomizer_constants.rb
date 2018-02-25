@@ -71,7 +71,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EE010 => 0x0001,
   },
   83 => { # Great Stairway
-    0x022EA020 => 0x0001,
+    0x022EA020 => 0x0045,
     0x022EC018 => 0x0001,
   },
   84 => { # Great Stairway
@@ -196,7 +196,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EC3E0 => 0x0237,
   },
   112 => { # Dark Academy
-    0x022EB524 => 0x0001,
+    0x022EB524 => 0x0267,
     0x022ED51C => 0x0001,
   },
   113 => { # Nest of Evil
