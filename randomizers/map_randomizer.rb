@@ -1469,6 +1469,17 @@ module MapRandomizer
       end
     end
     
+    if GAME == "por"
+      # Don't allow a transition room to connect to either of the two doors with the small openings you have to slide into.
+      # This is because blockade tiles don't appear in transition rooms, so the player wouldn't be able to see that they have to slide to get in, it would look like an invisible wall.
+      if ["02-02-07", "02-02-08"].include?(room_a.room_str) && @transition_rooms.include?(room_b)
+        return false
+      end
+      if ["02-02-07", "02-02-08"].include?(room_b.room_str) && @transition_rooms.include?(room_a)
+        return false
+      end
+    end
+    
     if room_a.sector_index == room_b.sector_index
       return true
     end
