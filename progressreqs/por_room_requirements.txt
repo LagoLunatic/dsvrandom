@@ -1096,11 +1096,11 @@ Rooms:
     e05-001: 
   00-07-0C:
     000-001: 
-    000-e00: height 2
-    000-e01: height 2
-    001-000: height 2
-    001-e00: height 2
-    001-e01: height 2
+    000-e00: height 2 | puppet master & big distance # you can puppet master up to the topmost gear with speed up. (you don't really NEED the fully charged speed up, but it makes it much easier, so use the fully charged one as the requirement.)
+    000-e01: height 2 | puppet master & big distance
+    001-000: height 2 | puppet master & big distance
+    001-e00: height 2 | puppet master & big distance
+    001-e01: height 2 | puppet master & big distance
     e00-000: 
     e00-001: 
     e01-000: 
