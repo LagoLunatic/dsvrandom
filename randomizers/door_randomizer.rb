@@ -953,6 +953,10 @@ module DoorRandomizer
       abaddon.x_pos = 0x80
       abaddon.write_to_rom()
     when "por"
+      behemoth = game.entity_by_str("00-00-09_02")
+      behemoth.x_pos = 0x100
+      behemoth.write_to_rom()
+      
       creature = game.entity_by_str("08-00-04_00")
       creature.x_pos = 0x100
       creature.write_to_rom()
