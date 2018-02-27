@@ -1422,8 +1422,24 @@ class Randomizer
     
     # Also change the magical ticket's destination x/y position.
     # The x/y are going to be arm shifted immediates, so they need to be rounded down to the nearest 0x10 to make sure they don't use too many bits.
-    x_pos = @starting_x_pos
-    y_pos = @starting_y_pos
+    if options[:randomize_starting_room]
+      x_pos = @starting_x_pos
+      y_pos = @starting_y_pos
+    else
+      # If starting room rando is off, don't use the actual starting x/y, we want to place the player near a door on the ground instead of in mid air.
+      case GAME
+      when "dos"
+        x_pos = 0x200 - 0x10
+        y_pos = 0x80
+      when "por"
+        x_pos = 0x300 - 0x10
+        y_pos = 0x80
+      when "ooe"
+        x_pos = 0x30
+        y_pos = 0x230
+      end
+    end
+
     if x_pos > 0x100
       x_pos = x_pos/0x10*0x10
     end
