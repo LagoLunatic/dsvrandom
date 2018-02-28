@@ -117,6 +117,7 @@ class RandomizerWindow < Qt::Dialog
   slots "generate_seed()"
   slots "randomize()"
   slots "open_about()"
+  slots "read_seed_info()"
   
   def initialize
     super(nil, Qt::WindowMinimizeButtonHint)
@@ -146,6 +147,8 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.difficulty_level, SIGNAL("activated(int)"), self, SLOT("difficulty_level_changed(int)"))
     
     update_settings()
+    
+    connect(@ui.read_seed_info_button, SIGNAL("clicked()"), self, SLOT("read_seed_info()"))
     
     self.resize(640, 1)
     
@@ -405,6 +408,8 @@ class RandomizerWindow < Qt::Dialog
       return
     end
     
+    @settings["last_used_#{GAME}_clean_rom_path".to_sym] = @ui.clean_rom.text
+    
     seed = @settings[:seed].to_s.strip.gsub(/\s/, "")
     
     if seed.empty?
@@ -551,6 +556,117 @@ class RandomizerWindow < Qt::Dialog
     @about_dialog.setText(text)
     @about_dialog.windowIcon = self.windowIcon
     @about_dialog.show()
+  end
+  
+  def read_seed_info
+    input_seed_info(@ui.paste_seed_info_field.plainText)
+  end
+  
+  def input_seed_info(text)
+    if text.nil? || text.strip == ""
+      raise "No seed info input."
+    end
+    
+    match = text.match(/Seed: ([a-zA-Z0-9\-_']+), Game: ([^,]+), Randomizer version: (.+)\s+Selected options: (.+)\s+Difficulty level: (.+)/)
+    if match.nil?
+      raise "Seed info is not in the proper format."
+    end
+    
+    seed = $1
+    game = $2
+    version = $3
+    options = $4.split(", ").map(&:to_sym)
+    difficulty = $5
+    
+    if version != DSVRANDOM_VERSION
+      raise "Wrong version! This is #{DSVRANDOM_VERSION}, need #{version}"
+    end
+    
+    short_game_name = case game
+    when "Dawn of Sorrow"
+      "dos"
+    when "Portrait of Ruin"
+      "por"
+    when "Order of Ecclesia"
+      "ooe"
+    else
+      raise "Invalid game name: #{game}"
+    end
+    last_used_rom_path_for_this_game = @settings["last_used_#{short_game_name}_clean_rom_path".to_sym]
+    if last_used_rom_path_for_this_game
+      @ui.clean_rom.text = last_used_rom_path_for_this_game
+      successfully_changed_clean_rom_path = true
+    else
+      @ui.clean_rom.text = ""
+      successfully_changed_clean_rom_path = false
+    end
+    
+    @ui.seed.text = seed
+    options.each do |option_name|
+      @ui.send(option_name).checked = true
+    end
+    (OPTIONS-options).each do |option_name|
+      @ui.send(option_name).checked = false
+    end
+    
+    difficulty_level_options = Randomizer::DIFFICULTY_LEVELS[difficulty]
+    if difficulty_level_options
+      # Preset difficulty level.
+      @ui.difficulty_level.count.times do |i|
+        if @ui.difficulty_level.itemText(i) == difficulty
+          difficulty_level_changed(i)
+          break
+        end
+      end
+    elsif difficulty =~ /Custom/
+      # Custom difficulty.
+      custom_difficulty_options = {}
+      on_difficulty_options = false
+      text.each_line do |line|
+        line = line.strip
+        if line == "Difficulty level: Custom, settings:"
+          on_difficulty_options = true
+        elsif on_difficulty_options && line =~ /([^\s:]+): (.+)/
+          name = $1.to_sym
+          val = $2
+          if val.include?(".")
+            val = val.to_f
+          else
+            val = val.to_i
+          end
+          custom_difficulty_options[name] = val
+        elsif on_difficulty_options
+          break
+        end
+      end
+      
+      form_layout = @ui.scrollAreaWidgetContents.layout
+      
+      Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+        slider = @slider_widgets_by_name[option_name]
+        average = custom_difficulty_options[option_name]
+        if average.nil?
+          # If some options are missing default to what it is on easy.
+          average = Randomizer::DIFFICULTY_LEVELS["Easy"][option_name]
+        end
+        slider.blockSignals(true)
+        slider.value = average
+        slider.blockSignals(false)
+        slider.setToolTip(slider.tooltip_text)
+      end
+    else
+      raise "No difficulty found"
+    end
+    
+    @ui.tabWidget.currentIndex = 0
+    
+    msg = "Successfully read seed info."
+    unless successfully_changed_clean_rom_path
+      msg << "\n\nPlease manually change the Clean ROM field to point to a clean #{game} ROM."
+    end
+    Qt::MessageBox.information(self, "Read seed info", msg)
+  rescue StandardError => e
+    Qt::MessageBox.warning(self, "Seed info input failed", e.message)
   end
 end
 
