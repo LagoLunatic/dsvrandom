@@ -345,9 +345,15 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="experimental_options_enabled">
          <property name="title">
           <string>Experimental randomization options (buggy and not guaranteed completable)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -475,8 +481,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>590</width>
+            <height>436</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">

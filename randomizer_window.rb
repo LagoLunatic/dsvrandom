@@ -25,6 +25,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_room_connections
     randomize_area_connections
     
+    experimental_options_enabled
     randomize_players
     randomize_bosses
     randomize_enemy_ai
@@ -118,6 +119,7 @@ class RandomizerWindow < Qt::Dialog
   slots "randomize()"
   slots "open_about()"
   slots "read_seed_info()"
+  slots "experimental_enabled_changed(bool)"
   
   def initialize
     super(nil, Qt::WindowMinimizeButtonHint)
@@ -136,8 +138,10 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
     OPTIONS.each do |option_name|
-      connect(@ui.send(option_name), SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+      connect(@ui.send(option_name), SIGNAL("clicked(bool)"), self, SLOT("update_settings()"))
     end
+    
+    connect(@ui.experimental_options_enabled, SIGNAL("clicked(bool)"), self, SLOT("experimental_enabled_changed(bool)"))
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
     connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
@@ -290,6 +294,14 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_rooms_map_friendly.enabled = true
     end
     
+    if !@settings[:experimental_options_enabled]
+      @ui.experimental_options_enabled.children.each do |child|
+        if child.is_a?(Qt::CheckBox)
+          child.checked = false
+        end
+      end
+    end
+    
     @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)
     @settings[:difficulty_options] = {}
     Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
@@ -299,6 +311,17 @@ class RandomizerWindow < Qt::Dialog
     end
     
     save_settings()
+  end
+  
+  def experimental_enabled_changed(enabled)
+    if enabled
+      msg = "Are you sure you want to enable the experimental section?\n\nThese options are mostly untested and are known to have bugs that can make seeds unwinnable."
+      response = Qt::MessageBox.question(self, "Enable experimental options?", msg, Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No)
+      
+      if response == Qt::MessageBox::No
+        @ui.experimental_options_enabled.checked = false
+      end
+    end
   end
   
   def initialize_difficulty_sliders
