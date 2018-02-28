@@ -1075,7 +1075,8 @@ class Randomizer
       game.fs.write(0x022DA394, [0xE3A00000].pack("V"))
     end
     
-    if GAME == "dos" && options[:fix_first_ability_soul]
+    if GAME == "dos"
+      # Always apply the patch to fix the first ability soul giving you multiple abilities.
       game.apply_armips_patch("dos_fix_first_ability_soul")
     end
     

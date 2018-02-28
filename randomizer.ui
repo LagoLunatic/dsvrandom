@@ -584,46 +584,7 @@
           <string>Dawn of Sorrow</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="add_magical_tickets">
-            <property name="toolTip">
-             <string>Implements a new magical ticket item that functions like it does in PoR and OoE.</string>
-            </property>
-            <property name="text">
-             <string>Add Magical Tickets</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="fix_first_ability_soul">
-            <property name="toolTip">
-             <string>Fixes a bug where the first ability soul you get would enable multiple ability souls.</string>
-            </property>
-            <property name="text">
-             <string>Fix first ability soul bug</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="unlock_boss_doors">
-            <property name="toolTip">
-             <string>You don't need magic seals to open boss doors.</string>
-            </property>
-            <property name="text">
-             <string>Unlock boss doors</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
            <widget class="QCheckBox" name="fix_luck">
             <property name="toolTip">
              <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
@@ -636,7 +597,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="0" column="1">
            <widget class="QCheckBox" name="no_touch_screen">
             <property name="toolTip">
              <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
@@ -649,7 +610,20 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="unlock_boss_doors">
+            <property name="toolTip">
+             <string>You don't need magic seals to open boss doors.</string>
+            </property>
+            <property name="text">
+             <string>Unlock boss doors</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
            <widget class="QCheckBox" name="remove_slot_machines">
             <property name="toolTip">
              <string>Removes golden slot machines that require specific amounts of gold to open.</string>
@@ -659,7 +633,20 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="add_magical_tickets">
+            <property name="toolTip">
+             <string>Implements a new magical ticket item that functions like it does in PoR and OoE.</string>
+            </property>
+            <property name="text">
+             <string>Add Magical Tickets</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
            <widget class="QCheckBox" name="always_start_with_rare_ring">
             <property name="toolTip">
              <string>Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.</string>
@@ -934,7 +921,6 @@
   <tabstop>reveal_breakable_walls</tabstop>
   <tabstop>reveal_bestiary</tabstop>
   <tabstop>remove_area_names</tabstop>
-  <tabstop>fix_first_ability_soul</tabstop>
   <tabstop>fix_luck</tabstop>
   <tabstop>no_touch_screen</tabstop>
   <tabstop>unlock_boss_doors</tabstop>
