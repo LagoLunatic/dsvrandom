@@ -22,6 +22,11 @@ module ChestPoolRandomizer
     available_common_wooden_chest_item_ids -= @max_up_items
     available_rare_wooden_chest_item_ids -= @max_up_items
     
+    if needs_infinite_magical_tickets?
+      # No need to allow magical tickets to appear in wooden chests if the player has an infinite magical ticket already.
+      available_common_wooden_chest_item_ids -= [0x7C]
+    end
+    
     available_common_wooden_chest_item_ids.shuffle!(random: rng)
     available_rare_wooden_chest_item_ids.shuffle!(random: rng)
     
