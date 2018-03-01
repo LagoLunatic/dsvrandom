@@ -178,17 +178,23 @@ module ItemSkillStatRandomizer
         item["Swing Modifiers"].names.each_with_index do |bit_name, i|
           next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
           
-          item["Swing Modifiers"][i] = [true, false, false, false].sample(random: rng)
+          if bit_name == "Player can move"
+            # 5% chance of the Valmanway effect.
+            bit_chance = 1/20.0
+          elsif GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
+            # This bit must be set for throwing weapons to throw correctly.
+            # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
+            bit_chance = 1/10.0
+          else
+            # Otherwise, give all other bits a 25% chance.
+            bit_chance = 1/4.0
+          end
+          
+          item["Swing Modifiers"][i] = (rng.rand() <= bit_chance)
           
           if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
             # This bit must be set for throwing weapons in DoS or they won't appear.
             item["Swing Modifiers"][i] = true
-          end
-          
-          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
-            # This bit must be set for throwing weapons to throw correctly.
-            # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
-            item["Swing Modifiers"][i] = [true, true, true, true, true, true, true, true, true, false].sample(random: rng)
           end
           
           if bit_name == "Player can move"
