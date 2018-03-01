@@ -5,6 +5,7 @@ Preferences:
   moonwalkers: 0.1
   mercury boots: 0.1
   winged boots: 0.1
+  rapidus fio: 0.001
 Glitch defs:
   # none
 Defs:

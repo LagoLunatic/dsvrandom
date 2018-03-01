@@ -1,4 +1,6 @@
 
+Preferences:
+  speed up spell: 0.001
 Glitch defs:
   katar: 0x78
   cinquedia: 0x79

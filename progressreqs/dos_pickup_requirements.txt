@@ -1,6 +1,6 @@
 
 Preferences:
-  # none
+  black panther: 0.001
 Glitch defs:
   cutall: 0x46
   cinquedia: 0x47
