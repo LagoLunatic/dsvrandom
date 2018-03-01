@@ -668,6 +668,12 @@ class Randomizer
       end
     end
     
+    if GAME == "dos"
+      # Always start the player with Doppelganger.
+      add_bonus_item_to_starting_room(0x144) # Doppelganger
+      checker.add_item(0x144)
+    end
+    
     if options[:randomize_pickups]
       yield [options_completed, "Placing progression pickups..."]
       reset_rng()
