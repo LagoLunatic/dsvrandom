@@ -648,20 +648,16 @@ class Randomizer
           # (Commented out because room rando unlocks all boss doors.)
         end
       when "por"
-        # If the player can't access Wind or Vincent give them Lizard Tail.
-        accessible_doors = checker.get_accessible_doors()
-        if !accessible_doors.include?("00-01-06_000") || !accessible_doors.include?("00-01-09_000")
-          add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
-        end
+        # Always start with Lizard Tail, Call Cube, and either Change Cube or Skill Cube.
+        # Even if the player technically could reach the vanilla location, they could be very far away on some seeds.
+        add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
         
-        # If the player can't access the drawbridge room, give them the Call Cube and either the Change Cube or Skill cube.
-        if !accessible_doors.include?("00-00-01_000")
-          add_bonus_item_to_starting_room(0x1AD) # Call Cube
-          if options[:dont_randomize_change_cube]
-            add_bonus_item_to_starting_room(0x1AC) # Change Cube
-          else
-            add_bonus_item_to_starting_room(0x1AE) # Skill Cube
-          end
+        add_bonus_item_to_starting_room(0x1AD) # Call Cube
+        
+        if options[:dont_randomize_change_cube]
+          add_bonus_item_to_starting_room(0x1AC) # Change Cube
+        else
+          add_bonus_item_to_starting_room(0x1AE) # Skill Cube
         end
       when "ooe"
         if options[:randomize_starting_room]
