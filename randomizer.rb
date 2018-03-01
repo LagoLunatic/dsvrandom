@@ -577,12 +577,19 @@ class Randomizer
         game.areas[2].sectors[0].rooms[4]
       end
       @starting_room_door_index = 0
-      @starting_x_pos = 0x80
-      @starting_y_pos = 0x60
-      if GAME == "por"
+      
+      case GAME
+      when "dos"
+        @starting_x_pos = 0x200 - 0x10
+        @starting_y_pos = 0x80
+      when "por"
         # The cutscene teleports the player off to the right.
         # Need to put the items over there so the player picks them up right at the start, as opposed to during the actual cutscene which will crash the game.
         @starting_x_pos = 0x1F0
+        @starting_y_pos = 0x60
+      when "ooe"
+        @starting_x_pos = 0xC0
+        @starting_y_pos = 0x230
       end
     end
     if room_rando?
