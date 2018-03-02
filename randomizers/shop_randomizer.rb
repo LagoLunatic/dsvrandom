@@ -65,6 +65,9 @@ module ShopRandomizer
       if progress_item
         # Always make progression items be worth 0 gold so they can't be sold on accident.
         item["Price"] = 0
+      elsif item.name == "Encyclopedia"
+        # Don't let Charlotte's base unequip weapon be sold, since having zero weapons can cause bugs and crashes.
+        item["Price"] = 0
       elsif item.name == "CASTLE MAP 1" && GAME == "por"
         # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
       else
