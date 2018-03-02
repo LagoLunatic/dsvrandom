@@ -41,6 +41,10 @@ module StartingRoomRandomizer
       next if room.area.name == "Training Hall"
       next if room.area.name == "Large Cavern"
       next if room.sector.name == "Final Approach"
+      if GAME == "ooe" && room.area_index == 0
+        # Don't allow starting in Dracula's Castle in OoE.
+        next
+      end
       
       next if room.entities.find{|e| e.is_boss?}
       
