@@ -170,6 +170,19 @@ Progress important rooms:
   - 0B-00-10 # Upper left exit of Tristis, only necessary for linear mode
   - 0D-00-09 # Upper right exit of Giant's Dwelling, only necessary for linear mode
   - 0F-00-00 # Left exit of Misty Forest Road, only necessary for linear mode
+  
+  # Boss fights that aren't strictly necessary but we place them anyway:
+  - 08-00-02 # Giant Skeleton
+  - 12-00-13 # Arthroverta
+  - 09-00-05 # Brachyura
+  - 11-00-07 # Maneater
+  - 07-01-02 # Rusalka
+  - 0D-00-07 # Goliath
+  - 10-01-02 # Gravedorcus
+  - 00-03-09 # Wallman
+  - 00-02-0C # Blackmore
+  - 00-08-0E # Eligor
+  - 00-06-14 # Death
 Subrooms:
   03-00-01:
     -

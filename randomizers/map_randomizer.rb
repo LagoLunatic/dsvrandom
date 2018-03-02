@@ -723,7 +723,6 @@ module MapRandomizer
             else
               false
             end
-            # TODO boss rooms
           end
           
           if possible_room_positions.empty?

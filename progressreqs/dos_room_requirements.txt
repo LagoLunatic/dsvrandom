@@ -107,6 +107,11 @@ Progress important rooms:
   - 00-07-0E # Bat Company
   - 00-08-14 # Zephyr
   - 00-09-01 # Aguni
+  
+  # Boss fights that aren't strictly necessary but we place them anyway:
+  - 00-01-1C # Paranoia
+  - 00-05-1B # Death
+  - 00-0B-13 # Abaddon
 Subrooms:
   00-01-26:
     -

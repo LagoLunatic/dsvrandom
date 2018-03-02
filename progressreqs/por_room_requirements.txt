@@ -106,6 +106,19 @@ Progress important rooms:
   - 03-00-0C # Astarte (to unlock the big portrait in short mode)
   - 05-02-0C # Legion (to unlock the big portrait in short mode)
   - 07-00-0E # Dagon (to unlock the big portrait in short mode)
+  
+  # Boss fights that aren't strictly necessary but we place them anyway:
+  - 00-00-09 # Behemoth
+  - 00-04-0A # Keremet
+  - 00-07-02 # Death
+  - 00-0B-01 # Sisters and Whip's Memory
+  - 09-00-0A # Balore
+  - 09-00-14 # Gergoth
+  - 09-00-1D # Zephyr
+  - 09-00-26 # Aguni
+  - 09-00-2F # Abaddon
+  - 09-00-3D # Doppelganger
+  - 09-00-39 # Fake Trevor/Grant/Sypha
 Subrooms:
   05-02-0C: # Legion's room.
     -
