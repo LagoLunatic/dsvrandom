@@ -560,6 +560,7 @@ module ItemSkillStatRandomizer
                 "Offensive Form",
                 "Defensive Form",
                 "Taunt",
+                "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
                 "Toad Morph",
                 "Owl Morph",
                 "Sanctuary",
