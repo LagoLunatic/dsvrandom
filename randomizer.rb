@@ -451,6 +451,31 @@ class Randomizer
       end
     end
     
+    # Choose a healing item to be guaranteed cheap and decent in the shop.
+    if options[:randomize_consumable_behavior]
+      reset_rng()
+      
+      all_non_progression_consumables = []
+      (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS - @max_up_items).each do |item_global_id|
+        item = game.items[item_global_id]
+        if item.item_type_name == "Consumables"
+          all_non_progression_consumables << item_global_id
+        end
+      end
+      
+      @shop_cheap_healing_item_id = all_non_progression_consumables.sample(random: rng)
+    else
+      # If the consumable rando is off use the base Potion as the cheap healing item.
+      @shop_cheap_healing_item_id = case GAME
+      when "dos"
+        0x0
+      when "por"
+        0x0
+      when "ooe"
+        0x75
+      end
+    end
+    
     if GAME == "ooe" && options[:randomize_pickups]
       # Glyph given by Barlowe.
       # We randomize this, but only to a starter physical weapon glyph, not to any glyph.

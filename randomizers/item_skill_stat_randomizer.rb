@@ -318,6 +318,11 @@ module ItemSkillStatRandomizer
             possible_types = [8]
           end
           
+          if item["Item ID"] == @shop_cheap_healing_item_id
+            # Make the guaranteed cheap healing item always restore HP.
+            possible_types = [0]
+          end
+          
           item["Type"] = possible_types.sample(random: rng)
           
           case item["Type"]
@@ -325,6 +330,11 @@ module ItemSkillStatRandomizer
             item["Var A"] = named_rand_range_weighted(:restorative_amount_range)
           when 2 # Cures status effect
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
+          end
+          
+          if item["Item ID"] == @shop_cheap_healing_item_id
+            # Always make the guaranteed cheap healing item restore a decent but not too large amount of HP.
+            item["Var A"] = rng.rand(80..200)
           end
           
           case item["Type"]
@@ -387,6 +397,11 @@ module ItemSkillStatRandomizer
             possible_types = [6]
           end
           
+          if item["Item ID"] == @shop_cheap_healing_item_id
+            # Make the guaranteed cheap healing item always restore HP.
+            possible_types = [0]
+          end
+          
           item["Type"] = possible_types.sample(random: rng)
           
           case item["Type"]
@@ -398,6 +413,11 @@ module ItemSkillStatRandomizer
             item["Var A"] = [1, 1, 1, 2, 2, 2, 4].sample(random: rng)
           when 0xB # Increases AP
             item["Var A"] = named_rand_range_weighted(:ap_increase_amount_range)
+          end
+          
+          if item["Item ID"] == @shop_cheap_healing_item_id
+            # Always make the guaranteed cheap healing item restore a decent but not too large amount of HP.
+            item["Var A"] = rng.rand(80..200)
           end
           
           case item["Type"]

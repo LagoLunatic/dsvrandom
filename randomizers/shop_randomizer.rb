@@ -31,11 +31,16 @@ module ShopRandomizer
     
     game.shop_item_pools.each_with_index do |pool, pool_index|
       pool.item_ids.length.times do |i|
-        if GAME == "por" && pool_index == 0 && i == 0
-          pool.item_ids[i] = 0+1 # Potion for the first quest
+        if pool_index == 0 && i == 0
+          # Make sure the guaranteed cheap healing item is always in the shop at the start.
+          pool.item_ids[i] = @shop_cheap_healing_item_id+1
           available_shop_item_ids.delete(0)
           next
         elsif GAME == "por" && pool_index == 0 && i == 1
+          pool.item_ids[i] = 0+1 # Potion for the first quest
+          available_shop_item_ids.delete(0)
+          next
+        elsif GAME == "por" && pool_index == 0 && i == 2
           pool.item_ids[i] = 0x4B+1 # Castle map 1 for the first quest
           available_shop_item_ids.delete(0x4B)
           next
@@ -70,6 +75,9 @@ module ShopRandomizer
         item["Price"] = 0
       elsif item.name == "CASTLE MAP 1" && GAME == "por"
         # Don't randomize castle map 1 in PoR so it doesn't cost a lot to buy for the first quest.
+      elsif item_global_id == @shop_cheap_healing_item_id
+        # Make the guaranteed cheap healing item reasonably priced (100-300).
+        item["Price"] = rng.rand(100..399)/100*100
       else
         item["Price"] = named_rand_range_weighted(:item_price_range)/100*100
       end
