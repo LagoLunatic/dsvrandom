@@ -53,7 +53,7 @@ class Randomizer
               :tiled
   
   DIFFICULTY_RANGES = {
-    :item_price_range               => 100..25000,
+    :item_price_range               => 100..15000,
     :weapon_attack_range            => 0..150,
     :weapon_iframes_range           => 4..55,
     :armor_defense_range            => 0..55,
