@@ -30,6 +30,9 @@ module PickupRandomizer
   AREA_INDEX_TO_PORTRAIT_NAME = PORTRAIT_NAME_TO_DATA.map do |name, data|
     [data[:var_a], name]
   end.to_h
+  PORTRAIT_NAME_TO_AREA_INDEX = PORTRAIT_NAME_TO_DATA.map do |name, data|
+    [name, data[:var_a]]
+  end.to_h
   PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION = {
     :portraitcityofhaze => "00-01-00_00",
     :portraitsandygrave => "00-04-12_00",

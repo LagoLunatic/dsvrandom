@@ -9,6 +9,11 @@ module StartingRoomRandomizer
     end
     
     rooms = []
+    if GAME == "por"
+      area_indexes_of_removed_portraits = @portraits_to_remove.map do |portrait_name|
+        PickupRandomizer::PORTRAIT_NAME_TO_AREA_INDEX[portrait_name]
+      end
+    end
     game.each_room do |room|
       next if room.layers.length == 0
       
@@ -28,6 +33,10 @@ module StartingRoomRandomizer
       next if room.area.name == "Nest of Evil"
       next if room.sector.name == "The Throne Room"
       next if room.sector.name == "Master's Keep" && room.sector_index == 0xC # Cutscene where Dracula dies
+      if GAME == "por" && area_indexes_of_removed_portraits.include?(room.area_index)
+        # Don't allow starting inside a portrait that was removed by Short Mode.
+        next
+      end
       
       next if room.area.name == "Training Hall"
       next if room.area.name == "Large Cavern"
