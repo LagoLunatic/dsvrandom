@@ -127,6 +127,8 @@ module WeaponSynthRandomizer
   end
   
   def randomize_vanilla_weapon_synths_that_use_progression_souls
+    return unless GAME == "dos"
+    
     # Randomize only soul requirements that could result in softlocks because they use progression souls.
     
     available_souls = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE.to_a
