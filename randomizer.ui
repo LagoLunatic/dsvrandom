@@ -481,8 +481,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>436</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -665,7 +665,7 @@
           <string>Portrait of Ruin</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="2">
+          <item row="0" column="1">
            <widget class="QCheckBox" name="dont_randomize_change_cube">
             <property name="toolTip">
              <string>The change cube will always be the first item you get.</string>
@@ -678,7 +678,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="0" column="0">
            <widget class="QCheckBox" name="por_short_mode">
             <property name="toolTip">
              <string>Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).</string>
@@ -688,20 +688,20 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="fix_infinite_quest_rewards">
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="por_nerf_enemy_resistances">
             <property name="toolTip">
-             <string>Fixes a bug where you could get any quest reward over and over again.</string>
+             <string>Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.</string>
             </property>
             <property name="text">
-             <string>Fix infinite quest rewards bug</string>
+             <string>Nerf enemy resistances</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="1" column="1">
            <widget class="QCheckBox" name="skip_emblem_drawing">
             <property name="toolTip">
              <string>Skips the screen where you have to use the touch screen to draw an emblem.</string>
@@ -714,7 +714,20 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1" colspan="2">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="fix_infinite_quest_rewards">
+            <property name="toolTip">
+             <string>Fixes a bug where you could get any quest reward over and over again.</string>
+            </property>
+            <property name="text">
+             <string>Fix infinite quest rewards bug</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
            <widget class="QCheckBox" name="always_show_drop_percentages">
             <property name="toolTip">
              <string>Drop chances always display as percentages instead of stars.</string>
@@ -756,19 +769,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="gain_extra_attribute_points">
-            <property name="toolTip">
-             <string>You gain 100x more AP when killing enemies or absorbing glyphs.</string>
-            </property>
-            <property name="text">
-             <string>Gain Attribute Points faster</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="summons_gain_extra_exp">
             <property name="toolTip">
@@ -776,6 +776,19 @@
             </property>
             <property name="text">
              <string>Summons gain EXP faster</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="gain_extra_attribute_points">
+            <property name="toolTip">
+             <string>You gain 100x more AP when killing enemies or absorbing glyphs.</string>
+            </property>
+            <property name="text">
+             <string>Gain Attribute Points faster</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -928,10 +941,11 @@
   <tabstop>remove_slot_machines</tabstop>
   <tabstop>add_magical_tickets</tabstop>
   <tabstop>always_start_with_rare_ring</tabstop>
-  <tabstop>fix_infinite_quest_rewards</tabstop>
-  <tabstop>skip_emblem_drawing</tabstop>
-  <tabstop>dont_randomize_change_cube</tabstop>
   <tabstop>por_short_mode</tabstop>
+  <tabstop>dont_randomize_change_cube</tabstop>
+  <tabstop>por_nerf_enemy_resistances</tabstop>
+  <tabstop>skip_emblem_drawing</tabstop>
+  <tabstop>fix_infinite_quest_rewards</tabstop>
   <tabstop>always_show_drop_percentages</tabstop>
   <tabstop>open_world_map</tabstop>
   <tabstop>always_dowsing</tabstop>

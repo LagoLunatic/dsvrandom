@@ -1156,6 +1156,10 @@ class Randomizer
       game.apply_armips_patch("por_skip_emblem_drawing")
     end
     
+    if GAME == "por" && options[:por_nerf_enemy_resistances]
+      game.apply_armips_patch("por_nerf_enemy_resistances")
+    end
+    
     if GAME == "por" && options[:por_short_mode]
       portraits_needed_to_open_studio_portrait = PORTRAIT_NAMES - [:portraitnestofevil] - @portraits_to_remove
       boss_flag_checking_code_locations = [0x02076B84, 0x02076BA4, 0x02076BC4, 0x02076BE4]
