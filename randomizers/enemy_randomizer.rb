@@ -63,6 +63,7 @@ module EnemyRandomizer
       "Fish Head",
       "Bone Ark",
       "Fleaman",
+      "Edimmu",
     ]
     @resource_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
