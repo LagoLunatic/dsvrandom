@@ -313,7 +313,7 @@ class Randomizer
       new_range = (range.begin..new_range_end)
       if !new_range.include?(average)
         new_range = (range.begin..average)
-        new_range = (new_range.begin.to_i..new_range.end.to_i) unless float_mode
+        new_range = (new_range.begin.floor..new_range.end.ceil) unless float_mode
       end
       return rand_range_weighted(new_range, average: average)
     elsif num > range.end
@@ -323,7 +323,7 @@ class Randomizer
       new_range = (new_range_begin..range.end)
       if !new_range.include?(average)
         new_range = (average..range.end)
-        new_range = (new_range.begin.to_i..new_range.end.to_i) unless float_mode
+        new_range = (new_range.begin.floor..new_range.end.ceil) unless float_mode
       end
       return rand_range_weighted(new_range, average: average)
     else
