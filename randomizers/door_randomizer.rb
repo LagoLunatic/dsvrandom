@@ -21,6 +21,17 @@ module DoorRandomizer
         all_area_subsectors += subsectors
       end
       
+      normal_door_to_subroom_door = {}
+      all_area_subsectors.each do |subsector_rooms|
+        subsector_rooms.each do |room|
+          room.doors.each do |door|
+            if door.is_a?(RoomRandoDoor)
+              normal_door_to_subroom_door[door.original_door] = door
+            end
+          end
+        end
+      end
+      
       remaining_transitions = {
         left: [],
         right: [],
@@ -60,13 +71,23 @@ module DoorRandomizer
         if transition_door.direction == :right
           # The door leading right into a transition room.
           # This is part of the sector proper, so we just use this room itself to detect the proper subsector.
-          room_in_desired_subsector = transition_door.room
+          door_in_desired_subsector = transition_door
         else
           # The door leading left out of the transition room.
           # We want the subsector to the right. But since this is in the transition room, we have no idea what subsector the transition room itself is in.
           # So follow the right door out of the transition room, and use the room there to detect the proper subsector.
-          room_in_desired_subsector = transition_door.room.doors.find{|d| d.direction == :right}.destination_room
+          right_door = transition_door.room.doors.find{|d| d.direction == :right}
+          door_in_desired_subsector = right_door.destination_door
         end
+        
+        dest_subroom_door_in_desired_subsector = normal_door_to_subroom_door[door_in_desired_subsector]
+        if dest_subroom_door_in_desired_subsector
+          # If this room has subrooms we need to use those instead of the regular room.
+          room_in_desired_subsector = dest_subroom_door_in_desired_subsector.room
+        else
+          room_in_desired_subsector = door_in_desired_subsector.room
+        end
+        
         all_area_subsectors.each_with_index do |subsector_rooms, subsector_index|
           if subsector_rooms.include?(room_in_desired_subsector)
             transition_doors_by_subsector[subsector_index] << transition_door
@@ -76,7 +97,7 @@ module DoorRandomizer
         end
         
         if other_transitions_in_same_subsector[transition_door].nil?
-          puts all_area_subsectors.flatten.map{|x| x.room_str}
+          #puts all_area_subsectors.flatten.map{|x| x.room_str}
           raise "#{transition_door.door_str} can't be found in any subsector"
         end
       end

@@ -1017,6 +1017,8 @@ class DoorCompletabilityChecker
 end
 
 class RoomRandoDoor < Door
+  attr_reader :original_door
+  
   def initialize(door, subroom)
     attrs = %w(fs game door_ram_pointer destination_room_metadata_ram_pointer x_pos y_pos dest_x_2 dest_y_2 dest_x dest_y unused)
     
