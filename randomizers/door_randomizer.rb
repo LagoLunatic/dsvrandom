@@ -958,6 +958,10 @@ module DoorRandomizer
       creature = game.entity_by_str("08-00-04_00")
       creature.x_pos = 0x100
       creature.write_to_rom()
+      
+      abaddon = game.entity_by_str("09-00-2F_02")
+      abaddon.x_pos = 0x80
+      abaddon.write_to_rom()
     when "ooe"
       arthroverta = game.entity_by_str("12-00-13_00")
       arthroverta.x_pos = 0x80
