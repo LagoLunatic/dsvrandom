@@ -17,7 +17,7 @@ module DoorRandomizer
       
       all_area_subsectors = []
       area.sectors.each do |sector|
-        subsectors = get_subsectors(sector, include_transitions: true, use_subrooms: false)
+        subsectors = get_subsectors(sector, include_transitions: true)
         all_area_subsectors += subsectors
       end
       
@@ -526,7 +526,7 @@ module DoorRandomizer
     end
   end
   
-  def get_subsectors(sector, include_transitions: false, use_subrooms: true)
+  def get_subsectors(sector, include_transitions: false)
     subsectors = []
     
     debug = false
@@ -537,7 +537,7 @@ module DoorRandomizer
       room_strs_unused_by_map_rando = @rooms_unused_by_map_rando.map{|room| room.room_str}
     end
     
-    if room_rando? && use_subrooms
+    if room_rando?
       # First convert the rooms to subrooms.
       sector_subrooms = checker.convert_rooms_to_subrooms(sector.rooms)
     else
