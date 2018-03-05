@@ -1395,6 +1395,10 @@ class Randomizer
       end
     end
     
+    if room_rando?
+      center_bosses_for_room_rando()
+    end
+    
     if needs_infinite_magical_tickets?
       room_rando_give_infinite_magical_tickets()
     end

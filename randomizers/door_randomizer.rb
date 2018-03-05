@@ -278,8 +278,6 @@ module DoorRandomizer
     end
     
     replace_outer_boss_doors()
-    
-    center_bosses_for_room_rando()
   end
   
   def randomize_non_transition_doors_for_subsector(subsector_rooms, subsector_index, area, sector, queued_door_changes, transition_doors)
@@ -964,6 +962,13 @@ module DoorRandomizer
       arthroverta = game.entity_by_str("12-00-13_00")
       arthroverta.x_pos = 0x80
       arthroverta.write_to_rom()
+      
+      # If you enter Gravedorcus's room from the left he appears on top of you.
+      # So we change his initial state from 2 (appearing at the left and moving through the sand to the right) to 5 (appearing and spitting to the right).
+      game.fs.load_overlay(33)
+      game.fs.write(0x022B8568, [5].pack("C"))
+      # Also skip the intro when entering from the right so it's consistent with the lack of intro from the left. Remove the branch instruction that goes to the intro.
+      game.fs.write(0x022BA230, [0xE1A00000].pack("V"))
     end
   end
   
