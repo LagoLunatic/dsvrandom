@@ -925,6 +925,9 @@ class Randomizer
       # And modify the code of the floors to not care if Gergoth's boss death flag is set, and just always be in place.
       game.fs.write(0x0219EF40, [0xE3A00000].pack("V")) # mov r0, 0h
       
+      # Apply a patch to make Gergoth move to the right if the player enters from the left so he's not on top of the player.
+      game.apply_armips_patch("dos_gergoth_either_side")
+      
       # When starting a new game, don't unlock the Lost Village warp by default.
       game.fs.write(0x021F6054, [0xE1A00000].pack("V"))
     end
@@ -1280,6 +1283,33 @@ class Randomizer
       # In room rando, unlock the bottom passage in the second room of the game by default to simplify the logic. (The one that usually needs you to complete the Nest of Evil quest.)
       game.fs.load_overlay(78)
       game.fs.write(0x022E8988, [0xE3E00000].pack("V")) # mvn r0, 0h
+    end
+    
+    if GAME == "por" && room_rando?
+      balore_room = game.room_by_str("09-00-0A")
+      unless @rooms_unused_by_map_rando.include?(balore_room)
+        right_door_out = balore_room.doors.find{|d| d.direction == :right}
+        left_door_in = right_door_out.destination_door
+        
+        # Left door that leads into Balore's room in Nest of Evil.
+        # If the player enters through this door they will be behind Balore, unable to get into the room, and Balore can't hit them.
+        # The player can still kill Balore but there's no challenge in that.
+        # So we make the door leave the player on the left half of the room, in front of Balore on the ground.
+        left_door_in.dest_x_2 = -0xC0
+        left_door_in.dest_y_2 = 0x30
+        left_door_in.write_to_rom()
+      end
+      
+      gergoth_room = game.room_by_str("09-00-14")
+      unless @rooms_unused_by_map_rando.include?(gergoth_room)
+        right_door_out = gergoth_room.doors.find{|d| d.direction == :right}
+        left_door_in = right_door_out.destination_door
+        
+        # Do the same thing for the door into Gergoth's room as we did for the one into Balore's room.
+        left_door_in.dest_x_2 = -0xC0
+        left_door_in.dest_y_2 = 0x30
+        left_door_in.write_to_rom()
+      end
     end
     
     if GAME == "por" && (options[:randomize_starting_room] || options[:randomize_rooms_map_friendly])
