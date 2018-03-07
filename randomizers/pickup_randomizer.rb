@@ -888,7 +888,7 @@ module PickupRandomizer
       # Update the list of x/y positions the player returns at in the por_distinct_return_portrait_positions patch.
       return_x = entity.x_pos
       return_y = floor_y
-      game.fs.write(0x0230900C+dest_area_index*4, [return_x, return_y].pack("vv"))
+      game.fs.write(0x02309010+dest_area_index*4, [return_x, return_y].pack("vv"))
       
       # If there's a small breakable wall containing this portrait we remove it.
       # Not only does the breakable wall not hide the portrait, but when the player returns they would be put out of bounds by it.
