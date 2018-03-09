@@ -734,14 +734,9 @@ class Randomizer
     if room_rando?
       # Reorder boss stats so they're more appropriate for the order you progress in room rando
       
-      reset_rng()
-      
       boss_ids_by_order_you_reach_them = []
       @rooms_by_progression_order_accessed.each do |progression_region|
         # A progression region is all the rooms you can access at a certain point on the main route in between getting progression items.
-        
-        # Shuffle the rooms within this region so if there are multiple bosses accessed at once, the canon order you should access them is random.
-        progression_region = progression_region.shuffle(random: rng)
         
         progression_region.each do |room_str|
           room = game.room_by_str(room_str)
