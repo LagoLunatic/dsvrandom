@@ -229,7 +229,6 @@ module PickupRandomizer
         
         # Then place the portrait.
         change_entity_location_to_pickup_global_id(starting_portrait_location_in_castle, starting_portrait_name)
-        checker.add_item(starting_portrait_name)
         @locations_randomized_to_have_useful_pickups << starting_portrait_location_in_castle
       end
     end
@@ -248,6 +247,10 @@ module PickupRandomizer
       end
       
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
+      if starting_portrait_name
+        # Don't place the starting portrait anywhere, it's already in Dracula's Castle.
+        pickups_by_locations.delete(starting_portrait_name)
+      end
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
       currently_useless_pickups = pickups_by_locations.select{|pickup, num_locations| num_locations == 0}
       puts "Num useless pickups: #{currently_useless_pickups.size}" if verbose
