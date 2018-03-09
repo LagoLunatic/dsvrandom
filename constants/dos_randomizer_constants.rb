@@ -14,6 +14,23 @@ STOLAS_UNFRIENDLY_ENEMY_IDS = [0x30] # Guillotiner bugs out and constantly telep
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x73, 0x74, 0x75] # Remove Menace, Soma, and Dracula.
 
+ORIGINAL_BOSS_IDS_ORDER = [
+  0x65, # Flying Armor
+  0x66, # Balore
+  0x68, # Dmitrii
+  0x67, # Malphas
+  0x69, # Dario
+  0x6A, # Puppet Master
+  0x6B, # Rahab
+  0x6C, # Gergoth
+  0x6D, # Zephyr
+  0x6E, # Bat Company
+  0x6F, # Paranoia
+  0x70, # Aguni
+  0x71, # Death
+  0x72, # Abaddon
+]
+
 POSSIBLE_RED_WALL_SOULS = (0..0x34).to_a -
   [0x00, 0x01, 0x02, 0x03] - # these are non-offensive souls, they have no hitbox to hit the wall with
   [0x1B, 0x26, 0x28, 0x29, 0x2B, 0x33] - # these can't hit the wall correctly: frozen shade, mollusca, killer fish, malacoda, aguni, holy water

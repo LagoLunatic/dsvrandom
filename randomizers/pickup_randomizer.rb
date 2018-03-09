@@ -195,6 +195,7 @@ module PickupRandomizer
     progression_pickups_placed = 0
     total_progression_pickups = checker.all_progression_pickups.length
     on_leftovers = false
+    @rooms_by_progression_order_accessed = []
     
     game.each_room do |room|
       room.entities.each do |entity|
@@ -325,6 +326,9 @@ module PickupRandomizer
       
       if room_rando?
         possible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
+        
+        accessible_rooms = accessible_doors.map{|door_str| door_str[0,8]}
+        @rooms_by_progression_order_accessed << accessible_rooms
       else
         possible_locations = checker.get_accessible_locations()
       end

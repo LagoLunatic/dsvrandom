@@ -19,6 +19,21 @@ RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x6D, 0x76] - # Also remove Brachyura and Eligor since they need their own huge rooms.
   [0x71] # Remove Gravedorcus because he relies on code and objects specific to Oblivion Ridge.
 
+ORIGINAL_BOSS_IDS_ORDER = [
+  0x6C, # Arthroverta
+  0x6B, # Giant Skeleton
+  0x6D, # Brachyura
+  0x6E, # Maneater
+  0x6F, # Rusalka
+  0x70, # Goliath
+  0x71, # Gravedorcus
+  0x72, # Albus
+  0x73, # Barlowe
+  0x75, # Blackmore
+  0x76, # Eligor
+  0x77, # Death
+]
+
 PATH_BLOCKING_BREAKABLE_WALLS = [
   {var_a: 2, var_b: 0},
   {var_a: 0, var_b: 0},

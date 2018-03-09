@@ -731,6 +731,53 @@ class Randomizer
       place_non_progression_pickups()
     end
     
+    if room_rando?
+      # Reorder boss stats so they're more appropriate for the order you progress in room rando
+      
+      reset_rng()
+      
+      boss_ids_by_order_you_reach_them = []
+      @rooms_by_progression_order_accessed.each do |progression_region|
+        # A progression region is all the rooms you can access at a certain point on the main route in between getting progression items.
+        
+        # Shuffle the rooms within this region so if there are multiple bosses accessed at once, the canon order you should access them is random.
+        progression_region = progression_region.shuffle(random: rng)
+        
+        progression_region.each do |room_str|
+          room = game.room_by_str(room_str)
+          bosses_in_room = room.entities.select do |e|
+            e.is_enemy? && ORIGINAL_BOSS_IDS_ORDER.include?(e.subtype)
+          end
+          if GAME == "ooe"
+            # Don't count common enemy Giant Skeleton as a boss.
+            bosses_in_room.reject!{|e| e.subtype == 0x6B && e.var_a != 1}
+          end
+          
+          bosses_in_room.each do |boss_entity|
+            boss_ids_by_order_you_reach_them << boss_entity.subtype
+          end
+        end
+      end
+      boss_ids_by_order_you_reach_them.uniq!
+      
+      boss_ids_by_order_you_reach_them.each_with_index do |boss_id, i|
+        orig_boss_id = ORIGINAL_BOSS_IDS_ORDER[i]
+        orig_boss = @original_enemy_dnas[orig_boss_id]
+        boss = game.enemy_dnas[boss_id]
+        
+        boss["HP"]               = orig_boss["HP"]
+        boss["MP"]               = orig_boss["MP"]
+        boss["SP"]               = orig_boss["SP"]
+        boss["AP"]               = orig_boss["AP"]
+        boss["EXP"]              = orig_boss["EXP"]
+        boss["Attack"]           = orig_boss["Attack"]
+        boss["Defense"]          = orig_boss["Defense"]
+        boss["Physical Defense"] = orig_boss["Physical Defense"]
+        boss["Magical Defense"]  = orig_boss["Magical Defense"]
+        boss.write_to_rom()
+      end
+    end
+    
     if options[:randomize_enemy_stats]
       yield [options_completed, "Randomizing enemy stats..."]
       reset_rng()

@@ -16,6 +16,23 @@ RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x99, 0x9A] - # Remove Dracula and True Dracula.
   [0x88, 0x89] # Also remove Fake Grant and Sypha as they're placed together with Trevor.
 
+ORIGINAL_BOSS_IDS_ORDER = [
+  0x8A, # Dullahan
+  0x8B, # Behemoth
+  0x8C, # Keremet
+  0x8D, # Astarte
+  0x8E, # Legion
+  0x91, # Stella
+  0x8F, # Dagon
+  0x90, # Death
+  0x92, # Loretta
+  0x94, # The Creature
+  0x95, # Werewolf
+  0x96, # Medusa
+  0x97, # Mummy Man
+  0x93, # Brauner
+]
+
 PATH_BLOCKING_BREAKABLE_WALLS = [
   {area_index: 0, sector_index: 0, var_a: 1},
   {area_index: 0, sector_index: 1, var_a: 0},
