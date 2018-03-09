@@ -621,7 +621,8 @@ module EnemyRandomizer
       
       enemy.var_a = 1
     when "Mud Man", "Mummy"
-      if enemy_dna.name == "Mud Man" && enemy.room.layers.length == 1
+      real_layers = enemy.room.layers.reject{|layer| layer.layer_tiledata_ram_start_offset.nil?}
+      if enemy_dna.name == "Mud Man" && real_layers.length == 1
         # If mud men are placed in a room with only 1 layer (e.g. some rooms in Dark Academy with a 3D background) they will crash the game on real hardware.
         return :redo
       end
