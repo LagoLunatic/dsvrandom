@@ -618,6 +618,12 @@ module MapRandomizer
               end
             end
             
+            if GAME == "ooe" && room.room_str == "0C-00-0F"
+              # The one-way room in Large Cavern.
+              # We want to place this from the right, so that the player can actually get through it.
+              next unless direction == :right
+            end
+            
             room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
             
             if GAME == "dos" && room.room_str == "00-05-07"
