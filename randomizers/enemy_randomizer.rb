@@ -138,12 +138,7 @@ module EnemyRandomizer
         @allowed_enemies_for_room << 0x6B # Count Giant Skeleton as a common enemy
       end
       
-      enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
-      if GAME == "ooe"
-        enemies_in_room += room.entities.select do |e|
-           e.is_enemy? && e.subtype == 0x6B && e.var_a == 0 # Count Giant Skeleton as a common enemy
-        end
-      end
+      enemies_in_room = get_common_enemies_in_room(room)
       
       next if enemies_in_room.empty?
       
@@ -184,20 +179,28 @@ module EnemyRandomizer
         @allowed_enemies_for_room -= [0x4D]
       end
       
-      # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
-      original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
-        enemy_dna = @original_enemy_dnas[enemy.subtype]
-        difficulty + enemy_dna["Attack"]
+      if room_rando? && @room_rando_enemy_difficulty_for_room[room.room_str]
+        hash = @room_rando_enemy_difficulty_for_room[room.room_str]
+        
+        original_room_difficulty = hash[:average_attack] * enemies_in_room.size
+        max_enemy_attack = hash[:max_enemy_attack]
+      else
+        # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
+        original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
+          enemy_dna = @original_enemy_dnas[enemy.subtype]
+          difficulty + enemy_dna["Attack"]
+        end
+      
+        max_enemy_attack = enemies_in_room.map do |enemy|
+          enemy_dna = @original_enemy_dnas[enemy.subtype]
+          enemy_dna["Attack"]
+        end.max
       end
       
       # Only allow tough enemies in the room up to the original room's difficulty times a multiplier.
       remaining_new_room_difficulty = original_room_difficulty*@difficulty_settings[:max_room_difficulty_mult]
       
-      # Only allow enemies up to 1.5x tougher than the toughest enemy in the original room.
-      max_enemy_attack = enemies_in_room.map do |enemy|
-        enemy_dna = @original_enemy_dnas[enemy.subtype]
-        enemy_dna["Attack"]
-      end.max
+      # Only allow enemies up to a certain multiplier higher than the strongest enemy in the original room.
       max_allowed_enemy_attack = max_enemy_attack*@difficulty_settings[:max_enemy_difficulty_mult]
       
       enemies_in_room.shuffle(random: rng).each_with_index do |enemy, i|
@@ -268,6 +271,18 @@ module EnemyRandomizer
     end
   end
   
+  def get_common_enemies_in_room(room)
+    enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
+    
+    if GAME == "ooe"
+      enemies_in_room += room.entities.select do |e|
+         e.is_enemy? && e.subtype == 0x6B && e.var_a == 0 # Count Giant Skeleton as a common enemy
+      end
+    end
+    
+    return enemies_in_room
+  end
+  
   def randomize_enemy(enemy, failed_enemies_for_this_spot = [])
     if GAME == "dos" && enemy.room.sector_index == 4 && enemy.room.room_index == 0x10 && enemy.subtype == 0x3A
       # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
@@ -299,7 +314,8 @@ module EnemyRandomizer
       max_enemy_id = ENEMY_IDS.max
       allowed_enemies_for_room_minus_failed = @allowed_enemies_for_room - failed_enemies_for_this_spot
       weights = allowed_enemies_for_room_minus_failed.map do |possible_enemy_id|
-        id_difference = (possible_enemy_id - enemy.subtype).abs
+        curr_enemy_id_for_id_weighting = get_enemy_id_for_weighting_purposes(enemy)
+        id_difference = (possible_enemy_id - curr_enemy_id_for_id_weighting).abs
         weight = max_enemy_id - id_difference
         weight**@difficulty_settings[:enemy_id_preservation_exponent]
       end
@@ -338,6 +354,15 @@ module EnemyRandomizer
       if @resource_intensive_enemy_ids.include?(random_enemy_id)
         @total_resource_intensive_enemies_in_room += 1
       end
+    end
+  end
+  
+  def get_enemy_id_for_weighting_purposes(enemy)
+    if room_rando? && @room_rando_enemy_difficulty_for_room[enemy.room.room_str]
+      hash = @room_rando_enemy_difficulty_for_room[enemy.room.room_str]
+      hash[:average_enemy_id]
+    else
+      enemy.subtype
     end
   end
   

@@ -773,6 +773,58 @@ class Randomizer
       end
     end
     
+    if room_rando?
+      # Generate new difficulty values for every room in the game based on the order you progress in room rando.
+      # These values are then used in place of the normal ones by the enemy randomizer.
+      # (If the enemy randomizer is off, common enemies don't get rebalanced.)
+      
+      original_room_difficulties = []
+      
+      all_rooms_in_order_accessed = @rooms_by_progression_order_accessed.flatten.uniq
+      all_rooms_in_order_accessed.each do |room_str|
+        room = game.room_by_str(room_str)
+        enemies_in_room = get_common_enemies_in_room(room)
+        next if enemies_in_room.empty?
+        
+        average_attack = enemies_in_room.reduce(0) do |difficulty, enemy|
+          enemy_dna = @original_enemy_dnas[enemy.subtype]
+          difficulty + enemy_dna["Attack"]
+        end
+        average_attack = average_attack.to_f / enemies_in_room.size
+        
+        max_enemy_attack = enemies_in_room.map do |enemy|
+          enemy_dna = @original_enemy_dnas[enemy.subtype]
+          enemy_dna["Attack"]
+        end.max
+        
+        average_enemy_id = enemies_in_room.reduce(0) do |id_sum, enemy|
+          id_sum + enemy.subtype
+        end
+        average_enemy_id = average_enemy_id.to_f / enemies_in_room.size
+        
+        original_room_difficulties << {
+          average_attack: average_attack,
+          max_enemy_attack: max_enemy_attack,
+          average_enemy_id: average_enemy_id,
+        }
+      end
+      
+      original_room_difficulties_in_order = original_room_difficulties.sort_by{|hash| hash[:average_attack]}
+      
+      @room_rando_enemy_difficulty_for_room = {}
+      room_strs_by_order_you_reach_them = @rooms_by_progression_order_accessed.flatten.uniq
+      i = 0
+      room_strs_by_order_you_reach_them.each do |room_str|
+        room = game.room_by_str(room_str)
+        enemies_in_room = get_common_enemies_in_room(room)
+        next if enemies_in_room.empty?
+        
+        @room_rando_enemy_difficulty_for_room[room_str] = original_room_difficulties_in_order[i]
+        
+        i += 1
+      end
+    end
+    
     if options[:randomize_enemy_stats]
       yield [options_completed, "Randomizing enemy stats..."]
       reset_rng()
