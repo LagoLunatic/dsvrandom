@@ -667,9 +667,24 @@ module EnemyRandomizer
         return :redo
       end
       
+      # Move to floor first so we know where he actually will be in game.
+      y = coll.get_floor_y(enemy, allow_jumpthrough: false)
+      if y.nil?
+        # No floor
+        return :redo
+      end
+      enemy.y_pos = y - 0x10
+      
       room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
-      max_left_dist = enemy.x_pos - 0x10
-      max_right_dist = room_width - enemy.x_pos - 0x10
+      right_wall_x = coll.get_right_wall_x(enemy)
+      left_wall_x = coll.get_left_wall_x(enemy)
+      right_wall_x = room_width - 0x40 if right_wall_x.nil?
+      left_wall_x = 0x40 if left_wall_x.nil?
+      
+      # Calculate the maximum distance these gunmen should be allowed to walk without going inside a wall.
+      # Subtract a block since we don't want the gunman to be half inside the wall either.
+      max_left_dist = enemy.x_pos - left_wall_x - 0x10
+      max_right_dist = right_wall_x - enemy.x_pos - 0x10
       
       room_has_left_doors = !!enemy.room.doors.find{|door| door.direction == :left}
       room_has_right_doors = !!enemy.room.doors.find{|door| door.direction == :right}
@@ -693,11 +708,10 @@ module EnemyRandomizer
         max_dist = [max_left_dist, max_right_dist].min
       end
       
-      if max_dist <= 0x20
-        dist = 0x20
-      else
-        dist = rng.rand(0x20..max_dist)
-      end
+      min_dist = 0x20
+      min_dist = max_dist if min_dist > max_dist
+      
+      dist = rng.rand(min_dist..max_dist)
       enemy.var_b = dist
     when "Blue Crow", "Black Crow"
       enemy.var_a = 1 # Teleport to the closest floor.
@@ -922,7 +936,8 @@ class RoomCollision
   def get_right_wall_x(entity)
     y = entity.y_pos
     chosen_x = nil
-    (entity.x_pos..room_width-1).step(0x10) do |x|
+    start_x = entity.x_pos/0x10*0x10
+    (start_x..room_width-1).step(0x10) do |x|
       if self[x,y].is_solid?
         chosen_x = x
         break
@@ -935,9 +950,10 @@ class RoomCollision
   def get_left_wall_x(entity)
     y = entity.y_pos
     chosen_x = nil
-    (0..entity.x_pos-1).step(0x10) do |x|
+    start_x = (entity.x_pos-1)/0x10*0x10
+    (0..start_x).step(0x10).reverse_each do |x|
       if self[x,y].is_solid?
-        chosen_x = x
+        chosen_x = x + 0x10 # Add a block because we want the position of the right edge of this tile.
         break
       end
     end
