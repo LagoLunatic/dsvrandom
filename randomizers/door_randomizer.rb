@@ -860,8 +860,6 @@ module DoorRandomizer
     # Make a list of boss rooms to fix the boss doors for.
     game.each_room do |room|
       next if room.area.name == "Ecclesia"
-      next if room.area.name == "Nest of Evil"
-      next if room.area.name == "Large Cavern"
       next if room.area.name == "Unused Boss Rush"
       
       if options[:randomize_rooms_map_friendly] && @rooms_unused_by_map_rando.include?(room)
@@ -870,14 +868,24 @@ module DoorRandomizer
       end
       
       room.entities.each do |entity|
-        if entity.is_boss_door? && entity.var_a == 0
-          # Boss door outside a boss room. Remove it.
-          entity.type = 0
-          entity.write_to_rom()
-        end
-        
-        if entity.is_boss_door? && entity.var_a != 0
-          boss_rooms << room
+        if entity.is_boss_door?
+          if entity.var_a == 0
+            # Boss door outside a boss room. Remove it.
+            entity.type = 0
+            entity.write_to_rom()
+          elsif GAME == "dos" || entity.var_a == 1
+            # Boss door inside a boss room. Keep track of it.
+            boss_rooms << room
+          elsif entity.var_a == 2
+            if room.entities.any?{|e| e.is_enemy?}
+              # Nest of Evil/Large Cavern enemy room. (Or PoR Dracula's boss room.)
+              boss_rooms << room
+            else
+              # Nest of Evil/Large Cavern empty room. Remove the boss door.
+              entity.type = 0
+              entity.write_to_rom()
+            end
+          end
         end
       end
     end

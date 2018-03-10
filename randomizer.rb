@@ -732,7 +732,7 @@ class Randomizer
     end
     
     if room_rando?
-      # Reorder boss stats so they're more appropriate for the order you progress in room rando
+      # Reorder boss stats so they're more appropriate for the order you progress in room rando.
       
       boss_ids_by_order_you_reach_them = []
       @rooms_by_progression_order_accessed.each do |progression_region|
