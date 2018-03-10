@@ -143,7 +143,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EC81C => 0x0001,
   },
   91 => { # Sandy Grave
-    0x022EB10C => 0x0010,
+    0x022EB10C => 0x01D1,
     0x022ED104 => 0x0001,
   },
   92 => { # Sandy Grave
