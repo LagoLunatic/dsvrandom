@@ -738,6 +738,7 @@ class Randomizer
       @rooms_by_progression_order_accessed.each do |progression_region|
         # A progression region is all the rooms you can access at a certain point on the main route in between getting progression items.
         
+        boss_ids_by_order_you_reach_them_for_this_region = []
         progression_region.each do |room_str|
           room = game.room_by_str(room_str)
           bosses_in_room = room.entities.select do |e|
@@ -749,9 +750,16 @@ class Randomizer
           end
           
           bosses_in_room.each do |boss_entity|
-            boss_ids_by_order_you_reach_them << boss_entity.subtype
+            boss_ids_by_order_you_reach_them_for_this_region << boss_entity.subtype
           end
         end
+        
+        # If multiple bosses are unlocked at the same time, use the vanilla order.
+        boss_ids_by_order_you_reach_them_for_this_region.sort_by! do |boss_id|
+          ORIGINAL_BOSS_IDS_ORDER.index(boss_id)
+        end
+        
+        boss_ids_by_order_you_reach_them += boss_ids_by_order_you_reach_them_for_this_region
       end
       boss_ids_by_order_you_reach_them.uniq!
       
