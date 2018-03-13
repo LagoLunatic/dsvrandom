@@ -704,7 +704,7 @@
           <item row="1" column="1">
            <widget class="QCheckBox" name="skip_emblem_drawing">
             <property name="toolTip">
-             <string>Skips the screen where you have to use the touch screen to draw an emblem.</string>
+             <string>Skips the screen where you have to use the touch screen to draw an emblem when starting a new game.</string>
             </property>
             <property name="text">
              <string>Skip emblem drawing</string>
