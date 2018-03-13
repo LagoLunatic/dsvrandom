@@ -93,7 +93,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022C9EEC => 0x0275,
   },
   74 => { # Final Approach
-    0x022D0FBC => 0x0001,
+    0x022D0FBC => 0x0030,
     0x022D2FB4 => 0x03E7,
   },
   75 => { # Final Approach
