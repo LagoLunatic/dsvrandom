@@ -179,7 +179,7 @@ module EnemyRandomizer
         @allowed_enemies_for_room -= [0x4D]
       end
       
-      if room_rando? && @room_rando_enemy_difficulty_for_room[room.room_str]
+      if room_rando? && options[:rebalance_enemies_in_room_rando] && @room_rando_enemy_difficulty_for_room[room.room_str]
         hash = @room_rando_enemy_difficulty_for_room[room.room_str]
         
         original_room_difficulty = hash[:average_attack] * enemies_in_room.size
@@ -358,7 +358,7 @@ module EnemyRandomizer
   end
   
   def get_enemy_id_for_weighting_purposes(enemy)
-    if room_rando? && @room_rando_enemy_difficulty_for_room[enemy.room.room_str]
+    if room_rando? && options[:rebalance_enemies_in_room_rando] && @room_rando_enemy_difficulty_for_room[enemy.room.room_str]
       hash = @room_rando_enemy_difficulty_for_room[enemy.room.room_str]
       hash[:average_enemy_id]
     else

@@ -455,6 +455,23 @@
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QCheckBox" name="rebalance_enemies_in_room_rando">
+           <property name="toolTip">
+            <string>Balances enemy and boss difficulty around the order you will reach them, as opposed to how difficult they were in the vanilla game. (Has no effect if all room randomizer options are off.)</string>
+           </property>
+           <property name="text">
+            <string>Rebalance enemies by order you reach them (room randomizers only)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <widget class="Line" name="line">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -481,8 +498,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>590</width>
+            <height>407</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -928,6 +945,7 @@
   <tabstop>difficulty_level</tabstop>
   <tabstop>enable_glitch_reqs</tabstop>
   <tabstop>bonus_starting_items</tabstop>
+  <tabstop>rebalance_enemies_in_room_rando</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>scavenger_mode</tabstop>
   <tabstop>name_unnamed_skills</tabstop>
