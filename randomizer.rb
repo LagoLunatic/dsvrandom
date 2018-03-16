@@ -673,16 +673,18 @@ class Randomizer
           # (Commented out because room rando unlocks all boss doors.)
         end
       when "por"
-        # Always start with Lizard Tail, Call Cube, and either Change Cube or Skill Cube.
+        # Always start with Lizard Tail, Call Cube, Skill Cube, and possibly Change Cube.
         # Even if the player technically could reach the vanilla location, they could be very far away on some seeds.
         add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
         
         add_bonus_item_to_starting_room(0x1AD) # Call Cube
         
+        add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+        
         if options[:dont_randomize_change_cube]
           add_bonus_item_to_starting_room(0x1AC) # Change Cube
         else
-          add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+          checker.add_item(0x1AE) # Skill Cube
         end
       when "ooe"
         if options[:randomize_starting_room]
@@ -700,6 +702,13 @@ class Randomizer
       # Always start the player with Doppelganger.
       add_bonus_item_to_starting_room(0x144) # Doppelganger
       checker.add_item(0x144)
+    end
+    
+    if GAME == "por" && options[:dont_randomize_change_cube] && !room_rando?
+      # Always start the player with Skill Cube.
+      # (If change cube is randomized, Skill Cube takes Change Cube's place, so we don't need to put Skill Cube in the starting room in that case.)
+      add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+      checker.add_item(0x1AE)
     end
     
     if options[:randomize_pickups]
