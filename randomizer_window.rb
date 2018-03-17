@@ -116,6 +116,7 @@ class RandomizerWindow < Qt::Dialog
   slots "browse_for_output_folder()"
   slots "difficulty_level_changed(int)"
   slots "difficulty_slider_value_changed(int)"
+  slots "difficulty_line_edit_value_changed()"
   slots "generate_seed()"
   slots "randomize()"
   slots "open_about()"
@@ -199,7 +200,9 @@ class RandomizerWindow < Qt::Dialog
         slider.blockSignals(true)
         slider.value = average
         slider.blockSignals(false)
-        slider.setToolTip(slider.tooltip_text)
+        
+        line_edit = @difficulty_line_edit_widgets_by_name[option_name]
+        line_edit.text = slider.true_value.to_s
       end
     else
       # First boot, default to easy difficulty.
@@ -332,6 +335,7 @@ class RandomizerWindow < Qt::Dialog
     
     form_layout = @ui.scrollAreaWidgetContents.layout
     @slider_widgets_by_name = {}
+    @difficulty_line_edit_widgets_by_name = {}
     
     DIFFICULTY_OPTION_PRETTY_NAMES.each_with_index do |(option_name, pretty_name), i|
       label = Qt::Label.new(@ui.scrollAreaWidgetContents)
@@ -344,6 +348,9 @@ class RandomizerWindow < Qt::Dialog
         next
       end
       
+      horizontal_layout = Qt::HBoxLayout.new
+      form_layout.setLayout(i, Qt::FormLayout::FieldRole, horizontal_layout)
+      
       slider = FloatSlider.new(@ui.scrollAreaWidgetContents)
       slider.minimum = option_value_range.begin
       slider.maximum = option_value_range.end
@@ -351,8 +358,16 @@ class RandomizerWindow < Qt::Dialog
       slider.pageStep = ((option_value_range.end - option_value_range.begin) / 100.0).ceil * 100
       slider.orientation = Qt::Horizontal
       connect(slider, SIGNAL("valueChanged(int)"), self, SLOT("difficulty_slider_value_changed(int)"))
-      form_layout.setWidget(i, Qt::FormLayout::FieldRole, slider)
+      horizontal_layout.addWidget(slider)
       @slider_widgets_by_name[option_name] = slider
+      slider.objectName = "#{option_name}_slider"
+      
+      line_edit = Qt::LineEdit.new
+      line_edit.setMaximumSize(60, 16777215)
+      connect(line_edit, SIGNAL("editingFinished()"), self, SLOT("difficulty_line_edit_value_changed()"))
+      horizontal_layout.addWidget(line_edit)
+      @difficulty_line_edit_widgets_by_name[option_name] = line_edit
+      line_edit.objectName = "#{option_name}_line_edit"
     end
     
     @ui.difficulty_level.addItem("Custom")
@@ -362,18 +377,40 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def difficulty_slider_value_changed(value)
-    # Shows the tooltip containing the current value of the slider.
+    # Update text in the corresponding line edit.
     slider = sender()
-    slider.setToolTip(slider.tooltip_text)
-    global_pos = slider.rect.topLeft
-    global_pos.x += Qt::Style.sliderPositionFromValue(slider.minimum, slider.maximum, slider.value, slider.width())
-    global_pos.y += slider.height / 2
-    toolTipEvent = Qt::HelpEvent.new(Qt::Event::ToolTip, Qt::Point.new(0, 0), slider.mapToGlobal(global_pos))
-    $qApp.sendEvent(slider, toolTipEvent)
-    
-    @ui.difficulty_level.setCurrentIndex(0)
-    
-    update_settings()
+    match = slider.objectName.match(/^(.+)_slider$/)
+    if match
+      option_name = match[1].to_sym
+      line_edit = @difficulty_line_edit_widgets_by_name[option_name]
+      line_edit.text = slider.true_value.to_s
+      
+      @ui.difficulty_level.setCurrentIndex(0)
+      
+      update_settings()
+    end
+  end
+  
+  def difficulty_line_edit_value_changed
+    # Update text in the corresponding line edit.
+    line_edit = sender()
+    match = line_edit.objectName.match(/^(.+)_line_edit$/)
+    if match
+      new_value = line_edit.text.to_f
+      
+      option_name = match[1].to_sym
+      slider = @slider_widgets_by_name[option_name]
+      slider.blockSignals(true)
+      slider.value = new_value
+      slider.blockSignals(false)
+      
+      # Also update the text in the line edit after the slider has clamped the value in case it was too big or too small.
+      line_edit.text = slider.true_value.to_s
+      
+      @ui.difficulty_level.setCurrentIndex(0)
+      
+      update_settings()
+    end
   end
   
   def difficulty_level_changed(diff_index)
@@ -390,7 +427,9 @@ class RandomizerWindow < Qt::Dialog
         slider.blockSignals(true)
         slider.value = average
         slider.blockSignals(false)
-        slider.setToolTip(slider.tooltip_text)
+        
+        line_edit = @difficulty_line_edit_widgets_by_name[option_name]
+        line_edit.text = slider.true_value.to_s
       end
     end
     
@@ -676,7 +715,9 @@ class RandomizerWindow < Qt::Dialog
         slider.blockSignals(true)
         slider.value = average
         slider.blockSignals(false)
-        slider.setToolTip(slider.tooltip_text)
+        
+        line_edit = @difficulty_line_edit_widgets_by_name[option_name]
+        line_edit.text = slider.true_value.to_s
       end
     else
       raise "No difficulty found"
@@ -732,14 +773,18 @@ class FloatSlider < Qt::Slider
   end
   
   def value=(val)
-    super(val*100)
+    # Very large ints can cause a crash here, so we need to manually clamp the user-entered value before letting the Qt code clamp it to prevent this.
+    val = val*100
+    if val > maximum
+      val = maximum
+    end
+    if val < minimum
+      val = minimum
+    end
+    super(val)
   end
   
   def true_value
     value/100.0
-  end
-  
-  def tooltip_text
-    (value/100.0).to_s
   end
 end
