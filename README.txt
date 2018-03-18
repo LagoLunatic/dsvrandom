@@ -13,23 +13,36 @@ Items/Skills: Randomizes items and skills you find lying on the ground.
 Enemy Locations: Randomizes which non-boss enemies appear where.
 Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.
 Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).
-Item Stats/Behavior: Randomizes item stats and how weapons behave.
+Equipment Stats: Randomizes weapon and armor stats.
+Weapon Behavior: Randomizes how weapons behave.
+Consumable Behavior: Randomizes what consumables do and how powerful they are.
 Skill Stats/Behavior: Randomizes skill stats and how skills behave.
-Shop Items: Randomizes what items are for sale in the shop.
+Shop Items: Randomizes what items are for sale in the shop and item prices.
 Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).
 Villagers: Randomizes where villagers are located (OoE only).
 Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).
 Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.
+Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.
+Portraits: Randomizes where portraits are located (PoR only).
+Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).
+Rooms and Areas (Map-friendly): Randomly generates a new map and connects the rooms to match the map.
+Starting Room: Randomizes which room you start in.
+Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)
+Area Connections (Not map-friendly): Randomizes which areas connect to each other.
 
-There are also some buggy, experimental options:
+As well as several other options that change how the game is played:
+Scavenger Mode: Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.
+Unlock Boss Doors (DoS only): You don't need magic seals to open boss doors.
+Short Mode (PoR only): Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).
+Open World Map (OoE only): Make all areas except Dracula's Castle accessible from the start.
+Allow Requiring Glitches to Win: If checked, certain glitches may be necessary to beat the game.
+Bonus Starting Items: Starts you out with 3 random extra items and 3 random extra skills.
+
+There are also some buggy, experimental randomization options:
 Players: Randomizes player graphics and movement stats.
 Boss Locations: Randomizes which bosses appear where.
-Area Connections: Randomizes which areas connect to each other.
-Room Connections: Randomizes which rooms within an area connect to each other.
-Starting Room: Randomizes which room you start in.
 Enemy AI: Shuffles the AI of non-boss enemies (extremely buggy).
 Skill Sprites: Randomizes the graphics used by each skill.
-Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.
 
 Every seed should be completable as long as you don't use the experimental options.
 If you think you've found a seed that's unwinnable, first check the spoiler log (located at /logs/spoiler_log.txt) to make sure you haven't missed something.
@@ -59,6 +72,11 @@ A: You might have forgotten a breakable wall. Progression items and skills can b
 If you check the "Reveal breakable walls" option in the Game Tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.
 You can also check the spoiler log located at /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
 
+Q: I fell into a pit and can't get back out without jump upgrades!
+
+A: Check your inventory if you're using any of the room/map randomization options or the portrait randomizer option. You have a magical ticket that doesn't get consumed when used, so you can use that to return to your starting room any time you get trapped like this.
+But if you're not using any of those options you won't have an infinitely usable magical ticket, in which case you may want to report this as a bug.
+
 Q: I can't make the jump in the room after Flying Armor.
 
 A: You can make the jump without any souls by doing a backdash jump off the very edge: http://i.imgur.com/ZXSHMcw.gif
@@ -68,13 +86,17 @@ Q: I have double jump, but I can't progress in Minera Prison Island without Magn
 A: Do a jumpkick off the breakable wall next to the Magnes point: http://i.imgur.com/y0TXcE0.gif
 Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot is too small to hit the wall when doing a diagonal jumpkick.
 
-Q: I think I'm stuck after using Yoko to get rid of my Skeleton, Axe Armor, Killer Clown, or Ukoback soul.
+Q: I have Puppet Master, but can't find a way out of Wizardry Lab.
 
-A: Those souls are required for progression, but unlike in the base game, they can't be farmed from enemies in the randomizer. You'll get softlocked if you get rid of the only one you have.
+A: You can activate the moving platform in the long room at right side of Wizardry Lab, then walk to the end of the room and use Puppet Master to get on top of the platform: https://i.imgur.com/l6NuZPY.gif
 
 Q: Why can I charge spells in midair sometimes?
 
 A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
+
+Q: In vanilla DoS, getting ability souls out of order (like Doppelganger before Balore) gives multiple abilities for the price of one. But this doesn't seem to work in the randomizer?
+
+A: This is a bug in the vanilla game that the randomizer fixes.
 
 Q: I'm using some experimental options, and I think I'm stuck.
 
