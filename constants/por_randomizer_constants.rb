@@ -92,7 +92,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EC018 => 0x0001,
   },
   84 => { # Great Stairway
-    0x022EA020 => 0x0004,
+    0x022EA020 => 0x01FE,
     0x022EC018 => 0x0001,
   },
   85 => { # Tower of Death
@@ -152,7 +152,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022EDE68 => 0x0005,
   },
   102 => { # Forgotten City
-    0x022EA558 => 0x0010,
+    0x022EA558 => 0x0188,
     0x022EC550 => 0x0001,
   },
   103 => { # Forgotten City
