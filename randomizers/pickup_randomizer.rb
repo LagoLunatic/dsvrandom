@@ -426,8 +426,8 @@ module PickupRandomizer
           
           i = 1
           weights = valid_previous_accessible_regions.map do |region|
-            # Weight later accessible regions as more likely than earlier accessible regions
-            weight = i
+            # Weight later accessible regions as more likely than earlier accessible regions (exponential)
+            weight = i**2
             i += 1
             weight
           end
