@@ -1390,6 +1390,12 @@ class Randomizer
       game.fs.write(0x022E88E4, [3].pack("C"))
     end
     
+    if GAME == "por"
+      # Fix a bug in the base game where skipping the cutscene after you kill Death too quickly will prevent Death's boss death flag from being set.
+      game.fs.load_overlay(64)
+      game.fs.write(0x022D8B18, [0xE1A00000].pack("V")) # nop out the line that waits 2 seconds before making Death put down his arms and set his boss death flag.
+    end
+    
     if GAME == "por" && room_rando?
       # In room rando, unlock the bottom passage in the second room of the game by default to simplify the logic. (The one that usually needs you to complete the Nest of Evil quest.)
       game.fs.load_overlay(78)
