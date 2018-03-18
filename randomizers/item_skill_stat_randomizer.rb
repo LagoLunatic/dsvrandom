@@ -499,6 +499,12 @@ module ItemSkillStatRandomizer
         end
       end
       
+      if ["Black Panther", "Speed Up", "Rapidus Fio"].include?(skill.name)
+        # Reduce damage of speed increasing skills so you can't oneshot every enemy by running into them.
+        skill["DMG multiplier"] = skill["DMG multiplier"] / 5
+        skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
+      end
+      
       if GAME == "dos"
         max_soul_scaling_type = 4
         if skill.name == "Persephone" || skill.name == "Axe Armor"
