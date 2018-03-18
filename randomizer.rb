@@ -1207,6 +1207,14 @@ class Randomizer
       boss_door.write_to_rom()
     end
     
+    if GAME == "dos"
+      # Remove the event where Yoko talks to you outside Flying Armor's room.
+      # This event can look weird and make the player think the game has softlocked if the player views it after killing Flying Armor.
+      event = game.entity_by_str("00-00-0E_09")
+      event.type = 0
+      event.write_to_rom()
+    end
+    
     if options[:randomize_boss_souls] && GAME == "dos"
       # If the player beats Balore but doesn't own Balore's soul they will appear stuck. (Though they could always escape with suspend.)
       # So get rid of the line of code Balore runs when he dies that recreates the Balore blocks in the room.
