@@ -301,7 +301,7 @@
                <string>Randomly generates a new map and connects the rooms to match the map.</string>
               </property>
               <property name="text">
-               <string>Rooms and Areas (Map-friendly)</string>
+               <string>Maps</string>
               </property>
              </widget>
             </item>
