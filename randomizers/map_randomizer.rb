@@ -822,6 +822,36 @@ module MapRandomizer
         end
       end
       
+      # We also need to delete any unreachable subroom doors that we can now reach by placing this last room.
+      unreachable_subroom_doors.delete_if do |unreachable_subroom_door_str|
+        unreachable_subroom_door = game.door_by_str(unreachable_subroom_door_str)
+        containing_room = unreachable_subroom_door.room
+        containing_room_x = containing_room.room_xpos_on_map
+        containing_room_y = containing_room.room_ypos_on_map
+        case unreachable_subroom_door.direction
+        when :left
+          x = containing_room_x
+          y = containing_room_y + unreachable_subroom_door.y_pos
+        when :right
+          x = containing_room_x + containing_room.width-1
+          y = containing_room_y + unreachable_subroom_door.y_pos
+        when :up
+          x = containing_room_x + unreachable_subroom_door.x_pos
+          y = containing_room_y
+        when :down
+          x = containing_room_x + unreachable_subroom_door.x_pos
+          y = containing_room_y + containing_room.height-1
+        end
+        next if x < 0 || x >= map_width || y < 0 || y >= map_height
+        
+        dest_door = find_matching_dest_door_on_map(containing_room, unreachable_subroom_door.direction, map_spots, map_width, map_height, x, y)
+        if dest_door && room.doors.include?(dest_door)
+          true
+        else
+          false
+        end
+      end
+      
       if unplaced_transition_rooms.include?(room)
         unplaced_transition_rooms.delete(room)
         placed_transition_rooms << room
