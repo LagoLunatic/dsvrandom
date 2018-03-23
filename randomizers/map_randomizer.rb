@@ -1502,6 +1502,14 @@ module MapRandomizer
       end
     end
     
+    # Don't let Dario's boss room and the Doppelganger event room connect.
+    # If they did, there would be no double boss door on the Dario side of the Doppelganger room to warn the player about it.
+    if GAME == "dos"
+      if [room_a.room_str, room_b.room_str].sort == ["00-03-0B", "00-03-0E"]
+        return false
+      end
+    end
+    
     if GAME == "por"
       # Don't allow a transition room to connect to either of the two doors with the small openings you have to slide into.
       # This is because blockade tiles don't appear in transition rooms, so the player wouldn't be able to see that they have to slide to get in, it would look like an invisible wall.
