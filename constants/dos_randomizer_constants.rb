@@ -27,8 +27,6 @@ ORIGINAL_BOSS_IDS_ORDER = [
   0x6E, # Bat Company
   0x6F, # Paranoia
   0x70, # Aguni
-  0x71, # Death
-  0x72, # Abaddon
 ]
 
 POSSIBLE_RED_WALL_SOULS = (0..0x34).to_a -
