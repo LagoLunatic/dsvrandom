@@ -662,6 +662,28 @@ class Randomizer
       checker.add_return_portrait("08-00-08", "00-0B-00_04")
     end
     
+    
+    if GAME == "dos"
+      # Remove the enemy and the entity hider hiding that enemy during the intro cutscene from the first room of the vanilla game.
+      # These two just cause more problems than they're worth - the hider can hide starting items, the enemy can hit you as soon as you enter the room, etc.
+      vanilla_starting_room = game.room_by_str("00-00-01")
+      vanilla_starting_room.entities.slice!(0xB, 2)
+      vanilla_starting_room.write_entities_to_rom()
+    end
+    
+    if GAME == "dos"
+      # Always start the player with Doppelganger.
+      add_bonus_item_to_starting_room(0x144) # Doppelganger
+      checker.add_item(0x144)
+    end
+    
+    if GAME == "por" && options[:dont_randomize_change_cube] && !room_rando?
+      # Always start the player with Skill Cube.
+      # (If change cube is randomized, Skill Cube takes Change Cube's place, so we don't need to put Skill Cube in the starting room in that case.)
+      add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+      checker.add_item(0x1AE)
+    end
+    
     if room_rando?
       # We need to put certain items the logic assumes the player starts with in the player's starting room if they can't reach them.
       case GAME
@@ -696,19 +718,6 @@ class Randomizer
           end
         end
       end
-    end
-    
-    if GAME == "dos"
-      # Always start the player with Doppelganger.
-      add_bonus_item_to_starting_room(0x144) # Doppelganger
-      checker.add_item(0x144)
-    end
-    
-    if GAME == "por" && options[:dont_randomize_change_cube] && !room_rando?
-      # Always start the player with Skill Cube.
-      # (If change cube is randomized, Skill Cube takes Change Cube's place, so we don't need to put Skill Cube in the starting room in that case.)
-      add_bonus_item_to_starting_room(0x1AE) # Skill Cube
-      checker.add_item(0x1AE)
     end
     
     if options[:randomize_pickups]

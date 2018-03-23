@@ -52,14 +52,6 @@ module StartingItemsRandomizer
       location = "#{room_str}_%02X" % (room.entities.length-1)
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
-    
-    if GAME == "dos" && room.room_str == "00-00-01"
-      # The normal starting room has an entity hider to hide a yeti.
-      # We need to move the hider and the yeti to the end of the entity list so they don't hide the starting items too.
-      removed_entities = room.entities.slice!(0xB..0xC)
-      room.entities += removed_entities
-      room.write_entities_to_rom()
-    end
   end
   
   def add_bonus_item_to_starting_room(pickup_global_id)
