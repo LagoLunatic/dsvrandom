@@ -247,11 +247,25 @@ class RandomizerWindow < Qt::Dialog
     @settings[:output_folder] = @ui.output_folder.text
     @settings[:seed] = @ui.seed.text
     
+    ensure_valid_combination_of_options()
+    
     OPTIONS.each do |option_name|
       @settings[option_name] = @ui.send(option_name).checked
     end
     
-    if !@settings[:randomize_pickups]
+    @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)
+    @settings[:difficulty_options] = {}
+    Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+      slider = @slider_widgets_by_name[option_name]
+      average = slider.true_value
+      @settings[:difficulty_options][option_name] = average
+    end
+    
+    save_settings()
+  end
+  
+  def ensure_valid_combination_of_options
+    if !@ui.randomize_pickups.checked
       @ui.randomize_boss_souls.checked = false
       @ui.randomize_boss_souls.enabled = false
       @ui.randomize_villagers.checked = false
@@ -276,45 +290,35 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_starting_room.enabled = true
     end
     
-    if @settings[:randomize_rooms_map_friendly]
+    if @ui.randomize_rooms_map_friendly.checked
       @ui.randomize_area_connections.checked = false
       @ui.randomize_area_connections.enabled = false
       @ui.randomize_room_connections.checked = false
       @ui.randomize_room_connections.enabled = false
     end
     
-    if @settings[:randomize_area_connections] || @settings[:randomize_room_connections]
+    if @ui.randomize_area_connections.checked || @ui.randomize_room_connections.checked
       @ui.randomize_rooms_map_friendly.checked = false
       @ui.randomize_rooms_map_friendly.enabled = false
     end
     
-    if @settings[:randomize_pickups] && !@settings[:randomize_rooms_map_friendly]
+    if @ui.randomize_pickups.checked && !@ui.randomize_rooms_map_friendly.checked
       @ui.randomize_area_connections.enabled = true
       @ui.randomize_room_connections.enabled = true
       @ui.randomize_starting_room.enabled = true
     end
     
-    if @settings[:randomize_pickups] && !@settings[:randomize_area_connections] && !@settings[:randomize_room_connections]
+    if @ui.randomize_pickups.checked && !@ui.randomize_area_connections.checked && !@ui.randomize_room_connections.checked
       @ui.randomize_rooms_map_friendly.enabled = true
     end
     
-    if !@settings[:experimental_options_enabled]
+    if !@ui.experimental_options_enabled.checked
       @ui.experimental_options_enabled.children.each do |child|
         if child.is_a?(Qt::CheckBox)
           child.checked = false
         end
       end
     end
-    
-    @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)
-    @settings[:difficulty_options] = {}
-    Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
-      slider = @slider_widgets_by_name[option_name]
-      average = slider.true_value
-      @settings[:difficulty_options][option_name] = average
-    end
-    
-    save_settings()
   end
   
   def experimental_enabled_changed(enabled)
