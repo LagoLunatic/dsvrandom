@@ -81,8 +81,14 @@ module ItemSkillStatRandomizer
           end
         end
         
-        unless item.name == "Casual Clothes"
+        if GAME == "por" && item.name != "Casual Clothes"
           item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
+          if item.name == "Master Ring"
+            item["Equippable by"].value |= 1 # Always let Jonathan use Master Ring
+          end
+          if item.name == "Sorceress Crest"
+            item["Equippable by"].value |= 2 # Always let Charlotte use Sorceress Crest
+          end
         end
         
         damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Resistances"], [0, 0, 0, 0, 0, 0, 1])
