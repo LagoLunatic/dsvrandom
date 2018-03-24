@@ -298,7 +298,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_rooms_map_friendly">
               <property name="toolTip">
-               <string>Randomly generates a new map and connects the rooms to match the map.</string>
+               <string>Randomly generates entirely new maps and connects rooms to match the map.</string>
               </property>
               <property name="text">
                <string>Maps</string>
@@ -498,8 +498,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>407</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">

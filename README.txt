@@ -25,7 +25,7 @@ Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.
 Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.
 Portraits: Randomizes where portraits are located (PoR only).
 Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).
-Rooms and Areas (Map-friendly): Randomly generates a new map and connects the rooms to match the map.
+Maps: Randomly generates entirely new maps and connects rooms to match the map.
 Starting Room: Randomizes which room you start in.
 Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)
 Area Connections (Not map-friendly): Randomizes which areas connect to each other.
