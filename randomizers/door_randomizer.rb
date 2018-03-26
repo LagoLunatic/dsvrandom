@@ -905,6 +905,10 @@ module DoorRandomizer
         # Aguni's boss room. Put two boss doors since this can also lead to a bad ending.
         num_boss_doors_on_each_side = 2
       end
+      if GAME == "por" && boss_room.room_str == "00-0B-01"
+        # Sisters' boss room. Put two boss doors since this can also lead to a bad ending.
+        num_boss_doors_on_each_side = 2
+      end
       
       doors = boss_room.doors
       if GAME == "dos" && boss_index == 7 # Gergoth
