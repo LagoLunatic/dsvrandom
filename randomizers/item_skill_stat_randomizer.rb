@@ -285,8 +285,6 @@ module ItemSkillStatRandomizer
       end
       
       if item.item_type_name == "Consumables"
-        description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
-        
         case GAME
         when "dos", "por"
           possible_types = (0..0x8).to_a
@@ -334,28 +332,6 @@ module ItemSkillStatRandomizer
           if item["Item ID"] == @shop_cheap_healing_item_id
             # Always make the guaranteed cheap healing item restore a decent but not too large amount of HP.
             item["Var A"] = rng.rand(80..200)
-          end
-          
-          case item["Type"]
-          when 0
-            description.decoded_string = "Restores #{item["Var A"]} HP."
-          when 1
-            description.decoded_string = "Restores #{item["Var A"]} MP."
-          when 2
-            case item["Var A"]
-            when 1
-              description.decoded_string = "Cures poison."
-            when 2
-              description.decoded_string = "Nullifies curse."
-            when 4
-              description.decoded_string = "Cures petrify."
-            end
-          when 3
-            description.decoded_string = "Subtracts #{item["Var A"]} HP."
-          when 7
-            description.decoded_string = "HP Max up."
-          when 8
-            description.decoded_string = "MP Max up."
           end
         when "ooe"
           possible_types = (0..0xA).to_a
@@ -418,44 +394,10 @@ module ItemSkillStatRandomizer
             # Always make the guaranteed cheap healing item restore a decent but not too large amount of HP.
             item["Var A"] = rng.rand(80..200)
           end
-          
-          case item["Type"]
-          when 0
-            description.decoded_string = "Restores #{item["Var A"]} HP."
-          when 1
-            description.decoded_string = "Restores #{item["Var A"]} MP."
-          when 2
-            description.decoded_string = "Restores #{item["Var A"]} hearts."
-          when 3
-            case item["Var A"]
-            when 1
-              description.decoded_string = "Cures poison."
-            when 2
-              description.decoded_string = "Nullifies curse."
-            when 4
-              description.decoded_string = "Cures petrify."
-            end
-          when 4
-            description.decoded_string = "Increases your maximum HP."
-          when 5
-            description.decoded_string = "Increases your maximum MP."
-          when 6
-            description.decoded_string = "Increases your heart maximum."
-          when 7
-            description.decoded_string = "Subtracts #{item["Var A"]} HP."
-          when 9
-            description.decoded_string = "Adjust the background music\\nto your liking."
-          when 0xA
-            description.decoded_string = "A one-way pass to return\\nto the village immediately."
-          when 0xB
-            ap_types = %w(flame ice lightning light dark)
-            ap_type_index = item["Item ID"]-0x9C
-            ap_type = ap_types[ap_type_index]
-            description.decoded_string = "Increases your #{ap_type}\\nattribute points by #{item["Var A"]}."
-          end
         end
         
         item.write_to_rom()
+        update_consumable_description(item)
       end
     end
     
@@ -696,6 +638,70 @@ module ItemSkillStatRandomizer
     end
     
     ooe_handle_glyph_tiers()
+  end
+  
+  def update_consumable_description(item)
+    description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+    
+    case GAME
+    when "dos", "por"
+      case item["Type"]
+      when 0
+        description.decoded_string = "Restores #{item["Var A"]} HP."
+      when 1
+        description.decoded_string = "Restores #{item["Var A"]} MP."
+      when 2
+        case item["Var A"]
+        when 1
+          description.decoded_string = "Cures poison."
+        when 2
+          description.decoded_string = "Nullifies curse."
+        when 4
+          description.decoded_string = "Cures petrify."
+        end
+      when 3
+        description.decoded_string = "Subtracts #{item["Var A"]} HP."
+      when 7
+        description.decoded_string = "HP Max up."
+      when 8
+        description.decoded_string = "MP Max up."
+      end
+    when "ooe"
+      case item["Type"]
+      when 0
+        description.decoded_string = "Restores #{item["Var A"]} HP."
+      when 1
+        description.decoded_string = "Restores #{item["Var A"]} MP."
+      when 2
+        description.decoded_string = "Restores #{item["Var A"]} hearts."
+      when 3
+        case item["Var A"]
+        when 1
+          description.decoded_string = "Cures poison."
+        when 2
+          description.decoded_string = "Nullifies curse."
+        when 4
+          description.decoded_string = "Cures petrify."
+        end
+      when 4
+        description.decoded_string = "Increases your maximum HP."
+      when 5
+        description.decoded_string = "Increases your maximum MP."
+      when 6
+        description.decoded_string = "Increases your heart maximum."
+      when 7
+        description.decoded_string = "Subtracts #{item["Var A"]} HP."
+      when 9
+        description.decoded_string = "Adjust the background music\\nto your liking."
+      when 0xA
+        description.decoded_string = "A one-way pass to return\\nto the village immediately."
+      when 0xB
+        ap_types = %w(flame ice lightning light dark)
+        ap_type_index = item["Item ID"]-0x9C
+        ap_type = ap_types[ap_type_index]
+        description.decoded_string = "Increases your #{ap_type}\\nattribute points by #{item["Var A"]}."
+      end
+    end
   end
   
   def ooe_handle_glyph_tiers
