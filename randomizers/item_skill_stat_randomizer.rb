@@ -633,6 +633,9 @@ module ItemSkillStatRandomizer
       end
       
       iframes = named_rand_range_weighted(:skill_iframes_range)
+      if skill.name == "1,000 Blades"
+        iframes = 1
+      end
       set_skill_iframes(skill, skill_global_id, iframes)
       
       
