@@ -630,6 +630,11 @@ module ItemSkillStatRandomizer
         end
         
         skill["Delay"] = named_rand_range_weighted(:glyph_attack_delay_range) unless progress_skill
+        
+        if skill.item_type_name == "Arm Glyphs" && skill["Code"] == 0x02070890
+          # Randomize the swing animation for melee weapons.
+          skill["Var A"] = rng.rand(0..6)
+        end
       end
       
       iframes = named_rand_range_weighted(:skill_iframes_range)
