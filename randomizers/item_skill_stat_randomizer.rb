@@ -112,7 +112,7 @@ module ItemSkillStatRandomizer
       progress_item = checker.all_progression_pickups.include?(item_global_id)
       
       # Don't randomize unequip/starting items.
-      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
+      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Encyclopedia"
         next
       end
       case GAME
@@ -276,19 +276,12 @@ module ItemSkillStatRandomizer
       
       progress_item = checker.all_progression_pickups.include?(item_global_id)
       
-      # Don't randomize unequip/starting items.
-      if item.name == "---" || item.name == "Bare knuckles" || item.name == "Casual Clothes" || item.name == "Encyclopedia"
-        next
-      end
-      case GAME
-      when "dos"
-        next if item.name == "Knife"
-      when "por"
-        next if item["Item ID"] == 0x61 # starting Vampire Killer
-      end
-      
       if needs_infinite_magical_tickets?
         next if item.name == "Magical Ticket"
+      end
+      
+      if GAME == "dos" && item.name == "Magical Ticket"
+        next
       end
       
       if item.item_type_name == "Consumables"
