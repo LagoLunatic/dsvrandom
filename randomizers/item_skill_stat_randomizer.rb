@@ -635,6 +635,12 @@ module ItemSkillStatRandomizer
           # Randomize the swing animation for melee weapons.
           skill["Var A"] = rng.rand(0..6)
         end
+        
+        if skill.name.include?("Culter")
+          # Randomize the number of knives thrown.
+          num_knives = rand_range_weighted(1..8, average: 3)
+          skill["Var A"] = num_knives-1
+        end
       end
       
       iframes = named_rand_range_weighted(:skill_iframes_range)
@@ -710,9 +716,11 @@ module ItemSkillStatRandomizer
     
     skills_by_family.each do |family|
       sorted_dmg_mults = family.map{|skill| skill["DMG multiplier"]}.sort
+      # Note about the "IFrames" field here: This should have the correct iframes value in it even for glyphs with hardcoded iframes, because when ooe_set_skill_iframes sets the hardcoded iframes it also sets this field.
       sorted_iframes = family.map{|skill| skill["IFrames"]}.sort.reverse
       sorted_delays = family.map{|skill| skill["Delay"]}.sort.reverse
       sorted_max_at_onces = family.map{|skill| skill["Max at once"]}.sort
+      sorted_var_as = family.map{|skill| skill["Var A"]}.sort
       
       prev_tier_damage_types = nil
       family.each do |skill|
@@ -721,6 +729,10 @@ module ItemSkillStatRandomizer
         set_skill_iframes(skill, skill["Item ID"], iframes)
         skill["Delay"] = sorted_delays.shift
         skill["Max at once"] = sorted_max_at_onces.shift
+        if skill.name.include?("Culter")
+          # Var A for knife glyphs is the number of knives thrown.
+          skill["Var A"] = sorted_var_as.shift
+        end
         
         if prev_tier_damage_types
           # Copy the lower tier's damage types to the higher tiers.
