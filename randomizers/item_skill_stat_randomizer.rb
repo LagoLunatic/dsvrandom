@@ -167,7 +167,8 @@ module ItemSkillStatRandomizer
           end
           
           if item.name == "Heaven's Sword" || item.name == "Tori"
-            item["Special Effect"] = [1, 5, 6, 7].sample(random: rng)
+            # Heaven's Sword and Tori need to have either the Heaven's Sword or Tori effect in order to go anywhere, otherwise they'll just be at the player's feet.
+            item["Special Effect"] = [5, 7].sample(random: rng)
           elsif rng.rand <= 0.50 # 50% chance to have a special effect
             if item["Item ID"] == 0x6B # Richter's Vampire Killer
               # Heaven's Sword and Illusion Fist effects don't work so well with it, and Richter can't switch to any other weapon, so don't allow those 2 special effects.
