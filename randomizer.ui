@@ -162,20 +162,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="randomize_weapon_behavior">
-              <property name="toolTip">
-               <string>Randomizes how weapons behave.</string>
-              </property>
-              <property name="text">
-               <string>Weapon Behavior</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
              <widget class="QCheckBox" name="randomize_consumable_behavior">
               <property name="toolTip">
                <string>Randomizes what consumables do and how powerful they are.</string>
@@ -185,13 +171,51 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QCheckBox" name="randomize_weapon_behavior">
+              <property name="toolTip">
+               <string>Randomizes how weapons behave.</string>
+              </property>
+              <property name="text">
+               <string>Weapon Behavior</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QCheckBox" name="randomize_skill_stats">
               <property name="toolTip">
-               <string>Randomizes skill stats and how skills behave.</string>
+               <string>Randomizes skill stats.</string>
               </property>
               <property name="text">
-               <string>Skill Stats/Behavior</string>
+               <string>Skill Stats</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_behavior">
+              <property name="toolTip">
+               <string>Randomizes how skills behave.</string>
+              </property>
+              <property name="text">
+               <string>Skill Behavior</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_weapon_and_skill_elements">
+              <property name="toolTip">
+               <string>Randomizes what elemental damage types and status effects each weapon/skill does.</string>
+              </property>
+              <property name="text">
+               <string>Weapon and Skill Elements</string>
               </property>
              </widget>
             </item>
@@ -498,8 +522,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>590</width>
+            <height>407</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -933,9 +957,11 @@
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
   <tabstop>randomize_equipment_stats</tabstop>
-  <tabstop>randomize_weapon_behavior</tabstop>
   <tabstop>randomize_consumable_behavior</tabstop>
+  <tabstop>randomize_weapon_behavior</tabstop>
   <tabstop>randomize_skill_stats</tabstop>
+  <tabstop>randomize_skill_behavior</tabstop>
+  <tabstop>randomize_weapon_and_skill_elements</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>randomize_villagers</tabstop>

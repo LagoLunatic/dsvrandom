@@ -104,17 +104,11 @@ module ItemSkillStatRandomizer
         update_equipment_description(item)
       end
     end
-    
-    game.text_database.write_to_rom()
   end
   
-  def randomize_weapon_behavior
-    all_weapons = game.items.select{|other_item| other_item.item_type_name == "Weapons"}
-    
+  def randomize_weapons
     (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
       item = game.items[item_global_id]
-      
-      progress_item = checker.all_progression_pickups.include?(item_global_id)
       
       # Don't randomize unequip/starting items.
       if item.name == "---" || item.name == "Bare knuckles" || item.name == "Encyclopedia"
@@ -128,178 +122,18 @@ module ItemSkillStatRandomizer
       end
       
       if item.item_type_name == "Weapons"
-        # We'll need this list of duplicate weapon sprites later.
-        other_weapons_with_same_sprite = all_weapons.select{|other_item| other_item["Sprite"] == item["Sprite"]} - [item]
-        
-        item["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
-        
-        case GAME
-        when "dos"
-          unless [9, 0xA, 0xB].include?(item["Swing Anim"])
-            # Only randomize swing anim if it wasn't originally a throwing/firing weapon.
-            # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
-            available_swing_anims = (0..0xC).to_a
-            if item.name == "Whip"
-              # If the whip turns into a projectile weapon Julius can't break Balore blocks, so ban those swing anims.
-              available_swing_anims -= [0x9, 0xA, 0xB]
-              if !options[:no_touch_screen]
-                # If the no touch screen option is off, only the whip swing anim works to break Balore blocks.
-                available_swing_anims = [0xC]
-              end
-            end
-            item["Swing Anim"] = available_swing_anims.sample(random: rng)
-          end
-          item["Super Anim"] = rng.rand(0..0xE) unless progress_item
-        when "por"
-          if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
-            # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
-          elsif item["Equippable by"].value == 1 && progress_item
-            # Don't randomize Jonathan's glitch progress weapons (Cinquedia, Axe, etc) to be for Charlotte because Charlotte may not be accessible with "Don't randomize Change Cube".
-          else
-            item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
-          end
-          
-          item["Swing Anim"] = rng.rand(0..9)
-          
-          unless progress_item
-            palette = item["Crit type/Palette"] & 0xC0
-            crit_type = rng.rand(0..0x13)
-            item["Crit type/Palette"] = palette | crit_type
-          end
-          
-          if item.name == "Heaven's Sword" || item.name == "Tori"
-            # Heaven's Sword and Tori need to have either the Heaven's Sword or Tori effect in order to go anywhere, otherwise they'll just be at the player's feet.
-            item["Special Effect"] = [5, 7].sample(random: rng)
-          elsif rng.rand <= 0.50 # 50% chance to have a special effect
-            possible_special_effects = (1..7).to_a
-            if item["Item ID"] == 0x6B # Richter's Vampire Killer
-              # Heaven's Sword and Illusion Fist effects don't work so well with it, and Richter can't switch to any other weapon, so don't allow those 2 special effects.
-              possible_special_effects -= [5, 6]
-            end
-            if other_weapons_with_same_sprite.any?
-              # Heaven's Sword and Tori effects require the weapon's sprite to be recentered to the origin.
-              # That would cause issues if this weapon's sprite is shared by any other weapons, so don't allow those 2 special effects in that case.
-              possible_special_effects -= [5, 7]
-            end
-            
-            # Nebula effect only activates when the weapon animation reaches keyframe index 9.
-            weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
-            sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
-            if sprite.animations[0] && sprite.animations[0].frame_delays.size >= 10
-              # This sprite's first animation has at least 10 frames so the Nebula effect would work.
-            else
-              # This sprite's first animation doesn't exist or has less than 10 frames. Nebula effect would never activate.
-              possible_special_effects -= [1]
-            end
-            
-            item["Special Effect"] = possible_special_effects.sample(random: rng)
-            
-            if [5, 7].include?(item["Special Effect"])
-              # If a normal weapon gets the Heaven's Sword or Tori special effect, we need to recenter this weapon's sprite and hitboxes to be on the origin so it's not floating higher than it should.
-              center_weapon_sprite_on_origin(item)
-            end
-          else
-            item["Special Effect"] = 0
-          end
+        if options[:randomize_weapon_behavior]
+          randomize_weapon_behavior(item, item_global_id)
         end
         
-        player_can_move = nil
-        item["Swing Modifiers"].names.each_with_index do |bit_name, i|
-          next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
-          
-          if bit_name == "Player can move"
-            # 5% chance of the Valmanway effect.
-            bit_chance = 1/20.0
-          elsif GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
-            # This bit must be set for throwing weapons to throw correctly.
-            # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
-            bit_chance = 1/10.0
-          else
-            # Otherwise, give all other bits a 25% chance.
-            bit_chance = 1/4.0
-          end
-          
-          item["Swing Modifiers"][i] = (rng.rand() <= bit_chance)
-          
-          if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
-            # This bit must be set for throwing weapons in DoS or they won't appear.
-            item["Swing Modifiers"][i] = true
-          end
-          
-          if bit_name == "Player can move"
-            player_can_move = item["Swing Modifiers"][i]
-          end
-          
-          if bit_name == "No interrupt on anim end" && player_can_move
-            # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
-            item["Swing Modifiers"][i] = true
-          end
-        end
-        
-        
-        if rng.rand() >= 0.30
-          # Increase the chance of a pure physical weapon.
-          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 2, 3])
-        else
-          damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
-        end
-        
-        if damage_types_to_set.length < 4 && rng.rand() <= 0.10
-          # 10% chance to add a status effect.
-          damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
-        end
-        
-        # Add extra bits.
-        damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
-        
-        item["Effects"].names.each_with_index do |bit_name, i|
-          if damage_types_to_set.include?(bit_name)
-            item["Effects"][i] = true
-          else
-            item["Effects"][i] = false
-          end
-          
-          if bit_name == "Cures vampirism & kills undead" && item["Effects"][i] == true
-            # Don't give this weapon the spell bit if it has the cures vampirism bit because we don't want it to cure the sisters.
-            item["Effects"][26] = false # Spell
-          end
-        end
-        
-        if item["Special Effect"] == 6
-          # Illusion fist effect overrides damage types bitfield.
-          # Therefore we set the damage types bitfield to match so it at least displays the correct values.
-          item["Effects"].value = 4 # Slash
-        end
-        
-        if item["Special Effect"] == 5
-          # The Heaven Sword "throw the weapon in front of you" effect only uses the first keyframe of the weapon sprite's first animation.
-          # If the first frame has no hitbox the weapon won't be able to hit enemies.
-          # So we reorder the keyframes so that one with a hitbox is first.
-          weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
-          sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
-          anim = sprite.animations.first
-          if anim
-            possible_keyframes = anim.frame_delays.select do |frame_delay|
-              frame = sprite.frames[frame_delay.frame_index]
-              frame.hitboxes.any?
-            end
-            if possible_keyframes.any?
-              # Select the first frame with a hitbox.
-              keyframe = possible_keyframes.first
-              # Move that frame to the front.
-              sprite.frame_delays.delete(keyframe)
-              sprite.frame_delays.insert(anim.frame_delay_indexes.first, keyframe)
-              sprite.write_to_rom()
-            end
-          end
+        if options[:randomize_weapon_and_skill_elements]
+          randomize_weapon_damage_types(item, item_global_id)
         end
         
         item.write_to_rom()
         update_weapon_description(item)
       end
     end
-    
-    game.text_database.write_to_rom()
   end
   
   def center_weapon_sprite_on_origin(item)
@@ -465,15 +299,11 @@ module ItemSkillStatRandomizer
         update_consumable_description(item)
       end
     end
-    
-    game.text_database.write_to_rom()
   end
   
-  def randomize_skill_stats
+  def randomize_skills
     SKILL_GLOBAL_ID_RANGE.each do |skill_global_id|
       skill = game.items[skill_global_id]
-      
-      progress_skill = !all_non_progression_pickups.include?(skill_global_id)
       
       if @ooe_starter_glyph_id
         next if skill_global_id == @ooe_starter_glyph_id
@@ -481,236 +311,429 @@ module ItemSkillStatRandomizer
         next if skill.name == "Confodere"
       end
       
-      if GAME == "por" && (0x1A2..0x1AB).include?(skill_global_id)
-        # Dual crush
-        skill["Mana cost"] = named_rand_range_weighted(:crush_mana_cost_range) unless progress_skill
-        skill["DMG multiplier"] = named_rand_range_weighted(:crush_or_union_dmg_range)
-      elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
-        # Glyph union
-        skill["Heart cost"] = named_rand_range_weighted(:union_heart_cost_range)
-        skill["DMG multiplier"] = named_rand_range_weighted(:crush_or_union_dmg_range)
-        
-        skill["Heart cost"] = 0 if skill_global_id == 0x68 # Dominus union shouldn't cost hearts
-      else
-        skill["DMG multiplier"] = named_rand_range_weighted(:skill_dmg_range)
-        if progress_skill
-          # Don't randomize mana cost for progress skills.
-        elsif GAME == "dos" && skill["Type"] == 1
-          # Guardian souls should have lower mana costs than bullet souls.
-          mana_cost = named_rand_range_weighted(:skill_mana_cost_range)
-          mana_cost = (mana_cost / 4.0).round
-          skill["Mana cost"] = mana_cost
-        else
-          skill["Mana cost"] = named_rand_range_weighted(:skill_mana_cost_range)
-        end
+      if options[:randomize_skill_stats]
+        randomize_skill_stats(skill, skill_global_id)
       end
       
-      if ["Black Panther", "Speed Up", "Rapidus Fio"].include?(skill.name)
-        # Reduce damage of speed increasing skills so you can't oneshot every enemy by running into them.
-        skill["DMG multiplier"] = skill["DMG multiplier"] / 5
-        skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
+      if options[:randomize_skill_behavior]
+        randomize_skill_behavior(skill, skill_global_id)
       end
-      if skill.name.include?("Culter")
-        # Reduce damage of the knife glyphs since they usually throw multiply projectiles.
-        skill["DMG multiplier"] = skill["DMG multiplier"] / 5
-        skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
-      end
-      
-      if GAME == "dos"
-        max_soul_scaling_type = 4
-        if skill.name == "Persephone" || skill.name == "Axe Armor"
-          # Persephone and Axe Armor don't have functional hitboxes at level 4+.
-          max_soul_scaling_type = 2
-        end
-        soul_scaling_type = rng.rand(0..max_soul_scaling_type)
-        skill["Soul Scaling"] = soul_scaling_type
-      end
-      
-      if skill["?/Swings/Union"]
-        union_type = skill["?/Swings/Union"] >> 2
-        if union_type != 0x13 # Don't randomize Dominus glyphs (union type 13)
-          union_type = rng.rand(0x01..0x12)
-          low_two_bits = skill["?/Swings/Union"] & 0b11
-          skill["?/Swings/Union"] = (union_type << 2) | low_two_bits
-        end
-      end
-      
-      if GAME == "por" && skill["Type"] == 0
-        skills_that_must_be_used_by_original_player = [
-          "Puppet Master",
-          "Stonewall",
-          "Gnebu",
-          "Wrecking Ball",
-          "Rampage",
-          "Toad Morph",
-          "Owl Morph",
-          "Speed Up",
-          "Berserker",
-          "STR Boost",
-          "CON Boost",
-          "INT Boost",
-          "MIND Boost",
-          "LUCK Boost",
-          "ALL Boost",
-        ]
-        
-        unless skills_that_must_be_used_by_original_player.include?(skill.name)
-          # Randomize whether this skill is usable by Jonathan or Charlotte.
-          # Except for the above listed skills, since the wrong character can't actually use them.
-          skill["??? bitfield"][2] = [true, false].sample(random: rng) # Is spell
-        end
-        
-        # Set either the sub or spell bit in the damage types bitfield to let enemies know what this is now.
-        is_spell = skill["??? bitfield"][2]
-        is_sub = !is_spell
-        skill["Effects"][25] = is_sub   # "Is a subweapon" bit
-        skill["Effects"][26] = is_spell # "Is a spell" bit
-      end
-      
-      case GAME
-      when "dos"
-        if (0xCE..0x102).include?(skill_global_id) && !progress_skill
-          soul_extra_data = game.items[skill_global_id+0x7B]
-          soul_extra_data["Max at once"] = named_rand_range_weighted(:skill_max_at_once_range)
-          soul_extra_data["Bonus max at once"] = rand_range_weighted(0..2)
-          soul_extra_data.write_to_rom()
-        end
-      when "por"
-        if (0x150..0x1A0).include?(skill_global_id)
-          skill_extra_data = game.items[skill_global_id+0x6C]
-          
-          unless progress_skill
-            max_at_once = named_rand_range_weighted(:skill_max_at_once_range)
-            is_spell = skill["??? bitfield"][2]
-            if is_spell
-              charge_time = named_rand_range_weighted(:spell_charge_time_range)
-              skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
-              skill_extra_data["SP to Master"] = 0
-            else
-              mastered_bonus_max_at_once = rand_range_weighted(1..6)
-              skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
-              
-              nonoffensive_skills = [
-                "Puppet Master",
-                "Gnebu",
-                "Stonewall",
-                "Offensive Form",
-                "Defensive Form",
-                "Taunt",
-                "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
-                "Toad Morph",
-                "Owl Morph",
-                "Sanctuary",
-                "Berserker",
-                "Clear Skies",
-                "Time Stop",
-                "Heal",
-                "Cure Poison",
-                "Cure Curse",
-                "STR Boost",
-                "CON Boost",
-                "INT Boost",
-                "MIND Boost",
-                "LUCK Boost",
-                "ALL Boost",
-              ]
-              if nonoffensive_skills.include?(skill.name)
-                skill_extra_data["SP to Master"] = 0
-              else
-                skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
-              end
-            end
-          end
-          
-          skill_extra_data["Price (1000G)"] = (named_rand_range_weighted(:skill_price_range)/1000.0).to_f
-          
-          skill_extra_data.write_to_rom()
-        end
-      when "ooe"
-        if (0x37..0x4E).include?(skill_global_id)
-          # Back glyphs can't be properly toggled off if max at once is greater than 1. (Except Agartha.)
-          skill["Max at once"] = 1
-        else
-          skill["Max at once"] = named_rand_range_weighted(:skill_max_at_once_range)
-        end
-        
-        skill["Delay"] = named_rand_range_weighted(:glyph_attack_delay_range) unless progress_skill
-        
-        if skill.item_type_name == "Arm Glyphs" && skill["Code"] == 0x02070890
-          # Randomize the swing animation for melee weapons.
-          skill["Var A"] = rng.rand(0..6)
-        end
-        
-        if skill.name.include?("Culter")
-          # Randomize the number of knives thrown.
-          num_knives = rand_range_weighted(1..8, average: 3)
-          skill["Var A"] = num_knives-1
-        end
-      end
-      
-      iframes = named_rand_range_weighted(:skill_iframes_range)
-      if skill.name == "1,000 Blades"
-        iframes = 1
-      end
-      set_skill_iframes(skill, skill_global_id, iframes)
-      
-      
-      if GAME == "ooe" && rng.rand() >= 0.40
-        # Increase the chance of a pure physical glyph in OoE.
-        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 1, 2])
-      else
-        damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
-      end
-      
-      if damage_types_to_set.length < 4 && rng.rand() <= 0.10
-        # 10% chance to add a status effect.
-        damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
-      end
-      
-      # Add extra bits.
-      damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
-      
-      skill["Effects"].names.each_with_index do |bit_name, i|
-        if bit_name == "Cures vampirism & kills undead"
-          # Don't want to randomize this or Sanctuary won't work. Also don't want to give any other spells besides Sanctuary this.
-          next
-        end
-        
-        if bit_name == "Is a spell" && skill.name == "Sanctuary"
-          # Always make sure Sanctuary has the spell bit set, in case it's a Jonathan skill and it doesn't get set automatically.
-          skill["Effects"][i] = true
-          next
-        elsif bit_name == "Is a subweapon" || bit_name == "Is a spell"
-          # Don't randomize these bits, they're necessary for skills to work properly.
-          next
-        end
-        
-        if damage_types_to_set.include?(bit_name)
-          skill["Effects"][i] = true
-        else
-          skill["Effects"][i] = false
-        end
-      end
-      
-      if GAME == "por" && skill_global_id == 0x155 # Grand Cross
-        # Grand Cross normally can't be used by Charlotte, so we unset a few bits so that it can be.
-        skill["Unwanted States"].value = 0x78C418
-      end
-      
-      skill["Unwanted States"].names.each_with_index do |bit_name, i|
-        # 50% chance to make a state that was originally not allowed be allowed.
-        # But don't make a state that was originally allowed be not allowed.
-        next if skill["Unwanted States"][i] == false
-        skill["Unwanted States"][i] = [true, false].sample(random: rng)
+    
+      if options[:randomize_weapon_and_skill_elements]
+        randomize_skill_damage_types(skill, skill_global_id)
       end
       
       skill.write_to_rom()
       update_skill_description(skill)
     end
     
-    game.text_database.write_to_rom()
-    
     ooe_handle_glyph_tiers()
+  end
+  
+  def randomize_weapon_behavior(item, item_global_id)
+    progress_item = checker.all_progression_pickups.include?(item_global_id)
+    
+    # We'll need this list of duplicate weapon sprites later.
+    other_weapons_with_same_sprite = game.items.select do |other_item|
+      other_item.item_type_name == "Weapons" && other_item["Sprite"] == item["Sprite"]
+    end
+    other_weapons_with_same_sprite -= [item]
+    
+    item["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
+    
+    case GAME
+    when "dos"
+      unless [9, 0xA, 0xB].include?(item["Swing Anim"])
+        # Only randomize swing anim if it wasn't originally a throwing/firing weapon.
+        # Throwing/firing weapon sprites have no hitbox, so they won't be able to damage anything if they don't remain a throwing/firing weapon.
+        available_swing_anims = (0..0xC).to_a
+        if item.name == "Whip"
+          # If the whip turns into a projectile weapon Julius can't break Balore blocks, so ban those swing anims.
+          available_swing_anims -= [0x9, 0xA, 0xB]
+          if !options[:no_touch_screen]
+            # If the no touch screen option is off, only the whip swing anim works to break Balore blocks.
+            available_swing_anims = [0xC]
+          end
+        end
+        item["Swing Anim"] = available_swing_anims.sample(random: rng)
+      end
+      item["Super Anim"] = rng.rand(0..0xE) unless progress_item
+    when "por"
+      if [0x61, 0x6C].include?(item["Item ID"]) || item.name == "---"
+        # Don't randomize who can equip the weapons Jonathan and Charlotte start out already equipped with, or the --- unequipped placeholder.
+      elsif item["Equippable by"].value == 1 && progress_item
+        # Don't randomize Jonathan's glitch progress weapons (Cinquedia, Axe, etc) to be for Charlotte because Charlotte may not be accessible with "Don't randomize Change Cube".
+      else
+        item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
+      end
+      
+      item["Swing Anim"] = rng.rand(0..9)
+      
+      unless progress_item
+        palette = item["Crit type/Palette"] & 0xC0
+        crit_type = rng.rand(0..0x13)
+        item["Crit type/Palette"] = palette | crit_type
+      end
+      
+      if item.name == "Heaven's Sword" || item.name == "Tori"
+        # Heaven's Sword and Tori need to have either the Heaven's Sword or Tori effect in order to go anywhere, otherwise they'll just be at the player's feet.
+        item["Special Effect"] = [5, 7].sample(random: rng)
+      elsif rng.rand <= 0.50 # 50% chance to have a special effect
+        possible_special_effects = (1..7).to_a
+        if item["Item ID"] == 0x6B # Richter's Vampire Killer
+          # Heaven's Sword and Illusion Fist effects don't work so well with it, and Richter can't switch to any other weapon, so don't allow those 2 special effects.
+          possible_special_effects -= [5, 6]
+        end
+        if other_weapons_with_same_sprite.any?
+          # Heaven's Sword and Tori effects require the weapon's sprite to be recentered to the origin.
+          # That would cause issues if this weapon's sprite is shared by any other weapons, so don't allow those 2 special effects in that case.
+          possible_special_effects -= [5, 7]
+        end
+        
+        # Nebula effect only activates when the weapon animation reaches keyframe index 9.
+        weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
+        sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
+        if sprite.animations[0] && sprite.animations[0].frame_delays.size >= 10
+          # This sprite's first animation has at least 10 frames so the Nebula effect would work.
+        else
+          # This sprite's first animation doesn't exist or has less than 10 frames. Nebula effect would never activate.
+          possible_special_effects -= [1]
+        end
+        
+        item["Special Effect"] = possible_special_effects.sample(random: rng)
+        
+        if [5, 7].include?(item["Special Effect"])
+          # If a normal weapon gets the Heaven's Sword or Tori special effect, we need to recenter this weapon's sprite and hitboxes to be on the origin so it's not floating higher than it should.
+          center_weapon_sprite_on_origin(item)
+        end
+      else
+        item["Special Effect"] = 0
+      end
+    end
+    
+    player_can_move = nil
+    item["Swing Modifiers"].names.each_with_index do |bit_name, i|
+      next if bit_name == "Shaky weapon" && GAME == "dos" # This makes the weapon appear too high up
+      
+      if bit_name == "Player can move"
+        # 5% chance of the Valmanway effect.
+        bit_chance = 1/20.0
+      elsif GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
+        # This bit must be set for throwing weapons to throw correctly.
+        # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
+        bit_chance = 1/10.0
+      else
+        # Otherwise, give all other bits a 25% chance.
+        bit_chance = 1/4.0
+      end
+      
+      item["Swing Modifiers"][i] = (rng.rand() <= bit_chance)
+      
+      if GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Player can move"
+        # This bit must be set for throwing weapons in DoS or they won't appear.
+        item["Swing Modifiers"][i] = true
+      end
+      
+      if bit_name == "Player can move"
+        player_can_move = item["Swing Modifiers"][i]
+      end
+      
+      if bit_name == "No interrupt on anim end" && player_can_move
+        # This no interrupt must be set if the player can move during the anim, or the weapon won't swing.
+        item["Swing Modifiers"][i] = true
+      end
+    end
+    
+    if item["Special Effect"] == 5
+      # The Heaven Sword "throw the weapon in front of you" effect only uses the first keyframe of the weapon sprite's first animation.
+      # If the first frame has no hitbox the weapon won't be able to hit enemies.
+      # So we reorder the keyframes so that one with a hitbox is first.
+      weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
+      sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
+      anim = sprite.animations.first
+      if anim
+        possible_keyframes = anim.frame_delays.select do |frame_delay|
+          frame = sprite.frames[frame_delay.frame_index]
+          frame.hitboxes.any?
+        end
+        if possible_keyframes.any?
+          # Select the first frame with a hitbox.
+          keyframe = possible_keyframes.first
+          # Move that frame to the front.
+          sprite.frame_delays.delete(keyframe)
+          sprite.frame_delays.insert(anim.frame_delay_indexes.first, keyframe)
+          sprite.write_to_rom()
+        end
+      end
+    end
+  end
+  
+  def randomize_weapon_damage_types(item, item_global_id)
+    if rng.rand() >= 0.30
+      # Increase the chance of a pure physical weapon.
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 2, 3])
+    else
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
+    end
+    
+    if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+      # 10% chance to add a status effect.
+      damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
+    end
+    
+    # Add extra bits.
+    damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+    
+    item["Effects"].names.each_with_index do |bit_name, i|
+      if damage_types_to_set.include?(bit_name)
+        item["Effects"][i] = true
+      else
+        item["Effects"][i] = false
+      end
+      
+      if bit_name == "Cures vampirism & kills undead" && item["Effects"][i] == true
+        # Don't give this weapon the spell bit if it has the cures vampirism bit because we don't want it to cure the sisters.
+        item["Effects"][26] = false # Spell
+      end
+    end
+    
+    if item["Special Effect"] == 6
+      # Illusion fist effect overrides damage types bitfield.
+      # Therefore we set the damage types bitfield to match so it at least displays the correct values.
+      item["Effects"].value = 4 # Slash
+    end
+  end
+  
+  def randomize_skill_stats(skill, skill_global_id)
+    progress_skill = !all_non_progression_pickups.include?(skill_global_id)
+    
+    if GAME == "por" && (0x1A2..0x1AB).include?(skill_global_id)
+      # Dual crush
+      skill["Mana cost"] = named_rand_range_weighted(:crush_mana_cost_range) unless progress_skill
+      skill["DMG multiplier"] = named_rand_range_weighted(:crush_or_union_dmg_range)
+    elsif GAME == "ooe" && (0x50..0x6E).include?(skill_global_id)
+      # Glyph union
+      skill["Heart cost"] = named_rand_range_weighted(:union_heart_cost_range)
+      skill["DMG multiplier"] = named_rand_range_weighted(:crush_or_union_dmg_range)
+      
+      skill["Heart cost"] = 0 if skill_global_id == 0x68 # Dominus union shouldn't cost hearts
+    else
+      skill["DMG multiplier"] = named_rand_range_weighted(:skill_dmg_range)
+      if progress_skill
+        # Don't randomize mana cost for progress skills.
+      elsif GAME == "dos" && skill["Type"] == 1
+        # Guardian souls should have lower mana costs than bullet souls.
+        mana_cost = named_rand_range_weighted(:skill_mana_cost_range)
+        mana_cost = (mana_cost / 4.0).round
+        skill["Mana cost"] = mana_cost
+      else
+        skill["Mana cost"] = named_rand_range_weighted(:skill_mana_cost_range)
+      end
+    end
+    
+    if ["Black Panther", "Speed Up", "Rapidus Fio"].include?(skill.name)
+      # Reduce damage of speed increasing skills so you can't oneshot every enemy by running into them.
+      skill["DMG multiplier"] = skill["DMG multiplier"] / 5
+      skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
+    end
+    if skill.name.include?("Culter")
+      # Reduce damage of the knife glyphs since they usually throw multiply projectiles.
+      skill["DMG multiplier"] = skill["DMG multiplier"] / 5
+      skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
+    end
+  end
+  
+  def randomize_skill_behavior(skill, skill_global_id)
+    progress_skill = !all_non_progression_pickups.include?(skill_global_id)
+    
+    if GAME == "dos"
+      max_soul_scaling_type = 4
+      if skill.name == "Persephone" || skill.name == "Axe Armor"
+        # Persephone and Axe Armor don't have functional hitboxes at level 4+.
+        max_soul_scaling_type = 2
+      end
+      soul_scaling_type = rng.rand(0..max_soul_scaling_type)
+      skill["Soul Scaling"] = soul_scaling_type
+    end
+    
+    if skill["?/Swings/Union"]
+      union_type = skill["?/Swings/Union"] >> 2
+      if union_type != 0x13 # Don't randomize Dominus glyphs (union type 13)
+        union_type = rng.rand(0x01..0x12)
+        low_two_bits = skill["?/Swings/Union"] & 0b11
+        skill["?/Swings/Union"] = (union_type << 2) | low_two_bits
+      end
+    end
+    
+    if GAME == "por" && skill["Type"] == 0
+      skills_that_must_be_used_by_original_player = [
+        "Puppet Master",
+        "Stonewall",
+        "Gnebu",
+        "Wrecking Ball",
+        "Rampage",
+        "Toad Morph",
+        "Owl Morph",
+        "Speed Up",
+        "Berserker",
+        "STR Boost",
+        "CON Boost",
+        "INT Boost",
+        "MIND Boost",
+        "LUCK Boost",
+        "ALL Boost",
+      ]
+      
+      unless skills_that_must_be_used_by_original_player.include?(skill.name)
+        # Randomize whether this skill is usable by Jonathan or Charlotte.
+        # Except for the above listed skills, since the wrong character can't actually use them.
+        skill["??? bitfield"][2] = [true, false].sample(random: rng) # Is spell
+      end
+      
+      # Set either the sub or spell bit in the damage types bitfield to let enemies know what this is now.
+      is_spell = skill["??? bitfield"][2]
+      is_sub = !is_spell
+      skill["Effects"][25] = is_sub   # "Is a subweapon" bit
+      skill["Effects"][26] = is_spell # "Is a spell" bit
+    end
+    
+    case GAME
+    when "dos"
+      if (0xCE..0x102).include?(skill_global_id) && !progress_skill
+        soul_extra_data = game.items[skill_global_id+0x7B]
+        soul_extra_data["Max at once"] = named_rand_range_weighted(:skill_max_at_once_range)
+        soul_extra_data["Bonus max at once"] = rand_range_weighted(0..2)
+        soul_extra_data.write_to_rom()
+      end
+    when "por"
+      if (0x150..0x1A0).include?(skill_global_id)
+        skill_extra_data = game.items[skill_global_id+0x6C]
+        
+        unless progress_skill
+          max_at_once = named_rand_range_weighted(:skill_max_at_once_range)
+          is_spell = skill["??? bitfield"][2]
+          if is_spell
+            charge_time = named_rand_range_weighted(:spell_charge_time_range)
+            skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
+            skill_extra_data["SP to Master"] = 0
+          else
+            mastered_bonus_max_at_once = rand_range_weighted(1..6)
+            skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
+            
+            nonoffensive_skills = [
+              "Puppet Master",
+              "Gnebu",
+              "Stonewall",
+              "Offensive Form",
+              "Defensive Form",
+              "Taunt",
+              "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
+              "Toad Morph",
+              "Owl Morph",
+              "Sanctuary",
+              "Berserker",
+              "Clear Skies",
+              "Time Stop",
+              "Heal",
+              "Cure Poison",
+              "Cure Curse",
+              "STR Boost",
+              "CON Boost",
+              "INT Boost",
+              "MIND Boost",
+              "LUCK Boost",
+              "ALL Boost",
+            ]
+            if nonoffensive_skills.include?(skill.name)
+              skill_extra_data["SP to Master"] = 0
+            else
+              skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
+            end
+          end
+        end
+        
+        skill_extra_data["Price (1000G)"] = (named_rand_range_weighted(:skill_price_range)/1000.0).to_f
+        
+        skill_extra_data.write_to_rom()
+      end
+    when "ooe"
+      if (0x37..0x4E).include?(skill_global_id)
+        # Back glyphs can't be properly toggled off if max at once is greater than 1. (Except Agartha.)
+        skill["Max at once"] = 1
+      else
+        skill["Max at once"] = named_rand_range_weighted(:skill_max_at_once_range)
+      end
+      
+      skill["Delay"] = named_rand_range_weighted(:glyph_attack_delay_range) unless progress_skill
+      
+      if skill.item_type_name == "Arm Glyphs" && skill["Code"] == 0x02070890
+        # Randomize the swing animation for melee weapons.
+        skill["Var A"] = rng.rand(0..6)
+      end
+      
+      if skill.name.include?("Culter")
+        # Randomize the number of knives thrown.
+        num_knives = rand_range_weighted(1..8, average: 3)
+        skill["Var A"] = num_knives-1
+      end
+    end
+    
+    iframes = named_rand_range_weighted(:skill_iframes_range)
+    if skill.name == "1,000 Blades"
+      iframes = 1
+    end
+    set_skill_iframes(skill, skill_global_id, iframes)
+    
+    if GAME == "por" && skill_global_id == 0x155 # Grand Cross
+      # Grand Cross normally can't be used by Charlotte, so we unset a few bits so that it can be.
+      skill["Unwanted States"].value = 0x78C418
+    end
+    
+    skill["Unwanted States"].names.each_with_index do |bit_name, i|
+      # 50% chance to make a state that was originally not allowed be allowed.
+      # But don't make a state that was originally allowed be not allowed.
+      next if skill["Unwanted States"][i] == false
+      skill["Unwanted States"][i] = [true, false].sample(random: rng)
+    end
+  end
+  
+  def randomize_skill_damage_types(skill, skill_global_id)
+    if GAME == "ooe" && rng.rand() >= 0.40
+      # Increase the chance of a pure physical glyph in OoE.
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 1, 2])
+    else
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
+    end
+    
+    if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+      # 10% chance to add a status effect.
+      damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
+    end
+    
+    # Add extra bits.
+    damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+    
+    skill["Effects"].names.each_with_index do |bit_name, i|
+      if bit_name == "Cures vampirism & kills undead"
+        # Don't want to randomize this or Sanctuary won't work. Also don't want to give any other spells besides Sanctuary this.
+        next
+      end
+      
+      if bit_name == "Is a spell" && skill.name == "Sanctuary"
+        # Always make sure Sanctuary has the spell bit set, in case it's a Jonathan skill and it doesn't get set automatically.
+        skill["Effects"][i] = true
+        next
+      elsif bit_name == "Is a subweapon" || bit_name == "Is a spell"
+        # Don't randomize these bits, they're necessary for skills to work properly.
+        next
+      end
+      
+      if damage_types_to_set.include?(bit_name)
+        skill["Effects"][i] = true
+      else
+        skill["Effects"][i] = false
+      end
+    end
   end
   
   def update_consumable_description(item)
@@ -922,9 +945,11 @@ module ItemSkillStatRandomizer
   end
   
   def ooe_handle_glyph_tiers
+    # Sorts the damage, iframes, attack delay, and max at once of the tiers in each glyph family.
+    # Also copies elemental damage types from lower tiers to higher tiers in each glyph family (and possibly adds more elements) if the option to randomize skill damage types is on.
+    
     return unless GAME == "ooe"
     
-    # Sorts the damage, iframes, attack delay, and max at once of the tiers in each glyph family.
     skills = game.items[SKILL_GLOBAL_ID_RANGE]
     skills_by_family = skills.group_by{|skill| skill.name.match(/^(?:Vol |Melio )?(.*)$/)[1]}
     skills_by_family = skills_by_family.values.select{|family| family.size > 1}
@@ -950,7 +975,7 @@ module ItemSkillStatRandomizer
           skill["Var A"] = sorted_var_as.shift
         end
         
-        if prev_tier_damage_types
+        if prev_tier_damage_types && options[:randomize_weapon_and_skill_elements]
           # Copy the lower tier's damage types to the higher tiers.
           skill["Effects"] = prev_tier_damage_types
           

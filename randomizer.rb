@@ -894,10 +894,10 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_weapon_behavior]
+    if options[:randomize_weapon_behavior] || options[:randomize_weapon_and_skill_elements]
       yield [options_completed, "Randomizing weapons..."]
       reset_rng()
-      randomize_weapon_behavior()
+      randomize_weapons()
       options_completed += 1
     end
     
@@ -908,12 +908,15 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_skill_stats]
+    if options[:randomize_skill_stats] || options[:randomize_skill_behavior] || options[:randomize_weapon_and_skill_elements]
       yield [options_completed, "Randomizing skill stats..."]
       reset_rng()
-      randomize_skill_stats()
+      randomize_skills()
       options_completed += 1
     end
+    
+    # The various item/skill randomization options probably updated the descriptions, so save the whole database now instead of multiple times for each option.
+    game.text_database.write_to_rom()
     
     if options[:randomize_skill_sprites]
       yield [options_completed, "Shuffling skill sprites..."]
