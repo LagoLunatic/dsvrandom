@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>639</height>
+    <height>668</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,6 +105,53 @@
              </widget>
             </item>
             <item>
+             <widget class="QCheckBox" name="randomize_boss_souls">
+              <property name="toolTip">
+               <string>Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).</string>
+              </property>
+              <property name="text">
+               <string>Boss Souls</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QCheckBox" name="randomize_portraits">
+              <property name="toolTip">
+               <string>Randomizes where portraits are located (PoR only).</string>
+              </property>
+              <property name="text">
+               <string>Portraits</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_villagers">
+              <property name="toolTip">
+               <string>Randomizes where villagers are located (OoE only).</string>
+              </property>
+              <property name="text">
+               <string>Villagers</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
              <widget class="QCheckBox" name="randomize_enemies">
               <property name="toolTip">
                <string>Randomizes which non-boss enemies appear where.</string>
@@ -117,10 +164,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_drops">
               <property name="toolTip">
@@ -134,16 +177,27 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
-             <widget class="QCheckBox" name="randomize_boss_souls">
+             <widget class="QCheckBox" name="randomize_enemy_stats">
               <property name="toolTip">
-               <string>Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).</string>
+               <string>Randomizes enemy stats, weaknesses, and resistances.</string>
               </property>
               <property name="text">
-               <string>Boss Souls</string>
+               <string>Enemy Stats</string>
               </property>
-              <property name="checked">
-               <bool>true</bool>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_anim_speed">
+              <property name="toolTip">
+               <string>Randomizes the speed at which each enemy's animations play at, which affects their attack speed.</string>
+              </property>
+              <property name="text">
+               <string>Enemy Animation Speed</string>
               </property>
              </widget>
             </item>
@@ -246,17 +300,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_15">
-            <item>
-             <widget class="QCheckBox" name="randomize_villagers">
-              <property name="toolTip">
-               <string>Randomizes where villagers are located (OoE only).</string>
-              </property>
-              <property name="text">
-               <string>Villagers</string>
-              </property>
-             </widget>
-            </item>
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
             <item>
              <widget class="QCheckBox" name="randomize_weapon_synths">
               <property name="toolTip">
@@ -264,44 +308,6 @@
               </property>
               <property name="text">
                <string>Weapon Synthesis</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_stats">
-              <property name="toolTip">
-               <string>Randomizes enemy stats, weaknesses, and resistances.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Stats</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_anim_speed">
-              <property name="toolTip">
-               <string>Randomizes the speed at which each enemy's animations play at, which affects their attack speed.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Animation Speed</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_18">
-            <item>
-             <widget class="QCheckBox" name="randomize_portraits">
-              <property name="toolTip">
-               <string>Randomizes where portraits are located (PoR only).</string>
-              </property>
-              <property name="text">
-               <string>Portraits</string>
               </property>
              </widget>
             </item>
@@ -522,8 +528,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>407</height>
+            <width>57</width>
+            <height>22</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -953,9 +959,13 @@
   <tabstop>seed</tabstop>
   <tabstop>generate_seed_button</tabstop>
   <tabstop>randomize_pickups</tabstop>
+  <tabstop>randomize_boss_souls</tabstop>
+  <tabstop>randomize_portraits</tabstop>
+  <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>
-  <tabstop>randomize_boss_souls</tabstop>
+  <tabstop>randomize_enemy_stats</tabstop>
+  <tabstop>randomize_enemy_anim_speed</tabstop>
   <tabstop>randomize_equipment_stats</tabstop>
   <tabstop>randomize_consumable_behavior</tabstop>
   <tabstop>randomize_weapon_behavior</tabstop>
@@ -964,11 +974,7 @@
   <tabstop>randomize_weapon_and_skill_elements</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
-  <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
-  <tabstop>randomize_enemy_stats</tabstop>
-  <tabstop>randomize_enemy_anim_speed</tabstop>
-  <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_rooms_map_friendly</tabstop>
   <tabstop>randomize_starting_room</tabstop>

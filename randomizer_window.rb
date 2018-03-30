@@ -5,9 +5,13 @@ require_relative 'randomizer'
 class RandomizerWindow < Qt::Dialog
   OPTIONS = %i(
     randomize_pickups
+    randomize_boss_souls
+    randomize_portraits
+    randomize_villagers
     randomize_enemies
     randomize_enemy_drops
-    randomize_boss_souls
+    randomize_enemy_stats
+    randomize_enemy_anim_speed
     randomize_equipment_stats
     randomize_consumable_behavior
     randomize_weapon_behavior
@@ -16,11 +20,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_weapon_and_skill_elements
     randomize_shop
     randomize_wooden_chests
-    randomize_villagers
     randomize_weapon_synths
-    randomize_enemy_stats
-    randomize_enemy_anim_speed
-    randomize_portraits
     randomize_red_walls
     randomize_rooms_map_friendly
     randomize_starting_room
