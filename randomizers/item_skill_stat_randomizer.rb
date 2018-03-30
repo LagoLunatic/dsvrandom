@@ -734,6 +734,18 @@ module ItemSkillStatRandomizer
         skill["Effects"][i] = false
       end
     end
+    
+    if skill.name == "Knee Strike"
+      # Knee Strike doesn't use its damage types properly, it just uses the player's body's damage types.
+      # So we change its damage types to be the same as the player's so that it displays accurately in the skill's description.
+      is_spell = skill["??? bitfield"][2]
+      if is_spell
+        player = game.players[1] # Charlotte
+      else
+        player = game.players[0] # Jonathan
+      end
+      skill["Effects"].value = player["Damage types"].value
+    end
   end
   
   def update_consumable_description(item)
