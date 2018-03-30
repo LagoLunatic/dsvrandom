@@ -21,6 +21,7 @@ require_relative 'randomizers/skill_sprites_randomizer'
 require_relative 'randomizers/enemy_anim_speed_randomizer'
 require_relative 'randomizers/red_wall_randomizer'
 require_relative 'randomizers/map_randomizer'
+require_relative 'randomizers/cosmetic/bgm_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -41,6 +42,7 @@ class Randomizer
   include EnemyAnimSpeedRandomizer
   include RedWallRandomizer
   include MapRandomizer
+  include BgmRandomizer
   
   attr_reader :options,
               :seed,
@@ -953,6 +955,13 @@ class Randomizer
       yield [options_completed, "Randomizing enemy speed..."]
       reset_rng()
       randomize_enemy_anim_speeds()
+      options_completed += 1
+    end
+    
+    if options[:randomize_bgm]
+      yield [options_completed, "Randomizing BGM..."]
+      reset_rng()
+      randomize_bgm()
       options_completed += 1
     end
     
