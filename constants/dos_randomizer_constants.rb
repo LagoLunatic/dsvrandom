@@ -73,6 +73,26 @@ PATH_BLOCKING_BREAKABLE_WALLS = [] # All breakable walls are path blocking in Do
 MAGICAL_TICKET_X_POS_OFFSET = 0x02308920+0x2C
 MAGICAL_TICKET_Y_POS_OFFSET = 0x02308920+0x30
 
+BGM_RANDO_AVAILABLE_SONG_INDEXES = [
+  0x0D, # Pitch Black Intrusion
+  0x11, # Demon Guest House
+  0x0E, # Dracula's Tears
+  0x0F, # Platinum Moonlight
+  0x10, # After Confession
+  0x12, # Condemned Tower
+  0x14, # Subterranean Hell
+  0x15, # Vampire Killer
+  0x13, # Cursed Clock Tower
+  0x16, # The Pinnacle
+  0x18, # The Abyss
+  0x18, # The Abyss
+  0x18, # The Abyss
+  0x18, # The Abyss
+  0x00, # The Beginning
+  0x00, # The Beginning
+  0x17, # Underground Melodies
+]
+
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   14 => { # The Lost Village
     0x0207FAD0 => 0x0001,

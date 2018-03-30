@@ -85,6 +85,41 @@ PATH_BLOCKING_BREAKABLE_WALLS = [
 MAGICAL_TICKET_X_POS_OFFSET = 0x02037B10
 MAGICAL_TICKET_Y_POS_OFFSET = 0x02037B04
 
+BGM_SONG_INDEXES = [
+  0x0E, # An Empty Tome
+  0x0E, # An Empty Tome
+  0x10, # Malak's Labyrinth
+  0x0E, # An Empty Tome
+  0x0E, # An Empty Tome
+  0x0F, # Ebony Wings
+  0x12, # Tower of Dolls
+  0x12, # Tower of Dolls
+  0x0F, # Ebony Wings
+  0x0D, # Ambience
+  0x13, # The Colossus
+  0x13, # The Colossus
+  0x0E, # An Empty Tome
+  0x03, # Serenade of the Hearth
+  0x01, # A Prologue
+  0x2E, # Riddle
+  0x04, # Emerald Mist
+  0x04, # Emerald Mist
+  0x05, # A Clashing of Waves
+  0x0A, # Wandering the Crystal Blue
+  0x06, # Rhapsody of the Forsaken
+  0x06, # Rhapsody of the Forsaken
+  0x07, # Jaws of a Scorched Earth
+  0x0B, # Edge of the Sky
+  0x2E, # Riddle
+  0x0C, # Hard Won Nobility
+  0x0C, # Hard Won Nobility
+  0x08, # Tragedy's Pulse
+  0x08, # Tragedy's Pulse
+  0x09, # Unholy Vespers
+  0x02, # Chapel Hidden in Smoke
+  0x2D, # Lone Challenger
+]
+
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   65 => { # Castle Entrance
     0x022CBF74 => 0x0010,

@@ -99,6 +99,25 @@ PATH_BLOCKING_BREAKABLE_WALLS = [
 MAGICAL_TICKET_X_POS_OFFSET = 0x0203A298
 MAGICAL_TICKET_Y_POS_OFFSET = 0x0203A284
 
+BGM_RANDO_AVAILABLE_SONG_INDEXES = [
+  0x01, # Invitation of a Crazed Moon
+  0x02, # Silent Prison
+  0x03, # Jail of Jewels
+  0x04, # The Gears Go Awry
+  0x05, # Gaze Up at the Darkness
+  0x10, # Overture
+  0x22, # Faraway Days
+  0x0F, # Troubled Times
+  0x07, # Victorian Fear
+  0x0C, # Iron Blue Intention
+  0x06, # Hail from the Past
+  0x0A, # Sandfall
+  0x09, # The Hidden Curse
+  0x0E, # Crucifix Held Close
+  0x08, # Chaotic Playground
+  0x0D, # Behind the Gaze
+]
+
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   78 => { # Entrance
     0x022EBFC0 => 0x0008,
