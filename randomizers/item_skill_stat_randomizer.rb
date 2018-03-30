@@ -106,6 +106,8 @@ module ItemSkillStatRandomizer
   end
   
   def randomize_weapon_behavior
+    all_weapons = game.items.select{|other_item| other_item.item_type_name == "Weapons"}
+    
     (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS).each do |item_global_id|
       item = game.items[item_global_id]
       
@@ -123,6 +125,9 @@ module ItemSkillStatRandomizer
       end
       
       if item.item_type_name == "Weapons"
+        # We'll need this list of duplicate weapon sprites later.
+        other_weapons_with_same_sprite = all_weapons.select{|other_item| other_item["Sprite"] == item["Sprite"]} - [item]
+        
         item["IFrames"] = named_rand_range_weighted(:weapon_iframes_range)
         
         case GAME
@@ -163,11 +168,22 @@ module ItemSkillStatRandomizer
             # Heaven's Sword and Tori need to have either the Heaven's Sword or Tori effect in order to go anywhere, otherwise they'll just be at the player's feet.
             item["Special Effect"] = [5, 7].sample(random: rng)
           elsif rng.rand <= 0.50 # 50% chance to have a special effect
+            possible_special_effects = (1..7).to_a
             if item["Item ID"] == 0x6B # Richter's Vampire Killer
               # Heaven's Sword and Illusion Fist effects don't work so well with it, and Richter can't switch to any other weapon, so don't allow those 2 special effects.
-              item["Special Effect"] = [1, 2, 3, 4, 7].sample(random: rng)
-            else
-              item["Special Effect"] = rng.rand(1..7)
+              possible_special_effects -= [5, 6]
+            end
+            if other_weapons_with_same_sprite.any?
+              # Heaven's Sword and Tori effects require the weapon's sprite to be recentered to the origin.
+              # That would cause issues if this weapon's sprite is shared by any other weapons, so don't allow those 2 special effects in that case.
+              possible_special_effects -= [5, 7]
+            end
+            
+            item["Special Effect"] = possible_special_effects.sample(random: rng)
+            
+            if [5, 7].include?(item["Special Effect"])
+              # If a normal weapon gets the Heaven's Sword or Tori special effect, we need to recenter this weapon's sprite and hitboxes to be on the origin so it's not floating higher than it should.
+              center_weapon_sprite_on_origin(item)
             end
           else
             item["Special Effect"] = 0
@@ -268,6 +284,39 @@ module ItemSkillStatRandomizer
         item.write_to_rom()
       end
     end
+  end
+  
+  def center_weapon_sprite_on_origin(item)
+    # Centers a weapon sprite on the origin point so that it works properly with the Heaven Sword/Tori effect.
+    
+    weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
+    sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
+    
+    return if sprite.animations.empty?
+    
+    anim = sprite.animations[0]
+    frames = anim.frame_delays.map{|frame_delay| sprite.frames[frame_delay.frame_index]}
+    
+    first_hitbox = nil
+    frames.each do |frame|
+      if frame.hitboxes.any?
+        first_hitbox = frame.hitboxes.first
+        break
+      end
+    end
+    
+    center_x = first_hitbox.x_pos + first_hitbox.width/2
+    center_y = first_hitbox.y_pos + first_hitbox.height/2
+    offset_amount_x = -center_x
+    offset_amount_y = -center_y
+    
+    parts_and_hitboxes = frames.map{|frame| frame.parts + frame.hitboxes}.flatten.uniq
+    parts_and_hitboxes.each do |part_or_hitbox|
+      part_or_hitbox.x_pos += offset_amount_x
+      part_or_hitbox.y_pos += offset_amount_y
+    end
+    
+    sprite.write_to_rom()
   end
   
   def randomize_consumable_behavior
