@@ -1414,6 +1414,22 @@ class Randomizer
     end
     
     if GAME == "por"
+      # Allow Jonathan and Charlotte to use weapons with swing anims they originally couldn't use.
+      
+      # Normally Jonathan cannot use books because he doesn't have any book swing anims specified.
+      # Copy his punch swing anims to his book swing anims so that he can.
+      jonathan = game.players[0]
+      punch_swing_anims_ptr = game.fs.read(jonathan["Swing anims ptr"] + 7*4, 4).unpack("V").first
+      game.fs.write(jonathan["Swing anims ptr"] + 9*4, [punch_swing_anims_ptr].pack("V*"))
+      
+      # Normally Charlotte cannot use any weapons besides books and punches because she doesn't have swing anims specified for most types of weapons.
+      # Copy her book swing anims to all her other types so that she can.
+      charlotte = game.players[1]
+      book_swing_anims_ptr = game.fs.read(charlotte["Swing anims ptr"] + 9*4, 4).unpack("V").first
+      game.fs.write(charlotte["Swing anims ptr"], ([book_swing_anims_ptr]*10).pack("V*"))
+    end
+    
+    if GAME == "por"
       # Give Charlotte the ability to jumpkick and superjump so she's on par with Jonathan in terms of mobility.
       charlotte = game.players[1]
       charlotte["Actions"][5] = true # Can jumpkick
