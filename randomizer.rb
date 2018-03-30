@@ -1413,6 +1413,33 @@ class Randomizer
       game.fs.write(0x022D8B18, [0xE1A00000].pack("V")) # nop out the line that waits 2 seconds before making Death put down his arms and set his boss death flag.
     end
     
+    if GAME == "por"
+      # Give Charlotte the ability to jumpkick and superjump so she's on par with Jonathan in terms of mobility.
+      charlotte = game.players[1]
+      charlotte["Actions"][5] = true # Can jumpkick
+      charlotte["Actions"][6] = true # Can superjump
+      # And set her state anims for both of those to be the broom animation.
+      # For superjumping the broom looks appropriate.
+      # For jumpkicking none of her animations look appropriate, so go with the broom anyway since it looks ridiculous.
+      state_anims = game.state_anims_for_player(1)
+      state_anims[0x0E] = 0x0A # Superjumping
+      state_anims[0x33] = 0x0A # Jumpkicking straight down
+      state_anims[0x34] = 0x0A # Jumpkicking diagonally down
+      game.save_state_anims_for_player(1, state_anims)
+      
+      # Also give her the ability to use critical arts.
+      # To do this we must enable her "Can combo tech" bit.
+      charlotte["??? bitfield"][3] = true # Can combo tech
+      # But enabling that bit causes an issue - by default that bit means she can do *all* combo techs, but we only want her to do critical art.
+      # So we need to specify a list of combo techs that she can and can't do, so we can set them all to 00 to specify that she can't do them.
+      # Get 4 bytes of free space for Charlotte's combo techs list.
+      charlotte["Combo tech ptr"] = game.fs.get_free_space(4)
+      # Then set all four to 0.
+      game.fs.write(charlotte["Combo tech ptr"], [0, 0, 0, 0].pack("CCCC"))
+      
+      charlotte.write_to_rom()
+    end
+    
     if GAME == "por" && room_rando?
       # In room rando, unlock the bottom passage in the second room of the game by default to simplify the logic. (The one that usually needs you to complete the Nest of Evil quest.)
       game.fs.load_overlay(78)
