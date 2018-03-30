@@ -243,19 +243,25 @@ module ItemSkillStatRandomizer
         end
         
         if item["Special Effect"] == 5
-          # The Heaven Sword "throw the weapon in front of you" effect only uses the first frame of the weapon's sprite.
+          # The Heaven Sword "throw the weapon in front of you" effect only uses the first keyframe of the weapon sprite's first animation.
           # If the first frame has no hitbox the weapon won't be able to hit enemies.
-          # So we reorder the frames so that one with a hitbox is first.
+          # So we reorder the keyframes so that one with a hitbox is first.
           weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
           sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
-          possible_frames = sprite.frames.select{|frame| frame.hitboxes.any?}
-          if possible_frames.any?
-            # Select the first frame with a hitbox.
-            frame = possible_frames.first
-            # Move that frame to the front.
-            sprite.frames.delete(frame)
-            sprite.frames.unshift(frame)
-            sprite.write_to_rom()
+          anim = sprite.animations.first
+          if anim
+            possible_keyframes = anim.frame_delays.select do |frame_delay|
+              frame = sprite.frames[frame_delay.frame_index]
+              frame.hitboxes.any?
+            end
+            if possible_keyframes.any?
+              # Select the first frame with a hitbox.
+              keyframe = possible_keyframes.first
+              # Move that frame to the front.
+              sprite.frame_delays.delete(keyframe)
+              sprite.frame_delays.insert(anim.frame_delay_indexes.first, keyframe)
+              sprite.write_to_rom()
+            end
           end
         end
         
