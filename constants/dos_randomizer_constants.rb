@@ -5,6 +5,40 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = []
 
+WEAPON_SWING_ANIM_NAMES = {
+  0x00 => "Fast stab",
+  0x01 => "Stab",
+  0x02 => "Slash",
+  0x03 => "Greatsword",
+  0x04 => "Spear",
+  0x05 => "Axe",
+  0x06 => "Mace",
+  0x07 => "Katana",
+  0x08 => "Punch",
+  0x09 => "Gun",
+  0x0A => "Throw",
+  0x0B => "RPG",
+  0x0C => "Whip",
+}
+
+WEAPON_SUPER_ANIM_NAMES = {
+  0x00 => "None",
+  0x01 => "Lunge",
+  0x02 => "Fast lunge",
+  0x03 => "Backstab",
+  0x04 => "Warp jump",
+  0x05 => "Triple",
+  0x06 => "Katana",
+  0x07 => "Fast triple",
+  0x08 => "Uppercut",
+  0x09 => "Stationary",
+  0x0A => "Death Scythe",
+  0x0B => "Throw",
+  0x0C => "Ice breath",
+  0x0D => "Fire breath",
+  0x0E => "Claimh Solais",
+}
+
 MAGICAL_TICKET_GLOBAL_ID = 0x2B # Actually Castle Map 0, this is repurposed as a magical ticket.
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x1A, 0x36, 0x40]

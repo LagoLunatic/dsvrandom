@@ -8,6 +8,39 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = [0x149] # death ring
 
+WEAPON_SWING_ANIM_NAMES = {
+  0x00 => "Fast",
+  0x01 => "Fast stab",
+  0x02 => "Fast",
+  0x03 => "Slow",
+  0x04 => "Stab",
+  0x05 => "Normal",
+  0x06 => "Normal",
+}
+
+WEAPON_SUPER_ANIM_NAMES = {
+  0x00 => "Generic",
+  0x01 => "Generic",
+  0x02 => "Sword",
+  0x03 => "Rapier",
+  0x04 => "Lance",
+  0x05 => "Hammer",
+  0x06 => "Bow",
+  0x07 => "Axe",
+  0x08 => "Sickle",
+  0x09 => "Knife",
+  0x0A => "Shield",
+  0x0B => "Lapiste",
+  0x0C => "Pneuma",
+  0x0D => "Fire",
+  0x0E => "Ice",
+  0x0F => "Lightning",
+  0x10 => "Holy",
+  0x11 => "Dark",
+  0x12 => "Nitesco",
+  0x13 => "Dominus",
+}
+
 MAGICAL_TICKET_GLOBAL_ID = 0x7C
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x03, 0x06, 0x0B, 0x0F, 0x1B, 0x2B, 0x3E, 0x48, 0x60, 0x61, 0x65]

@@ -101,8 +101,11 @@ module ItemSkillStatRandomizer
         end
         
         item.write_to_rom()
+        update_equipment_description(item)
       end
     end
+    
+    game.text_database.write_to_rom()
   end
   
   def randomize_weapon_behavior
@@ -292,8 +295,11 @@ module ItemSkillStatRandomizer
         end
         
         item.write_to_rom()
+        update_weapon_description(item)
       end
     end
+    
+    game.text_database.write_to_rom()
   end
   
   def center_weapon_sprite_on_origin(item)
@@ -699,7 +705,10 @@ module ItemSkillStatRandomizer
       end
       
       skill.write_to_rom()
+      update_skill_description(skill)
     end
+    
+    game.text_database.write_to_rom()
     
     ooe_handle_glyph_tiers()
   end
@@ -766,6 +775,150 @@ module ItemSkillStatRandomizer
         description.decoded_string = "Increases your #{ap_type}\\nattribute points by #{item["Var A"]}."
       end
     end
+  end
+  
+  def update_equipment_description(item)
+    return unless options[:revise_item_descriptions]
+    
+    description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+    
+    new_desc = ""
+    
+    resistance_names = []
+    item["Resistances"].names.each_with_index do |bit_name, i|
+      break if i >= 16 # We don't want to display the special bits, like "Is a red soul" for example
+      
+      if item["Resistances"][i]
+        resistance_names << bit_name
+      end
+    end
+    if resistance_names.any?
+      new_desc << "Resist: #{resistance_names.join(", ")}\\n"
+    else
+      new_desc << "No resistances.\\n"
+    end
+    
+    description.decoded_string = new_desc
+  end
+  
+  def update_weapon_description(item)
+    return unless options[:revise_item_descriptions]
+    
+    description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
+    
+    new_desc = ""
+    
+    if GAME == "por" && item["Special Effect"] != 0
+      special_effect_name = case item["Special Effect"]
+      when 1
+        "Nebula"
+      when 5
+        "Heaven Sword"
+      when 6
+        "Illusion Fist"
+      when 7
+        "Tori"
+      else
+        nil
+      end
+    end
+    
+    if special_effect_name
+      swing_anim_name = special_effect_name
+    else
+      swing_anim_name = WEAPON_SWING_ANIM_NAMES[item["Swing Anim"]]
+    end
+    new_desc << "Anim: #{swing_anim_name}"
+    
+    if GAME == "dos"
+      super_name = WEAPON_SUPER_ANIM_NAMES[item["Super Anim"]]
+      new_desc << ", Super: #{super_name}"
+    elsif GAME == "por"
+      crit_type = item["Crit type/Palette"] & 0x3F
+      crit_name = WEAPON_SUPER_ANIM_NAMES[crit_type]
+      new_desc << ", Crit: #{crit_name}"
+    end
+    
+    damage_type_names = []
+    item["Effects"].names.each_with_index do |bit_name, i|
+      break if i >= 16 # We don't want to display the special bits, like "Is a red soul" for example
+      
+      if ["Lightning", "Electric"].include?(bit_name) # This name is too long
+        bit_name = "Elec"
+      end
+      
+      if item["Effects"][i]
+        damage_type_names << bit_name
+      end
+    end
+    if damage_type_names.any?
+      new_desc << "\\nElements: #{damage_type_names.join(", ")}"
+    end
+    
+    description.decoded_string = new_desc
+  end
+  
+  def update_skill_description(skill)
+    return unless options[:revise_item_descriptions]
+    
+    if GAME == "dos" && skill["Type"] >= 2
+      # Yellow or ability soul.
+      return
+    end
+    if GAME == "por" && skill["Type"] == 3
+      # Relic.
+      return
+    end
+    
+    description = game.text_database.text_list[skill.description_text_id]
+    
+    new_desc = ""
+    
+    new_desc << "DMG: #{skill["DMG multiplier"]}"
+    
+    if GAME == "por"
+      new_desc << ", MP: #{skill["Mana cost"]}"
+    end
+    
+    if GAME == "por" && skill["Type"] == 0
+      is_spell = skill["??? bitfield"][2]
+      if is_spell
+        skill_extra_data = game.items[skill.index+0x150+0x6C]
+        charge_time = skill_extra_data["Max at once/Spell charge"] >> 4
+        charge_time_in_seconds = (charge_time/60.0).round(1)
+        new_desc << ", Charge: #{charge_time_in_seconds}s"
+      end
+    end
+    
+    if GAME == "ooe" && skill.item_type_name == "Arm Glyphs"
+      union_type = skill["?/Swings/Union"] >> 2
+      union_type_name = WEAPON_SUPER_ANIM_NAMES[union_type]
+      new_desc << ", Union: #{union_type_name}"
+    end
+    
+    damage_type_names = []
+    skill["Effects"].names.each_with_index do |bit_name, i|
+      break if i >= 16 # We don't want to display the special bits, like "Is a red soul" for example
+      
+      if ["Lightning", "Electric"].include?(bit_name) # This name is too long
+        bit_name = "Elec"
+      end
+      
+      if skill["Effects"][i]
+        damage_type_names << bit_name
+      end
+    end
+    if damage_type_names.any?
+      if GAME == "dos"
+        # Soul descriptions don't have very much room, so we have to cut out the word "Elements".
+        new_desc << "\\n"
+      else
+        new_desc << "\\nElements: "
+      end
+      new_desc << "#{damage_type_names.join(", ")}\\n"
+    end
+    
+    description.decoded_string = new_desc
   end
   
   def ooe_handle_glyph_tiers

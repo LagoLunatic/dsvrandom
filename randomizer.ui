@@ -523,19 +523,6 @@
           <string>All Games</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="unlock_all_modes">
-            <property name="toolTip">
-             <string>Unlocks alternate modes that normally require you to beat the main game first.</string>
-            </property>
-            <property name="text">
-             <string>Unlock all modes</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="reveal_bestiary">
             <property name="toolTip">
@@ -559,13 +546,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="remove_area_names">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="unlock_all_modes">
             <property name="toolTip">
-             <string>Removes the area names that appear on screen when you first enter an area.</string>
+             <string>Unlocks alternate modes that normally require you to beat the main game first.</string>
             </property>
             <property name="text">
-             <string>Remove area names</string>
+             <string>Unlock all modes</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -589,6 +576,32 @@
             </property>
             <property name="text">
              <string>Reveal breakable walls</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="remove_area_names">
+            <property name="toolTip">
+             <string>Removes the area names that appear on screen when you first enter an area.</string>
+            </property>
+            <property name="text">
+             <string>Remove area names</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="revise_item_descriptions">
+            <property name="toolTip">
+             <string>Updates all weapon, armor, and skill descriptions to indicate what their randomized attributes are.</string>
+            </property>
+            <property name="text">
+             <string>Revise Item Descriptions</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -953,6 +966,7 @@
   <tabstop>reveal_breakable_walls</tabstop>
   <tabstop>reveal_bestiary</tabstop>
   <tabstop>remove_area_names</tabstop>
+  <tabstop>revise_item_descriptions</tabstop>
   <tabstop>fix_luck</tabstop>
   <tabstop>no_touch_screen</tabstop>
   <tabstop>unlock_boss_doors</tabstop>

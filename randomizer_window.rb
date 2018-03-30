@@ -41,6 +41,7 @@ class RandomizerWindow < Qt::Dialog
     reveal_breakable_walls
     reveal_bestiary
     remove_area_names
+    revise_item_descriptions
     fix_luck
     no_touch_screen
     unlock_boss_doors

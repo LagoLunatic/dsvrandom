@@ -6,6 +6,42 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = []
 
+WEAPON_SWING_ANIM_NAMES = {
+  0x00 => "Fast stab",
+  0x01 => "Slash",
+  0x02 => "Slash",
+  0x03 => "Greatsword",
+  0x04 => "Spear",
+  0x05 => "Axe",
+  0x06 => "Mace",
+  0x07 => "Punch",
+  0x08 => "Whip",
+  0x09 => "Book",
+}
+
+WEAPON_SUPER_ANIM_NAMES = {
+  0x00 => "None",
+  0x01 => "Lunge",
+  0x02 => "Fast lunge",
+  0x03 => "Backstab",
+  0x04 => "Warp jump",
+  0x05 => "Triple",
+  0x06 => "???",
+  0x07 => "Ice breath",
+  0x08 => "Fire breath",
+  0x09 => "Nebula",
+  0x0A => "Flaming",
+  0x0B => "Fast 5x",
+  0x0C => "Warp jump",
+  0x0D => "Warp all over",
+  0x0E => "Tackle",
+  0x0F => "Spin Kick",
+  0x10 => "Combo",
+  0x11 => "Martial Art",
+  0x12 => "Spinning Art",
+  0x13 => "Running Axe",
+}
+
 MAGICAL_TICKET_GLOBAL_ID = 0x45
 
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x09, 0x18, 0x24, 0x38, 0x49, 0x68]
