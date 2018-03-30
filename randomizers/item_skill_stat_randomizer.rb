@@ -179,6 +179,16 @@ module ItemSkillStatRandomizer
               possible_special_effects -= [5, 7]
             end
             
+            # Nebula effect only activates when the weapon animation reaches keyframe index 9.
+            weapon_gfx = WeaponGfx.new(item["Sprite"], game.fs)
+            sprite = Sprite.new(weapon_gfx.sprite_file_pointer, game.fs)
+            if sprite.animations[0] && sprite.animations[0].frame_delays.size >= 10
+              # This sprite's first animation has at least 10 frames so the Nebula effect would work.
+            else
+              # This sprite's first animation doesn't exist or has less than 10 frames. Nebula effect would never activate.
+              possible_special_effects -= [1]
+            end
+            
             item["Special Effect"] = possible_special_effects.sample(random: rng)
             
             if [5, 7].include?(item["Special Effect"])
