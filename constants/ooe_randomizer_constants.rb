@@ -85,7 +85,7 @@ PATH_BLOCKING_BREAKABLE_WALLS = [
 MAGICAL_TICKET_X_POS_OFFSET = 0x02037B10
 MAGICAL_TICKET_Y_POS_OFFSET = 0x02037B04
 
-BGM_SONG_INDEXES = [
+BGM_RANDO_AVAILABLE_SONG_INDEXES = [
   0x0E, # An Empty Tome
   0x0E, # An Empty Tome
   0x10, # Malak's Labyrinth
@@ -118,6 +118,14 @@ BGM_SONG_INDEXES = [
   0x09, # Unholy Vespers
   0x02, # Chapel Hidden in Smoke
   0x2D, # Lone Challenger
+  0x35, # Vampire Killer
+  0x36, # Stalker
+  0x37, # Wicked Child
+  0x38, # Walking on the Edge
+  0x39, # Heart of Fire
+  0x3A, # Out of Time
+  0x3B, # Nothing to Lose
+  0x3C, # Black Night
 ]
 
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {

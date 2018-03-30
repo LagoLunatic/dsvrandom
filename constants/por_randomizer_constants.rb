@@ -106,16 +106,18 @@ BGM_RANDO_AVAILABLE_SONG_INDEXES = [
   0x04, # The Gears Go Awry
   0x05, # Gaze Up at the Darkness
   0x10, # Overture
-  0x22, # Faraway Days
   0x0F, # Troubled Times
   0x07, # Victorian Fear
   0x0C, # Iron Blue Intention
   0x06, # Hail from the Past
   0x0A, # Sandfall
+  0x0B, # In Search of the Secret Spell
   0x09, # The Hidden Curse
   0x0E, # Crucifix Held Close
   0x08, # Chaotic Playground
   0x0D, # Behind the Gaze
+  0x18, # Bloodlines Bequeathed
+  0x24, # Simon's Theme
 ]
 
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {

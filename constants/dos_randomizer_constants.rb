@@ -84,13 +84,10 @@ BGM_RANDO_AVAILABLE_SONG_INDEXES = [
   0x15, # Vampire Killer
   0x13, # Cursed Clock Tower
   0x16, # The Pinnacle
-  0x18, # The Abyss
-  0x18, # The Abyss
-  0x18, # The Abyss
-  0x18, # The Abyss
-  0x00, # The Beginning
-  0x00, # The Beginning
   0x17, # Underground Melodies
+  0x18, # The Abyss
+  0x00, # The Beginning
+  0x01, # Bloody Tears
 ]
 
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
