@@ -6,14 +6,41 @@ module DialogueRandomizer
     markov = Markov.new(rng)
     
     events = game.text_database.text_list[TEXT_REGIONS["Events"]]
+    intro_text = game.text_database.text_list[INTRO_TEXT_ID]
+    events -= [intro_text]
     
-    events.each do |text|
+    # Build the markov chain's dictionary.
+    (events + [intro_text]).each do |text|
       lines = text.decoded_string.gsub(/\\n/, "").split(/\{[^}]+\}/)
       lines.each do |line|
         markov.parse_string(line)
       end
     end
     
+    # Randomize scrolling intro text.
+    if GAME == "ooe"
+      num_intro_lines = 30
+    else
+      num_intro_lines = 10
+    end
+    if GAME == "por"
+      intro_max_line_length = 36
+    else
+      intro_max_line_length = 40
+    end
+    new_intro_lines = []
+    num_intro_lines.times do
+      sentence = markov.generate_sentence()
+      wordwrapped_sentence_lines = word_wrap_string(sentence, intro_max_line_length)
+      new_intro_lines += wordwrapped_sentence_lines
+    end
+    new_intro_text = new_intro_lines.join("\\n")
+    if GAME == "ooe"
+      new_intro_text += "\\n"*13
+    end
+    intro_text.decoded_string = new_intro_text
+    
+    # Randomize event dialogue.
     events.each do |text|
       new_lines = []
       
@@ -27,9 +54,7 @@ module DialogueRandomizer
           # Generate a new line of dialogue.
           sentence = markov.generate_sentence()
           
-          # Wordwrap.
-          max_line_length = 40
-          wordwrapped_sentence_lines = sentence.scan(/\S.{0,#{max_line_length-2}}\S(?=\s|$)|\S+/)
+          wordwrapped_sentence_lines = word_wrap_string(sentence)
           
           # If the new line takes up more than 3 lines, it won't fit on screen.
           # So we need to break it up into multiple lines that the player can click through.
@@ -37,7 +62,7 @@ module DialogueRandomizer
           
           new_line = groups_of_3_lines.join("{WAITINPUT}{SAMECHAR}")
           
-          new_lines << new_line + "\\n\n"
+          new_lines << new_line + "\\n"
         end
       end
       
@@ -45,6 +70,10 @@ module DialogueRandomizer
     end
     
     game.text_database.write_to_rom()
+  end
+  
+  def word_wrap_string(string, max_line_length=40)
+    return string.scan(/\S.{0,#{max_line_length-2}}\S(?=\s|$)|\S+/)
   end
 end
 

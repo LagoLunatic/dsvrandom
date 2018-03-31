@@ -73,6 +73,8 @@ PATH_BLOCKING_BREAKABLE_WALLS = [] # All breakable walls are path blocking in Do
 MAGICAL_TICKET_X_POS_OFFSET = 0x02308920+0x2C
 MAGICAL_TICKET_Y_POS_OFFSET = 0x02308920+0x30
 
+INTRO_TEXT_ID = 0x4A6
+
 BGM_RANDO_AVAILABLE_SONG_INDEXES = [
   0x0D, # Pitch Black Intrusion
   0x11, # Demon Guest House
