@@ -22,6 +22,7 @@ require_relative 'randomizers/enemy_anim_speed_randomizer'
 require_relative 'randomizers/red_wall_randomizer'
 require_relative 'randomizers/map_randomizer'
 require_relative 'randomizers/cosmetic/bgm_randomizer'
+require_relative 'randomizers/cosmetic/dialogue_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -42,7 +43,9 @@ class Randomizer
   include EnemyAnimSpeedRandomizer
   include RedWallRandomizer
   include MapRandomizer
+  
   include BgmRandomizer
+  include DialogueRandomizer
   
   attr_reader :options,
               :seed,
@@ -962,6 +965,13 @@ class Randomizer
       yield [options_completed, "Randomizing BGM..."]
       reset_rng()
       randomize_bgm()
+      options_completed += 1
+    end
+    
+    if options[:randomize_dialogue]
+      yield [options_completed, "Randomizing dialogue..."]
+      reset_rng()
+      randomize_dialogue()
       options_completed += 1
     end
     

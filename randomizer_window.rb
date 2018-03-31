@@ -62,6 +62,7 @@ class RandomizerWindow < Qt::Dialog
     summons_gain_extra_exp
     
     randomize_bgm
+    randomize_dialogue
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {

@@ -1,0 +1,131 @@
+
+module DialogueRandomizer
+  # TODO: The intro scrolling text needs more than 1 sentence
+  
+  def randomize_dialogue
+    markov = Markov.new(rng)
+    
+    events = game.text_database.text_list[TEXT_REGIONS["Events"]]
+    
+    events.each do |text|
+      lines = text.decoded_string.gsub(/\\n/, "").split(/\{[^}]+\}/)
+      lines.each do |line|
+        markov.parse_string(line)
+      end
+    end
+    
+    events.each do |text|
+      new_lines = []
+      
+      text.decoded_string.split(/((?:\{[^}]+\})+)/).each do |line|
+        next if line.length == 0
+        
+        if line.start_with?("{")
+          # Line of commands. Keep it exactly as it was.
+          new_lines << line
+        else
+          # Generate a new line of dialogue.
+          sentence = markov.generate_sentence()
+          
+          # Wordwrap.
+          max_line_length = 40
+          wordwrapped_sentence_lines = sentence.scan(/\S.{0,#{max_line_length-2}}\S(?=\s|$)|\S+/)
+          
+          # If the new line takes up more than 3 lines, it won't fit on screen.
+          # So we need to break it up into multiple lines that the player can click through.
+          groups_of_3_lines = wordwrapped_sentence_lines.each_slice(3).map{|three_lines| three_lines.join("\\n\n")}
+          
+          new_line = groups_of_3_lines.join("{WAITINPUT}{SAMECHAR}")
+          
+          new_lines << new_line + "\\n\n"
+        end
+      end
+      
+      text.decoded_string = new_lines.join
+    end
+    
+    game.text_database.write_to_rom()
+  end
+end
+
+class Markov
+  attr_reader :dictionary,
+              :capitalized_words,
+              :rng
+  
+  def initialize(rng)
+    @dictionary = {}
+    @capitalized_words = []
+    @rng = rng
+    @depth = 2
+  end
+  
+  def parse_string(string)
+    # Adds a string to the dictionary.
+    
+    # Remove parentheses, square brackets, and double dashes.
+    string = string.gsub(/\(|\)|\[|\]|--/, "")
+    sentences = string.split(/(?<=[.!?])\s+/)
+    sentences.each do |sentence|
+      sentence = sentence.strip
+      
+      words = sentence.split(/\s+|(\.\.\.)|(\.)|([!?])/)
+      if words.last !~ /[.!?]$/
+        # Make sure the last word of every sentence is punctuation.
+        words << "."
+      end
+      
+      words.each_cons(@depth+1) do |words|
+        prev_words = words[0..-2]
+        word = words[-1]
+        
+        self.add_word(prev_words, word)
+      end
+    end
+  end
+  
+  def add_word(prev_words, word)
+    @dictionary[prev_words] ||= []
+    @dictionary[prev_words] << word
+    if prev_words[0][0] =~ /[A-Z]/
+      capitalized_words << prev_words
+    end
+  end
+  
+  def generate_sentence
+    sentence = []
+    max_length = 30
+    
+    sentence += capitalized_words.sample(random: rng)
+    while sentence.length < max_length
+      if sentence.last =~ /[.!?]$/
+        # Sentence is punctuated.
+        break
+      end
+      
+      prev_words = sentence.last(@depth)
+      word = get_random_word(prev_words)
+      
+      if word =~ /[.!?]$/
+        # Append punctuation to the last word of the sentence instead of making it a separate word.
+        punctuated_final_word = sentence[-1].dup
+        if punctuated_final_word[-1] == ","
+          # Remove trailing comma before adding the punctuation.
+          punctuated_final_word = punctuated_final_word[0..-2]
+        end
+        sentence[-1] = punctuated_final_word + word
+        break
+      else
+        sentence << word
+      end
+    end
+    
+    return sentence.join(" ")
+  end
+  
+  def get_random_word(prev_words)
+    possible_words = @dictionary[prev_words]
+    
+    word = possible_words.sample(random: rng)
+  end
+end

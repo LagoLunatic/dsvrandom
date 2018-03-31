@@ -528,8 +528,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>436</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -881,6 +881,13 @@
              <widget class="QCheckBox" name="randomize_bgm">
               <property name="text">
                <string>Randomize BGM</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_dialogue">
+              <property name="text">
+               <string>Randomize Dialogue</string>
               </property>
              </widget>
             </item>
