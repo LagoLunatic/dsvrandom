@@ -324,10 +324,16 @@ module ItemSkillStatRandomizer
       end
       
       skill.write_to_rom()
-      update_skill_description(skill)
     end
     
     ooe_handle_glyph_tiers()
+    
+    # Must update the skill descriptions after the glyph families have been reordered.
+    SKILL_GLOBAL_ID_RANGE.each do |skill_global_id|
+      skill = game.items[skill_global_id]
+      
+      update_skill_description(skill)
+    end
   end
   
   def randomize_weapon_behavior(item, item_global_id)
@@ -1010,7 +1016,7 @@ module ItemSkillStatRandomizer
           end
         end
         
-        prev_tier_damage_types = skill["Effects"]
+        prev_tier_damage_types = skill["Effects"].dup
         
         skill.write_to_rom()
       end
