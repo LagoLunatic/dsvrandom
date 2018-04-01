@@ -658,8 +658,6 @@ module ItemSkillStatRandomizer
           end
         end
         
-        skill_extra_data["Price (1000G)"] = (named_rand_range_weighted(:skill_price_range)/1000.0).to_f
-        
         skill_extra_data.write_to_rom()
       end
     when "ooe"

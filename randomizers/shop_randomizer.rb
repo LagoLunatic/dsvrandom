@@ -84,5 +84,14 @@ module ShopRandomizer
       
       item.write_to_rom()
     end
+    
+    # Also randomize PoR skill prices.
+    if GAME == "por"
+      (0x150..0x1A0).each do |skill_global_id|
+        skill_extra_data = game.items[skill_global_id+0x6C]
+        skill_extra_data["Price (1000G)"] = (named_rand_range_weighted(:skill_price_range)/1000.0).to_i
+        skill_extra_data.write_to_rom()
+      end
+    end
   end
 end
