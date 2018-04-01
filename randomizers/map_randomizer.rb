@@ -805,6 +805,9 @@ module MapRandomizer
         end
       end
       
+      # If the room we just placed has subrooms, handle marking those subrooms as unreachable or not.
+      # Note that this piece of code only marks one subroom as reachable (the one containing the door we connected this room off of).
+      # If other subrooms besides that main one also got connected to existing doors due to chance, then this code will mark them as unreachable - but the next piece of code below this one will handle unmarking them as unreachable.
       inside_door_str_used_to_attach = chosen_room_position[:inside_door_str_used_to_attach]
       subrooms_in_room = checker.subrooms_doors_only[room.room_str]
       if subrooms_in_room
@@ -822,7 +825,10 @@ module MapRandomizer
         end
       end
       
-      # We also need to delete any unreachable subroom doors that we can now reach by placing this last room.
+      # We also need to delete any other unreachable subroom doors that are now reachable.
+      # There are two ways this can happen:
+      # 1. The room we just placed connected itself off of a subroom that was previously unreachable (common).
+      # 2. The room we just placed is the room with subrooms, and it coincidentally got placed in such a way that more than one of its subrooms is connected from the get-go (uncommon).
       unreachable_subroom_doors.delete_if do |unreachable_subroom_door_str|
         unreachable_subroom_door = game.door_by_str(unreachable_subroom_door_str)
         containing_room = unreachable_subroom_door.room
@@ -845,7 +851,7 @@ module MapRandomizer
         next if x < 0 || x >= map_width || y < 0 || y >= map_height
         
         dest_door = find_matching_dest_door_on_map(containing_room, unreachable_subroom_door.direction, map_spots, map_width, map_height, x, y)
-        if dest_door && room.doors.include?(dest_door)
+        if dest_door
           true
         else
           false
