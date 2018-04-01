@@ -834,9 +834,9 @@ module ItemSkillStatRandomizer
       end
     end
     if resistance_names.any?
-      new_desc << "Resist: #{resistance_names.join(", ")}\\n"
+      new_desc << "Resist: #{resistance_names.join(", ")}"
     else
-      new_desc << "No resistances.\\n"
+      new_desc << "No resistances."
     end
     
     description.decoded_string = new_desc
@@ -956,7 +956,7 @@ module ItemSkillStatRandomizer
       else
         new_desc << "\\nElements: "
       end
-      new_desc << "#{damage_type_names.join(", ")}\\n"
+      new_desc << "#{damage_type_names.join(", ")}"
     end
     
     description.decoded_string = new_desc
