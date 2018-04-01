@@ -1,7 +1,5 @@
 
 module DialogueRandomizer
-  # TODO: The intro scrolling text needs more than 1 sentence
-  
   def randomize_dialogue
     markov = Markov.new(rng)
     

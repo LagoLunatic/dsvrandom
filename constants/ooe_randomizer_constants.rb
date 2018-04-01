@@ -6,7 +6,7 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
   (0xD7..0xE4).to_a + # no-damage medals
   [0xAE, 0xB6, 0xD6] # usable items with a hardcoded effect for quests
 
-ITEMS_WITH_OP_HARDCODED_EFFECT = [0x123, 0x149] # death ring
+ITEMS_WITH_OP_HARDCODED_EFFECT = [0x123, 0x149] # queen of hearts, death ring
 
 WEAPON_SWING_ANIM_NAMES = {
   0x00 => "Fast",
