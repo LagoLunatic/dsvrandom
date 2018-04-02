@@ -1234,7 +1234,27 @@ module DoorRandomizer
       raise "Door #{door.door_str} has no gaps."
     end
     
-    tiles_in_biggest_gap = gaps.max_by{|tiles| tiles.length}
+    size_of_biggest_gap = gaps.max_by{|tiles| tiles.length}.length
+    possible_biggest_gaps = gaps.select{|tiles| tiles.length == size_of_biggest_gap}
+    if possible_biggest_gaps.size == 1
+      tiles_in_biggest_gap = possible_biggest_gaps.first
+    else
+      # There are multiple gaps that are all the biggest size.
+      # We need to get the centermost gap.
+      center_position_of_screen = case door.direction
+      when :left, :right
+        (SCREEN_HEIGHT_IN_TILES-1)/2.0
+      when :up, :down
+        (SCREEN_WIDTH_IN_TILES-1)/2.0
+      end
+      
+      centermost_gap = gaps.min_by do |tiles|
+        gap_center_position = tiles.inject(0){|sum, tile| sum + tile[:i]}.to_f / tiles.size
+        (center_position_of_screen - gap_center_position).abs
+      end
+      
+      tiles_in_biggest_gap = centermost_gap
+    end
     first_tile_i = tiles_in_biggest_gap.first[:i]
     last_tile_i = tiles_in_biggest_gap.last[:i]
     
