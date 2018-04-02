@@ -1063,11 +1063,6 @@ class Randomizer
         end
       end
       
-      # Modify the level design of the drawbridge room so you can go up and down even when the drawbridge is closed.
-      filename = "./dsvrandom/roomedits/dos_room_rando_00-00-15.tmx"
-      room = game.areas[0].sectors[0].rooms[0x15]
-      tiled.read(filename, room)
-      
       # Change regular Gergoth's code to act like boss rush Gergoth and not break the floor.
       # (We can't just use boss rush Gergoth himself because he wakes up whenever you're in the room, even if you're in a lower part of the tower.)
       game.fs.load_overlay(36)
@@ -1642,6 +1637,16 @@ class Randomizer
       room = game.room_by_str("00-0B-23")
       game.fs.write(0x02024C9C, [room.room_xpos_on_map].pack("C"))
       game.fs.write(0x02024CA4, [room.room_ypos_on_map].pack("C"))
+    end
+    
+    if GAME == "dos"
+      # Make the drawbridge stay permanently down once the player has lowered it.
+      game.apply_armips_patch("dos_drawbridge_stays_down")
+      
+      # And also modify the level design of the drawbridge room so you can go up and down even when the drawbridge is closed.
+      filename = "./dsvrandom/roomedits/dos_room_rando_00-00-15.tmx"
+      room = game.areas[0].sectors[0].rooms[0x15]
+      tiled.read(filename, room)
     end
     
     if options[:remove_area_names]
