@@ -551,10 +551,10 @@ module PickupRandomizer
     remaining_locations = checker.get_accessible_locations() - @locations_randomized_to_have_useful_pickups
     remaining_locations.shuffle!(random: rng)
     
-    # In room rando, we want to do the accessible locations first.
-    # But we also want to place nonprogression stuff in the inaccessible locations just in case the player manages to reach an item in an inaccessible room or subroom somehow, we wouldn't want there to be a vanilla progression item there.
+    # In room rando, some items may be unreachable.
+    # We don't want the player to see these items in a different subroom and think the randomizer is bugged, so we delete them.
     inaccessible_remaining_locations = checker.all_locations.keys - @locations_randomized_to_have_useful_pickups - remaining_locations
-    remaining_locations += inaccessible_remaining_locations
+    remove_inaccessible_items(inaccessible_remaining_locations)
     
     if GAME == "ooe"
       # Do event glyphs first. This is so they don't reuse a glyph already used by a glyph statue.
@@ -1183,6 +1183,20 @@ module PickupRandomizer
         entity.y_pos -= 0x20
       end
       
+      entity.write_to_rom()
+    end
+  end
+  
+  def remove_inaccessible_items(inaccessible_remaining_locations)
+    inaccessible_remaining_locations.each do |location|
+      entity = get_entity_by_location_str(location)
+      
+      if checker.event_locations.include?(location) || entity.type == 1
+        # Don't delete inaccessible events/bosses, just in case.
+        next
+      end
+      
+      entity.type = 0
       entity.write_to_rom()
     end
   end
