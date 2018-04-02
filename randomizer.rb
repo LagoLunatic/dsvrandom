@@ -23,6 +23,7 @@ require_relative 'randomizers/red_wall_randomizer'
 require_relative 'randomizers/map_randomizer'
 require_relative 'randomizers/cosmetic/bgm_randomizer'
 require_relative 'randomizers/cosmetic/dialogue_randomizer'
+require_relative 'randomizers/cosmetic/enemy_sprite_randomizer'
 
 class Randomizer
   include PickupRandomizer
@@ -46,6 +47,7 @@ class Randomizer
   
   include BgmRandomizer
   include DialogueRandomizer
+  include EnemySpriteRandomizer
   
   attr_reader :options,
               :seed,
@@ -860,6 +862,13 @@ class Randomizer
       yield [options_completed, "Randomizing enemy stats..."]
       reset_rng()
       randomize_enemy_stats()
+      options_completed += 1
+    end
+    
+    if options[:randomize_enemy_sprites]
+      yield [options_completed, "Randomizing enemy sprites..."]
+      reset_rng()
+      randomize_enemy_sprites()
       options_completed += 1
     end
     

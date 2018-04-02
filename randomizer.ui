@@ -880,14 +880,25 @@
             <item>
              <widget class="QCheckBox" name="randomize_bgm">
               <property name="text">
-               <string>Randomize BGM</string>
+               <string>BGM</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_dialogue">
               <property name="text">
-               <string>Randomize Dialogue</string>
+               <string>Dialogue</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_21">
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_sprites">
+              <property name="text">
+               <string>Enemy Sprites (Experimental)</string>
               </property>
              </widget>
             </item>
