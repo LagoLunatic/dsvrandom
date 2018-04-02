@@ -1583,6 +1583,15 @@ class Randomizer
       end
     end
     
+    if GAME == "ooe" && !options[:randomize_skill_stats]
+      # If skill damage isn't randomized, buff familiar summons to 5x vanilla damage so they're not completely useless.
+      (0x47..0x4D).each do |skill_global_id|
+        skill = game.items[skill_global_id]
+        skill["DMG multiplier"] *= 5
+        skill.write_to_rom()
+      end
+    end
+    
     if options[:name_unnamed_skills]
       game.fix_unnamed_skills()
     end
