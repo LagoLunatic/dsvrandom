@@ -1570,6 +1570,19 @@ class Randomizer
       game.fs.write(0x0207D438, [64].pack("C"))
     end
     
+    if GAME == "por" && !options[:randomize_skill_behavior]
+      # If the SP needed to master subweapons isn't randomized, reduce it to 1/4 vanilla so it's more attainable in a run.
+      (0x150..0x1A0).each do |skill_global_id|
+        skill = game.items[skill_global_id]
+        is_spell = skill["??? bitfield"][2]
+        next if is_spell
+        
+        skill_extra_data = game.items[skill_global_id+0x6C]
+        skill_extra_data["SP to Master"] /= 4
+        skill_extra_data.write_to_rom()
+      end
+    end
+    
     if options[:name_unnamed_skills]
       game.fix_unnamed_skills()
     end
