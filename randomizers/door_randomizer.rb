@@ -1056,6 +1056,16 @@ module DoorRandomizer
         right_door.dest_y_2 = right_door_dest_y_offset
       end
       
+      # If the door is very tiny and the player must slide through it, then the player would get softlocked if the door was connected to a boss door on the other side.
+      # This is because control is taken away from the player and the automatic walk AI isn't smart enough to slide to get out of the gap. (The boss cutscene removes the player's momentum, so even if the player entered the room sliding it wouldn't work.)
+      # So we warp the player just slightly past the wall on the other side so sliding to get out isn't necessary.
+      if left_tiles_in_biggest_gap.size <= 2
+        left_door.dest_x_2 -= 0x10
+      end
+      if right_tiles_in_biggest_gap.size <= 2
+        right_door.dest_x_2 += 0x10
+      end
+      
       # If the gaps are not the same size we need to block off part of the bigger gap so that they are the same size.
       # Otherwise the player could enter a room inside a solid wall, and get thrown out of bounds.
       if left_tiles_in_biggest_gap.size < right_tiles_in_biggest_gap.size
