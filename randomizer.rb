@@ -674,9 +674,12 @@ class Randomizer
     if GAME == "dos"
       # Remove the enemy and the entity hider hiding that enemy during the intro cutscene from the first room of the vanilla game.
       # These two just cause more problems than they're worth - the hider can hide starting items, the enemy can hit you as soon as you enter the room, etc.
-      vanilla_starting_room = game.room_by_str("00-00-01")
-      vanilla_starting_room.entities.slice!(0xB, 2)
-      vanilla_starting_room.write_entities_to_rom()
+      entity_hider = game.entity_by_str("00-00-01_0B")
+      entity_hider.type = 0
+      entity_hider.write_to_rom()
+      enemy = game.entity_by_str("00-00-01_0C")
+      enemy.type = 0
+      enemy.write_to_rom()
     end
     
     if GAME == "dos"
@@ -1147,6 +1150,11 @@ class Randomizer
             # This is an entity hider. In DoS, entity hiders always remove all remaining entities in the room.
             if entity_index == room.entities.size - 1
               # If the entity hider is the last entity in the room we just remove it entirely since it's not doing anything and we can't have it remove 0 entities.
+              entity.type = 0
+              entity.write_to_rom()
+            elsif room.room_str == "00-01-20"
+              # Mini-Paranoia room. This hides the item inside Mini-Paranoia's mirror until Paranoia is dead.
+              # We remove this so the item appears always.
               entity.type = 0
               entity.write_to_rom()
             else

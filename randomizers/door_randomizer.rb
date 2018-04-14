@@ -950,7 +950,21 @@ module DoorRandomizer
           new_boss_door.var_a = 0
           new_boss_door.var_b = boss_index
           
-          dest_room.entities << new_boss_door
+          # Usually we insert at the end of the list so we don't mess up the indexes of any items in the room.
+          index_to_insert_at = dest_room.entities.size
+          
+          # But for DoS, if the room has entity hiders, we need to insert the boss doors before the first entity hider. Otherwise the door will be hiden.
+          # This is fine, because in DoS no items appear after entity hiders in any room entity lists.
+          # (One exception: Mini-Paranoia's item is hidden by an entity hider in vanilla. But we delete his entity hider, so that doesn't count.)
+          if GAME == "dos"
+            entity_hider = dest_room.entities.find{|e| e.type == 6}
+            if entity_hider
+              entity_hider_index = dest_room.entities.index(entity_hider)
+              index_to_insert_at = entity_hider_index
+            end
+          end
+          
+          dest_room.entities.insert(index_to_insert_at, new_boss_door)
           dest_room.write_entities_to_rom()
         end
       end
