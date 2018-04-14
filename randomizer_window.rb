@@ -694,6 +694,8 @@ class RandomizerWindow < Qt::Dialog
       end
     elsif difficulty =~ /Custom/
       # Custom difficulty.
+      difficulty_level_changed(0)
+      
       custom_difficulty_options = {}
       on_difficulty_options = false
       text.each_line do |line|
