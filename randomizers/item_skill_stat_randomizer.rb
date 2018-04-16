@@ -487,8 +487,10 @@ module ItemSkillStatRandomizer
       damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
     end
     
-    # Add extra bits.
-    damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+    if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+      # 10% chance to add an extra bit.
+      damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [1])
+    end
     
     item["Effects"].names.each_with_index do |bit_name, i|
       if damage_types_to_set.include?(bit_name)
@@ -714,8 +716,10 @@ module ItemSkillStatRandomizer
       damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][8,8], [1])
     end
     
-    # Add extra bits.
-    damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+    if damage_types_to_set.length < 4 && rng.rand() <= 0.10
+      # 10% chance to add an extra bit.
+      damage_types_to_set += get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][16,16], [1])
+    end
     
     skill["Effects"].names.each_with_index do |bit_name, i|
       if bit_name == "Cures vampirism & kills undead"
@@ -878,18 +882,8 @@ module ItemSkillStatRandomizer
       new_desc << ", Crit: #{crit_name}"
     end
     
-    damage_type_names = []
-    item["Effects"].names.each_with_index do |bit_name, i|
-      break if i >= 16 # We don't want to display the special bits, like "Is a red soul" for example
-      
-      if ["Lightning", "Electric"].include?(bit_name) # This name is too long
-        bit_name = "Elec"
-      end
-      
-      if item["Effects"][i]
-        damage_type_names << bit_name
-      end
-    end
+    damage_type_names = get_elements_list_for_descriptions(item["Effects"])
+    
     if damage_type_names.any?
       new_desc << "\\nElements: #{damage_type_names.join(", ")}"
     end
@@ -935,18 +929,8 @@ module ItemSkillStatRandomizer
       new_desc << ", Union: #{union_type_name}"
     end
     
-    damage_type_names = []
-    skill["Effects"].names.each_with_index do |bit_name, i|
-      break if i >= 16 # We don't want to display the special bits, like "Is a red soul" for example
-      
-      if ["Lightning", "Electric"].include?(bit_name) # This name is too long
-        bit_name = "Elec"
-      end
-      
-      if skill["Effects"][i]
-        damage_type_names << bit_name
-      end
-    end
+    damage_type_names = get_elements_list_for_descriptions(skill["Effects"])
+    
     if damage_type_names.any?
       if GAME == "dos"
         # Soul descriptions don't have very much room, so we have to cut out the word "Elements".
@@ -958,6 +942,30 @@ module ItemSkillStatRandomizer
     end
     
     description.decoded_string = new_desc
+  end
+  
+  def get_elements_list_for_descriptions(effects_bitfield)
+    damage_type_names = []
+    
+    effects_bitfield.names.each_with_index do |bit_name, i|
+      if i >= 16 && bit_name != "Cures vampirism & kills undead"
+        # Don't want to display the special bits, like "Is a red soul", with undead killing being the only exception
+        next
+      end
+      
+      if ["Lightning", "Electric"].include?(bit_name) # This name is too long
+        bit_name = "Elec"
+      end
+      if bit_name == "Cures vampirism & kills undead"
+        bit_name = "Red"
+      end
+      
+      if effects_bitfield[i]
+        damage_type_names << bit_name
+      end
+    end
+    
+    return damage_type_names
   end
   
   def ooe_handle_glyph_tiers
