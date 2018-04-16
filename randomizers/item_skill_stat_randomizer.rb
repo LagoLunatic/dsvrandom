@@ -617,46 +617,53 @@ module ItemSkillStatRandomizer
       if (0x150..0x1A0).include?(skill_global_id)
         skill_extra_data = game.items[skill_global_id+0x6C]
         
-        unless progress_skill
+        if progress_skill
+          max_at_once = (skill_extra_data["Max at once/Spell charge"] & 0xF)
+        else
           max_at_once = named_rand_range_weighted(:skill_max_at_once_range)
-          is_spell = skill["??? bitfield"][2]
-          if is_spell
+        end
+        
+        is_spell = skill["??? bitfield"][2]
+        if is_spell
+          if progress_skill
+            charge_time = (skill_extra_data["Max at once/Spell charge"] >> 4)
+          else
             charge_time = named_rand_range_weighted(:spell_charge_time_range)
-            skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
+          end
+          skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
+          skill_extra_data["SP to Master"] = 0
+        else
+          mastered_bonus_max_at_once = rand_range_weighted(1..6)
+          skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
+          
+          nonoffensive_skills = [
+            "Puppet Master",
+            "Gnebu",
+            "Stonewall",
+            "Offensive Form",
+            "Defensive Form",
+            "Taunt",
+            "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
+            "Toad Morph",
+            "Owl Morph",
+            "Sanctuary",
+            "Berserker",
+            "Clear Skies",
+            "Time Stop",
+            "Heal",
+            "Cure Poison",
+            "Cure Curse",
+            "STR Boost",
+            "CON Boost",
+            "INT Boost",
+            "MIND Boost",
+            "LUCK Boost",
+            "ALL Boost",
+          ]
+          if nonoffensive_skills.include?(skill.name)
             skill_extra_data["SP to Master"] = 0
           else
-            mastered_bonus_max_at_once = rand_range_weighted(1..6)
-            skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
-            
-            nonoffensive_skills = [
-              "Puppet Master",
-              "Gnebu",
-              "Stonewall",
-              "Offensive Form",
-              "Defensive Form",
-              "Taunt",
-              "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
-              "Toad Morph",
-              "Owl Morph",
-              "Sanctuary",
-              "Berserker",
-              "Clear Skies",
-              "Time Stop",
-              "Heal",
-              "Cure Poison",
-              "Cure Curse",
-              "STR Boost",
-              "CON Boost",
-              "INT Boost",
-              "MIND Boost",
-              "LUCK Boost",
-              "ALL Boost",
-            ]
-            if nonoffensive_skills.include?(skill.name)
-              skill_extra_data["SP to Master"] = 0
-            else
-              skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
-            end
+            skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
           end
         end
         
