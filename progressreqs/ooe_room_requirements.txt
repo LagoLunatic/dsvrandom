@@ -96,8 +96,9 @@ No glyph locations:
   - 11-00-09_00
   - 12-00-07_00
 No progression locations:
-  - 00-06-1C_01
-  - 12-00-08_00
+  - 00-06-1C_01 # Generator puzzle from mechanical tower
+  - 08-02-06_01 # Tin Man summoned by the searchlights
+  - 12-00-08_00 # Falling block puzzle
 Warp connections:
   # none
 World map exits:
@@ -1929,7 +1930,11 @@ Rooms:
     e00-003: 
   08-02-06:
     000-001: 
+    000-e01: # Must kill Tin Man
     001-000: 
+    001-e01: 
+    e01-000: 
+    e01-001: 
   08-02-07:
     000-e02: 
     e02-000: 

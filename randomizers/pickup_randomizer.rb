@@ -575,6 +575,9 @@ module PickupRandomizer
       elsif ["dos", "por"].include?(GAME) && (checker.event_locations.include?(location) || checker.easter_egg_locations.include?(location))
         # Event item
         pickup_global_id = get_unplaced_non_progression_item()
+      elsif GAME == "ooe" && location == "08-02-06_01"
+        # Tin man's strength ring blue chest. Can't be a glyph.
+        pickup_global_id = get_unplaced_non_progression_item_that_can_be_an_arm_shifted_immediate()
       elsif GAME == "dos" && checker.mirror_locations.include?(location)
         # Soul candles shouldn't be placed in mirrors, as they will appear even outside the mirror.
         pickup_global_id = get_unplaced_non_progression_item()
@@ -680,6 +683,14 @@ module PickupRandomizer
       # Don't let events give you items in OoE.
       locations -= checker.event_locations
     end
+    if GAME == "ooe" && !ITEM_GLOBAL_ID_RANGE.include?(pickup_global_id)
+      # Glyphs/villagers can't be in the special blue chest spawned by the searchlights when you kill a Tin Man.
+      locations -= ["08-02-06_01"]
+    end
+    if GAME == "ooe" && (!pickup_global_id.is_a?(Integer) || !game.fs.check_integer_can_be_an_arm_shifted_immediate?(pickup_global_id))
+      # The pickup ID is a hardcoded arm shifted immediate for the special blue chest spawned by the searchlights when you kill a Tin Man.
+      locations -= ["08-02-06_01"]
+    end
     if GAME == "ooe" && (0x6F..0x74).include?(pickup_global_id)
       # Don't let relics be inside breakable walls in OoE.
       # This is because they need to be inside a chest, and chests can't be hidden.
@@ -767,6 +778,12 @@ module PickupRandomizer
     return get_unplaced_non_progression_pickup(valid_ids: ITEM_GLOBAL_ID_RANGE.to_a)
   end
   
+  def get_unplaced_non_progression_item_that_can_be_an_arm_shifted_immediate
+    valid_ids = ITEM_GLOBAL_ID_RANGE.to_a
+    valid_ids.select!{|item_id| game.fs.check_integer_can_be_an_arm_shifted_immediate?(item_id)}
+    return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
+  end
+  
   def get_unplaced_non_progression_skill
     return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a)
   end
@@ -821,7 +838,13 @@ module PickupRandomizer
       return
     end
     
-    if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+    if GAME == "ooe" && location == "08-02-06_01" # Strength Ring blue chest spawned by the searchlights after you kill the Tin Man
+      if entity.var_a != 2
+        raise "Searchlights are not of type 2 (Tin Man spawn)"
+      end
+      
+      game.fs.replace_arm_shifted_immediate_integer(0x022A194C, pickup_global_id+1)
+    elsif RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
       # Villager
       
       if GAME != "ooe"

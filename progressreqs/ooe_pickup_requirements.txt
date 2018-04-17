@@ -436,6 +436,9 @@ Rooms:
   08-02-05:
     room: mineraend
     00 (Falcis): 
+  08-02-06:
+    room: mineraend
+    01 (Strength Ring) (No progression): # Must kill Tin Man
   08-02-07:
     room: mineraend
     02 (Glyph Sleeve): 
