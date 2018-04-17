@@ -1037,6 +1037,11 @@ class Randomizer
     end
     
     if GAME == "ooe"
+      # Fixes a crash that happens if you exit the Lighthouse and enter Kalidus without having entered Kalidus before the Lighthouse.
+      game.apply_armips_patch("ooe_fix_kalidus_back_entrance_crash")
+    end
+    
+    if GAME == "ooe"
       # We need to unset the prerequisite event flag for certain events manually.
       # The ooe_nonlinear patch does this but we might already have those rooms cached by now in memory so the changes won't get read in correctly.
       # Also, we unset these event flags even if the nonlinear option is off just in case the player sequence breaks the game somehow.
