@@ -645,6 +645,7 @@ class Randomizer
       # For OoE we sometimes need pickup flags for when a glyph statue gets randomized into something that's not a glyph statue.
       @unused_pickup_flags = (0x71..0x15F).to_a
       # Pickup flags 160-16D and 170-17D exist but are used by no-damage blue chests so we don't use those. 16E, 16F, 17E, and 17F could probably be used by the randomizer safely but currently are not.
+      use_pickup_flag(0xB5) # Pickup flag for the Strength Ring chest.
     end
     
     if GAME == "por" && !options[:randomize_portraits] && room_rando?
