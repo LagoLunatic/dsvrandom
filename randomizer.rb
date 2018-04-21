@@ -710,15 +710,17 @@ class Randomizer
         # Always start with Lizard Tail, Call Cube, Skill Cube, and possibly Change Cube.
         # Even if the player technically could reach the vanilla location, they could be very far away on some seeds.
         add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+        checker.add_item(0x1B2) # Lizard Tail
         
         add_bonus_item_to_starting_room(0x1AD) # Call Cube
+        checker.add_item(0x1AD) # Call Cube
         
         add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+        checker.add_item(0x1AE) # Skill Cube
         
         if options[:dont_randomize_change_cube]
           add_bonus_item_to_starting_room(0x1AC) # Change Cube
-        else
-          checker.add_item(0x1AE) # Skill Cube
+          checker.add_item(0x1AC) # Change Cube
         end
       when "ooe"
         if options[:randomize_starting_room]
