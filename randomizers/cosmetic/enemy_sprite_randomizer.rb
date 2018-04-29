@@ -2,6 +2,7 @@
 module EnemySpriteRandomizer
   def randomize_enemy_sprites
     sprite_info_locations_for_enemy = {}
+    already_checked_create_codes = []
     COMMON_ENEMY_IDS.each do |enemy_id|
       next if OVERLAY_FILE_FOR_ENEMY_AI[enemy_id] # probably skeletally animated
       if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
@@ -14,12 +15,25 @@ module EnemySpriteRandomizer
       reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
       overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
       ptr_to_ptr_to_files_to_load = ENEMY_FILES_TO_LOAD_LIST + enemy_id*4
-      result = find_gfx_and_palette_and_sprite_locations_in_create_code(
+      result_hash = find_gfx_and_palette_and_sprite_locations_in_create_code(
         enemy["Create Code"],
         game.fs, overlay_to_load,
         reused_info, ptr_to_ptr_to_files_to_load
       )
-      sprite_info_locations_for_enemy[enemy_id] = result
+      
+      is_reused_enemy = sprite_info_locations_for_enemy.any? do |enemy_id, other_hash|
+        result_hash[:line_that_called_func]   == other_hash[:line_that_called_func]   ||
+        result_hash[:location_of_gfx_ptr]     == other_hash[:location_of_gfx_ptr]     ||
+        result_hash[:location_of_palette_ptr] == other_hash[:location_of_palette_ptr] ||
+        result_hash[:location_of_sprite_ptr]  == other_hash[:location_of_sprite_ptr]
+      end
+      if is_reused_enemy
+        puts "Enemy is reused, skipping"
+        puts
+        next
+      end
+      
+      sprite_info_locations_for_enemy[enemy_id] = result_hash
       puts
     end
     
