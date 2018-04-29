@@ -178,4 +178,26 @@ module EnemyStatRandomizer
       enemy_dna.write_to_rom()
     end
   end
+  
+  def update_hardcoded_enemy_attributes
+    # Updates some stats hardcoded by certain enemies.
+    
+    case GAME
+    when "por"
+      enemy_id = 0x90
+      death = game.enemy_dnas[enemy_id]
+      game.fs.load_overlay(OVERLAY_FILE_FOR_ENEMY_AI[enemy_id])
+      phys_def = death["Physical Defense"]
+      mag_def = death["Magical Defense"]
+      
+      game.fs.write(0x022DB348, [mag_def].pack("C")) # Phys def in purple form
+      game.fs.write(0x022DB344, [mag_def/2].pack("C")) # Phys def in purple form for richter/old axe armor hard mode
+      game.fs.write(0x022DB368, [phys_def].pack("C")) # Mag def in purple form
+      game.fs.write(0x022D7B5C, [mag_def].pack("C")) # Phys def in purple form
+      game.fs.write(0x022D7B58, [mag_def/2].pack("C")) # Phys def in purple form for richter/old axe armor hard mode
+      game.fs.write(0x022D7B7C, [phys_def].pack("C")) # Mag def in purple form
+      game.fs.write(0x022DB2DC, [phys_def].pack("C")) # Phys def in white form
+      game.fs.write(0x022DB2F0, [mag_def].pack("C")) # Mag def in white form
+    end
+  end
 end

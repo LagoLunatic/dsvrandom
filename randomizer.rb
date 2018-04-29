@@ -1696,6 +1696,8 @@ class Randomizer
       center_bosses_for_room_rando()
     end
     
+    update_hardcoded_enemy_attributes()
+    
     if needs_infinite_magical_tickets?
       room_rando_give_infinite_magical_tickets()
     end
