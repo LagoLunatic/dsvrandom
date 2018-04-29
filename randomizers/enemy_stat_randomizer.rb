@@ -127,6 +127,16 @@ module EnemyStatRandomizer
       weakness_names = all_non_status_elements.sample(num_weaknesses, random: rng)
       resist_names = all_non_status_elements.sample(num_resists, random: rng)
       
+      # Don't allow an enemy to both be weak to and resist the same element.
+      # Random 50% chance whether we will make it weak or resist.
+      (weakness_names & resist_names).each do |element|
+        if rng.rand < 0.5
+          weakness_names.delete(element)
+        else
+          resist_names.delete(element)
+        end
+      end
+      
       [
         "Weaknesses",
         "Resistances",
