@@ -184,7 +184,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_enemy_stats">
               <property name="toolTip">
-               <string>Randomizes enemy stats, weaknesses, and resistances.</string>
+               <string>Randomizes enemy attack, defense, HP, EXP given, and other stats.</string>
               </property>
               <property name="text">
                <string>Enemy Stats</string>
@@ -198,6 +198,20 @@
               </property>
               <property name="text">
                <string>Enemy Animation Speed</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_20">
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_tolerances">
+              <property name="toolTip">
+               <string>Randomizes enemy elemental weaknesses and resistances.</string>
+              </property>
+              <property name="text">
+               <string>Enemy Tolerances</string>
               </property>
              </widget>
             </item>
@@ -539,8 +553,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>590</width>
+            <height>465</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -1024,6 +1038,7 @@
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>randomize_enemy_anim_speed</tabstop>
+  <tabstop>randomize_enemy_tolerances</tabstop>
   <tabstop>randomize_equipment_stats</tabstop>
   <tabstop>randomize_consumable_behavior</tabstop>
   <tabstop>randomize_weapon_behavior</tabstop>

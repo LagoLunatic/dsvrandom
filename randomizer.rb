@@ -872,6 +872,13 @@ class Randomizer
       options_completed += 1
     end
     
+    if options[:randomize_enemy_tolerances]
+      yield [options_completed, "Randomizing enemy tolerances..."]
+      reset_rng()
+      randomize_enemy_tolerances()
+      options_completed += 1
+    end
+    
     if options[:randomize_enemy_sprites]
       yield [options_completed, "Randomizing enemy sprites..."]
       reset_rng()
