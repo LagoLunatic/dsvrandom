@@ -575,7 +575,7 @@ module ItemSkillStatRandomizer
     
     if GAME == "por" && skill["Type"] == 0
       skills_that_must_be_used_by_original_player = [
-        "Puppet Master",
+        "Puppet Master", # Charlotte can use it but the timing would be different due to charging it up
         "Stonewall",
         "Gnebu",
         "Wrecking Ball",

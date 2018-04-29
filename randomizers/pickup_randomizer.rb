@@ -1352,7 +1352,7 @@ module PickupRandomizer
         game.fs.write(0x021CBC18, [item_index].pack("C"))
       end
       
-      # Item name shown in the corner of the when watching the event screen
+      # Item name shown in the corner of the screen when watching the event.
       game.fs.write(0x021CBA08, [item_type].pack("C"))
       game.fs.write(0x021CBA0C, [item_index].pack("C"))
       # Also display the item's name in the corner when skipping the event.

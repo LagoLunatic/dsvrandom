@@ -92,7 +92,7 @@ A: You can activate the moving platform in the long room at right side of Wizard
 
 Q: Why can I charge spells in midair sometimes?
 
-A: One of the things the Skill Stats/Behavior option does is randomly allowing skills to be used in midair that normally only work on the ground.
+A: One of the things the Skill Behavior randomization option does is randomly allowing skills to be used in midair that normally only work on the ground. This can happen regardless of whether Jonathan or Charlotte gets the spell.
 
 Q: In vanilla DoS, getting ability souls out of order (like Doppelganger before Balore) gives multiple abilities for the price of one. But this doesn't seem to work in the randomizer?
 
