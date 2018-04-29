@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>668</height>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -429,6 +429,17 @@
               </property>
               <property name="text">
                <string>Skill Sprites</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_21">
+            <item>
+             <widget class="QCheckBox" name="randomize_enemy_sprites">
+              <property name="text">
+               <string>Enemy Sprites</string>
               </property>
              </widget>
             </item>
@@ -893,17 +904,6 @@
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_21">
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_sprites">
-              <property name="text">
-               <string>Enemy Sprites (Experimental)</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
@@ -1043,6 +1043,7 @@
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_skill_sprites</tabstop>
+  <tabstop>randomize_enemy_sprites</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>
@@ -1073,6 +1074,8 @@
   <tabstop>always_dowsing</tabstop>
   <tabstop>gain_extra_attribute_points</tabstop>
   <tabstop>summons_gain_extra_exp</tabstop>
+  <tabstop>randomize_bgm</tabstop>
+  <tabstop>randomize_dialogue</tabstop>
   <tabstop>paste_seed_info_field</tabstop>
   <tabstop>read_seed_info_button</tabstop>
  </tabstops>
