@@ -2,7 +2,7 @@
 module EnemySpriteRandomizer
   def randomize_enemy_sprites
     sprite_info_locations_for_enemy = {}
-    already_checked_create_codes = []
+    orig_enemy_id_to_reused_enemy_ids = {}
     COMMON_ENEMY_IDS.each do |enemy_id|
       next if OVERLAY_FILE_FOR_ENEMY_AI[enemy_id] # probably skeletally animated
       if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
@@ -21,13 +21,17 @@ module EnemySpriteRandomizer
         reused_info, ptr_to_ptr_to_files_to_load
       )
       
-      is_reused_enemy = sprite_info_locations_for_enemy.any? do |enemy_id, other_hash|
+      orig_enemy = sprite_info_locations_for_enemy.find do |enemy_id, other_hash|
         result_hash[:line_that_called_func]   == other_hash[:line_that_called_func]   ||
         result_hash[:location_of_gfx_ptr]     == other_hash[:location_of_gfx_ptr]     ||
         result_hash[:location_of_palette_ptr] == other_hash[:location_of_palette_ptr] ||
         result_hash[:location_of_sprite_ptr]  == other_hash[:location_of_sprite_ptr]
       end
-      if is_reused_enemy
+      if orig_enemy
+        orig_enemy_id, _ = orig_enemy
+        orig_enemy_id_to_reused_enemy_ids[orig_enemy_id] ||= []
+        orig_enemy_id_to_reused_enemy_ids[orig_enemy_id] << enemy_id
+        
         puts "Enemy is reused, skipping"
         puts
         next
@@ -58,7 +62,15 @@ module EnemySpriteRandomizer
       other_enemy = game.enemy_dnas[other_enemy_id]
       puts "Gave %02X #{enemy.name} the sprite of %02X #{other_enemy.name}" % [enemy_id, other_enemy_id]
       
+      # Update which files this enemy loads
       game.fs.write(ENEMY_FILES_TO_LOAD_LIST + enemy_id*4, [other_pointer_to_files_to_load].pack("V"))
+      
+      # Also update the files loaded by any reused versions of this enemy
+      if orig_enemy_id_to_reused_enemy_ids[enemy_id]
+        orig_enemy_id_to_reused_enemy_ids[enemy_id].each do |reused_enemy_id|
+          game.fs.write(ENEMY_FILES_TO_LOAD_LIST + reused_enemy_id*4, [other_pointer_to_files_to_load].pack("V"))
+        end
+      end
       
       game.fs.write(location_of_gfx_ptr, [other_gfx_ptr].pack("V"))
       game.fs.write(location_of_palette_ptr, [other_palette_ptr].pack("V"))
