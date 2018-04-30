@@ -1235,6 +1235,11 @@ class Randomizer
       game.apply_armips_patch("ooe_fix_lighthouse_other_entrances")
     end
     
+    if options[:randomize_enemy_sprites]
+      # Add a new function to load multi-gfx sprites that has the same function signature as the one that loads single-gfx sprites.
+      game.apply_armips_patch("#{GAME}_custom_load_sprite_func")
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]

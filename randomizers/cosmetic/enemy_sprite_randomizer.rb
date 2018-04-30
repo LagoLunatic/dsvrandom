@@ -85,7 +85,7 @@ module EnemySpriteRandomizer
       game.fs.write(location_of_sprite_ptr, [other_sprite_ptr].pack("V"))
       
       if other_is_multi_gfx
-        load_sprite_func_to_use = LOAD_SPRITE_MULTI_GFX_FUNC_PTR
+        load_sprite_func_to_use = CUSTOM_LOAD_SPRITE_MULTI_GFX_FUNC_PTR
       else
         load_sprite_func_to_use = LOAD_SPRITE_SINGLE_GFX_FUNC_PTR
       end
