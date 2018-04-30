@@ -10,8 +10,16 @@ module EnemySpriteRandomizer
         next
       end
       
-      puts "enemy ID: %02X" % enemy_id
       enemy = game.enemy_dnas[enemy_id]
+      
+      if GAME == "ooe"
+        sprite_info = enemy.extract_gfx_and_palette_and_sprite_from_init_ai
+        if sprite_info.skeleton_file # skeletally animated
+          next
+        end
+      end
+      
+      puts "enemy ID: %02X" % enemy_id
       reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
       overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
       ptr_to_ptr_to_files_to_load = ENEMY_FILES_TO_LOAD_LIST + enemy_id*4
