@@ -274,6 +274,11 @@ module EnemyRandomizer
   def get_common_enemies_in_room(room)
     enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
     
+    if GAME == "por"
+      enemies_in_room += room.entities.select do |e|
+         e.is_enemy? && e.subtype == 0x94 && e.var_a == 0 # Count The Creature as a common enemy
+      end
+    end
     if GAME == "ooe"
       enemies_in_room += room.entities.select do |e|
          e.is_enemy? && e.subtype == 0x6B && e.var_a == 0 # Count Giant Skeleton as a common enemy
