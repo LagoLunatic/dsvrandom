@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>697</height>
+    <height>765</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -554,7 +554,7 @@
             <x>0</x>
             <y>0</y>
             <width>590</width>
-            <height>465</height>
+            <height>478</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -987,6 +987,22 @@
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="option_description">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>

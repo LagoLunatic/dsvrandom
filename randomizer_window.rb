@@ -149,6 +149,8 @@ class RandomizerWindow < Qt::Dialog
     
     OPTIONS.each do |option_name|
       connect(@ui.send(option_name), SIGNAL("clicked(bool)"), self, SLOT("update_settings()"))
+      
+      @ui.send(option_name).installEventFilter(self)
     end
     
     connect(@ui.experimental_options_enabled, SIGNAL("clicked(bool)"), self, SLOT("experimental_enabled_changed(bool)"))
@@ -167,6 +169,18 @@ class RandomizerWindow < Qt::Dialog
     self.resize(640, 1)
     
     self.show()
+  end
+  
+  def eventFilter(target, event)
+    if event.type() == Qt::Event::Enter
+      @ui.option_description.text = target.toolTip()
+      return true
+    elsif event.type() == Qt::Event::Leave
+      @ui.option_description.text = ""
+      return true
+    end
+    
+    super(target, event)
   end
   
   def load_settings
