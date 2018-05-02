@@ -633,6 +633,12 @@ module MapRandomizer
               room_doors.select!{|door| ["00-05-07_000", "00-05-07_001"].include?(door.door_str)}
             end
             
+            if GAME == "ooe" && room.room_str == "03-00-01"
+              # The tall room in Training Hall.
+              # We only want this to be connected by the topmost door, so that the item is accessible.
+              room_doors.select!{|door| ["03-00-01_000"].include?(door.door_str)}
+            end
+            
             room_doors_to_attach = room_doors.select{|door| door.direction == direction}
             if room_doors_to_attach.empty?
               next
