@@ -848,6 +848,12 @@ module EnemyRandomizer
         return :redo
       end
     when "Tin Man"
+      y = coll.get_nonsolid_y_upwards(enemy)
+      if y.nil?
+        # No gap at or above the Tin Man. He would be stuck inside the wall, which crashes the game.
+        return :redo
+      end
+      
       # If Tin Man is placed on a 1-tile-wide jump-through-platform he will crash the game because his AI isn't sure where to put him.
       # So move him downwards to the nearest *solid* floor to prevent this.
       y = coll.get_floor_y(enemy, allow_jumpthrough: false)
@@ -964,6 +970,19 @@ class RoomCollision
     end
     
     return chosen_x
+  end
+  
+  def get_nonsolid_y_upwards(entity)
+    x = entity.x_pos
+    chosen_y = nil
+    (0..entity.y_pos).step(0x10).reverse_each do |y|
+      if !self[x,y].is_solid?
+        chosen_y = y
+        break
+      end
+    end
+    
+    return chosen_y
   end
   
   def all_floor_positions
