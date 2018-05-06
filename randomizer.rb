@@ -1284,9 +1284,23 @@ class Randomizer
     if GAME == "dos"
       # Remove the event where Yoko talks to you outside Flying Armor's room.
       # This event can look weird and make the player think the game has softlocked if the player views it after killing Flying Armor.
-      event = game.entity_by_str("00-00-0E_09")
-      event.type = 0
-      event.write_to_rom()
+      room = game.room_by_str("00-00-0E")
+      [9, 0xA, 0xB].each do |entity_index| # Event, font loader, and entity hider
+        entity = room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+    end
+    
+    if GAME == "dos"
+      # Remove the event with Celia, Julius and Arikado in Cursed Clock Tower.
+      # This event is useless, and it can softlock if the map randomizer blocks off the left wall because that prevents Arikado from leaving the room.
+      room = game.room_by_str("00-08-1E")
+      [2, 3, 4].each do |entity_index| # Event, font loader, and entity hider
+        entity = room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
     end
     
     if options[:randomize_boss_souls] && GAME == "dos"
