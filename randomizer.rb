@@ -1695,9 +1695,12 @@ class Randomizer
     if GAME == "dos" && options[:randomize_rooms_map_friendly]
       # Remove the cutscene where Yoko gives you a magic seal in the drawbridge room for map rando.
       # This cutscene puts you in the topleft door - but that door might be removed and blocked off in map rando, in which case the player will be put out of bounds.
-      drawbridge_event = game.entity_by_str("00-00-15_09")
-      drawbridge_event.type = 0
-      drawbridge_event.write_to_rom()
+      room = game.room_by_str("00-00-15")
+      [9, 0xC, 0xD].each do |entity_index| # Event, font loader, and entity hider
+        entity = room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
     end
     
     if options[:remove_area_names]
