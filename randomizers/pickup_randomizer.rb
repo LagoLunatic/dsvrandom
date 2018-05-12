@@ -780,7 +780,7 @@ module PickupRandomizer
   
   def get_unplaced_non_progression_item_that_can_be_an_arm_shifted_immediate
     valid_ids = ITEM_GLOBAL_ID_RANGE.to_a
-    valid_ids.select!{|item_id| game.fs.check_integer_can_be_an_arm_shifted_immediate?(item_id)}
+    valid_ids.select!{|item_id| game.fs.check_integer_can_be_an_arm_shifted_immediate?(item_id+1)}
     return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
   end
   
