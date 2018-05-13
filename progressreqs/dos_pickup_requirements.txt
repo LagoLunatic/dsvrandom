@@ -452,7 +452,7 @@ Rooms:
     01 (Hippogryph): 
   00-0B-0B:
     room: abyss & medium height
-    01 (Magus Ring): height
+    01 (Chaos Ring): height
   00-0B-13:
     room: bossabaddon
     00 (Abaddon) (Enemy): 
