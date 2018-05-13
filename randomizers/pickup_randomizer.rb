@@ -1014,6 +1014,7 @@ module PickupRandomizer
         is_cog = true
       else
         pickup_flag = get_unused_pickup_flag_for_entity(entity)
+        is_cog = false
       end
       
       if pickup_global_id == :money
@@ -1084,7 +1085,9 @@ module PickupRandomizer
           @unused_pickup_flags << pickup_flag
         when "por"
           # Skill
-          unless entity.is_hidden_pickup?
+          if entity.is_hidden_pickup?
+            entity.type = 7
+          else
             entity.type = 4
           end
           entity.subtype = item_type
@@ -1094,7 +1097,9 @@ module PickupRandomizer
         end
       else
         # Item
-        unless entity.is_hidden_pickup?
+        if entity.is_hidden_pickup?
+          entity.type = 7
+        else
           entity.type = 4
         end
         entity.subtype = item_type
