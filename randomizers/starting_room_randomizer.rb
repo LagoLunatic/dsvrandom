@@ -145,6 +145,8 @@ module StartingRoomRandomizer
     @starting_x_pos = x_pos
     @starting_y_pos = y_pos
     
-    puts "Starting room selected: #{@starting_room.room_str}"
+    log_str = "Starting room: #{@starting_room.room_str}"
+    puts log_str
+    spoiler_log.puts log_str
   end
 end
