@@ -507,7 +507,8 @@ class RandomizerWindow < Qt::Dialog
     end
     
     if seed =~ /[^a-zA-Z0-9\-_']/
-      raise "Invalid seed. Seed can only have letters, numbers, dashes, underscores, and apostrophes in it."
+      Qt::MessageBox.critical(self, "Invalid seed", "Invalid seed. Seed can only have letters, numbers, dashes, underscores, and apostrophes in it.")
+      return
     end
     
     @settings[:seed] = seed
