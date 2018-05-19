@@ -636,6 +636,9 @@ class Randomizer
     when "dos"
       # For DoS we sometimes need pickup flags for when a soul candle gets randomized into something that's not a soul candle.
       @unused_pickup_flags = (1..0x7F).to_a
+      use_pickup_flag(0xA) # Strongman puzzle first reward
+      use_pickup_flag(0xE) # Strongman puzzle second reward
+      use_pickup_flag(0x11) # Strongman puzzle third reward
     when "por"
       # We don't need spare pickup flags for the pickup randomizer in PoR, but we do need it for the starting item randomizer.
       @unused_pickup_flags = (1..0x17F).to_a
@@ -646,6 +649,7 @@ class Randomizer
       @unused_pickup_flags = (0x71..0x15F).to_a
       # Pickup flags 160-16D and 170-17D exist but are used by no-damage blue chests so we don't use those. 16E, 16F, 17E, and 17F could probably be used by the randomizer safely but currently are not.
       use_pickup_flag(0xB5) # Pickup flag for the Strength Ring chest.
+      use_pickup_flag(0xB2) # This appears to be used by something hardcoded, though I can't find what it is.
     end
     
     if GAME == "por" && !options[:randomize_portraits] && room_rando?
