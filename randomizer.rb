@@ -1186,6 +1186,40 @@ class Randomizer
       end
     end
     
+    if GAME == "dos"
+      # Remove the event where Yoko talks to you outside Flying Armor's room.
+      # This event can look weird and make the player think the game has softlocked if the player views it after killing Flying Armor.
+      room = game.room_by_str("00-00-0E")
+      [9, 0xA, 0xB].each do |entity_index| # Event, font loader, and entity hider
+        entity = room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+    end
+    
+    if GAME == "dos"
+      # Remove the event with Celia, Julius and Arikado in Cursed Clock Tower.
+      # This event is useless, and it can softlock if the map randomizer blocks off the left wall because that prevents Arikado from leaving the room.
+      room = game.room_by_str("00-08-1E")
+      [2, 3, 4].each do |entity_index| # Event, font loader, and entity hider
+        entity = room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+    end
+    
+    if GAME == "dos" && options[:randomize_rooms_map_friendly]
+      # Remove the cutscene where Yoko gives you a magic seal in the drawbridge room for map rando.
+      # This cutscene puts you in the topleft door - but that door might be removed and blocked off in map rando, in which case the player will be put out of bounds.
+      room = game.room_by_str("00-00-15")
+      [9, 0xC, 0xD].each do |entity_index| # Event, font loader, and entity hider
+        # TODO: the entity indexes got shifted around beforehand, so this removes the wrong entity
+        entity = room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+    end
+    
     if GAME == "ooe" && options[:gain_extra_attribute_points]
       # Make every enemy give 100x more AP than normal.
       game.enemy_dnas.each do |enemy|
@@ -1283,28 +1317,6 @@ class Randomizer
       boss_door = game.areas[0].sectors[8].rooms[0xD].entities[1]
       boss_door.x_pos = 0xF0
       boss_door.write_to_rom()
-    end
-    
-    if GAME == "dos"
-      # Remove the event where Yoko talks to you outside Flying Armor's room.
-      # This event can look weird and make the player think the game has softlocked if the player views it after killing Flying Armor.
-      room = game.room_by_str("00-00-0E")
-      [9, 0xA, 0xB].each do |entity_index| # Event, font loader, and entity hider
-        entity = room.entities[entity_index]
-        entity.type = 0
-        entity.write_to_rom()
-      end
-    end
-    
-    if GAME == "dos"
-      # Remove the event with Celia, Julius and Arikado in Cursed Clock Tower.
-      # This event is useless, and it can softlock if the map randomizer blocks off the left wall because that prevents Arikado from leaving the room.
-      room = game.room_by_str("00-08-1E")
-      [2, 3, 4].each do |entity_index| # Event, font loader, and entity hider
-        entity = room.entities[entity_index]
-        entity.type = 0
-        entity.write_to_rom()
-      end
     end
     
     if options[:randomize_boss_souls] && GAME == "dos"
@@ -1694,17 +1706,6 @@ class Randomizer
       room = game.room_by_str("00-0B-23")
       game.fs.write(0x02024C9C, [room.room_xpos_on_map].pack("C"))
       game.fs.write(0x02024CA4, [room.room_ypos_on_map].pack("C"))
-    end
-    
-    if GAME == "dos" && options[:randomize_rooms_map_friendly]
-      # Remove the cutscene where Yoko gives you a magic seal in the drawbridge room for map rando.
-      # This cutscene puts you in the topleft door - but that door might be removed and blocked off in map rando, in which case the player will be put out of bounds.
-      room = game.room_by_str("00-00-15")
-      [9, 0xC, 0xD].each do |entity_index| # Event, font loader, and entity hider
-        entity = room.entities[entity_index]
-        entity.type = 0
-        entity.write_to_rom()
-      end
     end
     
     if options[:remove_area_names]
