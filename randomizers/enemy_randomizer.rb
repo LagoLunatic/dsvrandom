@@ -722,8 +722,10 @@ module EnemyRandomizer
       room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
       right_wall_x = coll.get_right_wall_x(enemy)
       left_wall_x = coll.get_left_wall_x(enemy)
-      right_wall_x = room_width - 0x40 if right_wall_x.nil?
-      left_wall_x = 0x40 if left_wall_x.nil?
+      if right_wall_x.nil? || left_wall_x.nil?
+        # Would have line of sight to a door, meaning they could shoot the player as soon as they walk in.
+        return :redo
+      end
       
       # Calculate the maximum distance these gunmen should be allowed to walk without going inside a wall.
       # Subtract a block since we don't want the gunman to be half inside the wall either.
