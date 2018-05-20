@@ -2,14 +2,140 @@
 module EnemyRandomizer
   MAX_ASSETS_PER_ROOM = 16
   
+  RESOURCE_INTENSIVE_ENEMY_NAMES = [
+    "Forneus",
+    "Spin Devil",
+    "Stolas",
+    "Necromancer",
+    "Mollusca",
+    "Giant Slug",
+    "Invisible Man",
+    "Quetzalcoatl",
+    "Ukoback",
+    "White Dragon",
+    "Bone Pillar",
+    "Fish Head",
+    "Bone Ark",
+    "Fleaman",
+    "Edimmu",
+  ]
+  
   attr_reader :coll
   
   def randomize_enemies
+    apply_tweaks_for_enemy_rando()
+    
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
       COMMON_ENEMY_IDS.include?(enemy_id)
     end
-    overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
+    @overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
     
+    build_entity_assets_lists()
+    
+    
+    enemy_rando_info_for_each_room, all_randomizable_enemy_locations = build_enemy_rando_info_list()
+    total_enemy_locations = all_randomizable_enemy_locations.length
+    
+    
+    locations_done = 0
+    all_randomizable_enemy_locations.shuffle!(random: rng)
+    all_randomizable_enemy_locations.each do |enemy|
+      room = enemy.room
+      room_info = enemy_rando_info_for_each_room[room.room_str]
+      enemies_in_room = room_info[:enemies_in_room]
+      @enemy_pool_for_room = room_info[:enemy_pool_for_room]
+      @num_spawners = room_info[:num_spawners]
+      @total_resource_intensive_enemies_in_room = room_info[:total_resource_intensive_enemies_in_room]
+      @assets_needed_for_room = room_info[:assets_needed_for_room]
+      @allowed_enemies_for_room = room_info[:allowed_enemies_for_room]
+      @coll = room_info[:coll]
+      remaining_new_room_difficulty = room_info[:remaining_new_room_difficulty]
+      max_allowed_enemy_attack = room_info[:max_allowed_enemy_attack]
+      on_first_enemy_of_room = room_info[:on_first_enemy_of_room]
+      
+      @allowed_enemies_for_room.select! do |enemy_id|
+        enemy_dna = game.enemy_dnas[enemy_id]
+        if enemy_dna["Attack"] <= @weak_enemy_attack_threshold
+          # Always allow weak enemies in the room.
+          true
+        elsif enemy_dna["Attack"] <= remaining_new_room_difficulty && enemy_dna["Attack"] <= max_allowed_enemy_attack
+          true
+        else
+          false
+        end
+      end
+      
+      # Remove enemies that would go over the asset cap.
+      asset_slots_left = MAX_ASSETS_PER_ROOM - @assets_needed_for_room.size
+      @allowed_enemies_for_room.select! do |enemy_id|
+        needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size
+        needed_assets_for_enemy <= asset_slots_left
+      end
+      
+      if @num_spawners >= @max_spawners_per_room
+        @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+        @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
+      end
+      
+      if on_first_enemy_of_room && enemies_in_room.length > 1
+        # We don't want the first enemy we place to be one that there can only be a limited number in a given room.
+        # This is because if this one enemy goes over the asset limit for the room, then we wouldn't have any enemies left to place: the same one we already placed would go over the limit per room, while any new one would go over the asset limit.
+        # If the total number of enemies in the room is 1 it doesn't matter.
+        limitable_enemy_ids = @resource_intensive_enemy_ids + SPAWNER_ENEMY_IDS
+        temporarily_removed_enemies = @allowed_enemies_for_room & limitable_enemy_ids
+        @allowed_enemies_for_room -= temporarily_removed_enemies
+      end
+      
+      randomize_enemy(enemy)
+      
+      if temporarily_removed_enemies
+        # Add back the limitable enemies now.
+        @allowed_enemies_for_room += temporarily_removed_enemies
+      end
+      
+      if SPAWNER_ENEMY_IDS.include?(enemy.subtype)
+        @num_spawners += 1
+      end
+      
+      enemy_dna = game.enemy_dnas[enemy.subtype]
+      remaining_new_room_difficulty -= enemy_dna["Attack"]
+      
+      assets = @assets_for_each_enemy[enemy.subtype]
+      @assets_needed_for_room += assets
+      @assets_needed_for_room.uniq!
+      
+      if @total_resource_intensive_enemies_in_room >= 2
+        # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
+        
+        @allowed_enemies_for_room -= @resource_intensive_enemy_ids
+        @enemy_pool_for_room -= @resource_intensive_enemy_ids
+      end
+      
+      
+      room_info[:enemy_pool_for_room] = @enemy_pool_for_room
+      room_info[:num_spawners] = @num_spawners
+      room_info[:total_resource_intensive_enemies_in_room] = @total_resource_intensive_enemies_in_room
+      room_info[:assets_needed_for_room] = @assets_needed_for_room
+      room_info[:allowed_enemies_for_room] = @allowed_enemies_for_room
+      room_info[:remaining_new_room_difficulty] = remaining_new_room_difficulty
+      room_info[:on_first_enemy_of_room] = false
+      
+      
+      locations_done += 1
+      percent_done = locations_done.to_f / total_enemy_locations
+      yield percent_done
+    end
+    
+    # Delete room-specific instance variables as they are no longer needed.
+    @enemy_pool_for_room = nil
+    @num_spawners = nil
+    @total_resource_intensive_enemies_in_room = nil
+    @assets_needed_for_room = nil
+    @allowed_enemies_for_room = nil
+    @coll = nil
+  end
+  
+  def build_entity_assets_lists
     if COMMON_SPRITE[:gfx_files]
       common_sprite_gfx_files = COMMON_SPRITE[:gfx_files]
     elsif COMMON_SPRITE[:gfx_wrapper]
@@ -48,26 +174,9 @@ module EnemyRandomizer
       end
     end
     @resource_intensive_enemy_ids = @skeletally_animated_enemy_ids.dup
-    resource_intensive_enemy_names = [
-      "Forneus",
-      "Spin Devil",
-      "Stolas",
-      "Necromancer",
-      "Mollusca",
-      "Giant Slug",
-      "Invisible Man",
-      "Quetzalcoatl",
-      "Ukoback",
-      "White Dragon",
-      "Bone Pillar",
-      "Fish Head",
-      "Bone Ark",
-      "Fleaman",
-      "Edimmu",
-    ]
     @resource_intensive_enemy_ids += ENEMY_IDS.select do |enemy_id|
       enemy_dna = game.enemy_dnas[enemy_id]
-      resource_intensive_enemy_names.include?(enemy_dna.name)
+      RESOURCE_INTENSIVE_ENEMY_NAMES.include?(enemy_dna.name)
     end
     
     @assets_for_each_special_object = {}
@@ -99,176 +208,126 @@ module EnemyRandomizer
       # Add the searchlight's assets to Mothman's assets since it will be placed alongside him.
       @assets_for_each_enemy[0x50] += @assets_for_each_special_object[0x4B]
     end
-    
-    if GAME == "dos"
-      # Remove a bunch of enemies from those two big rooms with about 25 enemies.
-      # Randomizing that many enemies in a single room always causes bugs, so just reduce the number to about 16.
-      big_chapel_room = game.room_by_str("00-04-15")
-      [0x12, 0x0D, 0x0E, 0x10, 0x16, 0x1A, 0x1D].each do |entity_index|
-        entity = big_chapel_room.entities[entity_index]
-        entity.type = 0
-        entity.write_to_rom()
-      end
-      
-      big_hell_room = game.room_by_str("00-06-17")
-      [0x1C, 0x1D, 0x19, 0x18, 0x15, 0x16, 0x0F, 0x1A, 0x17].each do |entity_index|
-        entity = big_hell_room.entities[entity_index]
-        entity.type = 0
-        entity.write_to_rom()
-      end
-    end
-    
-    total_rooms = 0
+  end
+  
+  def build_enemy_rando_info_list
+    enemy_rando_info_for_each_room = {}
+    all_randomizable_enemy_locations = []
     game.each_room do |room|
-      total_rooms += 1
-    end
-    rooms_done = 0
-    game.each_room do |room|
-      @enemy_pool_for_room = []
-      @num_spawners = 0
-      @total_resource_intensive_enemies_in_room = 0
-      @assets_needed_for_room = []
-      
-      enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
-      @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
-        overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
-        overlay.nil? || overlay == enemy_overlay_id_for_room
-      end
-      if GAME == "ooe"
-        @allowed_enemies_for_room << 0x6B # Count Giant Skeleton as a common enemy
-      end
-      
       enemies_in_room = get_common_enemies_in_room(room)
-      
       next if enemies_in_room.empty?
       
-      @coll = RoomCollision.new(room, game.fs)
+      all_randomizable_enemy_locations += enemies_in_room
       
-      objects_in_room = room.entities.select{|e| e.is_special_object?}
-      objects_in_room.each do |object|
-        assets = @assets_for_each_special_object[object.subtype]
-        #puts "OBJ: %02X, ASSETS: #{assets}" % object.subtype
-        @assets_needed_for_room += assets
-        @assets_needed_for_room.uniq!
-      end
+      allowed_enemies_for_room = build_initial_allowed_enemy_list_for_room(room)
       
-      if enemies_in_room.length >= 6
-        # Don't let cpu intensive enemies in rooms that have lots of enemies.
-        
-        @allowed_enemies_for_room -= @resource_intensive_enemy_ids
-      end
+      assets_needed_for_room = build_base_list_of_assets_for_room(room)
       
-      # Don't allow spawners in Nest of Evil/Large Cavern.
-      if (GAME == "por" && room.area_index == 9) || (GAME == "ooe" && room.area_index == 0xC)
-        @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
-      end
-      # Don't allow spawners in the train room.
-      if GAME == "por" && room.area_index == 2 && room.sector_index == 0 && room.room_index == 1
-        @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
-      end
-      # Don't allow Red Skeletons and Red Axe Armors in Nest of Evil since they can't be killed without certain weapons.
-      if GAME == "por" && room.area_index == 9
-        @allowed_enemies_for_room -= [0x1C, 0x46]
-      end
-      # Don't allow Blood Skeletons in Large Cavern since they can't be killed.
-      if GAME == "ooe" && room.area_index == 0xC
-        @allowed_enemies_for_room -= [0x4B]
-      end
-      # Don't allow Mimics in Large Cavern since they can't be opened there, for some unknown reason.
-      if GAME == "ooe" && room.area_index == 0xC
-        @allowed_enemies_for_room -= [0x4D]
-      end
+      collision_checker_for_room = RoomCollision.new(room, game.fs)
       
-      if room_rando? && options[:rebalance_enemies_in_room_rando] && @room_rando_enemy_difficulty_for_room[room.room_str]
-        hash = @room_rando_enemy_difficulty_for_room[room.room_str]
-        
-        original_room_difficulty = hash[:average_attack] * enemies_in_room.size
-        max_enemy_attack = hash[:max_enemy_attack]
-      else
-        # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
-        original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
-          enemy_dna = @original_enemy_dnas[enemy.subtype]
-          difficulty + enemy_dna["Attack"]
-        end
+      remaining_new_room_difficulty, max_allowed_enemy_attack = calculate_allowed_difficulty_and_max_attack_for_room(room)
       
-        max_enemy_attack = enemies_in_room.map do |enemy|
-          enemy_dna = @original_enemy_dnas[enemy.subtype]
-          enemy_dna["Attack"]
-        end.max
-      end
-      
-      # Only allow tough enemies in the room up to the original room's difficulty times a multiplier.
-      remaining_new_room_difficulty = original_room_difficulty*@difficulty_settings[:max_room_difficulty_mult]
-      
-      # Only allow enemies up to a certain multiplier higher than the strongest enemy in the original room.
-      max_allowed_enemy_attack = max_enemy_attack*@difficulty_settings[:max_enemy_difficulty_mult]
-      
-      enemies_in_room.shuffle(random: rng).each_with_index do |enemy, i|
-        @allowed_enemies_for_room.select! do |enemy_id|
-          enemy_dna = game.enemy_dnas[enemy_id]
-          if enemy_dna["Attack"] <= @weak_enemy_attack_threshold
-            # Always allow weak enemies in the room.
-            true
-          elsif enemy_dna["Attack"] <= remaining_new_room_difficulty && enemy_dna["Attack"] <= max_allowed_enemy_attack
-            true
-          else
-            false
-          end
-        end
-        
-        # Remove enemies that would go over the asset cap.
-        asset_slots_left = MAX_ASSETS_PER_ROOM - @assets_needed_for_room.size
-        @allowed_enemies_for_room.select! do |enemy_id|
-          needed_assets_for_enemy = @assets_for_each_enemy[enemy_id].size
-          needed_assets_for_enemy <= asset_slots_left
-        end
-        
-        if @num_spawners >= @max_spawners_per_room
-          @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
-          @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
-        end
-        
-        if i == 0 && enemies_in_room.length > 1
-          # We don't want the first enemy we place to be one that there can only be a limited number in a given room.
-          # This is because if this one enemy goes over the asset limit for the room, then we wouldn't have any enemies left to place: the same one we already placed would go over the limit per room, while any new one would go over the asset limit.
-          # If the total number of enemies in the room is 1 it doesn't matter.
-          limitable_enemy_ids = @resource_intensive_enemy_ids + SPAWNER_ENEMY_IDS
-          temporarily_removed_enemies = @allowed_enemies_for_room & limitable_enemy_ids
-          @allowed_enemies_for_room -= temporarily_removed_enemies
-        end
-        
-        randomize_enemy(enemy)
-        
-        if temporarily_removed_enemies
-          # Add back the limitable enemies now.
-          @allowed_enemies_for_room += temporarily_removed_enemies
-        end
-        
-        if SPAWNER_ENEMY_IDS.include?(enemy.subtype)
-          @num_spawners += 1
-        end
-        
-        enemy_dna = game.enemy_dnas[enemy.subtype]
-        remaining_new_room_difficulty -= enemy_dna["Attack"]
-        
-        assets = @assets_for_each_enemy[enemy.subtype]
-        @assets_needed_for_room += assets
-        @assets_needed_for_room.uniq!
-        
-        if @total_resource_intensive_enemies_in_room >= 2
-          # We don't want too many skeletally animated enemies on screen at once, as it takes up too much processing power.
-          
-          @allowed_enemies_for_room -= @resource_intensive_enemy_ids
-          @enemy_pool_for_room -= @resource_intensive_enemy_ids
-        end
-      end
-      
-      #puts "ASSETS: #{@assets_needed_for_room.size}, ROOM: %02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index] if @assets_needed_for_room.size > 10
-      
-      rooms_done += 1
-      percent_done = rooms_done.to_f / total_rooms
-      yield percent_done
+      enemy_rando_info_for_each_room[room.room_str] = {
+        enemies_in_room: enemies_in_room,
+        enemy_pool_for_room: [],
+        num_spawners: 0,
+        total_resource_intensive_enemies_in_room: 0,
+        assets_needed_for_room: assets_needed_for_room,
+        allowed_enemies_for_room: allowed_enemies_for_room,
+        coll: collision_checker_for_room,
+        remaining_new_room_difficulty: remaining_new_room_difficulty,
+        max_allowed_enemy_attack: max_allowed_enemy_attack,
+        on_first_enemy_of_room: true,
+      }
     end
+    
+    return [enemy_rando_info_for_each_room, all_randomizable_enemy_locations]
+  end
+  
+  def build_initial_allowed_enemy_list_for_room(room)
+    # Initialize the list of which enemies can be in this room.
+    enemy_overlay_id_for_room = @overlay_ids_for_common_enemies.sample(random: rng)
+    allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
+      overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+      overlay.nil? || overlay == enemy_overlay_id_for_room
+    end
+    if GAME == "ooe"
+      allowed_enemies_for_room << 0x6B # Count Giant Skeleton as a common enemy
+    end
+    enemies_in_room = get_common_enemies_in_room(room)
+    if enemies_in_room.length >= 6
+      # Don't let cpu intensive enemies in rooms that have lots of enemies.
+      
+      allowed_enemies_for_room -= @resource_intensive_enemy_ids
+    end
+    # Don't allow spawners in Nest of Evil/Large Cavern.
+    if (GAME == "por" && room.area_index == 9) || (GAME == "ooe" && room.area_index == 0xC)
+      allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+    end
+    # Don't allow spawners in the train room.
+    if GAME == "por" && room.area_index == 2 && room.sector_index == 0 && room.room_index == 1
+      allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
+    end
+    # Don't allow Red Skeletons and Red Axe Armors in Nest of Evil since they can't be killed without certain weapons.
+    if GAME == "por" && room.area_index == 9
+      allowed_enemies_for_room -= [0x1C, 0x46]
+    end
+    # Don't allow Blood Skeletons in Large Cavern since they can't be killed.
+    if GAME == "ooe" && room.area_index == 0xC
+      allowed_enemies_for_room -= [0x4B]
+    end
+    # Don't allow Mimics in Large Cavern since they can't be opened there, for some unknown reason.
+    if GAME == "ooe" && room.area_index == 0xC
+      allowed_enemies_for_room -= [0x4D]
+    end
+    
+    return allowed_enemies_for_room
+  end
+  
+  def build_base_list_of_assets_for_room(room)
+    # Builds a list of assets that always need to be loaded for this room regardless of what the enemies are randomized into.
+    
+    assets_needed_for_room = []
+    
+    objects_in_room = room.entities.select{|e| e.is_special_object?}
+    objects_in_room.each do |object|
+      assets = @assets_for_each_special_object[object.subtype]
+      #puts "OBJ: %02X, ASSETS: #{assets}" % object.subtype
+      assets_needed_for_room += assets
+      assets_needed_for_room.uniq!
+    end
+    
+    return assets_needed_for_room
+  end
+  
+  def calculate_allowed_difficulty_and_max_attack_for_room(room)
+    enemies_in_room = get_common_enemies_in_room(room)
+    
+    if room_rando? && options[:rebalance_enemies_in_room_rando] && @room_rando_enemy_difficulty_for_room[room.room_str]
+      hash = @room_rando_enemy_difficulty_for_room[room.room_str]
+      
+      original_room_difficulty = hash[:average_attack] * enemies_in_room.size
+      max_enemy_attack = hash[:max_enemy_attack]
+    else
+      # Calculate how difficult a room originally was by the sum of the Attack value of all enemies in the room.
+      original_room_difficulty = enemies_in_room.reduce(0) do |difficulty, enemy|
+        enemy_dna = @original_enemy_dnas[enemy.subtype]
+        difficulty + enemy_dna["Attack"]
+      end
+    
+      max_enemy_attack = enemies_in_room.map do |enemy|
+        enemy_dna = @original_enemy_dnas[enemy.subtype]
+        enemy_dna["Attack"]
+      end.max
+    end
+    
+    # Only allow tough enemies in the room up to the original room's difficulty times a multiplier.
+    remaining_new_room_difficulty = original_room_difficulty*@difficulty_settings[:max_room_difficulty_mult]
+    
+    # Only allow enemies up to a certain multiplier higher than the strongest enemy in the original room.
+    max_allowed_enemy_attack = max_enemy_attack*@difficulty_settings[:max_enemy_difficulty_mult]
+    
+    return [remaining_new_room_difficulty, max_allowed_enemy_attack]
   end
   
   def get_common_enemies_in_room(room)
@@ -918,6 +977,26 @@ module EnemyRandomizer
     when "Giant Skeleton"
       enemy.var_a = 0 # Common enemy Giant Skeleton.
       enemy.var_b = 0 # Faces the player when they enter the room.
+    end
+  end
+  
+  def apply_tweaks_for_enemy_rando
+    if GAME == "dos"
+      # Remove a bunch of enemies from those two big rooms with about 25 enemies.
+      # Randomizing that many enemies in a single room always causes bugs, so just reduce the number to about 16.
+      big_chapel_room = game.room_by_str("00-04-15")
+      [0x12, 0x0D, 0x0E, 0x10, 0x16, 0x1A, 0x1D].each do |entity_index|
+        entity = big_chapel_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
+      
+      big_hell_room = game.room_by_str("00-06-17")
+      [0x1C, 0x1D, 0x19, 0x18, 0x15, 0x16, 0x0F, 0x1A, 0x17].each do |entity_index|
+        entity = big_hell_room.entities[entity_index]
+        entity.type = 0
+        entity.write_to_rom()
+      end
     end
   end
 end
