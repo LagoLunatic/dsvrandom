@@ -37,6 +37,9 @@ module EnemyRandomizer
     total_enemy_locations = all_randomizable_enemy_locations.length
     
     
+    @unplaced_enemy_ids = COMMON_ENEMY_IDS.dup
+    
+    
     locations_done = 0
     all_randomizable_enemy_locations.shuffle!(random: rng)
     all_randomizable_enemy_locations.each do |enemy|
@@ -111,6 +114,8 @@ module EnemyRandomizer
         @enemy_pool_for_room -= @resource_intensive_enemy_ids
       end
       
+      @unplaced_enemy_ids.delete(enemy.subtype)
+      
       
       room_info[:enemy_pool_for_room] = @enemy_pool_for_room
       room_info[:num_spawners] = @num_spawners
@@ -133,6 +138,13 @@ module EnemyRandomizer
     @assets_needed_for_room = nil
     @allowed_enemies_for_room = nil
     @coll = nil
+    
+    if @unplaced_enemy_ids.any?
+      puts "Total unplaced enemy types: #{@unplaced_enemy_ids.size} out of #{COMMON_ENEMY_IDS.size}"
+      for enemy_id in @unplaced_enemy_ids
+        puts "  %02X #{game.enemy_dnas[enemy_id].name}" % enemy_id
+      end
+    end
   end
   
   def build_entity_assets_lists
@@ -375,16 +387,23 @@ module EnemyRandomizer
     else
       # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
       # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
+      
+      possible_enemy_ids = @allowed_enemies_for_room
+      possible_enemy_ids -= failed_enemies_for_this_spot
+      possible_unplaced_enemy_ids = possible_enemy_ids & @unplaced_enemy_ids
+      if possible_unplaced_enemy_ids.any?
+        possible_enemy_ids = possible_unplaced_enemy_ids
+      end
+      
       max_enemy_id = ENEMY_IDS.max
-      allowed_enemies_for_room_minus_failed = @allowed_enemies_for_room - failed_enemies_for_this_spot
-      weights = allowed_enemies_for_room_minus_failed.map do |possible_enemy_id|
+      weights = possible_enemy_ids.map do |possible_enemy_id|
         curr_enemy_id_for_id_weighting = get_enemy_id_for_weighting_purposes(enemy)
         id_difference = (possible_enemy_id - curr_enemy_id_for_id_weighting).abs
         weight = max_enemy_id - id_difference
         weight**@difficulty_settings[:enemy_id_preservation_exponent]
       end
       ps = weights.map{|w| w.to_f / weights.reduce(:+)}
-      weighted_enemy_ids = allowed_enemies_for_room_minus_failed.zip(ps).to_h
+      weighted_enemy_ids = possible_enemy_ids.zip(ps).to_h
       random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
     end
     
