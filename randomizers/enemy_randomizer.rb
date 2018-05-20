@@ -428,13 +428,13 @@ module EnemyRandomizer
     if jumpthrough_y.nil? || (solid_y.nil? && jumpthrough_y >= room_height - 0x20)
       #puts "NO FLOOR! %02X-%02X-%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index]
       
-      # Try to move it 2 blocks left or right, that should fix it most of the time.
-      enemy.x_pos += 0x20
+      # Try to move it 4 blocks left or right, that should fix it most of the time.
+      enemy.x_pos += 0x40
       
       solid_y = coll.get_floor_y(enemy, allow_jumpthrough: false)
       jumpthrough_y = coll.get_floor_y(enemy, allow_jumpthrough: true)
       if jumpthrough_y.nil? || (solid_y.nil? && jumpthrough_y >= room_height - 0x20)
-        enemy.x_pos -= 0x40
+        enemy.x_pos -= 0x80 # Try 4 blocks to the left of its original position
         
         solid_y = coll.get_floor_y(enemy, allow_jumpthrough: false)
         jumpthrough_y = coll.get_floor_y(enemy, allow_jumpthrough: true)
