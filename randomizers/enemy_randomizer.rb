@@ -500,12 +500,38 @@ module EnemyRandomizer
       
       enemy.var_a = possible_directions.sample(random: rng)
     when "Mollusca", "Giant Slug"
-      # Mollusca and Giant Slug have a very high chance of bugging out when placed near cliffs.
+      # Mollusca and Giant Slug bug out when placed on top of cliffs or inside walls.
       # They can cause the screen to flash rapidly and take up most of the screen.
       # They can also cause the game to freeze for a couple seconds every time you enter a room with them in it.
-      # So for now let's just not place these enemies so this can't happen.
-      # TODO: Try to detect if they're placed near cliffs and move them a bit.
-      return :redo
+      # So we follow the floor to the left and right of them to find the closest cliff or wall.
+      # If it's too close in either direction, we ban them from being placed here.
+      
+      y = coll.get_floor_y(enemy, allow_jumpthrough: true)
+      if y.nil?
+        # No floor
+        return :redo
+      end
+      enemy.y_pos = y
+      
+      y = coll.push_up_out_of_floor(enemy)
+      if y.nil?
+        # Floor extends up infinitely
+        return :redo
+      end
+      enemy.y_pos = y
+      
+      right_type, right_x, right_y = coll.follow_floor_right(enemy.x_pos, enemy.y_pos)
+      left_type, left_x, left_y = coll.follow_floor_left(enemy.x_pos, enemy.y_pos)
+      
+      if right_type == :unknown || left_type == :unknown
+        return :redo
+      end
+      
+      distance_left = enemy.x_pos - left_x
+      distance_right = right_x - enemy.x_pos
+      if distance_left < 0x60 || distance_right < 0x60
+        return :redo
+      end
     when "Ghost Dancer"
       enemy.var_a = rng.rand(0..2) # Palette
     when "Killer Doll"
@@ -518,7 +544,7 @@ module EnemyRandomizer
       # Move down to the nearest floor
       y = coll.get_floor_y(enemy, allow_jumpthrough: true)
       if y.nil?
-        # No solid floor
+        # No floor
         return :redo
       end
       enemy.y_pos = y
@@ -938,9 +964,10 @@ class RoomCollision
   end
   
   def get_floor_y(entity, allow_jumpthrough: false)
+    start_y = entity.y_pos/0x10*0x10
     x = entity.x_pos
     chosen_y = nil
-    (entity.y_pos..room_height-1).step(0x10) do |y|
+    (start_y..room_height-1).step(0x10) do |y|
       if self[x,y].is_solid?
         chosen_y = y
         break
@@ -950,6 +977,20 @@ class RoomCollision
         if self[x,y].is_bottom_half?
           chosen_y += 8
         end
+        break
+      end
+    end
+    
+    return chosen_y
+  end
+  
+  def push_up_out_of_floor(entity)
+    start_y = entity.y_pos/0x10*0x10
+    x = entity.x_pos
+    chosen_y = nil
+    (0..start_y-1).step(0x10).reverse_each do |y|
+      if !self[x,y].is_solid? && self[x,y+0x10].is_solid?
+        chosen_y = y+0x10
         break
       end
     end
@@ -1012,5 +1053,73 @@ class RoomCollision
       
       all_positions
     end
+  end
+  
+  def follow_floor_right(start_x, start_y)
+    start_x = start_x/0x10*0x10
+    y = start_y/0x10*0x10
+    
+    (start_x..room_width-1).step(0x10) do |x|
+      if y == 0 || y > room_height-0x10
+        return [:unknown, x, y] # Invalid
+      end
+      
+      if self[x,y].is_flat_floor? && self[x,y-0x10].is_blank_or_damage?
+        # Do nothing, normal flat floor.
+      elsif self[x,y].is_valid_floor_slope_left? && self[x,y-0x10].is_blank_or_damage?
+        # Following a slope down.
+        y += self[x,y].slope_amount
+      elsif self[x,y].is_solid_block? && self[x,y-0x10].is_valid_floor_slope_right?
+        # Starting to follow a slope up.
+        y -= self[x,y-0x10].slope_amount
+      elsif self[x,y].is_valid_floor_slope_right? && self[x,y-0x10].is_blank_or_damage?
+        # Continuing to follow a slope up.
+        y -= self[x,y].slope_amount
+      elsif self[x,y].is_solid_block? && self[x,y-0x10].is_solid_block?
+        # Reached a wall.
+        return [:wall, x, y]
+      elsif self[x,y].is_blank_or_damage? && self[x,y-0x10].is_blank_or_damage?
+        # Reached a drop off of a cliff.
+        return [:cliff, x, y]
+      else
+        return [:unknown, x, y]
+      end
+    end
+    
+    return [:roomedge, room_width-0x10, y]
+  end
+  
+  def follow_floor_left(start_x, start_y)
+    start_x = start_x/0x10*0x10
+    y = start_y/0x10*0x10
+    
+    (0..start_x).step(0x10).reverse_each do |x|
+      if y == 0 || y > room_height-0x10
+        return [:unknown, x, y] # Invalid
+      end
+      
+      if self[x,y].is_flat_floor? && self[x,y-0x10].is_blank_or_damage?
+        # Do nothing, normal flat floor.
+      elsif self[x,y].is_valid_floor_slope_right? && self[x,y-0x10].is_blank_or_damage?
+        # Following a slope down.
+        y += self[x,y].slope_amount
+      elsif self[x,y].is_solid_block? && self[x,y-0x10].is_valid_floor_slope_left?
+        # Starting to follow a slope up.
+        y -= self[x,y-0x10].slope_amount
+      elsif self[x,y].is_valid_floor_slope_left? && self[x,y-0x10].is_blank_or_damage?
+        # Continuing to follow a slope up.
+        y -= self[x,y].slope_amount
+      elsif self[x,y].is_solid_block? && self[x,y-0x10].is_solid_block?
+        # Reached a wall.
+        return [:wall, x, y]
+      elsif self[x,y].is_blank_or_damage? && self[x,y-0x10].is_blank_or_damage?
+        # Reached a drop off of a cliff.
+        return [:cliff, x, y]
+      else
+        return [:unknown, x, y]
+      end
+    end
+    
+    return [:roomedge, 0, y]
   end
 end
