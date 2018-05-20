@@ -380,27 +380,27 @@ module EnemyRandomizer
     enemy.x_pos = [enemy.x_pos, room_width-0x10].min
     enemy.y_pos = [enemy.y_pos, room_height-0x10].min
     
-    if enemy.x_pos <= 0x40
+    if enemy.x_pos < 0x40
       close_to_left_door = enemy.room.doors.find{|door| door.direction == :left && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
       if close_to_left_door
         #puts "CLOSE LEFT %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
         enemy.x_pos = 0x40
       end
-    elsif enemy.x_pos >= room_width - 0x40
+    elsif enemy.x_pos > room_width - 0x40
       close_to_right_door = enemy.room.doors.find{|door| door.direction == :right && door.y_pos == enemy.y_pos/SCREEN_HEIGHT_IN_PIXELS}
       if close_to_right_door
         #puts "CLOSE RIGHT %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
         enemy.x_pos = room_width - 0x40
       end
     end
-    if enemy.y_pos <= 0x60
+    if enemy.y_pos < 0x60
       close_to_up_door = enemy.room.doors.find{|door| door.direction == :up && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
       if close_to_up_door
         #puts "CLOSE UP %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
         enemy.y_pos = 0x60
       end
     end
-    if enemy.y_pos >= room_height - 0x80
+    if enemy.y_pos > room_height - 0x80
       close_to_down_door = enemy.room.doors.find{|door| door.direction == :down && door.x_pos == enemy.x_pos/SCREEN_WIDTH_IN_PIXELS}
       if close_to_down_door
         #puts "CLOSE DOWN %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
