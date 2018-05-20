@@ -1558,6 +1558,7 @@ module MapRandomizer
       total_num_tiles = 0
       [castle_map, abyss_map].each do |map|
         map.tiles.each do |tile|
+          next if tile.sector_index == 0xA # Menace room, can't be explored
           total_num_tiles += 1 unless tile.is_blank
         end
       end
