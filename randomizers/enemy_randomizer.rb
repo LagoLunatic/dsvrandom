@@ -372,11 +372,23 @@ module EnemyRandomizer
   end
   
   def fix_enemy_position(enemy)
+    room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
+    room_height = enemy.room.height*SCREEN_HEIGHT_IN_PIXELS
+    
+    if enemy.x_pos <= 0
+      #puts "X IS ZERO: %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
+      buffer_width_from_room_edge = SCREEN_WIDTH_IN_PIXELS/2
+      enemy.x_pos = rng.rand(buffer_width_from_room_edge..room_width-buffer_width_from_room_edge)
+    end
+    if enemy.y_pos <= 0
+      #puts "Y IS ZERO: %02X-%02X-%02X_%02X" % [enemy.room.area_index, enemy.room.sector_index, enemy.room.room_index, enemy.room.entities.index(enemy)]
+      buffer_height_from_room_edge = SCREEN_HEIGHT_IN_PIXELS/2
+      enemy.y_pos = rng.rand(buffer_height_from_room_edge..room_height-buffer_height_from_room_edge)
+    end
+    
     enemy.x_pos = [enemy.x_pos, 0x10].max
     enemy.y_pos = [enemy.y_pos, 0x10].max
     
-    room_width = enemy.room.width*SCREEN_WIDTH_IN_PIXELS
-    room_height = enemy.room.height*SCREEN_HEIGHT_IN_PIXELS
     enemy.x_pos = [enemy.x_pos, room_width-0x10].min
     enemy.y_pos = [enemy.y_pos, room_height-0x10].min
     
