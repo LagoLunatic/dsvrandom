@@ -34,7 +34,7 @@ module ShopRandomizer
         if pool_index == 0 && i == 0
           # Make sure the guaranteed cheap healing item is always in the shop at the start.
           pool.item_ids[i] = @shop_cheap_healing_item_id+1
-          available_shop_item_ids.delete(0)
+          available_shop_item_ids.delete(@shop_cheap_healing_item_id)
           next
         elsif GAME == "por" && pool_index == 0 && i == 1
           pool.item_ids[i] = 0+1 # Potion for the first quest
