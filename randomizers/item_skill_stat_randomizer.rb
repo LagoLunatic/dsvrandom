@@ -427,7 +427,7 @@ module ItemSkillStatRandomizer
       elsif GAME == "dos" && item["Swing Anim"] == 0xA && bit_name == "Weapon floats in place"
         # This bit must be set for throwing weapons to throw correctly.
         # But instead we give it a 10% chance of not being set so you can get throwing weapons stuck at your feet sometimes.
-        bit_chance = 1/10.0
+        bit_chance = 9/10.0
       else
         # Otherwise, give all other bits a 25% chance.
         bit_chance = 1/4.0
