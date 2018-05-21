@@ -119,6 +119,8 @@ class RandomizerWindow < Qt::Dialog
     :starting_room_max_difficulty   => "Max Average Attack of Starting Area",
   }
   
+  VALID_SEED_CHARACTERS = "a-zA-Z0-9\-_'%"
+  
   slots "update_settings()"
   slots "browse_for_clean_rom()"
   slots "browse_for_output_folder()"
@@ -506,7 +508,7 @@ class RandomizerWindow < Qt::Dialog
       seed = @settings[:seed]
     end
     
-    if seed =~ /[^a-zA-Z0-9\-_']/
+    if seed =~ /[^#{VALID_SEED_CHARACTERS}]/
       Qt::MessageBox.critical(self, "Invalid seed", "Invalid seed. Seed can only have letters, numbers, dashes, underscores, and apostrophes in it.")
       return
     end
@@ -657,7 +659,7 @@ class RandomizerWindow < Qt::Dialog
       raise "No seed info input."
     end
     
-    match = text.match(/Seed: ([a-zA-Z0-9\-_']+), Game: ([^,]+), Randomizer version: (.+)\s+Selected options: (.+)\s+Difficulty level: (.+)/)
+    match = text.match(/Seed: ([#{VALID_SEED_CHARACTERS}]+), Game: ([^,]+), Randomizer version: (.+)\s+Selected options: (.+)\s+Difficulty level: (.+)/)
     if match.nil?
       raise "Seed info is not in the proper format."
     end
