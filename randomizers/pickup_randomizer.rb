@@ -1236,6 +1236,8 @@ module PickupRandomizer
       pickup_flag = entity.var_a
     elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x4D # Easter egg item
       pickup_flag = entity.var_b
+    elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x4C # All-souls-obtained item
+      pickup_flag = entity.var_a
     end
     
     if GAME == "ooe" && (0..0x51).include?(pickup_flag)
