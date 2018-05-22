@@ -920,6 +920,13 @@ class Randomizer
       options_completed += 1
     end
     
+    if options[:randomize_player_sprites]
+      yield [options_completed, "Randomizing player sprites..."]
+      reset_rng()
+      randomize_player_sprites()
+      options_completed += 1
+    end
+    
     if options[:randomize_players]
       yield [options_completed, "Randomizing players..."]
       reset_rng()

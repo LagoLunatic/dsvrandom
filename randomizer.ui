@@ -554,7 +554,7 @@
             <x>0</x>
             <y>0</y>
             <width>590</width>
-            <height>478</height>
+            <height>494</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -913,6 +913,17 @@
              <widget class="QCheckBox" name="randomize_dialogue">
               <property name="text">
                <string>Dialogue</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_22">
+            <item>
+             <widget class="QCheckBox" name="randomize_player_sprites">
+              <property name="text">
+               <string>Player Sprites</string>
               </property>
              </widget>
             </item>
