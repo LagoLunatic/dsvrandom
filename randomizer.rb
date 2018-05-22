@@ -375,6 +375,8 @@ class Randomizer
     
     apply_pre_randomization_tweaks()
     
+    @rooms_unused_by_map_rando = [] # This will be a list of rooms unused by the map rando/PoR short mode.
+    
     if GAME == "por"
       if options[:por_short_mode]
         reset_rng()
@@ -385,6 +387,14 @@ class Randomizer
           portrait_to_remove = possible_portraits.sample(random: rng)
           @portraits_to_remove << portrait_to_remove
           possible_portraits.delete(portrait_to_remove)
+        end
+        
+        # Keep track of unused rooms (every room in the 4 unused portraits).
+        @portraits_to_remove.each do |portrait_name|
+          area_index = PORTRAIT_NAME_TO_DATA[portrait_name][:var_a]
+          game.areas[area_index].sectors.each do |sector|
+            @rooms_unused_by_map_rando += sector.rooms
+          end
         end
         
         checker.remove_13th_street_and_burnt_paradise_boss_death_prerequisites()
@@ -538,8 +548,6 @@ class Randomizer
       regenerate_all_maps()
       options_completed += 75
     else
-      @rooms_unused_by_map_rando = [] # Initialize this so some other options that use it don't get an error.
-      
       if options[:randomize_area_connections]
         yield [options_completed, "Connecting areas..."]
         reset_rng()

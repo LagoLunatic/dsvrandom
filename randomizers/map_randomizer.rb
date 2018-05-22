@@ -20,7 +20,6 @@ module MapRandomizer
     add_extra_helper_rooms()
     remove_all_wooden_doors()
     
-    @rooms_unused_by_map_rando = []
     @all_unreachable_subroom_doors = []
     
     @map_rando_debug = false
