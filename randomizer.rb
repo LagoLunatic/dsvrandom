@@ -375,7 +375,7 @@ class Randomizer
     
     apply_pre_randomization_tweaks()
     
-    @rooms_unused_by_map_rando = [] # This will be a list of rooms unused by the map rando/PoR short mode.
+    @unused_rooms = [] # This will be a list of rooms unused by the map rando/PoR short mode.
     
     if GAME == "por"
       if options[:por_short_mode]
@@ -393,7 +393,7 @@ class Randomizer
         @portraits_to_remove.each do |portrait_name|
           area_index = PORTRAIT_NAME_TO_DATA[portrait_name][:var_a]
           game.areas[area_index].sectors.each do |sector|
-            @rooms_unused_by_map_rando += sector.rooms
+            @unused_rooms += sector.rooms
           end
         end
         
@@ -1567,7 +1567,7 @@ class Randomizer
     
     if GAME == "por" && room_rando?
       balore_room = game.room_by_str("09-00-0A")
-      unless @rooms_unused_by_map_rando.include?(balore_room)
+      unless @unused_rooms.include?(balore_room)
         right_door_out = balore_room.doors.find{|d| d.direction == :right}
         left_door_in = right_door_out.destination_door
         
@@ -1581,7 +1581,7 @@ class Randomizer
       end
       
       gergoth_room = game.room_by_str("09-00-14")
-      unless @rooms_unused_by_map_rando.include?(gergoth_room)
+      unless @unused_rooms.include?(gergoth_room)
         right_door_out = gergoth_room.doors.find{|d| d.direction == :right}
         left_door_in = right_door_out.destination_door
         

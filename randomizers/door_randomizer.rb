@@ -555,7 +555,7 @@ module DoorRandomizer
     
     transition_room_strs = @transition_rooms.map{|room| room.room_str}
     if options[:randomize_rooms_map_friendly]
-      room_strs_unused_by_map_rando = @rooms_unused_by_map_rando.map{|room| room.room_str}
+      unused_room_strs = @unused_rooms.map{|room| room.room_str}
     end
     
     if room_rando?
@@ -576,7 +576,7 @@ module DoorRandomizer
         
         remaining_rooms_to_check.delete(current_room)
         
-        if options[:randomize_rooms_map_friendly] && room_strs_unused_by_map_rando.include?(current_room.room_str)
+        if options[:randomize_rooms_map_friendly] && unused_room_strs.include?(current_room.room_str)
           # Skip rooms not used by the map friendly room randomizer.
           remaining_subsector_rooms = current_subsector & remaining_rooms_to_check
           break if remaining_subsector_rooms.empty?
@@ -862,7 +862,7 @@ module DoorRandomizer
       next if room.area.name == "Ecclesia"
       next if room.area.name == "Unused Boss Rush"
       
-      if options[:randomize_rooms_map_friendly] && @rooms_unused_by_map_rando.include?(room)
+      if options[:randomize_rooms_map_friendly] && @unused_rooms.include?(room)
         # Skip rooms not used by the map friendly room randomizer.
         next
       end

@@ -195,7 +195,7 @@ module MapRandomizer
       # Tell the logic where the white barrier was moved to.
       checker.move_por_white_barrier_location("00-0A-17", 1, 0)
       
-      if @rooms_unused_by_map_rando.include?(game.room_by_str("00-09-03"))
+      if @unused_rooms.include?(game.room_by_str("00-09-03"))
         # If the big stairway room to the throne didn't get placed, we need to use a replacement when the player beats Brauner.
         post_brauner_teleport_dest_room = transition_for_throne_room
         
@@ -238,7 +238,7 @@ module MapRandomizer
   
   def randomize_doors_no_overlap_for_area_with_redos(area_rooms, map_width, map_height, area_starting_room)
     area_index = area_rooms.first.area_index
-    orig_rooms_unused_by_map_rando = @rooms_unused_by_map_rando.dup
+    orig_unused_rooms = @unused_rooms.dup
     redo_counts_for_area = 0
     while true
       result = randomize_doors_no_overlap_for_area(area_rooms, map_width, map_height, area_starting_room) do |num_sectors_done_for_area|
@@ -250,7 +250,7 @@ module MapRandomizer
           raise "Map randomizer had to redo area %02X more than #{@max_map_rando_area_redos} times." % area_index
         end
         
-        @rooms_unused_by_map_rando = orig_rooms_unused_by_map_rando.dup
+        @unused_rooms = orig_unused_rooms.dup
         redo_counts_for_area += 1
         puts "Map rando is redoing area #{area_index} (time #{redo_counts_for_area})" if @map_rando_debug
       else
@@ -356,7 +356,7 @@ module MapRandomizer
       
       if placement_mode != :placing_skeleton
         # Keep track of the rooms we never used.
-        @rooms_unused_by_map_rando += unplaced_sector_rooms
+        @unused_rooms += unplaced_sector_rooms
       end
       
       remaining_sectors_to_place.delete(sector_index)
@@ -416,7 +416,7 @@ module MapRandomizer
       end
     end
     
-    @rooms_unused_by_map_rando += unplaced_transition_rooms
+    @unused_rooms += unplaced_transition_rooms
     
     remove_useless_transition_rooms(map_spots, map_width, map_height, placed_transition_rooms)
     
@@ -1034,7 +1034,7 @@ module MapRandomizer
         if room
           room_x = room.room_xpos_on_map
           room_y = room.room_ypos_on_map
-          next if room_x == 63 || room_y == 47 || @rooms_unused_by_map_rando.include?(room) # Dummied out room
+          next if room_x == 63 || room_y == 47 || @unused_rooms.include?(room) # Dummied out room
           
           if room_x < min_x
             min_x = room_x
@@ -1912,7 +1912,7 @@ module MapRandomizer
     area_rooms.each do |room|
       room_x = room.room_xpos_on_map
       room_y = room.room_ypos_on_map
-      next if room_x == 63 || room_y == 47 || @rooms_unused_by_map_rando.include?(room) # Dummied out room
+      next if room_x == 63 || room_y == 47 || @unused_rooms.include?(room) # Dummied out room
       
       if room_x < min_x
         min_x = room_x

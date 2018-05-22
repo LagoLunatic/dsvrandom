@@ -217,10 +217,10 @@ module PickupRandomizer
         # First pick a random valid location.
         possible_portrait_locations = checker.all_locations.keys
         possible_portrait_locations = filter_locations_valid_for_pickup(possible_portrait_locations, starting_portrait_name)
-        room_strs_unused_by_map_rando = @rooms_unused_by_map_rando.map{|room| room.room_str}
+        unused_room_strs = @unused_rooms.map{|room| room.room_str}
         possible_portrait_locations.reject! do |location|
           room_str = location[0,8]
-          room_strs_unused_by_map_rando.include?(room_str)
+          unused_room_strs.include?(room_str)
         end
         possible_portrait_locations.select! do |location|
           area_index = location[0,2].to_i(16)
