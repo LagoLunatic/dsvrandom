@@ -119,7 +119,7 @@ class RandomizerWindow < Qt::Dialog
     :starting_room_max_difficulty   => "Max Average Attack of Starting Area",
   }
   
-  VALID_SEED_CHARACTERS = "a-zA-Z0-9\-_'%"
+  VALID_SEED_CHARACTERS = "a-zA-Z0-9\\-_'%"
   
   slots "update_settings()"
   slots "browse_for_clean_rom()"
