@@ -60,7 +60,16 @@ module MapRandomizer
         yield percent_done
       end
     when "por"
-      areas_to_randomize = (0..9).map{|area_index| game.areas[area_index]}
+      areas_to_randomize = []
+      (0..9).each do |area_index|
+        portrait_name = PickupRandomizer::AREA_INDEX_TO_PORTRAIT_NAME[area_index]
+        if @portraits_to_remove.include?(portrait_name)
+          # Don't randomize the map for unused portraits.
+          next
+        end
+        
+        areas_to_randomize << game.areas[area_index]
+      end
       total_num_sectors = areas_to_randomize.inject(0){|sum, area| sum += area.sectors.size}
       num_sectors_done = 0
       
@@ -1577,6 +1586,12 @@ module MapRandomizer
       first_secret_room.write_to_rom()
     when "por"
       (0..9).each do |area_index|
+        portrait_name = PickupRandomizer::AREA_INDEX_TO_PORTRAIT_NAME[area_index]
+        if @portraits_to_remove.include?(portrait_name)
+          # Don't regenerate the map for unused portraits.
+          next
+        end
+        
         regenerate_map(area_index, 0)
       end
     when "ooe"
