@@ -226,6 +226,8 @@ module EnemyRandomizer
     enemy_rando_info_for_each_room = {}
     all_randomizable_enemy_locations = []
     game.each_room do |room|
+      next if @rooms_unused_by_map_rando.include?(room)
+      
       enemies_in_room = get_common_enemies_in_room(room)
       next if enemies_in_room.empty?
       
