@@ -1671,6 +1671,14 @@ class Randomizer
       end
     end
     
+    if GAME == "ooe"
+      # Remove the bottom left boss door in Brachyura's boss room.
+      # This is so the player can escape from the room even if they accidentally went in there before they could fight Brachyura.
+      boss_door = game.entity_by_str("09-00-05_03")
+      boss_door.type = 0
+      boss_door.write_to_rom()
+    end
+    
     if options[:name_unnamed_skills]
       game.fix_unnamed_skills()
     end
