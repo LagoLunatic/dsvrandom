@@ -1282,7 +1282,7 @@ Rooms:
     000-001: 
     001-000: 
   03-00-0A:
-    000-001: magnes & double jump | redire
+    000-001: magnes & double jump # Can be done with redire, but that last jump is extremely hard to not take damage from the flames on, so don't take it into account in the logic.
     001-000: magnes & double jump | redire
 #Ruvas Forest:
   04-00-01:
@@ -1956,18 +1956,18 @@ Rooms:
     000-001: 
     001-000: 
   09-00-05: # brachyura's room.
-    000-001: 
-    000-002: 
-    000-003: 
-    001-000: 
-    001-002: 
-    001-003: 
-    002-000: 
-    002-001: 
-    002-003: 
-    003-000: 
-    003-001: 
-    003-002: 
+    000-001: magnes | medium height
+    000-002: magnes | medium height
+    000-003: magnes | medium height
+    001-000: magnes | medium height
+    001-002: magnes | medium height
+    001-003: magnes | medium height
+    002-000: magnes | medium height
+    002-001: magnes | medium height
+    002-003: magnes | medium height
+    003-000: magnes | medium height
+    003-001: magnes | medium height
+    003-002: magnes | medium height
   09-00-06:
     000-001: 
     000-e00: 
@@ -2310,7 +2310,7 @@ Rooms:
     001-000: 
   0C-00-04:
     000-001: 
-    001-000: 
+    001-000: medium height
   0C-00-05:
     000-001: 
     001-000: 
@@ -2319,7 +2319,7 @@ Rooms:
     001-000: 
   0C-00-07:
     000-001: 
-    001-000: 
+    001-000: medium height
   0C-00-08:
     000-001: 
     001-000: 
@@ -2328,7 +2328,7 @@ Rooms:
     001-000: 
   0C-00-0A:
     000-001: 
-    001-000: 
+    001-000: medium height
   0C-00-0B:
     000-001: 
     001-000: 
@@ -2337,7 +2337,7 @@ Rooms:
     001-000: 
   0C-00-0D:
     000-001: 
-    001-000: 
+    001-000: medium height
   0C-00-0E:
     000-001: 
     001-000: 

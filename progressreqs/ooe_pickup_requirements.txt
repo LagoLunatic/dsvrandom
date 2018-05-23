@@ -98,7 +98,7 @@ Defs:
   bossbarlowe: ecclesia & bossalbus & allvillagers
   
   trainhall: backexit | nonlinear
-  trainhallend: trainhall & magnes & double jump | trainhall & redire
+  trainhallend: trainhall & magnes & double jump # Can be done with redire, but that last jump is extremely hard to not take damage from the flames on, so don't take it into account in the logic.
   
   largecavern: backexit | nonlinear
   
