@@ -870,7 +870,7 @@
           <item row="1" column="0">
            <widget class="QCheckBox" name="gain_extra_attribute_points">
             <property name="toolTip">
-             <string>You gain 100x more AP when killing enemies or absorbing glyphs.</string>
+             <string>You gain 25x more AP when killing enemies or absorbing glyphs.</string>
             </property>
             <property name="text">
              <string>Gain Attribute Points faster</string>
