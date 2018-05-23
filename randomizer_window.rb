@@ -58,6 +58,7 @@ class RandomizerWindow < Qt::Dialog
     skip_emblem_drawing
     fix_infinite_quest_rewards
     always_show_drop_percentages
+    allow_mastering_charlottes_skills
     open_world_map
     always_dowsing
     gain_extra_attribute_points

@@ -822,6 +822,19 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="allow_mastering_charlottes_skills">
+            <property name="toolTip">
+             <string>Allow Charlotte's skills to gain SP like Jonathan's. When mastered they act fully charged at half charge, and when both mastered and fully charged they act supercharged.</string>
+            </property>
+            <property name="text">
+             <string>Allow Charlotte to master skills</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

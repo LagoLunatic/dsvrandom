@@ -1,5 +1,29 @@
 
 module ItemSkillStatRandomizer
+  NONOFFENSIVE_SKILL_NAMES = [
+    "Puppet Master",
+    "Gnebu",
+    "Stonewall",
+    "Offensive Form",
+    "Defensive Form",
+    "Taunt",
+    "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
+    "Toad Morph",
+    "Owl Morph",
+    "Berserker",
+    "Clear Skies",
+    "Time Stop",
+    "Heal",
+    "Cure Poison",
+    "Cure Curse",
+    "STR Boost",
+    "CON Boost",
+    "INT Boost",
+    "MIND Boost",
+    "LUCK Boost",
+    "ALL Boost",
+  ]
+  
   def get_n_damage_types(all_damage_types, possible_n_values)
     known_damage_type_names = all_damage_types.select{|name| name !~ /\d$/}
     num_damage_types = possible_n_values.sample(random: rng)
@@ -631,35 +655,15 @@ module ItemSkillStatRandomizer
             charge_time = named_rand_range_weighted(:spell_charge_time_range)
           end
           skill_extra_data["Max at once/Spell charge"] = (charge_time<<4) | max_at_once
-          skill_extra_data["SP to Master"] = 0
         else
           mastered_bonus_max_at_once = rand_range_weighted(1..6)
           skill_extra_data["Max at once/Spell charge"] = (mastered_bonus_max_at_once<<4) | max_at_once
-          
-          nonoffensive_skills = [
-            "Puppet Master",
-            "Gnebu",
-            "Stonewall",
-            "Offensive Form",
-            "Defensive Form",
-            "Taunt",
-            "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
-            "Toad Morph",
-            "Owl Morph",
-            "Berserker",
-            "Clear Skies",
-            "Time Stop",
-            "Heal",
-            "Cure Poison",
-            "Cure Curse",
-            "STR Boost",
-            "CON Boost",
-            "INT Boost",
-            "MIND Boost",
-            "LUCK Boost",
-            "ALL Boost",
-          ]
-          if nonoffensive_skills.include?(skill.name)
+        end
+        
+        if is_spell && !options[:allow_mastering_charlottes_skills]
+          skill_extra_data["SP to Master"] = 0
+        else
+          if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
             skill_extra_data["SP to Master"] = 0
           else
             skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100

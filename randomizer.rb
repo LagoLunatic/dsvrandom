@@ -1662,6 +1662,24 @@ class Randomizer
       end
     end
     
+    if GAME == "por" && options[:allow_mastering_charlottes_skills]
+      game.apply_armips_patch("por_allow_mastering_spells")
+      
+      if !options[:randomize_skill_behavior]
+        # If skill behavior rando is off, give all spells a default SP to master of 500.
+        (0x150..0x1A0).each do |skill_global_id|
+          skill = game.items[skill_global_id]
+          is_spell = skill["??? bitfield"][2]
+          next unless is_spell
+          next if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+          
+          skill_extra_data = game.items[skill_global_id+0x6C]
+          skill_extra_data["SP to Master"] = 500
+          skill_extra_data.write_to_rom()
+        end
+      end
+    end
+    
     if GAME == "ooe" && !options[:randomize_skill_stats]
       # If skill damage isn't randomized, buff familiar summons to 5x vanilla damage so they're not completely useless.
       (0x47..0x4D).each do |skill_global_id|
