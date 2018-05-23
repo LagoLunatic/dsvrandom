@@ -114,6 +114,15 @@ module EnemyRandomizer
         @enemy_pool_for_room -= @resource_intensive_enemy_ids
       end
       
+      # If we placed an enemy that requires a specific overlay, limit all future enemies placed in this room to ones that need the same overlay or no overlay to avoid crashes.
+      overlay_for_placed_enemy = OVERLAY_FILE_FOR_ENEMY_AI[enemy.subtype]
+      if overlay_for_placed_enemy
+        @allowed_enemies_for_room.select! do |enemy_id|
+          overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+          overlay.nil? || overlay == overlay_for_placed_enemy
+        end
+      end
+      
       @unplaced_enemy_ids.delete(enemy.subtype)
       
       
@@ -260,11 +269,7 @@ module EnemyRandomizer
   
   def build_initial_allowed_enemy_list_for_room(room)
     # Initialize the list of which enemies can be in this room.
-    enemy_overlay_id_for_room = @overlay_ids_for_common_enemies.sample(random: rng)
-    allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
-      overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
-      overlay.nil? || overlay == enemy_overlay_id_for_room
-    end
+    allowed_enemies_for_room = COMMON_ENEMY_IDS.dup
     if GAME == "ooe"
       allowed_enemies_for_room << 0x6B # Count Giant Skeleton as a common enemy
     end
