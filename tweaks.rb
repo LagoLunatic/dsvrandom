@@ -642,7 +642,14 @@ module Tweaks
           next if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
           
           skill_extra_data = game.items[skill_global_id+0x6C]
-          skill_extra_data["SP to Master"] = 500
+          case skill.name
+          when "Sanctuary", "Speed Up", "Eye for an Eye", "Summon Medusa", "Salamander", "Cocytus", "Thor's Bellow"
+            skill_extra_data["SP to Master"] = 150
+          when "Dark Rift", "Summon Ghost", "Summon Skeleton", "Summon Frog"
+            skill_extra_data["SP to Master"] = 300
+          else
+            skill_extra_data["SP to Master"] = 500
+          end
           skill_extra_data.write_to_rom()
         end
       end
