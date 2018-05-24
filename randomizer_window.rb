@@ -203,7 +203,7 @@ class RandomizerWindow < Qt::Dialog
       @ui.send(option_name).setChecked(@settings[option_name]) unless @settings[option_name].nil?
     end
     
-    difficulty_level_options = Randomizer::DIFFICULTY_LEVELS[@settings[:difficulty_level]]
+    difficulty_level_options = DIFFICULTY_LEVELS[@settings[:difficulty_level]]
     if difficulty_level_options
       # Preset difficulty level.
       @ui.difficulty_level.count.times do |i|
@@ -216,12 +216,12 @@ class RandomizerWindow < Qt::Dialog
       # Custom difficulty.
       form_layout = @ui.scrollAreaWidgetContents.layout
       
-      Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+      DIFFICULTY_RANGES.keys.each do |option_name|
         slider = @slider_widgets_by_name[option_name]
         average = @settings[:difficulty_options][option_name]
         if average.nil?
           # If some options are missing default to what it is on easy.
-          average = Randomizer::DIFFICULTY_LEVELS["Easy"][option_name]
+          average = DIFFICULTY_LEVELS["Easy"][option_name]
         end
         slider.blockSignals(true)
         slider.value = average
@@ -281,7 +281,7 @@ class RandomizerWindow < Qt::Dialog
     
     @settings[:difficulty_level] = @ui.difficulty_level.itemText(@ui.difficulty_level.currentIndex)
     @settings[:difficulty_options] = {}
-    Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+    DIFFICULTY_RANGES.keys.each do |option_name|
       slider = @slider_widgets_by_name[option_name]
       average = slider.true_value
       @settings[:difficulty_options][option_name] = average
@@ -372,7 +372,7 @@ class RandomizerWindow < Qt::Dialog
       label.text = pretty_name
       form_layout.setWidget(i, Qt::FormLayout::LabelRole, label)
       
-      option_value_range = Randomizer::DIFFICULTY_RANGES[option_name]
+      option_value_range = DIFFICULTY_RANGES[option_name]
       if option_value_range.nil?
         # Not a real option, just descriptive text.
         next
@@ -401,7 +401,7 @@ class RandomizerWindow < Qt::Dialog
     end
     
     @ui.difficulty_level.addItem("Custom")
-    Randomizer::DIFFICULTY_LEVELS.keys.each do |name|
+    DIFFICULTY_LEVELS.keys.each do |name|
       @ui.difficulty_level.addItem(name)
     end
   end
@@ -448,7 +448,7 @@ class RandomizerWindow < Qt::Dialog
     
     difficulty_name = @ui.difficulty_level.itemText(diff_index)
     
-    difficulty_level_options = Randomizer::DIFFICULTY_LEVELS[difficulty_name]
+    difficulty_level_options = DIFFICULTY_LEVELS[difficulty_name]
     if difficulty_level_options
       form_layout = @ui.scrollAreaWidgetContents.layout
       
@@ -527,7 +527,7 @@ class RandomizerWindow < Qt::Dialog
     end
     
     difficulty_settings_averages = {}
-    Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+    DIFFICULTY_RANGES.keys.each do |option_name|
       slider = @slider_widgets_by_name[option_name]
       average = slider.true_value
       difficulty_settings_averages[option_name] = average
@@ -703,7 +703,7 @@ class RandomizerWindow < Qt::Dialog
       @ui.send(option_name).checked = false
     end
     
-    difficulty_level_options = Randomizer::DIFFICULTY_LEVELS[difficulty]
+    difficulty_level_options = DIFFICULTY_LEVELS[difficulty]
     if difficulty_level_options
       # Preset difficulty level.
       @ui.difficulty_level.count.times do |i|
@@ -738,12 +738,12 @@ class RandomizerWindow < Qt::Dialog
       
       form_layout = @ui.scrollAreaWidgetContents.layout
       
-      Randomizer::DIFFICULTY_RANGES.keys.each do |option_name|
+      DIFFICULTY_RANGES.keys.each do |option_name|
         slider = @slider_widgets_by_name[option_name]
         average = custom_difficulty_options[option_name]
         if average.nil?
           # If some options are missing default to what it is on easy.
-          average = Randomizer::DIFFICULTY_LEVELS["Easy"][option_name]
+          average = DIFFICULTY_LEVELS["Easy"][option_name]
         end
         slider.blockSignals(true)
         slider.value = average
