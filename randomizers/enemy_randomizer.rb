@@ -982,12 +982,6 @@ module EnemyRandomizer
         return :redo
       end
     when "Tin Man"
-      y = coll.get_nonsolid_y_upwards(enemy)
-      if y.nil?
-        # No gap at or above the Tin Man. He would be stuck inside the wall, which crashes the game.
-        return :redo
-      end
-      
       # If Tin Man is placed on a 1-tile-wide jump-through-platform he will crash the game because his AI isn't sure where to put him.
       # So move him downwards to the nearest *solid* floor to prevent this.
       y = coll.get_floor_y(enemy, allow_jumpthrough: false)
@@ -996,6 +990,27 @@ module EnemyRandomizer
         return :redo
       end
       enemy.y_pos = y
+      
+      y = coll.push_up_out_of_floor(enemy)
+      if y.nil?
+        # Floor extends up infinitely. He would be stuck inside the wall, which crashes the game.
+        return :redo
+      end
+      enemy.y_pos = y
+      
+      right_type, right_x, right_y = coll.follow_floor_right(enemy.x_pos, enemy.y_pos)
+      left_type, left_x, left_y = coll.follow_floor_left(enemy.x_pos, enemy.y_pos)
+      
+      if right_type == :unknown || left_type == :unknown
+        return :redo
+      end
+      
+      distance_left = enemy.x_pos - left_x
+      distance_right = right_x - enemy.x_pos
+      if (right_type == :roomedge && distance_right < 0x100) || (left_type == :roomedge && distance_left < 0x100)
+        # Prevent Tin Man from being able to access a door as soon as the player enters through it - Tin Man is so fast that the damage would be unavoidable.
+        return :redo
+      end
       
       # If var A is nonzero, Tin Man will be able to fall off ledges - but long falls will crash the game, so disable this.
       enemy.var_a = 0
