@@ -7,8 +7,17 @@ module DialogueRandomizer
     intro_text = game.text_database.text_list[INTRO_TEXT_ID]
     events -= [intro_text]
     
+    library_descriptions = []
+    if GAME == "dos"
+      TEXT_REGIONS["Library"].each do |text_id|
+        next if text_id.even? # Exclude the names of library entries, we only want to randomize the descriptions
+        
+        library_descriptions << game.text_database.text_list[text_id]
+      end
+    end
+    
     # Build the markov chain's dictionary.
-    (events + [intro_text]).each do |text|
+    (events + [intro_text] + library_descriptions).each do |text|
       lines = text.decoded_string.gsub(/\\n/, "").split(/\{[^}]+\}/)
       lines.each do |line|
         markov.parse_string(line)
@@ -37,6 +46,21 @@ module DialogueRandomizer
       new_intro_text += "\\n"*13
     end
     intro_text.decoded_string = new_intro_text
+    
+    # Randomize library entry descriptions.
+    num_library_lines = 4
+    library_max_line_length = 24
+    library_descriptions.each do |text|
+      new_library_desc_lines = []
+      num_library_lines.times do
+        sentence = markov.generate_sentence()
+        wordwrapped_sentence_lines = word_wrap_string(sentence, library_max_line_length)
+        new_library_desc_lines += wordwrapped_sentence_lines
+      end
+      
+      new_library_desc = new_library_desc_lines.join("\\n")
+      text.decoded_string = new_library_desc
+    end
     
     # Randomize event dialogue.
     events.each do |text|
