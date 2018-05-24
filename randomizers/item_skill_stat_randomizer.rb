@@ -109,6 +109,9 @@ module ItemSkillStatRandomizer
           item["Equippable by"].value = rng.rand(1..3) if GAME == "por"
           if item.name == "Master Ring"
             item["Equippable by"].value |= 1 # Always let Jonathan use Master Ring
+            if options[:allow_mastering_charlottes_skills]
+              item["Equippable by"].value |= 2 # Always let Charlotte use Master Ring too, if she can master skills.
+            end
           end
           if item.name == "Sorceress Crest"
             item["Equippable by"].value |= 2 # Always let Charlotte use Sorceress Crest
