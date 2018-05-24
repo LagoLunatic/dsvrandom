@@ -370,7 +370,7 @@ module Tweaks
     end
     
     if GAME == "por" && options[:por_short_mode]
-      portraits_needed_to_open_studio_portrait = PORTRAIT_NAMES - [:portraitnestofevil] - @portraits_to_remove
+      portraits_needed_to_open_studio_portrait = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - @portraits_to_remove
       boss_flag_checking_code_locations = [0x02076B84, 0x02076BA4, 0x02076BC4, 0x02076BE4]
       portraits_needed_to_open_studio_portrait.each_with_index do |portrait_name, i|
         new_boss_flag = case portrait_name
@@ -639,7 +639,7 @@ module Tweaks
           skill = game.items[skill_global_id]
           is_spell = skill["??? bitfield"][2]
           next unless is_spell
-          next if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+          next if ItemSkillStatRandomizer::NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
           
           skill_extra_data = game.items[skill_global_id+0x6C]
           case skill.name
