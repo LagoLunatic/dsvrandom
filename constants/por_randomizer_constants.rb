@@ -126,6 +126,96 @@ LOAD_SPRITE_SINGLE_GFX_FUNC_PTR = 0x020217C8
 LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x020216B0
 CUSTOM_LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x02309040
 
+
+
+HARDCODED_SKILL_IFRAMES_LOCATIONS = {
+  0x152 => [0x02212AE0], # Axe (Richter)
+  0x153 => [0x02212518], # Cross (Richter)
+  0x154 => [0x02211E68], # Holy Water (Richter)
+  0x155 => [ # Grand Cross
+    0x02211404, # Big cross
+    0x022119EC, # Tiny rotating crosses
+  ],
+  0x156 => [], # Seiryu, not hardcoded
+  0x157 => [0x0220B220], # Suzaku
+  0x158 => [0x0220AFDC], # Byakko
+  0x159 => [0x0220D714], # Genbu # doesn't matter?
+  0x15A => [], # Knife, not hardcoded
+  0x15B => [0x022110A8], # Axe
+  0x15C => [0x02210CB4], # Cross
+  0x15D => [0x02211E68], # Holy Water # same as richter's
+  0x15E => [0x02210784], # Bible
+  0x15F => [0x02210490], # Javelin
+  0x160 => [0x0220FF68], # Ricochet Rock
+  0x161 => [0x0220F7E4], # Boomerang
+  0x162 => [0x0220F4F0], # Bwaka Knife
+  0x163 => [], # Shuriken, not hardcoded
+  0x164 => [], # Yagyu Shuriken, not hardcoded
+  0x165 => [0x0220B5AC], # Discus
+  0x166 => [0x0220EE38], # Kunimitsu
+  0x167 => [], # Kunai, not hardcoded
+  0x168 => [0x0220E8A0], # Paper Airplane
+  0x169 => [0x0220EB8C], # Cream Pie
+  0x16A => [0x0220BAC0], # Crossbow
+  0x16B => [0x0220E444], # Dart
+  0x16C => [0x0220DF10], # Grenade
+  0x16D => [0x0220DAB4], # Steel Ball
+  0x16E => [0x0220D714], # Stonewall # doesn't matter? same as genbu
+  0x172 => [0x0220C9D0], # Wrecking Ball
+  0x173 => [0x0220C6A0], # Rampage
+  0x174 => [], # Knee Strike, uses the player's iframes
+  0x175 => [0x0220C014], # Aura Blast
+  0x176 => [0x0220C31C], # Rocket Slash
+  0x177 => [0x021EEA88], # Toad Morph # doesn't matter
+  0x179 => [0x021ED630], # Sanctuary
+  0x17A => [0x021EDE74], # Speed Up
+  0x17C => [0x021EBA20], # Eye for an Eye
+  0x17D => [0x021F1280], # Clear Skies
+  0x188 => [0x021EC2CC], # Gale Force
+  0x189 => [0x021EBE00], # Rock Riot
+  0x18A => [0x021EF984], # Raging Fire
+  0x18B => [0x021E9748], # Ice Fang
+  0x18C => [0x021ED364], # Thunderbolt
+  0x18D => [0x021F019C], # Spirit of Light
+  0x18E => [0x021EAE1C], # Dark Rift
+  0x18F => [0x021EA6CC], # Tempest
+  0x190 => [0x021ECEBC], # Stone Circle
+  0x191 => [0x021EC870], # Ice Needle
+  0x192 => [0x021F08F4], # Explosion
+  0x193 => [0x021EFB2C], # Chain Lightning
+  0x194 => [0x021EA060], # Piercing Beam
+  0x195 => [0x021E9148], # Nightmare
+  0x196 => [0x021E8B9C], # Summon Medusa
+  0x197 => [0x021E876C], # Acidic Bubbles
+  0x198 => [0x021E82B0], # Hex
+  0x199 => [ # Salamander
+    0x021E79D0, # ???
+    0x021E7DA8, # ???
+  ],
+  0x19A => [0x021E9C00], # Cocytus
+  0x19B => [0x021EB310], # Thor's Bellow
+  0x19C => [0x021E73D0], # Summon Crow
+  0x19D => [ # Summon Ghost
+    0x021E73D0, # ???
+    0x021E6F4C, # ???
+  ],
+  0x19E => [0x021E6C70], # Summon Skeleton
+  0x19F => [0x021E68FC], # Summon Gunman
+  0x1A0 => [0x021E640C], # Summon Frog
+  0x1A2 => [], # Rush, uses the player's iframes. (0x021E26CC seems to hardcode some kind of iframes specific to rush, but this is never used?)
+  0x1A3 => [0x021E1FB0], # Holy Lightning
+  0x1A4 => [0x021E1668], # Axe Bomber
+  0x1A5 => [0x021E0FE0], # 1,000 Blades
+  0x1A6 => [0x021E0B98], # Volcano
+  0x1A7 => [0x021E027C], # Meteor
+  0x1A8 => [0x021DFF90], # Grand Cruz
+  0x1A9 => [0x021DF5F8], # Divine Storm
+  0x1AA => [0x021DEC24], # Dark Gate
+  0x1AB => [0x021DE91C], # Greatest Five
+}
+
+
+
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   78 => { # Entrance
     0x022EBFC0 => 0x0008,

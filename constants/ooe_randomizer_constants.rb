@@ -134,6 +134,77 @@ LOAD_SPRITE_SINGLE_GFX_FUNC_PTR = 0x0203B5D0
 LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x0203B6D0
 CUSTOM_LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x022EB1CC
 
+
+
+HARDCODED_SKILL_IFRAMES_LOCATIONS = {
+  0x19 => [0x0207943C], # Scutum, iframes are useless
+  0x1A => [0x0207943C], # Vol Scutum, iframes are useless
+  0x1B => [0x0207943C], # Melio Scutum, iframes are useless
+  0x1C => [0x020767B4], # Redire
+  0x1D => [0x02078AC4], # Cubus
+  0x1E => [0x02079068], # Torpor
+  0x1F => [0x0207142C], # Lapiste
+  0x20 => [0x02071EC4], # Pneuma
+  0x21 => [0x02072318], # Ignis
+  0x22 => [0x02072788], # Vol Ignis
+  0x23 => [0x02072B70], # Grando
+  0x24 => [0x0207342C], # Vol Grando
+  0x25 => [0x020742E8], # Fulgur
+  0x26 => [0x02073F30], # Vol Fulgur
+  0x27 => [0x0207483C], # Luminatio
+  0x28 => [0x02074CD4], # Vol Luminatio
+  0x29 => [0x02075978], # Umbra
+  0x2A => [0x02075248], # Vol Umbra
+  0x2B => [0x020762DC], # Morbus
+  0x2C => [0x02076DB8], # Nitesco
+  0x2D => [0x020796E4], # Acerbatus
+  0x2E => [0x0207A088], # Globus
+  0x2F => [0x02077328], # Dextro Custos
+  0x30 => [0x02077328], # Sinestro Custos
+  0x31 => [ # Dominus Hatred
+    0x02077A08, # The first projectile you shoot up.
+    0x02077910, # The rain of projectiles that comes down.
+  ],
+  0x32 => [0x02077F34], # Dominus Anger
+  0x33 => [0x02070AB0], # Cat Tackle
+  0x34 => [0x02070E68], # Cat Tail
+  0x3B => [0x0207DCB0], # Rapidus Fio
+  0x47 => [0x020834A4], # Fidelis Caries
+  0x48 => [0x02082630], # Fidelis Alate
+  0x49 => [0x0207EAC0], # Fidelis Polkir
+  0x4A => [0x02082A9C], # Fidelis Noctua
+  0x4B => [0x0207D554], # Fidelis Medusa
+  0x4C => [0x0207D744], # Fidelis Aranea
+  0x4D => [0x0207FE0C], # Fidelis Mortus
+  0x4F => [0x02083918], # Agartha
+  0x55 => [0x020A0014], # Pneuma union
+  0x56 => [0x020A081C], # Lapiste union
+  0x57 => [0x020A0E54], # Ignis union
+  0x58 => [0x020A18B8], # Grando union
+  0x59 => [ # Fulgur union
+    0x02073F30, # ???
+    0x02073FFC, # ???
+  ],
+  0x5A => [ # Fire+ice union
+    0x020A243C, # Circling ice and fire parts
+    0x020A25E4, # Center
+  ],
+  0x5B => [0x020A2AF4], # Light union
+  0x5C => [0x020A372C], # Dark union
+  0x5D => [0x020A3DC8], # Light+dark union
+  0x66 => [0x020A5DF0], # Nitesco union
+  0x68 => [0x020A7170], # Dominus union
+  0x6A => [0x020A7E60], # Albus's optical shot
+  0x6C => [0x020A8748], # Knife union
+  0x6D => [0x020A8F08], # Confodere union, the blade uses the iframes from the item data, but the petals have hardcoded iframes.
+  0x6E => [ # Arcus union
+    0x020A9458, # Single upwards arrow
+    0x020A9268, # Rain of arrows
+  ],
+}
+
+
+
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   65 => { # Castle Entrance
     0x022CBF74 => 0x0010,

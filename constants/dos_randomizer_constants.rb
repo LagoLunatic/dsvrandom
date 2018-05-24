@@ -96,6 +96,98 @@ LOAD_SPRITE_SINGLE_GFX_FUNC_PTR = 0x0201C2B8
 LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x0201C1B8
 CUSTOM_LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x02308A0C
 
+
+
+HARDCODED_SKILL_IFRAMES_LOCATIONS = {
+  0xD2 => [0x02207744], # Skeleton
+  0xD3 => [0x02207F64], # Zombie
+  0xD4 => [0x0220C5D4], # Axe Armor
+  0xD5 => [0x0220DF4C], # Student Witch
+  0xD6 => [0x0220A214], # Warg
+  0xD7 => [0x0220BD40], # Bomber Armor
+  0xD8 => [0x0220E3CC], # Amalaric Sniper
+  0xD9 => [0x0220CDA4], # Cave Troll
+  0xDA => [0x0220BB0C], # Waiter Skeleton
+  0xDB => [0x0220B628], # Slime
+  0xDC => [0x022074F0], # Yorick
+  0xDD => [0x02206838], # Une
+  0xDE => [0x0220ABE8], # Mandragora
+  0xDF => [0x02204750], # Rycuda
+  0xE0 => [0x0220A974], # Fleaman
+  0xE1 => [ # Ripper
+    0x0220A704, # ???
+    0x0220A72C, # ???
+  ],
+  0xE2 => [ # Guillotiner
+    0x02203CAC, # Head?
+    0x02203B9C, # Body?
+  ],
+  0xE3 => [0x02206020], # Killer Clown
+  0xE4 => [0x02209C64], # Malachi
+  0xE5 => [0x0220B198], # Disc Armor
+  0xE6 => [0x0220A37C], # Great Axe Armor
+  0xE7 => [0x0220913C], # Slaughterer
+  0xE8 => [0x0220913C], # Hell Boar # same as slaughterer
+  0xE9 => [0x02208BAC], # Frozen Shade
+  0xEA => [0x022087E8], # Merman
+  0xEB => [0x02203FD4], # Larva
+  0xEC => [0x02207120], # Ukoback
+  0xED => [0x02206B00], # Decarabia
+  0xEE => [0x0220C924], # Succubus
+  0xEF => [0x0220652C], # Slogra
+  0xF0 => [0x02205CC0], # Erinys
+  0xF1 => [0x02205998], # Homunculus
+  0xF2 => [0x02205604], # Witch
+  0xF3 => [0x0220546C], # Fish Head
+  0xF4 => [0x02204AA0], # Mollusca
+  0xF5 => [0x02204418], # Dead Mate
+  0xF6 => [0x022037DC], # Killer Fish
+  0xF7 => [0x02207AF4], # Malacoda
+  0xF8 => [0x02209388], # Flame Demon
+  0xF9 => [0x02208244], # Aguni
+  0xFA => [0x022097BC], # Abaddon
+  0xFB => [0x022035CC], # Hell Fire
+  0xFD => [0x02203138], # Holy Flame
+  0xFE => [0x02202C64], # Blue Splash
+  0xFF => [0x02202738], # Holy Lightning
+  0x100 => [0x022021DC], # Cross
+  0x101 => [0x02201B38], # Holy Water
+  0x102 => [0x02201438], # Grand Cross
+  0x105 => [0x021E6980], # Black Panther
+  0x106 => [0x021E492C], # Armor Knight
+  0x107 => [0x021DB510], # Spin Devil
+  0x108 => [0x021DEFB0], # Skull Archer
+  0x10A => [0x021E50B8], # Yeti
+  0x10B => [0x021DC2B0], # Buer
+  0x10C => [0x021DFC4C], # Manticore
+  0x10D => [0x021DFC4C], # Mushussu # Same as Manticore
+  0x10E => [0x021DCE44], # White Dragon
+  0x10F => [0x021DCE44], # Catoblepas # Same as White Dragon
+  0x110 => [0x021DCE44], # Gorgon # Same as White Dragon
+  0x111 => [0x021DB8A4], # Persephone
+  0x117 => [0x021E111C], # Alura Une
+  0x118 => [0x021E5EC8], # Iron Golem
+  0x119 => [0x021DE7D8], # Bone Ark
+  0x11A => [0x021E067C], # Barbariccia
+  0x11B => [0x021E067C], # Valkyrie # Same as Barbariccia
+  0x11C => [0x021DC868], # Bat
+  0x11D => [0x021E4448], # Great Armor
+  0x11E => [0x021E4024], # Mini Devil
+  0x11F => [0x021E387C], # Harpy
+  0x120 => [0x021E3124], # Corpseweed
+  0x121 => [ # Quetzalcoatl
+    0x021E1BAC, # Head
+    0x021E1EF4, # Body
+  ],
+  0x122 => [0x021DD354], # Needles
+  0x123 => [0x021DAE0C], # Alastor
+  0x124 => [0x021DD868], # Gaibon
+  0x125 => [0x021DDE24], # Gergoth
+  0x126 => [0x021DBB10], # Death
+}
+
+
+
 SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   14 => { # The Lost Village
     0x0207FAD0 => 0x0001,
