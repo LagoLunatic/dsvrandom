@@ -123,7 +123,15 @@ module EnemyRandomizer
         end
       end
       
-      @unplaced_enemy_ids.delete(enemy.subtype)
+      
+      room_is_part_of_main_game = true
+      if room.area.name.include?("Boss Rush") || room.sector.name.include?("Boss Rush")
+        room_is_part_of_main_game = false
+      end
+      if room_is_part_of_main_game
+        # Keep track of enemies that have not yet been made accessible in the main game so we can prioritize them.
+        @unplaced_enemy_ids.delete(enemy.subtype)
+      end
       
       
       room_info[:enemy_pool_for_room] = @enemy_pool_for_room
