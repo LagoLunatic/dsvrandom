@@ -58,7 +58,6 @@ class Randomizer
   attr_reader :options,
               :seed,
               :rng,
-              :seed_log,
               :spoiler_log,
               :game,
               :checker,
@@ -232,14 +231,7 @@ class Randomizer
       difficulty_settings_string = "Custom, settings:\n  " + @user_given_difficulty_settings.map{|k,v| "#{k}: #{v}"}.join("\n  ")
     end
     
-    FileUtils.mkdir_p("./logs")
-    @seed_log = File.open("./logs/seed_log_no_spoilers.txt", "a")
-    seed_log.puts "Seed: #{seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
-    seed_log.puts "  Selected options: #{options_string}"
-    seed_log.puts "  Difficulty level: #{difficulty_settings_string}"
-    seed_log.close()
-    
-    @spoiler_log = File.open("./logs/spoiler_log.txt", "a")
+    @spoiler_log = StringIO.new
     spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
     spoiler_log.puts "Selected options: #{options_string}"
     spoiler_log.puts "Difficulty level: #{difficulty_settings_string}"
@@ -890,17 +882,6 @@ class Randomizer
     
     yield [options_completed, "Applying tweaks..."]
     apply_tweaks()
-  rescue StandardError => e
-    if spoiler_log
-      spoiler_log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
-    end
-    raise e
-  ensure
-    if spoiler_log
-      spoiler_log.puts
-      spoiler_log.puts
-      spoiler_log.close()
-    end
   end
   
   def inspect; to_s; end

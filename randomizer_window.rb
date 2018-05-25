@@ -629,9 +629,18 @@ class RandomizerWindow < Qt::Dialog
           @progress_dialog = nil
         end
         
+        # Write the spoiler log.
+        randomizer.spoiler_log.seek(0)
+        spoiler_str = randomizer.spoiler_log.read()
+        output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Spoiler Log.txt"
+        output_log_path = File.join(@ui.output_folder.text, output_log_filename)
+        File.open(output_log_path, "w") do |f|
+          f.write(spoiler_str)
+        end
+        
         msg = "Randomization complete.\n\n"
         msg << "Output ROM:\n#{output_rom_filename}\n\n"
-        msg << "If you get stuck, check the FAQ in the readme,\nand the progression spoiler log here: /logs/spoiler_log.txt"
+        msg << "If you get stuck, check the FAQ in the readme,\nand the progression spoiler log in the output folder."
         msg << "\n\nNote that you have an infinitely usable magical ticket in your inventory, so if you get trapped in a pit use that to return to your starting room." if randomizer.needs_infinite_magical_tickets?
         
         Qt::MessageBox.information(self, "Done", msg)
