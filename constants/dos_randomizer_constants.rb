@@ -41,7 +41,13 @@ WEAPON_SUPER_ANIM_NAMES = {
 
 MAGICAL_TICKET_GLOBAL_ID = 0x2B # Actually Castle Map 0, this is repurposed as a magical ticket.
 
-SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x1A, 0x36, 0x40]
+SPAWNER_ENEMY_IDS = [
+  0x00, # Zombie
+  0x01, # Bat
+  0x1A, # Ghoul
+  0x36, # Wakwak Tree
+  0x40, # Medusa Head
+]
 
 STOLAS_UNFRIENDLY_ENEMY_IDS = [0x30] # Guillotiner bugs out and constantly teleports on top of the player before Stolas even summons him.
 

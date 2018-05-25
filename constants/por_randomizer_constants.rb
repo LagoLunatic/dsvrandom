@@ -44,7 +44,16 @@ WEAPON_SUPER_ANIM_NAMES = {
 
 MAGICAL_TICKET_GLOBAL_ID = 0x45
 
-SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x09, 0x18, 0x24, 0x38, 0x49, 0x68]
+SPAWNER_ENEMY_IDS = [
+  0x00, # Zombie
+  0x01, # Bat
+  0x09, # Mud Man
+  0x18, # Larva
+  0x24, # Mummy
+  0x38, # Medusa Head
+  0x49, # Razor Bat
+  0x68, # Wakwak Tree
+]
 
 STOLAS_UNFRIENDLY_ENEMY_IDS = []
 
