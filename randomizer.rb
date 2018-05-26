@@ -699,6 +699,10 @@ class Randomizer
       all_rooms_in_order_accessed = @rooms_by_progression_order_accessed.flatten.uniq
       all_rooms_in_order_accessed.each do |room_str|
         room = game.room_by_str(room_str)
+        
+        # Skip Nest of Evil/Large Cavern, they will be given unlimited enemy difficulty.
+        next if ["Nest of Evil", "Large Cavern"].include?(room.area.name)
+        
         enemies_in_room = get_common_enemies_in_room(room)
         next if enemies_in_room.empty?
         
@@ -738,6 +742,17 @@ class Randomizer
         @room_rando_enemy_difficulty_for_room[room_str] = original_room_difficulties_in_order[i]
         
         i += 1
+      end
+      
+      game.each_room do |room|
+        if ["Nest of Evil", "Large Cavern"].include?(room.area.name)
+          # Give Nest of Evil and Large Cavern unlimited enemy difficulty.
+          @room_rando_enemy_difficulty_for_room[room.room_str] = {
+            average_attack: 9999,
+            max_enemy_attack: 9999,
+            average_enemy_id: 100,
+          }
+        end
       end
     end
     
