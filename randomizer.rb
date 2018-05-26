@@ -74,6 +74,9 @@ class Randomizer
       raise "No seed given"
     end
     
+    if options[:open_world_map]
+      options[:randomize_world_map_exits] = false
+    end
     if room_rando?
       options[:unlock_boss_doors] = true
       options[:add_magical_tickets] = true
@@ -215,7 +218,7 @@ class Randomizer
   end
   
   def room_rando?
-    options[:randomize_rooms_map_friendly] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room]
+    options[:randomize_rooms_map_friendly] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room] || options[:randomize_world_map_exits]
   end
   
   def needs_infinite_magical_tickets?
