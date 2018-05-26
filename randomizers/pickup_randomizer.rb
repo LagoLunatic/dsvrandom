@@ -428,7 +428,7 @@ module PickupRandomizer
       
       
       
-      if GAME == "ooe" && !options[:open_world_map] && room_rando? #&& options[:randomize_rooms_map_friendly]
+      if GAME == "ooe" && options[:randomize_world_map_exits] && !options[:open_world_map] && room_rando?
         # Randomize world map exits.
         
         unused_accessible_exits = (accessible_doors & WORLD_MAP_EXITS) - world_map_exits_randomized
