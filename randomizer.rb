@@ -92,7 +92,8 @@ class Randomizer
         options[:enable_glitch_reqs],
         options[:open_world_map],
         options[:randomize_villagers],
-        options[:randomize_portraits]
+        options[:randomize_portraits],
+        options[:randomize_world_map_exits],
       )
     else
       @checker = CompletabilityChecker.new(
@@ -100,7 +101,7 @@ class Randomizer
         options[:enable_glitch_reqs],
         options[:open_world_map],
         options[:randomize_villagers],
-        options[:randomize_portraits]
+        options[:randomize_portraits],
       )
     end
     

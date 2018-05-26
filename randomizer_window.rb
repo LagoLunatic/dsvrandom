@@ -13,6 +13,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_enemy_stats
     randomize_enemy_anim_speed
     randomize_enemy_tolerances
+    randomize_world_map_exits
     randomize_equipment_stats
     randomize_consumable_behavior
     randomize_weapon_behavior

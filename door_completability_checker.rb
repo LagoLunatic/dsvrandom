@@ -21,12 +21,13 @@ class DoorCompletabilityChecker
               :no_progression_locations,
               :portrait_locations
   
-  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers, por_randomize_portraits)
+  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers, por_randomize_portraits, ooe_randomize_world_map_exits)
     @game = game
     @enable_glitches = enable_glitches
     @ooe_nonlinear = ooe_nonlinear
     @ooe_randomize_villagers = ooe_randomize_villagers
     @por_randomize_portraits = por_randomize_portraits
+    @ooe_randomize_world_map_exits = ooe_randomize_world_map_exits
     
     load_room_reqs()
     @current_items = []
@@ -62,6 +63,13 @@ class DoorCompletabilityChecker
       @world_map_areas_unlocked_from_beginning = ["02-00-03_000"]
     end
     @debug = false
+    
+    if @ooe_randomize_world_map_exits
+      # Remove default world map values. These will be set as they are randomized.
+      @world_map_unlocks = {
+        "00-02-1B_000": "03-00-00_000, 0C-00-00_000", # TODO: just temporary measure
+      }
+    end
   end
   
   def load_room_reqs
@@ -894,6 +902,13 @@ class DoorCompletabilityChecker
   def remove_final_approach_gate_requirement
     # Remove the logic that it's impossible to get through the room with the big gate in the Final Approach.
     @room_reqs["00-0A-01"][:doors][0]["001"] = nil
+  end
+  
+  def set_world_map_exit_destination_area(world_map_exit_door_str, entrance_door_str)
+    if @world_map_unlocks[world_map_exit_door_str]
+      raise "Tried to set a world map unlock that already exists: #{world_map_exit_door_str}"
+    end
+    @world_map_unlocks[world_map_exit_door_str] = entrance_door_str
   end
   
   def set_current_location_by_entity(entity_str)

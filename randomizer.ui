@@ -215,6 +215,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_world_map_exits">
+              <property name="toolTip">
+               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
+              </property>
+              <property name="text">
+               <string>World Map Exits</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>

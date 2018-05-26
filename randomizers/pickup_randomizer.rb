@@ -45,6 +45,47 @@ module PickupRandomizer
     :portraitnestofevil => "00-00-05_00",
   }
   
+  WORLD_MAP_EXITS = [
+    #"00-02-1B_000", # Exit from the castle. Don't randomize this.
+    "04-00-03_000",
+    "05-00-00_000",
+    "06-00-0A_000",
+    "06-01-00_000",
+    "07-00-0E_000",
+    #"08-02-07_000", # Minera exit. This is currently hardcoded in my logic because of the spikes. TODO: Find a way to randomize this.
+    "09-00-07_000",
+    "0A-00-0A_000",
+    #"0A-00-13_000", # Alternate exit from Tymeo. Not randomized separately from the other one.
+    "0B-00-10_000",
+    "0D-00-09_000",
+    "0F-00-00_000",
+  ]
+  WORLD_MAP_ENTRANCES = {
+       #3 => "03-00-00_000", # Training Hall. Not randomized because we don't randomize the castle exit.
+       6 => "06-00-00_000",
+       8 => "08-00-00_000",
+       #9 => "09-00-00_000", # Lighthouse. This is currently hardcoded in my logic because of the spikes. TODO: Find a way to randomize this.
+     0xA => "0A-00-00_000",
+     0xB => "0B-00-00_000",
+     0xD => "0D-00-00_000",
+     0xE => "0E-00-0C_000",
+     0xF => "0F-00-08_000",
+    0x10 => "10-01-06_000",
+    0x11 => "11-00-00_000",
+      -1 => "06-01-09_000", # Lower Kalidus entrance.
+      #-2 => "0C-00-00_000", # Large Cavern. Not randomized because we don't randomize the castle exit.
+  }
+  WORLD_MAP_ENTRANCES_THAT_LEAD_TO_A_WORLD_MAP_EXIT = [
+    # Which entrances to prioritize placing first to avoid running out of accessible exits.
+       6,
+       8,
+       9,
+     0xA,
+     0xB,
+     0xD,
+     0xF,
+  ]
+  
   def randomize_pickups_completably(&block)
     spoiler_log.puts "Randomizing pickups:"
     
@@ -196,6 +237,8 @@ module PickupRandomizer
     total_progression_pickups = checker.all_progression_pickups.length
     on_leftovers = false
     @rooms_by_progression_order_accessed = []
+    world_map_exits_randomized = []
+    world_map_entrances_used = []
     
     game.each_room do |room|
       room.entities.each do |entity|
@@ -335,6 +378,8 @@ module PickupRandomizer
       possible_locations -= @locations_randomized_to_have_useful_pickups
       puts "Total possible locations: #{possible_locations.size}" if verbose
       
+      
+      
       if !options[:randomize_boss_souls]
         # If randomize boss souls option is off, don't allow putting random things in these locations.
         accessible_unused_boss_locations = possible_locations & checker.enemy_locations
@@ -380,6 +425,48 @@ module PickupRandomizer
         
         next if accessible_unused_portrait_locations.length > 0
       end
+      
+      
+      
+      if GAME == "ooe" && !options[:open_world_map] && room_rando? #&& options[:randomize_rooms_map_friendly]
+        # Randomize world map exits.
+        
+        unused_accessible_exits = (accessible_doors & WORLD_MAP_EXITS) - world_map_exits_randomized
+        if unused_accessible_exits.any?
+          while unused_accessible_exits.any?
+            world_map_exit = unused_accessible_exits.sample(random: rng)
+            unused_accessible_exits.delete(world_map_exit)
+            
+            unused_entrances = WORLD_MAP_ENTRANCES.keys - world_map_entrances_used
+            possible_entrances = unused_entrances
+            
+            if unused_accessible_exits.empty?
+              # We're on the last accessible exit.
+              # We need to prioritize placing entrances that lead to more exits.
+              # Otherwise we would exhaust all the remaining exits and the player would have no way to progress.
+              # (Unless this is the very last exit overall - in that case it's fine that we exhaust the last one.)
+              possible_entrances_that_lead_to_a_new_exit = unused_entrances & WORLD_MAP_ENTRANCES_THAT_LEAD_TO_A_WORLD_MAP_EXIT
+              if possible_entrances_that_lead_to_a_new_exit.any?
+                possible_entrances = possible_entrances_that_lead_to_a_new_exit
+              end
+            end
+            
+            if possible_entrances.empty?
+              raise "Ran out of world map entrances to make world map exits unlock!"
+            end
+            entrance = possible_entrances.sample(random: rng)
+            
+            set_world_map_exit_destination_area(world_map_exit, entrance)
+            
+            world_map_exits_randomized << world_map_exit
+            world_map_entrances_used << entrance
+          end
+          
+          next # Redo this progression placement loop with the world map entrances now set.
+        end
+      end
+      
+      
       
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
@@ -1497,6 +1584,31 @@ module PickupRandomizer
         game.fs.replace_hardcoded_bit_constant(pickup_flag_read_location+4, pickup_flag_bit_index)
         game.fs.replace_hardcoded_bit_constant(second_pickup_flag_read_location+4, pickup_flag_bit_index) if second_pickup_flag_read_location
       end
+    end
+  end
+  
+  def set_world_map_exit_destination_area(world_map_exit_door_str, entrance_type)
+    room_str = world_map_exit_door_str[0,8]
+    area_exit_entity_str = room_str + "_00"
+    area_exit = game.entity_by_str(area_exit_entity_str)
+    if entrance_type >= 0
+      area_exit.var_a = entrance_type
+      area_exit.var_b = 0
+    else # Negative value indicates var B should be used instead of var A.
+      area_exit.var_a = 0
+      area_exit.var_b = -entrance_type
+    end
+    area_exit.write_to_rom()
+    
+    entrance_door_str = WORLD_MAP_ENTRANCES[entrance_type]
+    puts "Setting world map unlock: #{world_map_exit_door_str} -> #{entrance_door_str}"
+    
+    checker.set_world_map_exit_destination_area(world_map_exit_door_str, entrance_door_str)
+    
+    if world_map_exit_door_str == "0A-00-0A_000"
+      # For now we sync up the two Tymeo exits to always unlock the same area like in vanilla.
+      # In the future consider randomizing these seperately.
+      set_world_map_exit_destination_area("0A-00-13_000", entrance_type)
     end
   end
 end
