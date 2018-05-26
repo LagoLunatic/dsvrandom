@@ -52,7 +52,7 @@ module PickupRandomizer
     "06-00-0A_000",
     "06-01-00_000",
     "07-00-0E_000",
-    #"08-02-07_000", # Minera exit. This is currently hardcoded in my logic because of the spikes. TODO: Find a way to randomize this.
+    "08-02-07_000",
     "09-00-07_000",
     "0A-00-0A_000",
     #"0A-00-13_000", # Alternate exit from Tymeo. Not randomized separately from the other one.
@@ -64,7 +64,7 @@ module PickupRandomizer
        #3 => "03-00-00_000", # Training Hall. Not randomized because we don't randomize the castle exit.
        6 => "06-00-00_000",
        8 => "08-00-00_000",
-       #9 => "09-00-00_000", # Lighthouse. This is currently hardcoded in my logic because of the spikes. TODO: Find a way to randomize this.
+       9 => "09-00-00_000", # Lighthouse. My logic has a special case here due to the spikes but it can still be randomized.
      0xA => "0A-00-00_000",
      0xB => "0B-00-00_000",
      0xD => "0D-00-00_000",

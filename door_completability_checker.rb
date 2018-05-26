@@ -607,7 +607,15 @@ class DoorCompletabilityChecker
         
         # Normal world map unlocks, not hardcoded.
         if @world_map_unlocks[door_or_entity_str]
-          newly_unlocked_world_map_door_strs += @world_map_unlocks[door_or_entity_str].split(",").map{|str| str.strip}
+          newly_world_map_unlocks = @world_map_unlocks[door_or_entity_str].split(",").map{|str| str.strip}
+          newly_world_map_unlocks.each do |world_map_entrance_door_str|
+            if world_map_entrance_door_str == "09-00-00_000"
+              # For the Lighthouse entrance we need to delay giving access to the right door because there are spikes in between the entrance and door.
+              lighthouse_accessible = true
+            else
+              newly_unlocked_world_map_door_strs << world_map_entrance_door_str
+            end
+          end
         end
         
         if !barlowe_accessible && accessible_doors["02-00-06_000"]
@@ -624,9 +632,6 @@ class DoorCompletabilityChecker
         end
         if !george_accessible && accessible_doors["11-00-08_000"]
           george_accessible = true
-        end
-        if !lighthouse_accessible && accessible_doors["08-02-07_000"]
-          lighthouse_accessible = true
         end
         
         # Unlock the castle on the world map.
