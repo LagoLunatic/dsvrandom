@@ -360,14 +360,26 @@ module EnemyRandomizer
   def get_common_enemies_in_room(room)
     enemies_in_room = room.entities.select{|e| e.is_common_enemy?}
     
-    if GAME == "por"
-      enemies_in_room += room.entities.select do |e|
-         e.is_enemy? && e.subtype == 0x94 && e.var_a == 0 # Count The Creature as a common enemy
+    case GAME
+    when "dos"
+      # Don't randomize the Malachi which is part of Dmitrii's event or the event gets messed up.
+      enemies_in_room.reject! do |e|
+        e.entity_str == "00-04-10_06"
       end
-    end
-    if GAME == "ooe"
+    when "por"
+      # Randomize the Creatures that are common enemies.
       enemies_in_room += room.entities.select do |e|
-         e.is_enemy? && e.subtype == 0x6B && e.var_a == 0 # Count Giant Skeleton as a common enemy
+         e.is_enemy? && e.subtype == 0x94 && e.var_a == 0
+      end
+    when "ooe"
+      # Randomize the Giant Skeletons that are common enemies.
+      enemies_in_room += room.entities.select do |e|
+         e.is_enemy? && e.subtype == 0x6B && e.var_a == 0
+      end
+      
+      # Don't randomize the inanimate Gargoyle's outside the castle. They're supposed to be decorations.
+      enemies_in_room.reject! do |e|
+        ["00-0C-00_03", "00-0C-02_04"].include?(e.entity_str)
       end
     end
     
@@ -375,15 +387,6 @@ module EnemyRandomizer
   end
   
   def randomize_enemy(enemy, failed_enemies_for_this_spot = [])
-    if GAME == "dos" && enemy.room.sector_index == 4 && enemy.room.room_index == 0x10 && enemy.subtype == 0x3A
-      # That one Malachi needed for Dmitrii's event. Don't do anything to it or the event gets messed up.
-      return
-    end
-    if GAME == "ooe" && enemy.room.area_index == 0 && enemy.room.sector_index == 0xC
-      # Those two gargoyles outside of the castle. These aren't supposed to be enemies, just decorations, so don't randomize them.
-      return
-    end
-    
     if @assets_needed_for_room.size >= MAX_ASSETS_PER_ROOM
       # There's a limit to how many different GFX files can be loaded at once before things start getting very buggy.
       # Once there's too many, just select from enemies already in the room.
@@ -882,7 +885,6 @@ module EnemyRandomizer
       if room_has_up_doors && room_has_upwards_gravity
         # In rooms with upside down gravity and an updoor, Yorick's skull can fall infinitely upwards out of bounds, which lags the game.
         # The lag doesn't occur when falling infinitely downwards out of bounds for some reason.
-        puts enemy.room.room_str
         return :redo
       end
     end
