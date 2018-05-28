@@ -568,6 +568,8 @@ class RandomizerWindow < Qt::Dialog
             @progress_dialog = nil
           end
           
+          write_spoiler_log(randomizer, is_error: true)
+          
           Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
         end
         return
@@ -618,6 +620,8 @@ class RandomizerWindow < Qt::Dialog
             @progress_dialog = nil
           end
           
+          write_spoiler_log(randomizer, is_error: true)
+          
           Qt::MessageBox.critical(self, "Building ROM failed", "Failed to build ROM with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
         end
         return
@@ -630,14 +634,7 @@ class RandomizerWindow < Qt::Dialog
           @progress_dialog = nil
         end
         
-        # Write the spoiler log.
-        randomizer.spoiler_log.seek(0)
-        spoiler_str = randomizer.spoiler_log.read()
-        output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Spoiler Log.txt"
-        output_log_path = File.join(@ui.output_folder.text, output_log_filename)
-        File.open(output_log_path, "w") do |f|
-          f.write(spoiler_str)
-        end
+        write_spoiler_log(randomizer)
         
         msg = "Randomization complete.\n\n"
         msg << "Output ROM:\n#{output_rom_filename}\n\n"
@@ -646,6 +643,25 @@ class RandomizerWindow < Qt::Dialog
         
         Qt::MessageBox.information(self, "Done", msg)
       end
+    end
+  end
+  
+  def write_spoiler_log(randomizer, is_error: false)
+    randomizer.spoiler_log.seek(0)
+    spoiler_str = randomizer.spoiler_log.read()
+    
+    game_with_caps = GAME.dup
+    game_with_caps[0] = game_with_caps[0].upcase
+    game_with_caps[2] = game_with_caps[2].upcase
+    if is_error
+      output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Error Log.txt"
+    else
+      output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Spoiler Log.txt"
+    end
+    output_log_path = File.join(@ui.output_folder.text, output_log_filename)
+    
+    File.open(output_log_path, "w") do |f|
+      f.write(spoiler_str)
     end
   end
   

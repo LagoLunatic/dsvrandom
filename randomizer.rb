@@ -901,6 +901,11 @@ class Randomizer
     
     yield [options_completed, "Applying tweaks..."]
     apply_tweaks()
+  rescue StandardError => e
+    if spoiler_log
+      spoiler_log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
+    end
+    raise e
   end
   
   def inspect; to_s; end
