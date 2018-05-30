@@ -1,6 +1,11 @@
 
 module PlayerRandomizer
   def randomize_player_sprites
+    # First fix the alternate mode characters to use their default attack animations instead of the ones for the main mode characters.
+    game.apply_armips_patch("dos_fix_alt_character_swing_anims")
+    game.apply_armips_patch("por_fix_alt_character_swing_anims")
+    
+    
     players = game.players
     
     # Shuffle player attributes which are related to the sprite the player uses.
