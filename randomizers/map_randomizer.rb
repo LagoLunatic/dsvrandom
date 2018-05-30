@@ -431,10 +431,6 @@ module MapRandomizer
     
     connect_doors_based_on_map(map_spots, map_width, map_height)
     
-    if area_index == 0 # Castle
-      replace_wooden_doors(placed_transition_rooms)
-    end
-    
     @all_unreachable_subroom_doors += unreachable_subroom_doors
   end
   
@@ -1353,54 +1349,6 @@ module MapRandomizer
           entity.type = 0
           entity.write_to_rom()
         end
-      end
-    end
-  end
-  
-  def replace_wooden_doors(placed_transition_rooms)
-    # Add replacement wooden doors in the proper places.
-    placed_transition_rooms.each do |transition_room|
-      transition_room.doors.each do |door|
-        dest_door = door.destination_door
-        dest_room = dest_door.room
-        
-        if dest_room.entities.find{|e| e.is_boss?}
-          # Don't add wooden doors on top of boss doors. The player could use the wooden door to walk straight through the boss door.
-          next
-        end
-        
-        gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(dest_door)
-        gap_end_offset = gap_end_index * 0x10 + 0x10
-        
-        door_x = door.dest_x
-        if door.direction == :left
-          door_x += 0xF0
-        end
-        door_y = door.dest_y + gap_end_offset
-        
-        dest_room.sector.load_necessary_overlay()
-        coll = RoomCollision.new(dest_room, game.fs)
-        floor_tile_x = door_x
-        if door.direction == :left
-          floor_tile_x -= 0x10
-        else
-          floor_tile_x += 0x10
-        end
-        if !coll[floor_tile_x,door_y].is_solid?
-          # The door wouldn't have a solid tile as ground right before it.
-          # This is bad since it would softlock the player when they touch the door and control is taken away from them.
-          # So don't add a wooden door here.
-          next
-        end
-        
-        new_wooden_door = dest_room.add_new_entity()
-        new_wooden_door.x_pos = door_x
-        new_wooden_door.y_pos = door_y - 0x20
-        
-        new_wooden_door.type = 2
-        new_wooden_door.subtype = WOODEN_DOOR_SUBTYPE
-        
-        new_wooden_door.write_to_rom()
       end
     end
   end
