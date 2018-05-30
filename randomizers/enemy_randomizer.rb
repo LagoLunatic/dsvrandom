@@ -571,6 +571,13 @@ module EnemyRandomizer
   def dos_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
     when "Zombie", "Ghoul"
+      down_door = enemy.room.doors.find{|door| door.direction == :down}
+      if down_door
+        # Don't allow in rooms that have a down door.
+        # The spawner freezes the game for a second every time it tries to spawn a zombie/ghoul above nothingness.
+        return :redo
+      end
+      
       # 50% chance to be a single zombie, 50% chance to be a spawner.
       if rng.rand <= 0.5
         enemy.var_a = 0
