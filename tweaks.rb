@@ -724,6 +724,14 @@ module Tweaks
       game.fs.write(0x02024CA4, [room.room_ypos_on_map].pack("C"))
     end
     
+    if GAME == "ooe" && room_rando?
+      # If any player character other than Shanoa enters Eligor's fight, Eligor's code forces the player to walk to the right until they're on Eligor's back.
+      # This is fine when entering from the left, but when entering from the right it softlocks the player walking into a wall forever.
+      # So we remove this special code to automatically walk the player and make it behave the same way as it does for Shanoa.
+      game.fs.load_overlay(31)
+      game.fs.write(0x022BA47C, [0xEA000002].pack("V")) # Make branch unconditional, so it works for any player character, not just Shanoa.
+    end
+    
     if options[:remove_area_names]
       game.each_room do |room|
         room.entities.each do |entity|
