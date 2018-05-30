@@ -4,6 +4,23 @@ module PlayerRandomizer
     # First fix the alternate mode characters to use their default attack animations instead of the ones for the main mode characters.
     game.apply_armips_patch("dos_fix_alt_character_swing_anims")
     game.apply_armips_patch("por_fix_alt_character_swing_anims")
+    if GAME == "por"
+      # And fix Stella and Loretta's attack animations, since they don't have proper default attack animations set at all.
+      state_anims = game.state_anims_for_player(2) # Stella
+      state_anims[0x40] = 0x02 # Attacking
+      state_anims[0x41] = 0x08 # Attacking crouched
+      state_anims[0x42] = 0x02 # Attacking in air
+      state_anims[0x43] = 0xFF # Stop attacking
+      state_anims[0x44] = 0xFF # Stop attacking crouched
+      game.save_state_anims_for_player(2, state_anims)
+      state_anims = game.state_anims_for_player(3) # Loretta
+      state_anims[0x40] = 0x0B # Attacking
+      state_anims[0x41] = 0x0E # Attacking crouched
+      state_anims[0x42] = 0x06 # Attacking in air
+      state_anims[0x43] = 0xFF # Stop attacking
+      state_anims[0x44] = 0xFF # Stop attacking crouched
+      game.save_state_anims_for_player(3, state_anims)
+    end
     
     
     players = game.players
