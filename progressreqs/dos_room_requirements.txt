@@ -91,6 +91,7 @@ Progress important rooms:
   - 00-03-0E # Doppelganger event that requires Mina's Talisman
   - 00-05-27 # Warp to Abyss
   - 00-0B-1F # Warp to Menace
+  - 00-0B-23 # Warp room in Abyss, not strictly necessary but nice to have. And this is necessary to reach the special Abyss warp tile on the castle map and get 100% map completion.
   
   - 00-00-0A # Hammer
   - 00-00-03 # Yoko

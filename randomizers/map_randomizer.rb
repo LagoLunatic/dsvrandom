@@ -1518,7 +1518,12 @@ module MapRandomizer
           total_num_tiles += 1 unless tile.is_blank
         end
       end
+      total_num_tiles += 1 # The 1 extra tile you get when you use the Abyss warp room
       game.fs.write(0x02026B68, [total_num_tiles].pack("V"))
+      
+      # Also fix a bug in the game's code where it would not count the rightmost 2 columns and the bottommost 3 rows of the Abyss map as being part of your map percentage.
+      game.fs.write(0x02026C04, [0x19].pack("C"))
+      game.fs.write(0x02026C10, [0x12].pack("C"))
       
       # Get rid of all secret doors so they don't appear on the new map and look weird.
       # A secret door with X and Y of FF is the end marker of the list, so just set the first secret door as the end marker.
