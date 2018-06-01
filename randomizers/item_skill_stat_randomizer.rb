@@ -504,7 +504,8 @@ module ItemSkillStatRandomizer
   def randomize_weapon_damage_types(item, item_global_id)
     if rng.rand() >= 0.30
       # Increase the chance of a pure physical weapon.
-      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 2, 3])
+      # (Only DoS and PoR have weapons, so the first 3 elements are physical.)
+      damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,3], [1, 1, 1, 1, 1, 2, 3])
     else
       damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
     end
@@ -719,6 +720,7 @@ module ItemSkillStatRandomizer
   def randomize_skill_damage_types(skill, skill_global_id)
     if GAME == "ooe" && rng.rand() >= 0.40
       # Increase the chance of a pure physical glyph in OoE.
+      # (In OoE only the first 2 elements are physical.)
       damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,2], [1, 1, 1, 1, 1, 1, 2])
     else
       damage_types_to_set = get_n_damage_types(ITEM_BITFIELD_ATTRIBUTES["Effects"][0,8], [1, 1, 1, 2, 2, 3, 4])
