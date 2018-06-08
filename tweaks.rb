@@ -698,6 +698,13 @@ module Tweaks
       game.fs.write(0x021E8B30, [0x3C].pack("C"))
     end
     
+    if GAME == "por"
+      # PoR Malphas has leftover code from DoS to set the "during a boss fight" global game flag.
+      # We need to remove the line that sets this flag, otherwise portraits and magical tickets won't work in any room he is in.
+      game.fs.load_overlay(46)
+      game.fs.write(0x022D7A10, [0xE1A00000].pack("V")) # nop
+    end
+    
     if GAME == "dos" && options[:randomize_weapon_synths]
       # Fix the stat difference display in the weapon synth screen.
       # It assumes that all items are weapons and displays a weapon's stats by default.
