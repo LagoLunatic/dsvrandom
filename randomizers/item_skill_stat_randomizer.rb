@@ -76,7 +76,6 @@ module ItemSkillStatRandomizer
         
         extra_stats = ["Strength", "Constitution", "Intelligence", "Luck"]
         extra_stats << "Mind" if GAME == "por" || GAME == "ooe"
-        extra_stats << "Attack" if GAME == "por"
         
         # Don't randomize some extreme stats that are part of the identity of the item.
         if item.name == "Death Ring"
