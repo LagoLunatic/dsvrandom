@@ -309,12 +309,15 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_starting_room.enabled = false
       @ui.randomize_rooms_map_friendly.checked = false
       @ui.randomize_rooms_map_friendly.enabled = false
+      @ui.randomize_world_map_exits.checked = false
+      @ui.randomize_world_map_exits.enabled = false
     else
       @ui.randomize_boss_souls.enabled = true
       @ui.randomize_villagers.enabled = true
       @ui.randomize_portraits.enabled = true
       @ui.randomize_red_walls.enabled = true
       @ui.randomize_starting_room.enabled = true
+      @ui.randomize_world_map_exits.enabled = true
     end
     
     if @ui.randomize_rooms_map_friendly.checked
