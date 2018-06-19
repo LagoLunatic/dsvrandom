@@ -695,9 +695,9 @@ Rooms:
   00-01-09:
     000-001: 
     000-002: 
-    001-000: backdashjump
+    001-000: # Can be done with backdash jump but is somewhat tricky so not in the logic
     001-002: 
-    002-000: backdashjump
+    002-000: # Can be done with backdash jump but is somewhat tricky so not in the logic
     002-001: 
   00-01-0A: # sliding puzzle
     000-001: 
