@@ -1289,13 +1289,22 @@ module DoorRandomizer
     room.sector.load_necessary_overlay()
     coll_layer = room.layers.first
     solid_tile_index_on_tileset = SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET[room.overlay_id][coll_layer.collision_tileset_pointer]
+    layers_to_modify = room.layers.select{|layer| layer.tileset_pointer == coll_layer.tileset_pointer}
     
     tiles.each do |tile|
-      tile_i = tile[:x] + tile[:y]*SCREEN_WIDTH_IN_TILES*coll_layer.width
-      coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-      coll_layer.tiles[tile_i].horizontal_flip = false
-      coll_layer.tiles[tile_i].vertical_flip = false
+      layers_to_modify.each do |layer|
+        if tile[:x] >= layer.width*SCREEN_WIDTH_IN_TILES || tile[:y] >= layer.height*SCREEN_HEIGHT_IN_TILES
+          next
+        end
+        
+        tile_i = tile[:x] + tile[:y]*SCREEN_WIDTH_IN_TILES*layer.width
+        layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+        layer.tiles[tile_i].horizontal_flip = false
+        layer.tiles[tile_i].vertical_flip = false
+      end
     end
-    coll_layer.write_to_rom()
+    layers_to_modify.each do |layer|
+      layer.write_to_rom()
+    end
   end
 end

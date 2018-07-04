@@ -1118,7 +1118,6 @@ module MapRandomizer
         # Choose the solid tile to use to block off doors we remove.
         room.sector.load_necessary_overlay()
         coll_layer = room.layers.first
-        solid_tile_index_on_tileset = SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET[room.overlay_id][coll_layer.collision_tileset_pointer]
         coll = RoomCollision.new(room, game.fs)
         
         x_in_room = x - room.room_xpos_on_map
@@ -1161,14 +1160,12 @@ module MapRandomizer
             # No matching door. Block this door off.
             tile_x = 0
             tile_start_y = left_door.y_pos*SCREEN_HEIGHT_IN_TILES
+            tiles_to_block_off = []
             (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
               next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
-              coll_layer.tiles[tile_i].vertical_flip = false
+              tiles_to_block_off << {x: tile_x, y: tile_y}
             end
-            coll_layer.write_to_rom()
+            block_off_tiles(room, tiles_to_block_off)
             
             left_door.destination_room_metadata_ram_pointer = 0
             left_door.x_pos = room.width + 1
@@ -1201,14 +1198,12 @@ module MapRandomizer
             # No matching door. Block this door off.
             tile_x = room.width*SCREEN_WIDTH_IN_TILES-1
             tile_start_y = right_door.y_pos*SCREEN_HEIGHT_IN_TILES
+            tiles_to_block_off = []
             (tile_start_y..tile_start_y+SCREEN_HEIGHT_IN_TILES-1).each do |tile_y|
               next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
-              coll_layer.tiles[tile_i].vertical_flip = false
+              tiles_to_block_off << {x: tile_x, y: tile_y}
             end
-            coll_layer.write_to_rom()
+            block_off_tiles(room, tiles_to_block_off)
             
             right_door.destination_room_metadata_ram_pointer = 0
             right_door.x_pos = room.width + 1
@@ -1241,22 +1236,19 @@ module MapRandomizer
             # No matching door. Block this door off.
             tile_y = 0
             tile_start_x = up_door.x_pos*SCREEN_WIDTH_IN_TILES
+            tiles_to_block_off = []
             (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
               next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
-              coll_layer.tiles[tile_i].vertical_flip = false
+              tiles_to_block_off << {x: tile_x, y: tile_y}
               
               # If there are any up slopes immediately below the updoor we're blocking off, delete those slopes.
               # If we don't delete them and the player manages to get on top of the slope under the blocked off door the player can be pushed out of bounds by the slope.
               below_tile = coll[tile_x*0x10,(tile_y+1)*0x10]
               if below_tile.is_slope? && !below_tile.vertical_flip
-                tile_i = tile_x + (tile_y+1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = 0
+                tiles_to_block_off << {x: tile_x, y: tile_y+1}
               end
             end
-            coll_layer.write_to_rom()
+            block_off_tiles(room, tiles_to_block_off)
             
             up_door.destination_room_metadata_ram_pointer = 0
             up_door.x_pos = room.width + 1
@@ -1289,28 +1281,24 @@ module MapRandomizer
             # No matching door. Block this door off.
             tile_y = room.height*SCREEN_HEIGHT_IN_TILES-1
             tile_start_x = down_door.x_pos*SCREEN_WIDTH_IN_TILES
+            tiles_to_block_off = []
             (tile_start_x..tile_start_x+SCREEN_WIDTH_IN_TILES-1).each do |tile_x|
               next if coll[tile_x*0x10,tile_y*0x10].is_solid?
-              tile_i = tile_x + tile_y*SCREEN_WIDTH_IN_TILES*coll_layer.width
-              coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
-              coll_layer.tiles[tile_i].horizontal_flip = false
-              coll_layer.tiles[tile_i].vertical_flip = false
+              tiles_to_block_off << {x: tile_x, y: tile_y}
               
               # If there are any jumpthrough platforms immediately above the downdoor we're blocking off, delete those platforms.
               # If we don't delete them and the player tries to fall through one, it kind of bugs out the physics and the player teleports around a little bit.
               above_tile = coll[tile_x*0x10,(tile_y-1)*0x10]
               if above_tile.is_jumpthrough_platform?
-                tile_i = tile_x + (tile_y-1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = 0
+                tiles_to_block_off << {x: tile_x, y: tile_y-1}
               end
               # If there are any down slopes immediately above the downdoor we're blocking off, delete those slopes.
               # If we don't delete them and the player manages to get under the slope above the blocked off door the player can get stuck inside the slope.
               if above_tile.is_slope? && above_tile.vertical_flip
-                tile_i = tile_x + (tile_y-1)*SCREEN_WIDTH_IN_TILES*coll_layer.width
-                coll_layer.tiles[tile_i].index_on_tileset = 0
+                tiles_to_block_off << {x: tile_x, y: tile_y-1}
               end
             end
-            coll_layer.write_to_rom()
+            block_off_tiles(room, tiles_to_block_off)
             
             down_door.destination_room_metadata_ram_pointer = 0
             down_door.x_pos = room.width + 1
