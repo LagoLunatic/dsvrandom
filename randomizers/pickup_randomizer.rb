@@ -1088,7 +1088,7 @@ module PickupRandomizer
       when "dos"
         enemy_dna["Soul"] = item_index
       when "ooe"
-        enemy_dna["Glyph"] = item_index + 1
+        enemy_dna["Glyph"] = pickup_global_id + 1
       else
         raise "Boss soul randomizer is bugged for #{LONG_GAME_NAME}."
       end
