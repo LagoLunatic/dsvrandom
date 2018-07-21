@@ -442,6 +442,14 @@ module Tweaks
       end
     end
     
+    if GAME == "por" && (options[:randomize_portraits] || options[:por_short_mode])
+      # Remove the cutscene where the player characters talk about the first portrait they find that leads to City of Haze.
+      # It bugs out the game pretty seriously if there's no portrait in the room.
+      first_portrait_cutscene = game.entity_by_str("00-01-00_01")
+      first_portrait_cutscene.type = 0
+      first_portrait_cutscene.write_to_rom()
+    end
+    
     if GAME == "por"
       # If the portrait randomizer or short mode remove all 4 portraits from the studio portrait room, going into the studio portrait crashes on real hardware.
       # This is because it needs part of the small square-framed portrait's sprite.
