@@ -284,6 +284,19 @@ module PickupRandomizer
         end
       end
       
+      
+      if room_rando?
+        possible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
+        
+        accessible_rooms = accessible_doors.map{|door_str| door_str[0,8]}
+        @rooms_by_progression_order_accessed << accessible_rooms
+      else
+        possible_locations = checker.get_accessible_locations()
+      end
+      possible_locations -= @locations_randomized_to_have_useful_pickups
+      puts "Total possible locations: #{possible_locations.size}" if verbose
+      
+      
       pickups_by_locations = checker.pickups_by_current_num_locations_they_access()
       if starting_portrait_name
         # Don't place the starting portrait anywhere, it's already in Dracula's Castle.
@@ -347,6 +360,14 @@ module PickupRandomizer
             # But if the only things left to place are villagers, we have no choice but to place them before Albus is accessible.
             valid_pickups = pickups_by_locations.keys
           end
+        elsif GAME == "dos" && room_rando? && accessible_rooms.include?("00-06-00")
+          # Player has access to the Subterranean Hell room with the huge spikes.
+          # To get through this room you need either rahab and bone ark or rahab, puppet master, and skeleton ape.
+          # The logic can have trouble placing the items necessary to get through this room, since skeleton ape and bone ark are useless everywhere else, and rahab is only useful in a handful of rooms - so if the player doesn't have access to any places that make rahab useful by itself, the randomizer might just try to place every other item, filling up all available item locations, and never place rahab.
+          # So we add a special case here to 100% guaranteed place rahab (assuming the player has access to under 15 item locations). From there the randomizer can figure out that it should place bone ark or puppet master and skeleton ape.
+          if valid_pickups.include?(0x145) && possible_locations.length < 15
+            valid_pickups = [0x145] # Rahab
+          end
         end
         
         pickup_global_id = valid_pickups.sample(random: rng)
@@ -360,17 +381,6 @@ module PickupRandomizer
       
       pickup_name = checker.defs.invert[pickup_global_id].to_s
       puts "Trying to place #{pickup_name}" if verbose
-      
-      if room_rando?
-        possible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
-        
-        accessible_rooms = accessible_doors.map{|door_str| door_str[0,8]}
-        @rooms_by_progression_order_accessed << accessible_rooms
-      else
-        possible_locations = checker.get_accessible_locations()
-      end
-      possible_locations -= @locations_randomized_to_have_useful_pickups
-      puts "Total possible locations: #{possible_locations.size}" if verbose
       
       
       
