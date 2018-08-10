@@ -13,7 +13,7 @@ module Tweaks
       tiled.read(filename, room)
     end
     
-    if GAME == "ooe" && options[:open_world_map]
+    if GAME == "ooe" && options[:open_world_map] && !room_rando?
       game.apply_armips_patch("ooe_nonlinear")
       
       # Fix some broken platforms in Tristis Pass so the player cannot become permastuck.
