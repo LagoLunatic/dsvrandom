@@ -343,6 +343,12 @@ module ItemSkillStatRandomizer
       
       if options[:randomize_skill_behavior]
         randomize_skill_behavior(skill, skill_global_id)
+      elsif GAME == "ooe"
+        skill_iframes_locations = HARDCODED_SKILL_IFRAMES_LOCATIONS[skill_global_id]
+        if skill_iframes_locations
+          orig_iframes = game.fs.read(skill_iframes_locations[0], 1).unpack("C")[0]
+          skill["IFrames"] = orig_iframes
+        end
       end
     
       if options[:randomize_weapon_and_skill_elements]
@@ -995,7 +1001,8 @@ module ItemSkillStatRandomizer
     
     skills_by_family.each do |family|
       sorted_dmg_mults = family.map{|skill| skill["DMG multiplier"]}.sort
-      # Note about the "IFrames" field here: This should have the correct iframes value in it even for glyphs with hardcoded iframes, because when ooe_set_skill_iframes sets the hardcoded iframes it also sets this field.
+      # Note about the "IFrames" field here: This should have the correct iframes value in it even for glyphs with hardcoded iframes, because when set_skill_iframes sets the hardcoded iframes it also sets this field.
+      # And if skill behavior rando is off, it instead reads the original iframes value and sets it here.
       sorted_iframes = family.map{|skill| skill["IFrames"]}.sort.reverse
       sorted_delays = family.map{|skill| skill["Delay"]}.sort.reverse
       sorted_max_at_onces = family.map{|skill| skill["Max at once"]}.sort
