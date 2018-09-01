@@ -203,6 +203,12 @@ module Tweaks
       end
     end
     
+    if GAME == "dos"
+      # Hellfire's iframes line was originally coded to just copy register r4 (containing 1) into register r1.
+      # Change this to a constant "mov r1, 1h" so the iframes value can be directly written to when skill behavior rando is on.
+      game.fs.write(0x022035CC, [0xE3A01001].pack("V"))
+    end
+    
     if GAME == "ooe" && options[:gain_extra_attribute_points]
       # Make every enemy give 25x more AP than normal.
       game.enemy_dnas.each do |enemy|

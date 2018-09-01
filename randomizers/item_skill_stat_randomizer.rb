@@ -1065,11 +1065,6 @@ module ItemSkillStatRandomizer
     end
     
     skill_iframes_locations.each do |skill_iframes_location|
-      if GAME == "dos" && skill_global_id == 0xFB # Hell Fire
-        # Need to change it to a normal constant mov, instead of copying an already used variable to r1.
-        game.fs.write(skill_iframes_location, [0xE3A01001].pack("V"))
-      end
-      
       game.fs.write(skill_iframes_location, [iframes].pack("C"))
     end
   end
