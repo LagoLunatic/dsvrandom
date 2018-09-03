@@ -84,7 +84,6 @@ module SkillSpriteRandomizer
       hitbox.height = max_part_y - min_part_y
       
       frame.hitboxes << hitbox
-      frame.number_of_hitboxes += 1
       frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
       sprite.hitboxes << hitbox
       
@@ -98,8 +97,6 @@ module SkillSpriteRandomizer
       num_keyframes = 20
       
       animation = Animation.new
-      animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
-      animation.number_of_frames = num_keyframes
       sprite.animations << animation
       
       num_keyframes.times do |i|
@@ -108,6 +105,7 @@ module SkillSpriteRandomizer
         frame_delay.delay = 1 # 1 frame of delay
         
         sprite.frame_delays << frame_delay
+        animation.frame_delays << frame_delay
       end
       
       any_changes_made_to_this_sprite = true
