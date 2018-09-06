@@ -131,7 +131,7 @@ class RandomizerWindow < Qt::Dialog
   slots "difficulty_slider_value_changed(int)"
   slots "difficulty_line_edit_value_changed()"
   slots "generate_seed()"
-  slots "randomize()"
+  slots "randomize_n_seeds()"
   slots "open_about()"
   slots "read_seed_info()"
   slots "experimental_enabled_changed(bool)"
@@ -160,12 +160,14 @@ class RandomizerWindow < Qt::Dialog
     
     connect(@ui.experimental_options_enabled, SIGNAL("clicked(bool)"), self, SLOT("experimental_enabled_changed(bool)"))
     
-    connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
+    connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize_n_seeds()"))
     connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
     
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
     connect(@ui.difficulty_level, SIGNAL("activated(int)"), self, SLOT("difficulty_level_changed(int)"))
+    
+    connect(@ui.num_seeds_to_create, SIGNAL("activated(int)"), self, SLOT("update_settings()"))
     
     update_settings()
     
@@ -202,6 +204,11 @@ class RandomizerWindow < Qt::Dialog
     
     OPTIONS.each do |option_name|
       @ui.send(option_name).setChecked(@settings[option_name]) unless @settings[option_name].nil?
+    end
+    
+    num_seeds_index = @ui.num_seeds_to_create.findText(@settings[:num_seeds_to_create].to_s)
+    if num_seeds_index != -1
+      @ui.num_seeds_to_create.setCurrentIndex(num_seeds_index)
     end
     
     difficulty_level_options = DIFFICULTY_LEVELS[@settings[:difficulty_level]]
@@ -287,6 +294,8 @@ class RandomizerWindow < Qt::Dialog
       average = slider.true_value
       @settings[:difficulty_options][option_name] = average
     end
+    
+    @settings[:num_seeds_to_create] = @ui.num_seeds_to_create.itemText(@ui.num_seeds_to_create.currentIndex)
     
     save_settings()
   end
@@ -486,6 +495,15 @@ class RandomizerWindow < Qt::Dialog
     save_settings()
   end
   
+  def randomize_n_seeds
+    num_seeds_to_create = @settings[:num_seeds_to_create]
+    num_seeds_to_create = num_seeds_to_create.to_i
+    num_seeds_to_create = 1 if num_seeds_to_create < 1
+    @remaining_seeds_to_create = num_seeds_to_create
+    @output_filenames_written_so_far = []
+    randomize()
+  end
+  
   def randomize
     unless File.file?(@ui.clean_rom.text)
       Qt::MessageBox.warning(self, "No ROM specified", "Must specify clean ROM path.")
@@ -642,12 +660,23 @@ class RandomizerWindow < Qt::Dialog
         
         write_spoiler_log(randomizer)
         
-        msg = "Randomization complete.\n\n"
-        msg << "Output ROM:\n#{output_rom_filename}\n\n"
-        msg << "If you get stuck, check the FAQ in the readme,\nand the progression spoiler log in the output folder."
-        msg << "\n\nNote that you have an infinitely usable magical ticket in your inventory, so if you get trapped in a pit use that to return to your starting room." if randomizer.needs_infinite_magical_tickets?
-        
-        Qt::MessageBox.information(self, "Done", msg)
+        @remaining_seeds_to_create -= 1
+        @output_filenames_written_so_far << output_rom_filename
+        if @remaining_seeds_to_create > 0
+          generate_seed()
+          randomize()
+        else
+          msg = "Randomization complete.\n\n"
+          if @output_filenames_written_so_far.length == 1
+            msg << "Output ROM:\n#{output_rom_filename}\n\n"
+          else
+            msg << "Output ROMs:\n#{@output_filenames_written_so_far.join(", ")}\n\n"
+          end
+          msg << "If you get stuck, check the FAQ in the readme,\nand the progression spoiler log in the output folder."
+          msg << "\n\nNote that you have an infinitely usable magical ticket in your inventory, so if you get trapped in a pit use that to return to your starting room." if randomizer.needs_infinite_magical_tickets?
+          
+          Qt::MessageBox.information(self, "Done", msg)
+        end
       end
     end
   end
