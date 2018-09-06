@@ -1623,10 +1623,10 @@ Rooms:
     001-002: 
     001-e00: 
     001-e01: 
-    002-000: 
-    002-001: 
-    002-e00: 
-    002-e01: 
+    002-000: small height
+    002-001: small height
+    002-e00: small height
+    002-e01: small height
     e00-000: 
     e00-001: 
     e00-002: 
