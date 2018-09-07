@@ -393,7 +393,18 @@ module ItemSkillStatRandomizer
             available_swing_anims = [0xC]
           end
         end
+        if other_weapons_with_same_sprite.any?
+          # The throwing weapon swing anim require the weapon's sprite to be recentered to the origin.
+          # That would cause issues if this weapon's sprite is shared by any other weapons, so don't allow this swing anim in that case.
+          available_swing_anims -= [0xA]
+        end
+        
         item["Swing Anim"] = available_swing_anims.sample(random: rng)
+        
+        if [0xA].include?(item["Swing Anim"])
+          # If a normal weapon gets the throwing weapon swing anim, we need to recenter this weapon's sprite and hitboxes to be on the origin so it's not spinning around where its actual hitbox is.
+          center_weapon_sprite_on_origin(item)
+        end
       end
       item["Super Anim"] = rng.rand(0..0xE) unless progress_item
     when "por"
