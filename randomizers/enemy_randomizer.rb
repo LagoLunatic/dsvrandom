@@ -354,6 +354,13 @@ module EnemyRandomizer
     # Only allow enemies up to a certain multiplier higher than the strongest enemy in the original room.
     max_allowed_enemy_attack = max_enemy_attack*@difficulty_settings[:max_enemy_difficulty_mult]
     
+    if max_enemy_attack > 60
+      # If this is a very difficult endgame room in vanilla already, we make the difficulty of the room completely unlimited.
+      # This is so that certain enemies that had high stats in vanilla and also had those stats increased by the enemy stat randomizer can still have a chance at being placed somewhere in the game.
+      remaining_new_room_difficulty = 9999
+      max_allowed_enemy_attack = 9999
+    end
+    
     return [remaining_new_room_difficulty, max_allowed_enemy_attack]
   end
   
