@@ -173,16 +173,17 @@ module ItemSkillStatRandomizer
     anim = sprite.animations[0]
     frames = anim.frame_delays.map{|frame_delay| sprite.frames[frame_delay.frame_index]}
     
-    first_hitbox = nil
+    widest_hitbox = nil
     frames.each do |frame|
-      if frame.hitboxes.any?
-        first_hitbox = frame.hitboxes.first
-        break
+      frame.hitboxes.each do |hitbox|
+        if widest_hitbox.nil? || hitbox.width > widest_hitbox.width
+          widest_hitbox = hitbox
+        end
       end
     end
     
-    center_x = first_hitbox.x_pos + first_hitbox.width/2
-    center_y = first_hitbox.y_pos + first_hitbox.height/2
+    center_x = widest_hitbox.x_pos + widest_hitbox.width/2
+    center_y = widest_hitbox.y_pos + widest_hitbox.height/2
     offset_amount_x = -center_x
     offset_amount_y = -center_y
     
