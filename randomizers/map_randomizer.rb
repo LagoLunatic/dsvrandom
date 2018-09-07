@@ -1754,20 +1754,27 @@ module MapRandomizer
           tile.sector_index = sector_index
           tile.room_index = room_index
           
-          tile.is_save = room.entities.any?{|e| e.is_save_point?}
-          tile.is_warp = room.entities.any?{|e| e.is_warp_point?}
-          tile.is_transition = @transition_rooms.include?(room)
-          
           tile_x_off = (x - room.room_xpos_on_map) * SCREEN_WIDTH_IN_PIXELS
           tile_y_off = (y - room.room_ypos_on_map) * SCREEN_HEIGHT_IN_PIXELS
+          tile.is_save = room.entities.any? do |e|
+            e.is_save_point? &&
+              (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
+              (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
+          end
+          tile.is_warp = room.entities.any? do |e|
+            e.is_warp_point? &&
+              (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
+              (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
+          end
+          tile.is_transition = @transition_rooms.include?(room)
           if GAME == "por"
-            tile.is_entrance = room.entities.find do |e|
+            tile.is_entrance = room.entities.any? do |e|
               e.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(e.subtype) &&
                 (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(e.x_pos) &&
                 (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
             end
           else # OoE
-            tile.is_entrance = room.entities.find do |e|
+            tile.is_entrance = room.entities.any? do |e|
               e.is_special_object? && e.subtype == 0x2B &&
                 (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS).include?(e.x_pos) &&
                 (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(e.y_pos)
@@ -1941,5 +1948,163 @@ module MapRandomizer
     end
     
     return true
+  end
+  
+  def add_more_save_and_warp_rooms
+    return if GAME == "dos" # Save/warp rooms aren't very flexible in DoS
+    
+    @new_save_warp_rooms_debug = false
+    
+    num_warps_for_area = {}
+    game.areas.each_with_index do |area, area_index|
+      num_warps_for_area[area_index] = 0
+      area.sectors.each do |sector|
+        sector.rooms.each do |room|
+          next if @unused_rooms.include?(room)
+          
+          num_warps_for_area[area_index] += room.entities.count{|e| e.is_warp_point?}
+        end
+      end
+    end
+    
+    all_rooms = []
+    game.each_room do |room|
+      all_rooms << room
+    end
+    
+    rooms_to_add_save_or_warp_to = []
+    all_rooms.shuffle!(random: rng)
+    all_rooms.each do |base_room|
+      next if @unused_rooms.include?(base_room)
+      
+      # Don't add a save/warp to a room with enemies in it.
+      next if base_room.entities.any?{|e| e.is_enemy? }
+      
+      # Don't add a save/warp to this room if it's an entrance room, since the entrance would override it on the map, which also makes warp rooms not function.
+      if GAME == "por"
+        next if base_room.entities.any? do |e|
+          e.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(e.subtype)
+        end
+      elsif GAME == "ooe"
+        next if base_room.entities.any? do |e|
+          e.is_special_object? && e.subtype == 0x2B
+        end
+      end 
+      
+      if @new_save_warp_rooms_debug
+        puts
+        puts "Checking room: #{base_room.room_str}"
+      end
+      
+      save_point = base_room.entities.find{|e| e.is_special_object? && e.subtype == SAVE_POINT_SUBTYPE}
+      warp_point = base_room.entities.find{|e| e.is_special_object? && e.subtype == WARP_POINT_SUBTYPE}
+      if save_point || warp_point
+        # Don't want to add a save or warp if this room already has one
+        puts "Room already has a save/warp point" if @new_save_warp_rooms_debug
+        next
+      end
+      
+      checked_rooms = []
+      accessible_unchecked_rooms = [{room: base_room, degree_of_separation: 0}]
+      while true
+        if accessible_unchecked_rooms.empty?
+          break
+        end
+        
+        curr_room_hash = accessible_unchecked_rooms.shift()
+        curr_room = curr_room_hash[:room]
+        curr_degree_of_separation = curr_room_hash[:degree_of_separation]
+        
+        save_point = curr_room.entities.find{|e| e.is_special_object? && e.subtype == SAVE_POINT_SUBTYPE}
+        warp_point = curr_room.entities.find{|e| e.is_special_object? && e.subtype == WARP_POINT_SUBTYPE}
+        is_new_save_or_warp = rooms_to_add_save_or_warp_to.include?(curr_room)
+        if save_point
+          puts "Found save point #{save_point.entity_str} with degree of separation #{curr_degree_of_separation}" if @new_save_warp_rooms_debug
+          break
+        elsif warp_point
+          puts "Found warp point #{warp_point.entity_str} with degree of separation #{curr_degree_of_separation}" if @new_save_warp_rooms_debug
+          break
+        elsif is_new_save_or_warp
+          puts "Found new save/warp in room #{curr_room.room_str} with degree of separation #{curr_degree_of_separation}" if @new_save_warp_rooms_debug
+          break
+        elsif curr_degree_of_separation >= 8
+          # No save or warp points for a while from the base room. Add a new one.
+          rooms_to_add_save_or_warp_to << base_room
+          break
+        end
+        
+        curr_room.doors.each do |door|
+          next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map rando
+          
+          dest_room = door.destination_room
+          if !checked_rooms.include?(dest_room)
+            accessible_unchecked_rooms << {room: door.destination_room, degree_of_separation: curr_degree_of_separation+1}
+          end
+        end
+        
+        checked_rooms << curr_room
+      end
+    end
+    
+    rooms_to_add_save_or_warp_to.each do |room|
+      # There's a limit to the number of warp rooms that can be in a single area before the warp select screen stops working.
+      # Once that limit is reached, we only add save rooms, no more warps.
+      if num_warps_for_area[room.area_index] < MAX_WARP_ROOMS_PER_AREA
+        if num_warps_for_area[room.area_index] == 1
+          # If we have exactly 1 warp right now, definitely add another warp, since just 1 is useless.
+          type = :warp
+        else
+          type = [:warp, :warp, :warp, :save].sample(random: rng)
+        end
+        num_warps_for_area[room.area_index] += 1
+      else
+        type = :save
+      end
+      puts "Adding new #{type} point to room #{room.room_str}" if @new_save_warp_rooms_debug
+      add_save_or_warp_to_room(room, type)
+    end
+  end
+  
+  def add_save_or_warp_to_room(room, type)
+    return if GAME == "dos" # Save/warp rooms aren't very flexible in DoS
+    
+    @coll = RoomCollision.new(room, game.fs)
+    
+    valid_positions = coll.all_floor_positions.dup
+    
+    valid_positions.select! do |x, y|
+      if type == :warp
+        # Warp rooms only function correctly if in the upper left screen.
+        next if x >= SCREEN_WIDTH_IN_PIXELS
+        next if y >= SCREEN_HEIGHT_IN_PIXELS
+      end
+      
+      next if y < 0x60
+      
+      full_height_is_empty = true
+      (y-0x30..y).step(0x10) do |y_to_check|
+        if !coll[x,y_to_check].is_blank
+          full_height_is_empty = false
+        end
+      end
+      
+      next if !full_height_is_empty
+      
+      true
+    end
+    
+    if valid_positions.empty?
+      raise "No valid floor positions to place save/warp point in room #{room.room_str}"
+    end
+    
+    save_or_warp_point = room.add_new_entity()
+    save_or_warp_point.type = SPECIAL_OBJECT_ENTITY_TYPE
+    if type == :save
+      save_or_warp_point.subtype = SAVE_POINT_SUBTYPE
+    else
+      save_or_warp_point.subtype = WARP_POINT_SUBTYPE
+    end
+    save_or_warp_point.x_pos, save_or_warp_point.y_pos = valid_positions.sample(random: rng)
+    save_or_warp_point.write_to_rom()
   end
 end

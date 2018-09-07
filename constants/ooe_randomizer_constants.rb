@@ -8,6 +8,8 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = [0x123, 0x149] # queen of hearts, death ring
 
+MAX_WARP_ROOMS_PER_AREA = 8
+
 WEAPON_SWING_ANIM_NAMES = {
   0x00 => "Fast",
   0x01 => "Fast stab",

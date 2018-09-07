@@ -412,6 +412,8 @@ class Randomizer
       randomize_doors_no_overlap() do |percent|
         yield [options_completed+percent*75, "Generating map..."]
       end
+      
+      add_more_save_and_warp_rooms()
       regenerate_all_maps()
       options_completed += 75
     else
