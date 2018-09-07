@@ -1,5 +1,7 @@
 
 module MapRandomizer
+  MAX_MAP_WIDTH = 59
+  MAX_MAP_HEIGHT = 44
   DOS_WARP_ROOM_STRS = [
     "00-00-18",
     "00-01-3E",
@@ -45,7 +47,7 @@ module MapRandomizer
       starting_room = game.areas[0].sectors[0].rooms[1]
       
       num_sectors_done_before_area = num_sectors_done
-      randomize_doors_no_overlap_for_area_with_redos(castle_rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
+      randomize_doors_no_overlap_for_area_with_redos(castle_rooms, MAX_MAP_WIDTH, MAX_MAP_HEIGHT, starting_room) do |num_sectors_done_for_area|
         num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
         percent_done = num_sectors_done / total_num_sectors
         yield percent_done
@@ -105,7 +107,7 @@ module MapRandomizer
         end
         
         num_sectors_done_before_area = num_sectors_done
-        randomize_doors_no_overlap_for_area_with_redos(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
+        randomize_doors_no_overlap_for_area_with_redos(rooms, MAX_MAP_WIDTH, MAX_MAP_HEIGHT, starting_room) do |num_sectors_done_for_area|
           num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
           percent_done = num_sectors_done / total_num_sectors
           yield percent_done
@@ -173,7 +175,7 @@ module MapRandomizer
         end
         
         num_sectors_done_before_area = num_sectors_done
-        randomize_doors_no_overlap_for_area_with_redos(rooms, 60, 44, starting_room) do |num_sectors_done_for_area|
+        randomize_doors_no_overlap_for_area_with_redos(rooms, MAX_MAP_WIDTH, MAX_MAP_HEIGHT, starting_room) do |num_sectors_done_for_area|
           num_sectors_done = num_sectors_done_before_area + num_sectors_done_for_area
           percent_done = num_sectors_done / total_num_sectors
           yield percent_done
@@ -1739,8 +1741,8 @@ module MapRandomizer
       recenter_map(map, area)
     end
     
-    (0...44).each do |y|
-      (0...60).each do |x|
+    (0...MAX_MAP_HEIGHT).each do |y|
+      (0...MAX_MAP_WIDTH).each do |x|
         sector_index, room_index = area.get_sector_and_room_indexes_from_map_x_y(x, y)
         
         curr_tile_has_valid_room = check_if_tile_has_valid_room(x, y, area, map)
