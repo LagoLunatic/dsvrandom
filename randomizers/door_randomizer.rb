@@ -1289,7 +1289,9 @@ module DoorRandomizer
     room.sector.load_necessary_overlay()
     coll_layer = room.layers.first
     solid_tile_index_on_tileset = SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET[room.overlay_id][coll_layer.collision_tileset_pointer]
-    layers_to_modify = room.layers.select{|layer| layer.tileset_pointer == coll_layer.tileset_pointer}
+    layers_to_modify = room.layers.select do |layer|
+      layer.tileset_pointer == coll_layer.tileset_pointer && layer.scroll_mode == 1
+    end
     
     tiles.each do |tile|
       layers_to_modify.each do |layer|
