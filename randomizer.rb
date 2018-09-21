@@ -374,7 +374,7 @@ class Randomizer
       reset_rng()
       
       all_non_progression_consumables = []
-      (ITEM_GLOBAL_ID_RANGE.to_a - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS - @max_up_items).each do |item_global_id|
+      all_non_progression_pickups.each do |item_global_id|
         item = game.items[item_global_id]
         if item.item_type_name == "Consumables"
           all_non_progression_consumables << item_global_id
