@@ -302,6 +302,9 @@ class Randomizer
       checker.set_removed_portraits(@portraits_to_remove)
     end
     
+    # Now it's safe to initialize the list of progress items.
+    checker.initialize_all_progression_pickups()
+    
     @max_up_items = []
     if options[:randomize_consumable_behavior]
       reset_rng()
@@ -376,8 +379,7 @@ class Randomizer
       checker.set_red_wall_souls(@red_wall_souls)
     end
     
-    # Now it's safe to initialize the lists of what are and are not progress items.
-    checker.initialize_all_progression_pickups()
+    # Now it's safe to initialize the list of non-progress items.
     initialize_all_non_progression_pickups()
     
     # Choose a healing item to be guaranteed cheap and decent in the shop.
