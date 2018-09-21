@@ -3,6 +3,7 @@ module EnemySpriteRandomizer
   def randomize_enemy_sprites
     sprite_info_locations_for_enemy = {}
     orig_enemy_id_to_reused_enemy_ids = {}
+    all_enemy_sprites = []
     COMMON_ENEMY_IDS.each do |enemy_id|
       next if OVERLAY_FILE_FOR_ENEMY_AI[enemy_id] # probably skeletally animated
       if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
@@ -46,6 +47,7 @@ module EnemySpriteRandomizer
       end
       
       sprite_info_locations_for_enemy[enemy_id] = result_hash
+      all_enemy_sprites << Sprite.new(result_hash[:sprite_ptr], game.fs)
       puts
     end
     
@@ -92,6 +94,10 @@ module EnemySpriteRandomizer
       func_offset = ((load_sprite_func_to_use - line_that_called_func - 8) / 4) & 0x00FFFFFF
       new_line_of_code = 0xEB000000 | func_offset
       game.fs.write(line_that_called_func, [new_line_of_code].pack("V"))
+    end
+    
+    all_enemy_sprites.each do |sprite|
+      fix_skill_or_enemy_sprite(sprite)
     end
   end
   

@@ -60,11 +60,11 @@ module SkillSpriteRandomizer
     skill_sprites_to_fix.uniq!
     skill_sprites_to_fix.each do |skill_sprite_index|
       sprite = all_skill_sprites[skill_sprite_index]
-      fix_skill_sprite(sprite)
+      fix_skill_or_enemy_sprite(sprite)
     end
   end
   
-  def fix_skill_sprite(sprite)
+  def fix_skill_or_enemy_sprite(sprite)
     any_changes_made_to_this_sprite = false
     
     # Add a hitbox to every frame if it had no hitboxes originally.
@@ -90,10 +90,52 @@ module SkillSpriteRandomizer
       any_changes_made_to_this_sprite = true
     end
     
-    # Add one dummy animation if it had no animations.
+    # Pad every existing animation with duplicate keyframes to get it up to 20 keyframes. (Assuming we can do so without affecting the actual time the animation takes to play out.)
+    # The reason we need to make the animation have a lot of keyframes is to to fix the issue of some skills/enemies not advancing until a certain keyframe index is reached (e.g. Vol Arcus doesn't fire until keyframe 0xD is reached).
+    # So instead of having one keyframe that lasts for a certain number of frames, we have a bunch of keyframes that only last for 1 frame each.
+    sprite.animations.each do |animation|
+      remaining_keyframes_to_add = (20 - animation.frame_delays.length)
+      
+      next if remaining_keyframes_to_add <= 0
+      
+      any_changes_made_to_this_sprite = true
+      
+      new_frame_delays = []
+      animation.frame_delays.each do |frame_delay|
+        new_frame_delays << frame_delay
+        
+        next if remaining_keyframes_to_add <= 0
+        next if frame_delay.delay < 2
+        
+        dupes_to_add = [frame_delay.delay-1, remaining_keyframes_to_add].min
+        
+        frame_delay.delay = 1
+        
+        dupes_to_add.times do
+          dupe_frame_delay = FrameDelay.new
+          dupe_frame_delay.frame_index = frame_delay.frame_index
+          dupe_frame_delay.delay = 1
+          new_frame_delays << dupe_frame_delay
+        end
+        
+        remaining_keyframes_to_add -= dupes_to_add
+      end
+      
+      animation.frame_delays.clear()
+      new_frame_delays.each do |frame_delay|
+        animation.frame_delays << frame_delay
+      end
+    end
+    
+    sprite.frame_delays.clear()
+    sprite.animations.each do |animation|
+      animation.frame_delays.each do |frame_delay|
+        sprite.frame_delays << frame_delay
+      end
+    end
+    
+    # Add one dummy animation if it had no animations. Give it 20 keyframes, each lasting 1 frame.
     if sprite.animations.length == 0
-      # We need to make the animation have a lot of keyframes in order to fix the issue of some skills not advancing until a certain keyframe index is reached (e.g. Vol Arcus doesn't fire until keyframe 0xD is reached).
-      # So instead of having one keyframe that lasts for a certain number of frames, we have a bunch of keyframes that only last for 1 frame each.
       num_keyframes = 20
       
       animation = Animation.new
