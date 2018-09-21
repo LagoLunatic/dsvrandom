@@ -898,6 +898,10 @@ module ItemSkillStatRandomizer
       end
     end
     
+    if item["Swing Modifiers"]["Player can move"]
+      special_effect_name = "Valmanway"
+    end
+    
     if special_effect_name
       swing_anim_name = special_effect_name
     else
