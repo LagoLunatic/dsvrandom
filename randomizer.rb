@@ -59,6 +59,7 @@ class Randomizer
               :seed,
               :rng,
               :spoiler_log,
+              :non_spoiler_log,
               :game,
               :checker,
               :renderer,
@@ -236,9 +237,14 @@ class Randomizer
     end
     
     @spoiler_log = StringIO.new
-    spoiler_log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
-    spoiler_log.puts "Selected options: #{options_string}"
-    spoiler_log.puts "Difficulty level: #{difficulty_settings_string}"
+    @non_spoiler_log = StringIO.new
+    @logs = [spoiler_log, non_spoiler_log]
+    
+    @logs.each do |log|
+      log.puts "Seed: #{@seed}, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
+      log.puts "Selected options: #{options_string}"
+      log.puts "Difficulty level: #{difficulty_settings_string}"
+    end
     
     apply_pre_randomization_tweaks()
     
@@ -905,7 +911,9 @@ class Randomizer
     apply_tweaks()
   rescue StandardError => e
     if spoiler_log
-      spoiler_log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
+      @logs.each do |log|
+        log.puts "ERROR! Randomization failed with error:\n  #{e.message}\n  #{e.backtrace.join("\n  ")}"
+      end
     end
     raise e
   end

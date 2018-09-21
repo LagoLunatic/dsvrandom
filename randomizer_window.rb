@@ -592,7 +592,7 @@ class RandomizerWindow < Qt::Dialog
             @progress_dialog = nil
           end
           
-          write_spoiler_log(randomizer, is_error: true)
+          write_logs(randomizer, is_error: true)
           
           Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
         end
@@ -644,7 +644,7 @@ class RandomizerWindow < Qt::Dialog
             @progress_dialog = nil
           end
           
-          write_spoiler_log(randomizer, is_error: true)
+          write_logs(randomizer, is_error: true)
           
           Qt::MessageBox.critical(self, "Building ROM failed", "Failed to build ROM with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
         end
@@ -658,7 +658,7 @@ class RandomizerWindow < Qt::Dialog
           @progress_dialog = nil
         end
         
-        write_spoiler_log(randomizer)
+        write_logs(randomizer)
         
         @remaining_seeds_to_create -= 1
         @output_filenames_written_so_far << output_rom_filename
@@ -681,22 +681,32 @@ class RandomizerWindow < Qt::Dialog
     end
   end
   
-  def write_spoiler_log(randomizer, is_error: false)
-    randomizer.spoiler_log.seek(0)
-    spoiler_str = randomizer.spoiler_log.read()
-    
-    game_with_caps = GAME.dup
-    game_with_caps[0] = game_with_caps[0].upcase
-    game_with_caps[2] = game_with_caps[2].upcase
+  def write_logs(randomizer, is_error: false)
     if is_error
-      output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Error Log.txt"
+      logs = [randomizer.spoiler_log]
     else
-      output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Spoiler Log.txt"
+      logs = [randomizer.spoiler_log, randomizer.non_spoiler_log]
     end
-    output_log_path = File.join(@ui.output_folder.text, output_log_filename)
     
-    File.open(output_log_path, "w") do |f|
-      f.write(spoiler_str)
+    logs.each do |log|
+      log.seek(0)
+      spoiler_str = log.read()
+      
+      game_with_caps = GAME.dup
+      game_with_caps[0] = game_with_caps[0].upcase
+      game_with_caps[2] = game_with_caps[2].upcase
+      if is_error
+        output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Error Log.txt"
+      elsif log == randomizer.non_spoiler_log
+        output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Non-Spoiler Log.txt"
+      else
+        output_log_filename = "#{game_with_caps} #{@sanitized_seed} - Spoiler Log.txt"
+      end
+      output_log_path = File.join(@ui.output_folder.text, output_log_filename)
+      
+      File.open(output_log_path, "w") do |f|
+        f.write(spoiler_str)
+      end
     end
   end
   
