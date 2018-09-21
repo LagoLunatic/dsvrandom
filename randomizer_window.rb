@@ -13,7 +13,6 @@ class RandomizerWindow < Qt::Dialog
     randomize_enemy_stats
     randomize_enemy_anim_speed
     randomize_enemy_tolerances
-    randomize_world_map_exits
     randomize_equipment_stats
     randomize_consumable_behavior
     randomize_weapon_behavior
@@ -33,6 +32,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_players
     randomize_bosses
     randomize_enemy_ai
+    randomize_world_map_exits
     randomize_skill_sprites
     randomize_enemy_sprites
     
@@ -354,10 +354,17 @@ class RandomizerWindow < Qt::Dialog
       @ui.randomize_rooms_map_friendly.enabled = true
     end
     
-    if !@ui.experimental_options_enabled.checked
+    if @ui.experimental_options_enabled.checked
+      @ui.experimental_options_enabled.children.each do |child|
+        if child.is_a?(Qt::CheckBox)
+          child.enabled = true
+        end
+      end
+    else
       @ui.experimental_options_enabled.children.each do |child|
         if child.is_a?(Qt::CheckBox)
           child.checked = false
+          child.enabled = false
         end
       end
     end

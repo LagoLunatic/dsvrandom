@@ -215,16 +215,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_world_map_exits">
-              <property name="toolTip">
-               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
-              </property>
-              <property name="text">
-               <string>World Map Exits</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
           <item>
@@ -447,12 +437,12 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="randomize_skill_sprites">
+             <widget class="QCheckBox" name="randomize_world_map_exits">
               <property name="toolTip">
-               <string>Randomizes the graphics used by each skill.</string>
+               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
               </property>
               <property name="text">
-               <string>Skill Sprites</string>
+               <string>World Map Exits</string>
               </property>
              </widget>
             </item>
@@ -464,6 +454,16 @@
              <widget class="QCheckBox" name="randomize_enemy_sprites">
               <property name="text">
                <string>Enemy Sprites</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_sprites">
+              <property name="toolTip">
+               <string>Randomizes the graphics used by each skill.</string>
+              </property>
+              <property name="text">
+               <string>Skill Sprites</string>
               </property>
              </widget>
             </item>
@@ -563,8 +563,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
-            <height>494</height>
+            <width>57</width>
+            <height>22</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -1193,7 +1193,6 @@
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
-  <tabstop>randomize_skill_sprites</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>tabWidget</tabstop>
