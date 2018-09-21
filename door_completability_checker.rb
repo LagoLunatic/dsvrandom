@@ -10,6 +10,7 @@ class DoorCompletabilityChecker
               :progress_important_rooms,
               :subrooms_doors_only,
               :subroom_map_tiles,
+              :all_progression_pickups,
               :enemy_locations,
               :event_locations,
               :easter_egg_locations,
@@ -730,8 +731,12 @@ class DoorCompletabilityChecker
     get_accessible_locations_and_doors()[1]
   end
   
-  def all_progression_pickups
-    @all_progression_pickups ||= begin
+  def initialize_all_progression_pickups
+    if !@all_progression_pickups.nil?
+      raise "all_progression_pickups was initialized too early."
+    end
+    
+    @all_progression_pickups = begin
       pickups = []
       
       @defs.each do |name, req|

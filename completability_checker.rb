@@ -7,6 +7,7 @@ class CompletabilityChecker
               :defs,
               :preferences,
               :inaccessible_doors,
+              :all_progression_pickups,
               :enemy_locations,
               :event_locations,
               :easter_egg_locations,
@@ -278,8 +279,12 @@ class CompletabilityChecker
     return accessible_locations
   end
   
-  def all_progression_pickups
-    @all_progression_pickups ||= begin
+  def initialize_all_progression_pickups
+    if !@all_progression_pickups.nil?
+      raise "all_progression_pickups was initialized too early."
+    end
+    
+    @all_progression_pickups = begin
       pickups = []
       
       @defs.each do |name, req|

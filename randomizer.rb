@@ -63,7 +63,8 @@ class Randomizer
               :game,
               :checker,
               :renderer,
-              :tiled
+              :tiled,
+              :all_non_progression_pickups
   
   def initialize(seed, game, options, difficulty_level, difficulty_settings_averages)
     @seed = seed
@@ -374,6 +375,10 @@ class Randomizer
       # Tell the completability checker logic what souls are for what red walls on this seed.
       checker.set_red_wall_souls(@red_wall_souls)
     end
+    
+    # Now it's safe to initialize the lists of what are and are not progress items.
+    checker.initialize_all_progression_pickups()
+    initialize_all_non_progression_pickups()
     
     # Choose a healing item to be guaranteed cheap and decent in the shop.
     if options[:randomize_consumable_behavior]

@@ -728,8 +728,12 @@ module PickupRandomizer
     end
   end
   
-  def all_non_progression_pickups
-    @all_non_progression_pickups ||= begin
+  def initialize_all_non_progression_pickups
+    if !@all_non_progression_pickups.nil?
+      raise "all_non_progression_pickups was initialized too early."
+    end
+    
+    @all_non_progression_pickups = begin
       all_non_progression_pickups = PICKUP_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups
       
       all_non_progression_pickups -= NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
