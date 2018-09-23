@@ -55,6 +55,15 @@ module EnemySpriteRandomizer
     remaining_unused_enemy_sprite_ids.shuffle!(random: rng)
     
     sprite_info_locations_for_enemy.each do |enemy_id, hash|
+      overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+      if overlay_to_load.is_a?(Integer)
+        game.fs.load_overlay(overlay_to_load)
+      elsif overlay_to_load.is_a?(Array)
+        overlay_to_load.each do |overlay|
+          game.fs.load_overlay(overlay)
+        end
+      end
+      
       line_that_called_func    = hash[:line_that_called_func]
       location_of_gfx_ptr      = hash[:location_of_gfx_ptr]
       location_of_palette_ptr  = hash[:location_of_palette_ptr]
