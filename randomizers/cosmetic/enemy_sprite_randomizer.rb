@@ -12,7 +12,7 @@ module EnemySpriteRandomizer
       
       enemy = game.enemy_dnas[enemy_id]
       
-      puts "enemy ID: %02X" % enemy_id
+      puts "Enemy ID: %02X #{enemy.name}" % enemy_id
       reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
       overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
       ptr_to_ptr_to_files_to_load = ENEMY_FILES_TO_LOAD_LIST + enemy_id*4
@@ -23,17 +23,18 @@ module EnemySpriteRandomizer
       )
       
       orig_enemy = sprite_info_locations_for_enemy.find do |enemy_id, other_hash|
-        result_hash[:line_that_called_func]   == other_hash[:line_that_called_func]   ||
-        result_hash[:location_of_gfx_ptr]     == other_hash[:location_of_gfx_ptr]     ||
-        result_hash[:location_of_palette_ptr] == other_hash[:location_of_palette_ptr] ||
-        result_hash[:location_of_sprite_ptr]  == other_hash[:location_of_sprite_ptr]
+        result_hash[:line_that_called_func]   == other_hash[:line_that_called_func]   &&
+        result_hash[:location_of_gfx_ptr]     == other_hash[:location_of_gfx_ptr]     &&
+        result_hash[:location_of_palette_ptr] == other_hash[:location_of_palette_ptr] &&
+        result_hash[:location_of_sprite_ptr]  == other_hash[:location_of_sprite_ptr]  &&
+        result_hash[:overlay_to_load]         == other_hash[:overlay_to_load]
       end
       if orig_enemy
         orig_enemy_id, _ = orig_enemy
         orig_enemy_id_to_reused_enemy_ids[orig_enemy_id] ||= []
         orig_enemy_id_to_reused_enemy_ids[orig_enemy_id] << enemy_id
         
-        puts "Enemy is reused, skipping"
+        puts "Enemy is reused (orig: %02X #{game.enemy_dnas[orig_enemy_id].name}), skipping" % orig_enemy_id
         puts
         next
       end
@@ -47,7 +48,7 @@ module EnemySpriteRandomizer
     remaining_unused_enemy_sprite_ids.shuffle!(random: rng)
     
     sprite_info_locations_for_enemy.each do |enemy_id, hash|
-      overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+      overlay_to_load = hash[:overlay_to_load]
       if overlay_to_load.is_a?(Integer)
         game.fs.load_overlay(overlay_to_load)
       elsif overlay_to_load.is_a?(Array)
@@ -259,6 +260,7 @@ module EnemySpriteRandomizer
       location_of_sprite_ptr: location_of_sprite_ptr,
       sprite_ptr: sprite_ptr,
       pointer_to_files_to_load: pointer_to_files_to_load,
+      overlay_to_load: overlay_to_load,
     }
   end
 end
