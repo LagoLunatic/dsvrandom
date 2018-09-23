@@ -4,7 +4,7 @@ module EnemySpriteRandomizer
     sprite_info_locations_for_enemy = {}
     orig_enemy_id_to_reused_enemy_ids = {}
     all_enemy_sprites = []
-    COMMON_ENEMY_IDS.each do |enemy_id|
+    ENEMY_IDS.each do |enemy_id|
       if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
         # No sprite
         next
