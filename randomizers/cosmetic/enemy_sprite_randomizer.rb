@@ -5,20 +5,12 @@ module EnemySpriteRandomizer
     orig_enemy_id_to_reused_enemy_ids = {}
     all_enemy_sprites = []
     COMMON_ENEMY_IDS.each do |enemy_id|
-      next if OVERLAY_FILE_FOR_ENEMY_AI[enemy_id] # probably skeletally animated
       if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
         # No sprite
         next
       end
       
       enemy = game.enemy_dnas[enemy_id]
-      
-      if GAME == "ooe"
-        sprite_info = enemy.extract_gfx_and_palette_and_sprite_from_init_ai
-        if sprite_info.skeleton_file # skeletally animated
-          next
-        end
-      end
       
       puts "enemy ID: %02X" % enemy_id
       reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
