@@ -1018,8 +1018,10 @@ module ItemSkillStatRandomizer
     skills_by_family.each do |family|
       sorted_dmg_mults = family.map{|skill| skill["DMG multiplier"]}.sort
       # Note about the "IFrames" field here: This should have the correct iframes value in it even for glyphs with hardcoded iframes, because when set_skill_iframes sets the hardcoded iframes it also sets this field.
-      # And if skill behavior rando is off, it instead reads the original iframes value and sets it here.
-      sorted_iframes = family.map{|skill| skill["IFrames"]}.sort.reverse
+      # And if skill behavior rando is off, we don't reorder iframes here at all.
+      if options[:randomize_skill_behavior]
+        sorted_iframes = family.map{|skill| skill["IFrames"]}.sort.reverse
+      end
       sorted_delays = family.map{|skill| skill["Delay"]}.sort.reverse
       sorted_max_at_onces = family.map{|skill| skill["Max at once"]}.sort
       sorted_var_as = family.map{|skill| skill["Var A"]}.sort
@@ -1027,8 +1029,10 @@ module ItemSkillStatRandomizer
       prev_tier_damage_types = nil
       family.each do |skill|
         skill["DMG multiplier"] = sorted_dmg_mults.shift
-        iframes = sorted_iframes.shift
-        set_skill_iframes(skill, skill["Item ID"], iframes)
+        if options[:randomize_skill_behavior]
+          iframes = sorted_iframes.shift
+          set_skill_iframes(skill, skill["Item ID"], iframes)
+        end
         skill["Delay"] = sorted_delays.shift
         skill["Max at once"] = sorted_max_at_onces.shift
         if skill.name.include?("Culter")
