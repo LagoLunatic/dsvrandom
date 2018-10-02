@@ -431,16 +431,17 @@ module BossRandomizer
     game.fs.write(0x0222BE14, final_boss_tele_data)
   end
   
-  def dos_set_julius_mode_final_boss(final_boss_name)
-    return unless GAME == "dos"
-    
-    final_boss_tele_data = DOS_FINAL_BOSS_TELEPORT_DATA[final_boss_name]
-    if final_boss_tele_data.nil?
-      raise "Invalid final boss name: #{final_boss_name}"
-    end
-    
-    game.fs.write(0x0222BE1C, final_boss_tele_data)
-  end
+  # Menace doesn't appear in Julius mode.
+  #def dos_set_julius_mode_final_boss(final_boss_name)
+  #  return unless GAME == "dos"
+  #  
+  #  final_boss_tele_data = DOS_FINAL_BOSS_TELEPORT_DATA[final_boss_name]
+  #  if final_boss_tele_data.nil?
+  #    raise "Invalid final boss name: #{final_boss_name}"
+  #  end
+  #  
+  #  game.fs.write(0x0222BE1C, final_boss_tele_data)
+  #end
   
   def dos_randomize_final_boss
     return unless GAME == "dos"
@@ -448,8 +449,8 @@ module BossRandomizer
     soma_mode_final_boss = [:menace, :somacula].sample(random: rng)
     dos_set_soma_mode_final_boss(soma_mode_final_boss)
     
-    julius_mode_final_boss = [:menace, :somacula].sample(random: rng)
-    dos_set_julius_mode_final_boss(julius_mode_final_boss)
+    #julius_mode_final_boss = [:menace, :somacula].sample(random: rng)
+    #dos_set_julius_mode_final_boss(julius_mode_final_boss)
   end
   
   def update_boss_doors(old_boss_id, new_boss_id, boss_entity)
