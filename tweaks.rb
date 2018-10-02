@@ -764,6 +764,10 @@ module Tweaks
       end
     end
     
+    if GAME == "dos" && options[:menace_to_somacula]
+      dos_set_soma_mode_final_boss(:somacula)
+    end
+    
     if room_rando?
       center_bosses_for_room_rando()
     end

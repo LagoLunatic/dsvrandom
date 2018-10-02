@@ -53,6 +53,7 @@ class RandomizerWindow < Qt::Dialog
     remove_slot_machines
     add_magical_tickets
     always_start_with_rare_ring
+    menace_to_somacula
     por_short_mode
     dont_randomize_change_cube
     por_nerf_enemy_resistances

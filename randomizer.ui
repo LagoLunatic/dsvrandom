@@ -563,8 +563,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>57</width>
-            <height>22</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -705,6 +705,26 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="remove_slot_machines">
+            <property name="toolTip">
+             <string>Removes golden slot machines that require specific amounts of gold to open.</string>
+            </property>
+            <property name="text">
+             <string>Remove slot machines</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="always_start_with_rare_ring">
+            <property name="toolTip">
+             <string>Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.</string>
+            </property>
+            <property name="text">
+             <string>Always start with Rare Ring</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="unlock_boss_doors">
             <property name="toolTip">
@@ -715,16 +735,6 @@
             </property>
             <property name="checked">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="remove_slot_machines">
-            <property name="toolTip">
-             <string>Removes golden slot machines that require specific amounts of gold to open.</string>
-            </property>
-            <property name="text">
-             <string>Remove slot machines</string>
             </property>
            </widget>
           </item>
@@ -741,13 +751,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="always_start_with_rare_ring">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="menace_to_somacula">
             <property name="toolTip">
-             <string>Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.</string>
+             <string>Changes the final boss of Soma mode to be Somacula instead of Menace.</string>
             </property>
             <property name="text">
-             <string>Always start with Rare Ring</string>
+             <string>Replace Menace</string>
             </property>
            </widget>
           </item>
