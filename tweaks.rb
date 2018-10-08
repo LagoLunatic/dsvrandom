@@ -267,6 +267,16 @@ module Tweaks
       game.apply_armips_patch("#{GAME}_custom_load_sprite_func")
     end
     
+    if GAME == "dos" && options[:dos_new_style_map]
+      # Make DoS maps look like PoR and OoE, with a hole in the doors and different colors.
+      game.apply_armips_patch("dos_add_hole_to_map_doors")
+      
+      colors = renderer.read_single_palette(0x02079D5C, 16)
+      colors[1] = ChunkyPNG::Color.rgba(0x14<<3, 8<<3, 0x10<<3, 255) # Room fill color
+      colors[3] = ChunkyPNG::Color.rgba(0x1B<<3, 0x1B<<3, 0x1B<<3, 255) # Door color
+      renderer.save_palette_by_specific_palette_pointer(0x02079D5C, colors)
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
