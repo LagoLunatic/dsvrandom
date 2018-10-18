@@ -870,7 +870,8 @@ module ItemSkillStatRandomizer
     if resistance_names.any?
       new_desc << "Resist: #{resistance_names.join(", ")}"
     else
-      new_desc << "No resistances."
+      # If the item doesn't have any resistances to display, don't modify the original description at all.
+      return
     end
     
     description.decoded_string = new_desc
