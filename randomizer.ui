@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>765</height>
+    <width>725</width>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,6 +117,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_red_walls">
+              <property name="toolTip">
+               <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
+              </property>
+              <property name="text">
+               <string>Red Soul Walls</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -146,6 +156,9 @@
                <bool>true</bool>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget" native="true"/>
             </item>
            </layout>
           </item>
@@ -177,10 +190,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_stats">
               <property name="toolTip">
@@ -191,6 +200,10 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_anim_speed">
               <property name="toolTip">
@@ -201,10 +214,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_20">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_tolerances">
               <property name="toolTip">
@@ -215,20 +224,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QWidget" name="widget_2" native="true"/>
+            </item>
            </layout>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <item>
-             <widget class="QCheckBox" name="randomize_equipment_stats">
-              <property name="toolTip">
-               <string>Randomizes weapon and armor stats.</string>
-              </property>
-              <property name="text">
-               <string>Equipment Stats</string>
-              </property>
-             </widget>
-            </item>
             <item>
              <widget class="QCheckBox" name="randomize_consumable_behavior">
               <property name="toolTip">
@@ -239,10 +241,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QCheckBox" name="randomize_weapon_behavior">
               <property name="toolTip">
@@ -254,26 +252,36 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="randomize_skill_stats">
-              <property name="toolTip">
-               <string>Randomizes skill stats.</string>
-              </property>
-              <property name="text">
-               <string>Skill Stats</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
-            <item>
              <widget class="QCheckBox" name="randomize_skill_behavior">
               <property name="toolTip">
                <string>Randomizes how skills behave.</string>
               </property>
               <property name="text">
                <string>Skill Behavior</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QCheckBox" name="randomize_equipment_stats">
+              <property name="toolTip">
+               <string>Randomizes weapon and armor stats.</string>
+              </property>
+              <property name="text">
+               <string>Equipment Stats</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_stats">
+              <property name="toolTip">
+               <string>Randomizes skill stats.</string>
+              </property>
+              <property name="text">
+               <string>Skill Stats</string>
               </property>
              </widget>
             </item>
@@ -311,10 +319,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_18">
             <item>
              <widget class="QCheckBox" name="randomize_weapon_synths">
               <property name="toolTip">
@@ -322,16 +326,6 @@
               </property>
               <property name="text">
                <string>Weapon Synthesis</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_red_walls">
-              <property name="toolTip">
-               <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
-              </property>
-              <property name="text">
-               <string>Red Soul Walls</string>
               </property>
              </widget>
             </item>
@@ -358,6 +352,9 @@
                <string>Starting Room</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_3" native="true"/>
             </item>
            </layout>
           </item>
@@ -422,6 +419,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_world_map_exits">
+              <property name="toolTip">
+               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
+              </property>
+              <property name="text">
+               <string>World Map Exits</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -436,20 +443,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_world_map_exits">
-              <property name="toolTip">
-               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
-              </property>
-              <property name="text">
-               <string>World Map Exits</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_21">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_sprites">
               <property name="text">
@@ -563,8 +556,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>675</width>
+            <height>378</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -780,6 +773,29 @@
           <string>Portrait of Ruin</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="fix_infinite_quest_rewards">
+            <property name="toolTip">
+             <string>Fixes a bug where you could get any quest reward over and over again.</string>
+            </property>
+            <property name="text">
+             <string>Fix infinite quest rewards bug</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="always_show_drop_percentages">
+            <property name="toolTip">
+             <string>Drop chances always display as percentages instead of stars.</string>
+            </property>
+            <property name="text">
+             <string>Always have Gambler Glasses effect</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="dont_randomize_change_cube">
             <property name="toolTip">
@@ -804,19 +820,6 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="por_nerf_enemy_resistances">
-            <property name="toolTip">
-             <string>Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.</string>
-            </property>
-            <property name="text">
-             <string>Nerf enemy resistances</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
            <widget class="QCheckBox" name="skip_emblem_drawing">
             <property name="toolTip">
              <string>Skips the screen where you have to use the touch screen to draw an emblem when starting a new game.</string>
@@ -829,30 +832,20 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="fix_infinite_quest_rewards">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="por_nerf_enemy_resistances">
             <property name="toolTip">
-             <string>Fixes a bug where you could get any quest reward over and over again.</string>
+             <string>Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.</string>
             </property>
             <property name="text">
-             <string>Fix infinite quest rewards bug</string>
+             <string>Nerf enemy resistances</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="always_show_drop_percentages">
-            <property name="toolTip">
-             <string>Drop chances always display as percentages instead of stars.</string>
-            </property>
-            <property name="text">
-             <string>Always have Gambler Glasses effect</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
+          <item row="2" column="0">
            <widget class="QCheckBox" name="allow_mastering_charlottes_skills">
             <property name="toolTip">
              <string>Allow Charlotte's skills to gain SP like Jonathan's. When mastered they act fully charged at half charge, and when both mastered and fully charged they act supercharged.</string>
@@ -874,30 +867,7 @@
           <string>Order of Ecclesia</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="open_world_map">
-            <property name="toolTip">
-             <string>Make all areas except Dracula's Castle accessible from the start.</string>
-            </property>
-            <property name="text">
-             <string>Open world map</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="always_dowsing">
-            <property name="toolTip">
-             <string>Hidden blue chests always make a beeping sound.</string>
-            </property>
-            <property name="text">
-             <string>Always have Dowsing Hat effect</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
+          <item row="1" column="2">
            <widget class="QCheckBox" name="summons_gain_extra_exp">
             <property name="toolTip">
              <string>Your summons gain far more EXP every time they hit an enemy.</string>
@@ -910,13 +880,36 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="1" column="1">
            <widget class="QCheckBox" name="gain_extra_attribute_points">
             <property name="toolTip">
              <string>You gain 25x more AP when killing enemies or absorbing glyphs.</string>
             </property>
             <property name="text">
              <string>Gain Attribute Points faster</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="always_dowsing">
+            <property name="toolTip">
+             <string>Hidden blue chests always make a beeping sound.</string>
+            </property>
+            <property name="text">
+             <string>Always have Dowsing Hat effect</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="open_world_map">
+            <property name="toolTip">
+             <string>Make all areas except Dracula's Castle accessible from the start.</string>
+            </property>
+            <property name="text">
+             <string>Open world map</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -959,10 +952,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_22">
             <item>
              <widget class="QCheckBox" name="randomize_player_sprites">
               <property name="text">
@@ -1179,7 +1168,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>randomize_button</tabstop>
   <tabstop>clean_rom</tabstop>
   <tabstop>clean_rom_browse_button</tabstop>
   <tabstop>output_folder</tabstop>
@@ -1188,6 +1176,7 @@
   <tabstop>generate_seed_button</tabstop>
   <tabstop>randomize_pickups</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
+  <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_enemies</tabstop>
@@ -1195,16 +1184,15 @@
   <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>randomize_enemy_anim_speed</tabstop>
   <tabstop>randomize_enemy_tolerances</tabstop>
-  <tabstop>randomize_equipment_stats</tabstop>
   <tabstop>randomize_consumable_behavior</tabstop>
   <tabstop>randomize_weapon_behavior</tabstop>
-  <tabstop>randomize_skill_stats</tabstop>
   <tabstop>randomize_skill_behavior</tabstop>
+  <tabstop>randomize_equipment_stats</tabstop>
+  <tabstop>randomize_skill_stats</tabstop>
   <tabstop>randomize_weapon_and_skill_elements</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
-  <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_rooms_map_friendly</tabstop>
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_room_connections</tabstop>
@@ -1212,9 +1200,13 @@
   <tabstop>experimental_options_enabled</tabstop>
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
+  <tabstop>randomize_world_map_exits</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
+  <tabstop>randomize_skill_sprites</tabstop>
   <tabstop>about_button</tabstop>
+  <tabstop>num_seeds_to_create</tabstop>
+  <tabstop>randomize_button</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>
   <tabstop>enable_glitch_reqs</tabstop>
@@ -1234,18 +1226,22 @@
   <tabstop>remove_slot_machines</tabstop>
   <tabstop>add_magical_tickets</tabstop>
   <tabstop>always_start_with_rare_ring</tabstop>
+  <tabstop>menace_to_somacula</tabstop>
+  <tabstop>dos_new_style_map</tabstop>
   <tabstop>por_short_mode</tabstop>
   <tabstop>dont_randomize_change_cube</tabstop>
   <tabstop>por_nerf_enemy_resistances</tabstop>
   <tabstop>skip_emblem_drawing</tabstop>
   <tabstop>fix_infinite_quest_rewards</tabstop>
   <tabstop>always_show_drop_percentages</tabstop>
+  <tabstop>allow_mastering_charlottes_skills</tabstop>
   <tabstop>open_world_map</tabstop>
   <tabstop>always_dowsing</tabstop>
   <tabstop>gain_extra_attribute_points</tabstop>
   <tabstop>summons_gain_extra_exp</tabstop>
   <tabstop>randomize_bgm</tabstop>
   <tabstop>randomize_dialogue</tabstop>
+  <tabstop>randomize_player_sprites</tabstop>
   <tabstop>paste_seed_info_field</tabstop>
   <tabstop>read_seed_info_button</tabstop>
  </tabstops>
