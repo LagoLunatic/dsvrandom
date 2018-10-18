@@ -450,16 +450,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_skill_sprites">
-              <property name="toolTip">
-               <string>Randomizes the graphics used by each skill.</string>
-              </property>
-              <property name="text">
-               <string>Skill Sprites</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
          </layout>
@@ -556,8 +546,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>675</width>
-            <height>378</height>
+            <width>57</width>
+            <height>22</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -952,10 +942,24 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
              <widget class="QCheckBox" name="randomize_player_sprites">
               <property name="text">
                <string>Player Sprites</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_skill_sprites">
+              <property name="toolTip">
+               <string>Randomizes the graphics used by each skill.</string>
+              </property>
+              <property name="text">
+               <string>Skill Sprites</string>
               </property>
              </widget>
             </item>
@@ -1203,7 +1207,6 @@
   <tabstop>randomize_world_map_exits</tabstop>
   <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
-  <tabstop>randomize_skill_sprites</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>num_seeds_to_create</tabstop>
   <tabstop>randomize_button</tabstop>
@@ -1241,7 +1244,6 @@
   <tabstop>summons_gain_extra_exp</tabstop>
   <tabstop>randomize_bgm</tabstop>
   <tabstop>randomize_dialogue</tabstop>
-  <tabstop>randomize_player_sprites</tabstop>
   <tabstop>paste_seed_info_field</tabstop>
   <tabstop>read_seed_info_button</tabstop>
  </tabstops>
