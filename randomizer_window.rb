@@ -304,72 +304,53 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def ensure_valid_combination_of_options
-    if @ui.experimental_options_enabled.checked
+    should_enable_options = {}
+    OPTIONS.each do |option_name|
+      should_enable_options[option_name] = true
+    end
+    
+    if !@ui.experimental_options_enabled.checked
       @ui.experimental_options_enabled.children.each do |child|
         if child.is_a?(Qt::CheckBox)
-          child.enabled = true
-        end
-      end
-    else
-      @ui.experimental_options_enabled.children.each do |child|
-        if child.is_a?(Qt::CheckBox)
-          child.checked = false
-          child.enabled = false
+          should_enable_options[child.object_name.to_sym] &&= false
         end
       end
     end
     
+    pickup_randomizer_dependant_options = [
+      :randomize_boss_souls,
+      :randomize_villagers,
+      :randomize_portraits,
+      :randomize_red_walls,
+      :randomize_area_connections,
+      :randomize_room_connections,
+      :randomize_starting_room,
+      :randomize_rooms_map_friendly,
+      :randomize_world_map_exits,
+      :por_short_mode,
+    ]
     if !@ui.randomize_pickups.checked
-      @ui.randomize_boss_souls.checked = false
-      @ui.randomize_boss_souls.enabled = false
-      @ui.randomize_villagers.checked = false
-      @ui.randomize_villagers.enabled = false
-      @ui.randomize_portraits.checked = false
-      @ui.randomize_portraits.enabled = false
-      @ui.randomize_red_walls.checked = false
-      @ui.randomize_red_walls.enabled = false
-      @ui.randomize_area_connections.checked = false
-      @ui.randomize_area_connections.enabled = false
-      @ui.randomize_room_connections.checked = false
-      @ui.randomize_room_connections.enabled = false
-      @ui.randomize_starting_room.checked = false
-      @ui.randomize_starting_room.enabled = false
-      @ui.randomize_rooms_map_friendly.checked = false
-      @ui.randomize_rooms_map_friendly.enabled = false
-      @ui.randomize_world_map_exits.checked = false
-      @ui.randomize_world_map_exits.enabled = false
-      @ui.por_short_mode.checked = false
-      @ui.por_short_mode.enabled = false
-    else
-      @ui.randomize_boss_souls.enabled = true
-      @ui.randomize_villagers.enabled = true
-      @ui.randomize_portraits.enabled = true
-      @ui.randomize_red_walls.enabled = true
-      @ui.randomize_starting_room.enabled = true
-      @ui.randomize_world_map_exits.enabled = true
-      @ui.por_short_mode.enabled = true
+      pickup_randomizer_dependant_options.each do |option_name|
+        should_enable_options[option_name] &&= false
+      end
     end
     
     if @ui.randomize_rooms_map_friendly.checked
-      @ui.randomize_area_connections.checked = false
-      @ui.randomize_area_connections.enabled = false
-      @ui.randomize_room_connections.checked = false
-      @ui.randomize_room_connections.enabled = false
+      should_enable_options[:randomize_area_connections] &&= false
+      should_enable_options[:randomize_room_connections] &&= false
     end
     
     if @ui.randomize_area_connections.checked || @ui.randomize_room_connections.checked
-      @ui.randomize_rooms_map_friendly.checked = false
-      @ui.randomize_rooms_map_friendly.enabled = false
+      should_enable_options[:randomize_rooms_map_friendly] &&= false
     end
     
-    if @ui.randomize_pickups.checked && !@ui.randomize_rooms_map_friendly.checked
-      @ui.randomize_area_connections.enabled = true
-      @ui.randomize_room_connections.enabled = true
-      @ui.randomize_starting_room.enabled = true
-    end
-    
-    if @ui.randomize_pickups.checked && !@ui.randomize_area_connections.checked && !@ui.randomize_room_connections.checked
-      @ui.randomize_rooms_map_friendly.enabled = true
+    OPTIONS.each do |option_name|
+      if should_enable_options[option_name]
+        @ui.send(option_name).enabled = true
+      else
+        @ui.send(option_name).enabled = false
+        @ui.send(option_name).checked = false
+      end
     end
   end
   
