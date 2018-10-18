@@ -304,6 +304,21 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def ensure_valid_combination_of_options
+    if @ui.experimental_options_enabled.checked
+      @ui.experimental_options_enabled.children.each do |child|
+        if child.is_a?(Qt::CheckBox)
+          child.enabled = true
+        end
+      end
+    else
+      @ui.experimental_options_enabled.children.each do |child|
+        if child.is_a?(Qt::CheckBox)
+          child.checked = false
+          child.enabled = false
+        end
+      end
+    end
+    
     if !@ui.randomize_pickups.checked
       @ui.randomize_boss_souls.checked = false
       @ui.randomize_boss_souls.enabled = false
@@ -355,21 +370,6 @@ class RandomizerWindow < Qt::Dialog
     
     if @ui.randomize_pickups.checked && !@ui.randomize_area_connections.checked && !@ui.randomize_room_connections.checked
       @ui.randomize_rooms_map_friendly.enabled = true
-    end
-    
-    if @ui.experimental_options_enabled.checked
-      @ui.experimental_options_enabled.children.each do |child|
-        if child.is_a?(Qt::CheckBox)
-          child.enabled = true
-        end
-      end
-    else
-      @ui.experimental_options_enabled.children.each do |child|
-        if child.is_a?(Qt::CheckBox)
-          child.checked = false
-          child.enabled = false
-        end
-      end
     end
   end
   
