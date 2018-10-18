@@ -663,7 +663,7 @@ module Tweaks
           skill = game.items[skill_global_id]
           is_spell = skill["??? bitfield"][2]
           next unless is_spell
-          next if ItemSkillStatRandomizer::NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+          next if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
           
           skill_extra_data = game.items[skill_global_id+0x6C]
           case skill.name
