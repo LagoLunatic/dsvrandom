@@ -8,6 +8,24 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = [0x123, 0x149] # queen of hearts, death ring
 
+NONOFFENSIVE_SKILL_NAMES = [
+  "Magnes",
+  "Paries",
+  "Volaticus",
+  "Vis Fio",
+  "Fortis Fio",
+  "Sapiens Fio",
+  "Fides Fio",
+  "Felicem Fio",
+  "Inire Pecunia",
+  "Arma Felix",
+  "Arma Chiroptera",
+  "Arma Machina",
+  "Refectio",
+  "Arma Custos",
+  "Dominus Agony",
+]
+
 MAX_WARP_ROOMS_PER_AREA = 8
 
 WEAPON_SWING_ANIM_NAMES = {

@@ -6,6 +6,30 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = []
 
+NONOFFENSIVE_SKILL_NAMES = [
+  "Puppet Master",
+  "Gnebu",
+  "Stonewall",
+  "Offensive Form",
+  "Defensive Form",
+  "Taunt",
+  "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
+  "Toad Morph",
+  "Owl Morph",
+  "Berserker",
+  "Clear Skies",
+  "Time Stop",
+  "Heal",
+  "Cure Poison",
+  "Cure Curse",
+  "STR Boost",
+  "CON Boost",
+  "INT Boost",
+  "MIND Boost",
+  "LUCK Boost",
+  "ALL Boost",
+]
+
 MAX_WARP_ROOMS_PER_AREA = 12
 
 WEAPON_SWING_ANIM_NAMES = {

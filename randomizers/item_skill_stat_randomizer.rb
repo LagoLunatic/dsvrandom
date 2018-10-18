@@ -1,29 +1,5 @@
 
 module ItemSkillStatRandomizer
-  NONOFFENSIVE_SKILL_NAMES = [
-    "Puppet Master",
-    "Gnebu",
-    "Stonewall",
-    "Offensive Form",
-    "Defensive Form",
-    "Taunt",
-    "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
-    "Toad Morph",
-    "Owl Morph",
-    "Berserker",
-    "Clear Skies",
-    "Time Stop",
-    "Heal",
-    "Cure Poison",
-    "Cure Curse",
-    "STR Boost",
-    "CON Boost",
-    "INT Boost",
-    "MIND Boost",
-    "LUCK Boost",
-    "ALL Boost",
-  ]
-  
   def get_n_damage_types(all_damage_types, possible_n_values)
     known_damage_type_names = all_damage_types.select{|name| name !~ /\d$/}
     num_damage_types = possible_n_values.sample(random: rng)
@@ -937,6 +913,10 @@ module ItemSkillStatRandomizer
     end
     if GAME == "por" && skill["Type"] == 3
       # Relic.
+      return
+    end
+    if GAME == "ooe" && NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+      # Non-offensive back glyph.
       return
     end
     
