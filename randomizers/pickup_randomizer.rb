@@ -724,6 +724,8 @@ module PickupRandomizer
         end
       end
       
+      @used_non_progression_pickups << pickup_global_id
+      
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
   end
@@ -865,6 +867,7 @@ module PickupRandomizer
     end
     
     @unplaced_non_progression_pickups.delete(pickup_global_id)
+    @used_non_progression_pickups << pickup_global_id
     
     return pickup_global_id
   end

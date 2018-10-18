@@ -639,6 +639,8 @@ class Randomizer
     
     @unplaced_non_progression_pickups = all_non_progression_pickups.dup
     @unplaced_non_progression_pickups -= checker.current_items
+    @used_non_progression_pickups = []
+    @used_non_progression_pickups += checker.current_items
     
     if options[:scavenger_mode]
       remove_all_enemy_drops()
