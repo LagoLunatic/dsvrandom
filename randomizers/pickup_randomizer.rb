@@ -635,6 +635,22 @@ module PickupRandomizer
       end
     end
     
+    if GAME == "ooe" && options[:randomize_world_map_exits]
+      unused_exits = WORLD_MAP_EXITS - world_map_exits_randomized
+      unused_entrances = WORLD_MAP_ENTRANCES.keys - world_map_entrances_used
+      
+      puts "Unused world map exits: #{unused_exits.join(", ")}"
+      puts "Unused world map entrances: #{unused_entrances.join(", ")}"
+      
+      if unused_exits.any? && unused_entrances.any?
+        raise "Error: There are unplaced world map exits and entrances:\nExits: #{unused_exits.join(", ")}\nEntrances: #{unused_entrances.join(", ")}"
+      elsif unused_exits.any?
+        raise "Error: There are unplaced world map exits: #{unused_exits.join(", ")}"
+      elsif unused_entrances.any?
+        raise "Error: There are unplaced world map entrances: #{unused_entrances.join(", ")}"
+      end
+    end
+    
     spoiler_log.puts "All progression pickups placed successfully."
   end
   
