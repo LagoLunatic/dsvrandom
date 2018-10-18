@@ -262,7 +262,7 @@ module Tweaks
       game.apply_armips_patch("ooe_fix_lighthouse_other_entrances")
     end
     
-    if options[:randomize_enemy_sprites]
+    if options[:randomize_enemy_sprites] || options[:randomize_boss_sprites]
       # Add a new function to load multi-gfx sprites that has the same function signature as the one that loads single-gfx sprites.
       game.apply_armips_patch("#{GAME}_custom_load_sprite_func")
     end

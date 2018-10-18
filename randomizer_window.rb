@@ -33,8 +33,8 @@ class RandomizerWindow < Qt::Dialog
     randomize_bosses
     randomize_enemy_ai
     randomize_world_map_exits
-    randomize_skill_sprites
     randomize_enemy_sprites
+    randomize_boss_sprites
     
     enable_glitch_reqs
     bonus_starting_items
@@ -70,6 +70,7 @@ class RandomizerWindow < Qt::Dialog
     randomize_bgm
     randomize_dialogue
     randomize_player_sprites
+    randomize_skill_sprites
   )
   
   DIFFICULTY_OPTION_PRETTY_NAMES = {

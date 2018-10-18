@@ -1,10 +1,18 @@
 
 module EnemySpriteRandomizer
   def randomize_enemy_sprites
+    enemy_ids_to_randomize = []
+    if options[:randomize_enemy_sprites]
+      enemy_ids_to_randomize += COMMON_ENEMY_IDS
+    end
+    if options[:randomize_boss_sprites]
+      enemy_ids_to_randomize += BOSS_IDS
+    end
+    
     sprite_info_locations_for_enemy = {}
     orig_enemy_id_to_reused_enemy_ids = {}
     all_enemy_sprites = []
-    ENEMY_IDS.each do |enemy_id|
+    enemy_ids_to_randomize.each do |enemy_id|
       if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
         # No sprite
         next

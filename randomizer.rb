@@ -790,7 +790,7 @@ class Randomizer
       options_completed += 1
     end
     
-    if options[:randomize_enemy_sprites]
+    if options[:randomize_enemy_sprites] || options[:randomize_boss_sprites]
       yield [options_completed, "Randomizing enemy sprites..."]
       reset_rng()
       randomize_enemy_sprites()

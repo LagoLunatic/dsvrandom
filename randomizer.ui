@@ -450,6 +450,13 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QCheckBox" name="randomize_boss_sprites">
+              <property name="text">
+               <string>Boss Sprites</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -546,8 +553,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>57</width>
-            <height>22</height>
+            <width>675</width>
+            <height>378</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
