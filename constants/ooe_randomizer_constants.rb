@@ -259,7 +259,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
     0x022D4F78 => 0x0001,
     0x022D6F70 => 0x0010,
   },
-  70 => { # Library
+  70 => { # Library (Kitchen)
     0x022C89CC => 0x00A9,
     0x022CA9C4 => 0x00E0,
   },

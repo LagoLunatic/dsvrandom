@@ -622,6 +622,7 @@ Rooms:
     001-002: 
     002-000: medium height
     002-001: 
+#Library (Kitchen):
   00-04-00:
     000-001: 
     001-000: 
