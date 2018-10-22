@@ -17,8 +17,7 @@ module StartingRoomRandomizer
     game.each_room do |room|
       next if room.layers.length == 0
       
-      room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-      room_doors.select!{|door| door.direction == :left || door.direction == :right}
+      room_doors = filter_valid_doors_for_starting_door(room.doors)
       next if room_doors.empty?
       
       # Limit to save rooms.
@@ -55,8 +54,7 @@ module StartingRoomRandomizer
     
     rooms_with_access_to_progress = rooms.select do |room|
       # Limit to rooms where the player can access at least 3 item locations. Otherwise the player could be stuck right at the start with no items.
-      room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-      room_doors.select!{|door| door.direction == :left || door.direction == :right}
+      room_doors = filter_valid_doors_for_starting_door(room.doors)
       door = room_doors[0]
       door_index = room.doors.index(door)
       checker.set_starting_room(room, door_index)
@@ -88,28 +86,9 @@ module StartingRoomRandomizer
     
     room = possible_rooms.sample(random: rng)
     
-    room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
-    room_doors.select!{|door| door.direction == :left || door.direction == :right}
+    room_doors = filter_valid_doors_for_starting_door(room.doors)
     door = room_doors[0] # .sample(random: rng)
-    gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
-    case door.direction
-    when :left
-      x_pos = 0x10
-      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
-      y_pos += gap_end_index*0x10 + 0x10
-    when :right
-      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS-0x10
-      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
-      y_pos += gap_end_index*0x10 + 0x10
-    when :up
-      y_pos = 0
-      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
-      x_pos += gap_end_index*0x10
-    when :down
-      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS-1
-      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
-      x_pos += gap_end_index*0x10
-    end
+    x_pos, y_pos = get_start_pos_for_door(door)
     
     if GAME == "dos"
       # In DoS we don't want to actually change the starting room, we instead change where the prologue cutscene teleports you to, so you still go through the tutorial.
@@ -148,5 +127,49 @@ module StartingRoomRandomizer
     log_str = "Starting room: #{@starting_room.room_str}"
     puts log_str
     spoiler_log.puts log_str
+  end
+  
+  def filter_valid_doors_for_starting_door(doors)
+    room_doors = doors.reject{|door| checker.inaccessible_doors.include?(door.door_str)}
+    room_doors.select!{|door| door.direction == :left || door.direction == :right}
+    room_doors.reject!{|door| check_door_underwater(door)}
+    return room_doors
+  end
+  
+  def get_start_pos_for_door(door)
+    gap_start_index, gap_end_index, tiles_in_biggest_gap = get_biggest_door_gap(door)
+    
+    case door.direction
+    when :left
+      x_pos = 0x10
+      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
+      y_pos += gap_end_index*0x10 + 0x10
+    when :right
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS-0x10
+      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS
+      y_pos += gap_end_index*0x10 + 0x10
+    when :up
+      y_pos = 0
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
+      x_pos += gap_end_index*0x10
+    when :down
+      y_pos = door.y_pos*SCREEN_HEIGHT_IN_PIXELS-1
+      x_pos = door.x_pos*SCREEN_WIDTH_IN_PIXELS
+      x_pos += gap_end_index*0x10
+    end
+    
+    return x_pos, y_pos
+  end
+  
+  def check_door_underwater(door)
+    x_pos, y_pos = get_start_pos_for_door(door)
+    coll = RoomCollision.new(door.room, game.fs)
+    
+    starting_tile = coll[x_pos, y_pos-0x10]
+    if starting_tile.is_water
+      return true
+    end
+    
+    return false
   end
 end
