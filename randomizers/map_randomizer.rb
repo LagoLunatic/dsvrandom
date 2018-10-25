@@ -1993,6 +1993,10 @@ module MapRandomizer
         end
       end 
       
+      if BAD_NEW_SAVE_WARP_ROOMS.include?(base_room.room_str)
+        next
+      end
+      
       if @new_save_warp_rooms_debug
         puts
         puts "Checking room: #{base_room.room_str}"
