@@ -2229,7 +2229,7 @@ Rooms:
   03-00-13:
     000-e00: 
     000-e01: 
-    000-e02: small height | big distance
+    000-e02: puppet master | medium height | big distance
     e00-000: small height # only necessary if it leads up out of the worm hole since that's the highest gap in this sector.
     e01-000: small height
     e02-000: small height
@@ -2531,7 +2531,7 @@ Rooms:
     e00-000: puppet master & change cube | height # puppet master by itself gets you stuck crouching on the platform so you would also need change cube to sneak your way out.
     e00-001: puppet master & change cube | height
   04-00-13:
-    000-e00: small height | big distance
+    000-e00: puppet master | medium height | big distance
     e00-000: small height
   04-00-14:
     000-001: 
