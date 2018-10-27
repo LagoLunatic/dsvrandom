@@ -678,7 +678,13 @@ class Randomizer
           end
           
           bosses_in_room.each do |boss_entity|
-            boss_ids_by_order_you_reach_them_for_this_region << boss_entity.subtype
+            boss_id = boss_entity.subtype
+            boss_ids_by_order_you_reach_them_for_this_region << boss_id
+            
+            if GAME == "por" && boss_id == 0x91 && boss_entity.var_a == 1
+              # Stella with Var A = 1 is the double fight with Loretta, so rebalance Loretta for this point in the game too.
+              boss_ids_by_order_you_reach_them_for_this_region << 0x92
+            end
           end
         end
         
@@ -695,6 +701,8 @@ class Randomizer
         orig_boss_id = ORIGINAL_BOSS_IDS_ORDER[i]
         orig_boss = @original_enemy_dnas[orig_boss_id]
         boss = game.enemy_dnas[boss_id]
+        
+        #puts "#{orig_boss.name} -> #{boss.name}"
         
         boss["HP"]               = orig_boss["HP"]
         boss["MP"]               = orig_boss["MP"]
