@@ -424,7 +424,7 @@ SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET = {
   117 => { # Epilogue
     0x022EC380 => 0x02D0,
   },
-  118 => { # Unused Boss Rush
+  118 => { # Co-op Boss Rush & Shop Mode
     0x022E1CA4 => 0x003F,
     0x022E289C => 0x0001,
   },

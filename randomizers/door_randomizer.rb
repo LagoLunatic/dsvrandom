@@ -860,7 +860,7 @@ module DoorRandomizer
     # Make a list of boss rooms to fix the boss doors for.
     game.each_room do |room|
       next if room.area.name == "Ecclesia"
-      next if room.area.name == "Unused Boss Rush"
+      next if room.area.name == "Co-op Boss Rush & Shop Mode"
       
       if options[:randomize_rooms_map_friendly] && @unused_rooms.include?(room)
         # Skip rooms not used by the map friendly room randomizer.
