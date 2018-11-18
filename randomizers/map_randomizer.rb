@@ -1997,6 +1997,12 @@ module MapRandomizer
         next
       end
       
+      if get_valid_save_or_warp_positions(base_room, :save).empty?
+        # If it doesn't have any valid spots to put a save room at, don't bother trying to add a save or warp to it.
+        # (Warps are more picky than saves, but that will be handled later.)
+        next
+      end
+      
       if @new_save_warp_rooms_debug
         puts
         puts "Checking room: #{base_room.room_str}"
@@ -2062,18 +2068,49 @@ module MapRandomizer
         else
           type = [:warp, :warp, :warp, :save].sample(random: rng)
         end
-        num_warps_for_area[room.area_index] += 1
       else
         type = :save
       end
-      puts "Adding new #{type} point to room #{room.room_str}" if @new_save_warp_rooms_debug
-      add_save_or_warp_to_room(room, type)
+      
+      puts "Trying to add a new #{type} point to room #{room.room_str}" if @new_save_warp_rooms_debug
+      final_type = add_save_or_warp_to_room(room, type)
+      puts "Added a new #{final_type} point to room #{room.room_str}" if @new_save_warp_rooms_debug
+      
+      if final_type == :warp
+        num_warps_for_area[room.area_index] += 1
+      end
     end
   end
   
   def add_save_or_warp_to_room(room, type)
     return if GAME == "dos" # Save/warp rooms aren't very flexible in DoS
     
+    valid_positions = get_valid_save_or_warp_positions(room, type)
+    
+    if valid_positions.empty? && type == :warp
+      # If there's no valid spots for a warp room, we can at least put a save room here instead.
+      type = :save
+      valid_positions = get_valid_save_or_warp_positions(room, type)
+    end
+    
+    if valid_positions.empty?
+      raise "No valid floor positions to place save/warp point in room #{room.room_str}"
+    end
+    
+    save_or_warp_point = room.add_new_entity()
+    save_or_warp_point.type = SPECIAL_OBJECT_ENTITY_TYPE
+    if type == :save
+      save_or_warp_point.subtype = SAVE_POINT_SUBTYPE
+    else
+      save_or_warp_point.subtype = WARP_POINT_SUBTYPE
+    end
+    save_or_warp_point.x_pos, save_or_warp_point.y_pos = valid_positions.sample(random: rng)
+    save_or_warp_point.write_to_rom()
+    
+    return type
+  end
+  
+  def get_valid_save_or_warp_positions(room, type)
     @coll = RoomCollision.new(room, game.fs)
     
     valid_positions = coll.all_floor_positions.dup
@@ -2099,18 +2136,6 @@ module MapRandomizer
       true
     end
     
-    if valid_positions.empty?
-      raise "No valid floor positions to place save/warp point in room #{room.room_str}"
-    end
-    
-    save_or_warp_point = room.add_new_entity()
-    save_or_warp_point.type = SPECIAL_OBJECT_ENTITY_TYPE
-    if type == :save
-      save_or_warp_point.subtype = SAVE_POINT_SUBTYPE
-    else
-      save_or_warp_point.subtype = WARP_POINT_SUBTYPE
-    end
-    save_or_warp_point.x_pos, save_or_warp_point.y_pos = valid_positions.sample(random: rng)
-    save_or_warp_point.write_to_rom()
+    return valid_positions
   end
 end
