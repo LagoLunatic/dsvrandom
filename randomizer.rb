@@ -659,7 +659,7 @@ class Randomizer
       place_non_progression_pickups()
     end
     
-    if room_rando? && options[:rebalance_enemies_in_room_rando]
+    if room_rando? && options[:rebalance_enemies_in_room_rando] && options[:randomize_pickups]
       # Reorder boss stats so they're more appropriate for the order you progress in room rando.
       
       boss_ids_by_order_you_reach_them = []
@@ -717,7 +717,7 @@ class Randomizer
       end
     end
     
-    if room_rando? && options[:rebalance_enemies_in_room_rando]
+    if room_rando? && options[:rebalance_enemies_in_room_rando] && options[:randomize_pickups]
       # Generate new difficulty values for every room in the game based on the order you progress in room rando.
       # These values are then used in place of the normal ones by the enemy randomizer.
       # (If the enemy randomizer is off, common enemies don't get rebalanced.)
