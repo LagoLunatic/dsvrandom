@@ -1978,6 +1978,8 @@ module MapRandomizer
     all_rooms.shuffle!(random: rng)
     all_rooms.each do |base_room|
       next if @unused_rooms.include?(base_room)
+      next if base_room.layers.empty?
+      next if base_room.layers.first.collision_tileset_pointer == 0
       
       # Don't add a save/warp to a room with enemies in it.
       next if base_room.entities.any?{|e| e.is_enemy? }
