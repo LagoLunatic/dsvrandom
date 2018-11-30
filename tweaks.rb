@@ -570,26 +570,30 @@ module Tweaks
       balore_room = game.room_by_str("09-00-0A")
       unless @unused_rooms.include?(balore_room)
         right_door_out = balore_room.doors.find{|d| d.direction == :right}
-        left_door_in = right_door_out.destination_door
-        
-        # Left door that leads into Balore's room in Nest of Evil.
-        # If the player enters through this door they will be behind Balore, unable to get into the room, and Balore can't hit them.
-        # The player can still kill Balore but there's no challenge in that.
-        # So we make the door leave the player on the left half of the room, in front of Balore on the ground.
-        left_door_in.dest_x_2 = -0xC0
-        left_door_in.dest_y_2 = 0x30
-        left_door_in.write_to_rom()
+        if right_door_out
+          left_door_in = right_door_out.destination_door
+          
+          # Left door that leads into Balore's room in Nest of Evil.
+          # If the player enters through this door they will be behind Balore, unable to get into the room, and Balore can't hit them.
+          # The player can still kill Balore but there's no challenge in that.
+          # So we make the door leave the player on the left half of the room, in front of Balore on the ground.
+          left_door_in.dest_x_2 = -0xC0
+          left_door_in.dest_y_2 = 0x30
+          left_door_in.write_to_rom()
+        end
       end
       
       gergoth_room = game.room_by_str("09-00-14")
       unless @unused_rooms.include?(gergoth_room)
         right_door_out = gergoth_room.doors.find{|d| d.direction == :right}
-        left_door_in = right_door_out.destination_door
-        
-        # Do the same thing for the door into Gergoth's room as we did for the one into Balore's room.
-        left_door_in.dest_x_2 = -0xC0
-        left_door_in.dest_y_2 = 0x30
-        left_door_in.write_to_rom()
+        if right_door_out
+          left_door_in = right_door_out.destination_door
+          
+          # Do the same thing for the door into Gergoth's room as we did for the one into Balore's room.
+          left_door_in.dest_x_2 = -0xC0
+          left_door_in.dest_y_2 = 0x30
+          left_door_in.write_to_rom()
+        end
       end
     end
     
