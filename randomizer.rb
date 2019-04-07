@@ -302,6 +302,24 @@ class Randomizer
       checker.set_removed_portraits(@portraits_to_remove)
     end
     
+    @red_wall_souls = []
+    if GAME == "dos"
+      if options[:randomize_red_walls]
+        reset_rng()
+        randomize_red_walls()
+      else
+        @red_wall_souls = [
+          0xD2, # skeleton
+          0xD4, # axe armor
+          0xE3, # killer clown
+          0xEC, # ukoback
+        ]
+      end
+      
+      # Tell the completability checker logic what souls are for what red walls on this seed.
+      checker.set_red_wall_souls(@red_wall_souls)
+    end
+    
     # Now it's safe to initialize the list of progress items.
     checker.initialize_all_progression_pickups()
     
@@ -360,24 +378,6 @@ class Randomizer
     end
     
     options_completed += 2 # Initialization
-    
-    @red_wall_souls = []
-    if GAME == "dos"
-      if options[:randomize_red_walls]
-        reset_rng()
-        randomize_red_walls()
-      else
-        @red_wall_souls = [
-          0xD2, # skeleton
-          0xD4, # axe armor
-          0xE3, # killer clown
-          0xEC, # ukoback
-        ]
-      end
-      
-      # Tell the completability checker logic what souls are for what red walls on this seed.
-      checker.set_red_wall_souls(@red_wall_souls)
-    end
     
     # Now it's safe to initialize the list of non-progress items.
     initialize_all_non_progression_pickups()
