@@ -181,6 +181,38 @@ class RandomizerWindow < Qt::Dialog
     self.show()
   end
   
+  def bulk_test
+    failed_times = 0
+    total_tests = 100
+    total_tests.times do |i|
+      game = Game.new
+      game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
+      seed = i.to_s
+      
+      options_hash = {}
+      OPTIONS.each do |option_name|
+        options_hash[option_name] = @ui.send(option_name).checked
+      end
+      
+      difficulty_settings_averages = {}
+      DIFFICULTY_RANGES.keys.each do |option_name|
+        slider = @slider_widgets_by_name[option_name]
+        average = slider.true_value
+        difficulty_settings_averages[option_name] = average
+      end
+      
+      randomizer = Randomizer.new(seed, game, options_hash, @settings[:difficulty_level], difficulty_settings_averages)
+      begin
+        randomizer.randomize() {}
+      rescue StandardError => e
+        puts "Error on seed #{seed}:"
+        puts e.message
+        failed_times += 1
+      end
+      puts "%d/%d seeds failed" % [failed_times, i+1]
+    end
+  end
+  
   def eventFilter(target, event)
     if event.type() == Qt::Event::Enter
       @ui.option_description.text = target.toolTip()
