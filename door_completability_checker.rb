@@ -1,7 +1,7 @@
 
 require 'yaml'
 
-class DoorCompletabilityChecker
+class DoorCompletabilityChecker < CompletabilityChecker
   attr_reader :game,
               :current_items,
               :defs,
@@ -233,30 +233,6 @@ class DoorCompletabilityChecker
     @inaccessible_doors << door.door_str
   end
   
-  def parse_reqs(reqs)
-    if reqs.is_a?(Integer) || reqs.nil?
-      return reqs
-    elsif reqs == true
-      return true
-    elsif reqs == false
-      return false
-    elsif PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(reqs.to_sym)
-      return reqs.to_sym
-    elsif PickupRandomizer::PORTRAIT_NAMES.include?(reqs.to_sym)
-      return reqs.to_sym
-    end
-    
-    or_reqs = reqs.split("|")
-    or_reqs.map! do |or_req|
-      and_reqs = or_req.split("&")
-      and_reqs.map! do |and_req|
-        and_req = and_req.strip.tr(" ", "_").to_sym
-        and_req = nil if and_req.empty?
-        and_req
-      end
-    end
-  end
-  
   def game_beatable?
     if GAME == "ooe" && !check_reqs([[:dominus_hatred, :dominus_anger, :dominus_agony]])
       # Reaching the throne room in OoE isn't good enough, you also need all 3 dominus glyphs.
@@ -276,17 +252,6 @@ class DoorCompletabilityChecker
   
   def vincent_accessible?
     get_accessible_doors().include?("00-01-09_000")
-  end
-  
-  def check_reqs(reqs)
-    if reqs == true
-      return true
-    elsif reqs == false
-      return false
-    end
-    
-    @cached_checked_reqs = {}
-    check_multiple_reqs_recursive(reqs)
   end
   
   def check_req_recursive(req)
@@ -339,22 +304,6 @@ class DoorCompletabilityChecker
       end
       raise "Invalid requirement: #{req}"
     end
-  end
-  
-  def check_multiple_reqs_recursive(or_reqs)
-    return true if or_reqs.nil?
-    
-    or_reqs.each do |and_reqs|
-      or_req_met = and_reqs.all? do |and_req|
-        check_req_recursive(and_req)
-      end
-      
-      puts "Req #{or_reqs} is true (AND req: #{and_reqs})" if @debug && or_req_met
-      return true if or_req_met
-    end
-    
-    puts "Req #{or_reqs} is false" if @debug
-    return false
   end
   
   def all_locations
@@ -731,67 +680,10 @@ class DoorCompletabilityChecker
     get_accessible_locations_and_doors()[1]
   end
   
-  def initialize_all_progression_pickups
-    if !@all_progression_pickups.nil?
-      raise "all_progression_pickups was initialized too early."
-    end
-    
-    @all_progression_pickups = begin
-      pickups = []
-      
-      @defs.each do |name, req|
-        pickups << req if req.is_a?(Integer)
-      end
-      if GAME == "ooe" && @ooe_randomize_villagers
-        pickups += PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES
-      end
-      if GAME == "por" && @por_randomize_portraits
-        pickups += PickupRandomizer::PORTRAIT_NAMES
-        pickups -= @removed_portraits
-      end
-      
-      pickups
-    end
-  end
-  
-  def pickups_by_current_num_locations_they_access
-    orig_current_items = @current_items
-    
-    possibly_useful_pickups = all_progression_pickups - @current_items
-    
-    # Subtract no_progression_locations since we don't want those messing up the numbers.
-    currently_accessible_locations = get_accessible_locations() - no_progression_locations
-    
-    pickups_by_locations = {}
-    
-    possibly_useful_pickups.each do |pickup_global_id|
-      @current_items = orig_current_items + [pickup_global_id]
-      new_accessible_locations = get_accessible_locations() - no_progression_locations
-      next_accessible_pickups = new_accessible_locations - currently_accessible_locations
-      
-      pickups_by_locations[pickup_global_id] = next_accessible_pickups.length
-    end
-    
-    return pickups_by_locations
-  ensure
-    @current_items = orig_current_items
-  end
-  
-  def add_item(new_item_global_id)
-    @current_items << new_item_global_id
-  end
-  
   def set_starting_room(starting_room, starting_room_door_index)
     @current_room = starting_room.room_str
     @current_location_in_room = "%03X" % starting_room_door_index
     @starting_location = "#{@current_room}_#{@current_location_in_room}"
-  end
-  
-  def set_red_wall_souls(red_wall_souls)
-    @defs[:red_wall_soul_0] = red_wall_souls[0]
-    @defs[:red_wall_soul_1] = red_wall_souls[1]
-    @defs[:red_wall_soul_2] = red_wall_souls[2]
-    @defs[:red_wall_soul_3] = red_wall_souls[3]
   end
   
   def set_removed_portraits(removed_portraits)
