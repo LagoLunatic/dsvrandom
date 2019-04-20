@@ -176,14 +176,6 @@ module BossRandomizer
   def dos_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case new_boss.name
     when "Balore"
-      has_left_door = boss_entity.room.doors.find{|d| d.direction == :left}
-      has_right_door = boss_entity.room.doors.find{|d| d.direction == :right}
-      
-      if has_left_door && has_right_door
-        # Balore has to be set as facing left OR right by the randomizer, he won't automatically face the direction the player entered from.
-        return false
-      end
-      
       coll = RoomCollision.new(boss_entity.room, game.fs)
       (0x40..0xC0).each do |x|
         # If the floor is 2 tiles high instead of 1, the player won't have room to crouch under Balore' huge laser.
@@ -271,21 +263,15 @@ module BossRandomizer
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0x50
     when "Balore"
-      has_left_door = boss_entity.room.doors.find{|d| d.direction == :left}
-      has_right_door = boss_entity.room.doors.find{|d| d.direction == :right}
+      # Defaults to right-facing Balore.
+      # But Balore's code has been modified so that he will face left and reposition himself if the player comes from the left.
+      boss_entity.var_a = 1
+      boss_entity.x_pos = 0x10
+      boss_entity.y_pos = 0xB0
       
-      if has_right_door
-        boss_entity.var_a = 1
-        boss_entity.x_pos = 0x10
-        boss_entity.y_pos = 0xB0
-        
-        if old_boss.name == "Puppet Master"
-          boss_entity.x_pos += 0x90
-        end
-      else
-        boss_entity.var_a = 0
-        boss_entity.x_pos = 0xF0
-        boss_entity.y_pos = 0xB0
+      if old_boss.name == "Puppet Master"
+        # Puppet Master's room's left wall is farther to the right than most.
+        boss_entity.x_pos += 0x90
       end
     when "Malphas"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
