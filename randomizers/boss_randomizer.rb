@@ -426,6 +426,21 @@ module BossRandomizer
     end
     
     case new_boss.name
+    when "Arthroverta"
+      # Add two magnes points to rooms with Arthroverta in them to help dodging.
+      magnes_point_1 = boss_entity.room.add_new_entity()
+      magnes_point_1.type = SPECIAL_OBJECT_ENTITY_TYPE
+      magnes_point_1.subtype = 1
+      magnes_point_1.x_pos = 0x40
+      magnes_point_1.y_pos = 0x28
+      magnes_point_1.write_to_rom()
+      
+      magnes_point_2 = boss_entity.room.add_new_entity()
+      magnes_point_2.type = SPECIAL_OBJECT_ENTITY_TYPE
+      magnes_point_2.subtype = 1
+      magnes_point_2.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS - 0x40
+      magnes_point_2.y_pos = 0x28
+      magnes_point_2.write_to_rom()
     when "Giant Skeleton"
       boss_entity.var_a = 1 # Boss version of the Giant Skeleton
       boss_entity.var_b = 0 # Faces the player when they enter the room.
