@@ -58,6 +58,14 @@ module BossRandomizer
         boss_swaps_that_work[new_boss_id].include?(old_boss_id)
       end
     end
+    boss_swaps_that_work.each do |old_boss_id, valid_new_boss_ids|
+      old_boss = game.enemy_dnas[old_boss_id]
+      puts "Boss %02X (#{old_boss.name}) can be swapped with:" % [old_boss_id]
+      valid_new_boss_ids.each do |new_boss_id|
+        new_boss = game.enemy_dnas[new_boss_id]
+        puts "  Boss %02X (#{new_boss.name})" % [new_boss_id]
+      end
+    end
     
     remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
     queued_dna_changes = Hash.new{|h, k| h[k] = {}}
