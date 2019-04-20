@@ -183,6 +183,14 @@ module BossRandomizer
         # Balore has to be set as facing left OR right by the randomizer, he won't automatically face the direction the player entered from.
         return false
       end
+      
+      coll = RoomCollision.new(boss_entity.room, game.fs)
+      (0x40..0xC0).each do |x|
+        # If the floor is 2 tiles high instead of 1, the player won't have room to crouch under Balore' huge laser.
+        if coll[x,0xA0].is_solid?
+          return false
+        end
+      end
     when "Puppet Master"
       # If Puppet Master is in a room less than 2 screens wide he can teleport the player out of bounds.
       if boss_entity.room.width < 2
