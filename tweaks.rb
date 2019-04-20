@@ -320,8 +320,9 @@ module Tweaks
       boss_door.write_to_rom()
     end
     
-    if options[:randomize_boss_souls] && GAME == "dos"
+    if (options[:randomize_boss_souls] || options[:randomize_bosses]) && GAME == "dos"
       # If the player beats Balore but doesn't own Balore's soul they will appear stuck. (Though they could always escape with suspend.)
+      # Also if Balore is put in a random room the blocks won't fit at all in that room.
       # So get rid of the line of code Balore runs when he dies that recreates the Balore blocks in the room.
       
       game.fs.load_overlay(23)
