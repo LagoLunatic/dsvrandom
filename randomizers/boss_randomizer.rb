@@ -286,18 +286,53 @@ module BossRandomizer
       boss_entity.var_b = 0
     when "Dmitrii"
       boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
+      
+      # TODO: he doesn't set boss music properly.
+      # to get that to work, make a new func called PlaySongOverrideBGM which calls PlaySong and then also sets bit 00040000 in bitfield 020F6DFC. replace both of dmitrii's PlaySong calls with this new func.
     when "Dario"
       boss_entity.var_b = 0
+      
+      # TODO: he doesn't set boss music at all.
     when "Puppet Master"
-      boss_entity.x_pos = 0x100
-      boss_entity.y_pos = 0x60
+      # Regular Puppet Master.
+      boss_entity.var_a = 1
       
       if old_boss.name == "Puppet Master"
-        # Regular Puppet Master.
-        boss_entity.var_a = 1
+        # Puppet Master's in his original room.
+        boss_entity.x_pos = 0x148
+        boss_entity.y_pos = 0x60
       else
-        # Boss rush Puppet Master.
-        boss_entity.var_a = 0
+        # Not in his original room, so the left edge isn't missing.
+        # First center him in the room.
+        boss_entity.x_pos = 0x100
+        boss_entity.y_pos = 0x60
+        
+        if old_boss.name == "Rahab"
+          # Move Puppet Master down a bit so the player can reach him and his iron maidens easier from the water.
+          boss_entity.y_pos = 0x70
+        end
+        
+        # Also update a hardcoded position for his limbs to appear at.
+        game.fs.load_overlay(25)
+        game.fs.write(0x023052B0, [boss_entity.x_pos, boss_entity.y_pos].pack("vv"))
+        
+        # And the hardcoded position for his iron maidens to appear at.
+        game.fs.write(0x02305350, [boss_entity.x_pos+0x68, boss_entity.y_pos-0x38].pack("vv"))
+        game.fs.write(0x02305354, [boss_entity.x_pos+0x68, boss_entity.y_pos+0x38].pack("vv"))
+        game.fs.write(0x02305358, [boss_entity.x_pos-0x68, boss_entity.y_pos-0x38].pack("vv"))
+        game.fs.write(0x0230535C, [boss_entity.x_pos-0x68, boss_entity.y_pos+0x38].pack("vv"))
+        # And the platforms under the upper iron maidens.
+        game.fs.write(0x023052E4, [boss_entity.x_pos+0x68, boss_entity.y_pos-0x18].pack("vv"))
+        game.fs.write(0x023052E8, [boss_entity.x_pos-0x68, boss_entity.y_pos-0x18].pack("vv"))
+        # And the positions Soma is teleported to.
+        game.fs.write(0x02305370, [boss_entity.x_pos+0x68, boss_entity.y_pos-0x38+0x17].pack("vv"))
+        game.fs.write(0x02305374, [boss_entity.x_pos+0x68, boss_entity.y_pos+0x38+0x17].pack("vv"))
+        game.fs.write(0x02305378, [boss_entity.x_pos-0x68, boss_entity.y_pos-0x38+0x17].pack("vv"))
+        game.fs.write(0x0230537C, [boss_entity.x_pos-0x68, boss_entity.y_pos+0x38+0x17].pack("vv"))
+        
+        # And remove the code that usually sets the minimum screen scrolling position to hide the missing left side of the screen.
+        game.fs.write(0x022FFC1C, [0xE1A00000].pack("V")) # nop (for when he's alive)
+        game.fs.write(0x022FFA40, [0xE1A00000].pack("V")) # nop (for after he's dead)
       end
     when "Gergoth"
       if old_boss_id == new_boss_id && GAME == "dos"
@@ -314,6 +349,8 @@ module BossRandomizer
       if boss_entity.room.width < 2
         # Small room, so we need boss rush Zephyr. Normal Zephyr's intro cutscene doesn't work unless the room is 2 screens tall or more.
         boss_entity.var_a = 0
+        
+        # TODO: he doesn't set boss music at all.
       else
         # Normal Zephyr, with the cutscene.
         boss_entity.var_a = 1
@@ -330,6 +367,8 @@ module BossRandomizer
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
+      
+      # TODO: he doesn't set boss music at all.
     when "Death"
       # If there are any candle's in Death's room, he will softlock the game when you kill him.
       # Why? I dunno.
@@ -339,6 +378,8 @@ module BossRandomizer
           entity.write_to_rom()
         end
       end
+      
+      # TODO: he doesn't set boss music at all.
     when "Abaddon"
       # Abaddon's locusts always appear on the top left screen, so make sure he's there as well.
       boss_entity.x_pos = 0x80
