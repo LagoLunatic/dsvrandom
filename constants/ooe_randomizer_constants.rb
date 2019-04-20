@@ -84,7 +84,8 @@ STOLAS_UNFRIENDLY_ENEMY_IDS = []
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x78] - # Remove the final boss, Dracula. 
   [0x6D, 0x76] - # Also remove Brachyura and Eligor since they need their own huge rooms.
-  [0x71] # Remove Gravedorcus because he relies on code and objects specific to Oblivion Ridge.
+  [0x71] - # Remove Gravedorcus because he relies on code and objects specific to Oblivion Ridge.
+  [0x74] # Remove Wallman because his instant kill attack can be undodgeable in some boss rooms, and because he's the only boss who can drop a progress glyph.
 
 ORIGINAL_BOSS_IDS_ORDER = [
   0x6C, # Arthroverta
