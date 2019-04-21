@@ -185,6 +185,8 @@ Progress important rooms:
   - 00-02-0C # Blackmore
   - 00-08-0E # Eligor
   - 00-06-14 # Death
+  
+  - 03-00-01 # Tall Training Hall room that has the item in it, without this room the whole area's pointless
 Subrooms:
   03-00-01:
     -
