@@ -63,6 +63,12 @@ module DialogueRandomizer
     end
     
     # Randomize event dialogue.
+    case GAME
+    when "ooe"
+      max_line_length = 39
+    else
+      max_line_length = 40
+    end
     events.each do |text|
       new_lines = []
       
@@ -76,7 +82,7 @@ module DialogueRandomizer
           # Generate a new line of dialogue.
           sentence = markov.generate_sentence()
           
-          wordwrapped_sentence_lines = word_wrap_string(sentence)
+          wordwrapped_sentence_lines = word_wrap_string(sentence, max_line_length=max_line_length)
           
           # If the new line takes up more than 3 lines, it won't fit on screen.
           # So we need to break it up into multiple lines that the player can click through.
