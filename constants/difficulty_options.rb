@@ -45,6 +45,51 @@ DIFFICULTY_RANGES = {
 }
 
 DIFFICULTY_LEVELS = {
+  "Casual" => {
+    :item_price_range               => 500,
+    :weapon_attack_range            => 36,
+    :weapon_iframes_range           => 26,
+    :armor_defense_range            => 17,
+    :item_extra_stats_range         => 7,
+    :restorative_amount_range       => 250,
+    :heart_restorative_amount_range => 75,
+    :ap_increase_amount_range       => 2000,
+    
+    :skill_price_range              => 5000,
+    :skill_dmg_range                => 13,
+    :crush_or_union_dmg_range       => 38,
+    :skill_iframes_range            => 26,
+    :subweapon_sp_to_master_range   => 100,
+    :spell_charge_time_range        => 32,
+    :skill_mana_cost_range          => 18,
+    :crush_mana_cost_range          => 40,
+    :union_heart_cost_range         => 8,
+    :skill_max_at_once_range        => 2,
+    :glyph_attack_delay_range       => 7,
+  
+    :item_drop_chance_range         => 13,
+    :skill_drop_chance_range        => 8,
+    
+    :item_placement_weight          => 55,
+    :soul_candle_placement_weight   => 8,
+    :por_skill_placement_weight     => 25,
+    :glyph_placement_weight         => 25,
+    :max_up_placement_weight        => 18,
+    :money_placement_weight         => 2,
+    
+    :max_room_difficulty_mult       => 1.75,
+    :max_enemy_difficulty_mult      => 1.1,
+    :enemy_id_preservation_exponent => 3.0,
+  
+    :enemy_stat_mult_range          => 0.65,
+    :enemy_num_weaknesses_range     => 4,
+    :enemy_num_resistances_range    => 1,
+    :boss_stat_mult_range           => 0.80,
+    :enemy_anim_speed_mult_range    => 0.8,
+    
+    :starting_room_max_difficulty   => 15,
+  },
+  
   "Normal" => {
     :item_price_range               => 500,
     :weapon_attack_range            => 30,
