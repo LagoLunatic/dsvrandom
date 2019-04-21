@@ -120,19 +120,19 @@ class Markov
   def parse_string(string)
     # Adds a string to the dictionary.
     
-    # Remove parentheses, square brackets, and double dashes.
-    string = string.gsub(/\(|\)|\[|\]|--/, "")
-    sentences = string.split(/(?<=[.!?])\s+/)
+    # Remove parentheses and square brackets.
+    cleaned_string = string.gsub(/\(|\)|\[|\]/, "")
+    sentences = cleaned_string.split(/(?<=[.!?])\s+/)
     sentences.each do |sentence|
       sentence = sentence.strip
       
-      words = sentence.split(/\s+|(\.\.\.)|(\.)|([!?])/)
-      if words.last !~ /[.!?]$/
+      sentence_words = sentence.split(/\s+|(\.\.\.)|(\.)|([!?])|--/)
+      if sentence_words.last !~ /[.!?]$/
         # Make sure the last word of every sentence is punctuation.
-        words << "."
+        sentence_words << "."
       end
       
-      words.each_cons(@depth+1) do |words|
+      sentence_words.each_cons(@depth+1) do |words|
         prev_words = words[0..-2]
         word = words[-1]
         
