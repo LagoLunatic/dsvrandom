@@ -352,6 +352,13 @@ class Randomizer
         possible_max_up_ids -= [0x4B] # Don't let castle map 1 be a max up since it will get put in the shop.
         possible_max_up_ids -= [0x4C, 0x4D] # Don't let castle maps 2 and 3 be max ups either since then they won't reveal the map
         possible_max_up_ids -= [0x45, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F] # Don't let magical tickets and records be max ups since other types of items can't be made magical tickets or max ups.
+        
+        # Don't allow quest rewards to be max ups since the player could use it infinitely.
+        game.quests.each do |quest|
+          next if quest.reward_item.nil?
+          possible_max_up_ids.delete(quest.reward_item["Item ID"])
+        end
+        
         2.times do
           max_up_id = possible_max_up_ids.sample(random: rng)
           possible_max_up_ids.delete(max_up_id)
@@ -366,6 +373,14 @@ class Randomizer
         possible_max_up_ids = (0x75..0xE4).to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
         possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
         possible_max_up_ids -= [0xD2] # VIP card given to you by Jacob and put directly into your inventory.
+        possible_max_up_ids -= (0xAE..0xB2).to_a # Camera and photos
+        
+        # Don't allow quest rewards to be max ups since the player could use it infinitely.
+        game.quests.each do |quest|
+          next if quest.reward_item.nil?
+          possible_max_up_ids.delete(quest.reward_item["Item ID"])
+        end
+        
         3.times do
           max_up_id = possible_max_up_ids.sample(random: rng)
           possible_max_up_ids.delete(max_up_id)
