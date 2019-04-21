@@ -67,6 +67,10 @@ module EnemyStatRandomizer
       
       # Don't let some stats be 0.
       enemy_dna["HP"]     = 1 if enemy_dna["HP"] < 1
+      if GAME == "dos" && enemy_dna.name == "Death" && enemy_dna["HP"] < 2
+        # DoS Death starts out bugged in his second form if his max HP is 1.
+        enemy_dna["HP"] = 2
+      end
       enemy_dna["MP"]     = 1 if GAME == "dos" && enemy_dna["MP"] < 1
       enemy_dna["SP"]     = 1 if GAME == "por" && enemy_dna["SP"] < 1
       enemy_dna["AP"]     = 1 if GAME == "ooe" && enemy_dna["AP"] < 1
