@@ -31,7 +31,6 @@ class RandomizerWindow < Qt::Dialog
     experimental_options_enabled
     randomize_players
     randomize_bosses
-    randomize_enemy_ai
     randomize_world_map_exits
     randomize_enemy_sprites
     randomize_boss_sprites

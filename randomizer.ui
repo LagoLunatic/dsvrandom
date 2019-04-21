@@ -434,16 +434,6 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
-             <widget class="QCheckBox" name="randomize_enemy_ai">
-              <property name="toolTip">
-               <string>Shuffles the AI of non-boss enemies (extremely buggy).</string>
-              </property>
-              <property name="text">
-               <string>Enemy AI</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QCheckBox" name="randomize_enemy_sprites">
               <property name="text">
                <string>Enemy Sprites</string>
@@ -456,6 +446,9 @@
                <string>Boss Sprites</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_4" native="true"/>
             </item>
            </layout>
           </item>
@@ -553,8 +546,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>675</width>
-            <height>378</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -1212,7 +1205,6 @@
   <tabstop>randomize_players</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_world_map_exits</tabstop>
-  <tabstop>randomize_enemy_ai</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>num_seeds_to_create</tabstop>

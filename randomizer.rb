@@ -18,7 +18,6 @@ require_relative 'randomizers/item_skill_stat_randomizer'
 require_relative 'randomizers/enemy_stat_randomizer'
 require_relative 'randomizers/weapon_synth_randomizer'
 require_relative 'randomizers/starting_room_randomizer'
-require_relative 'randomizers/enemy_ai_randomizer'
 require_relative 'randomizers/starting_items_randomizer'
 require_relative 'randomizers/skill_sprites_randomizer'
 require_relative 'randomizers/enemy_anim_speed_randomizer'
@@ -44,7 +43,6 @@ class Randomizer
   include EnemyStatRandomizer
   include WeaponSynthRandomizer
   include StartingRoomRandomizer
-  include EnemyAIRandomizer
   include StartingItemsRandomizer
   include SkillSpriteRandomizer
   include EnemyAnimSpeedRandomizer
@@ -837,13 +835,6 @@ class Randomizer
       yield [options_completed, "Placing starting items..."]
       reset_rng()
       randomize_starting_items()
-    end
-    
-    if options[:randomize_enemy_ai]
-      yield [options_completed, "Shuffling enemy AI..."]
-      reset_rng()
-      randomize_enemy_ai()
-      options_completed += 1
     end
     
     if options[:randomize_player_sprites]
