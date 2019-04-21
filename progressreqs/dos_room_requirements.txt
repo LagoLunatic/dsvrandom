@@ -12,6 +12,7 @@ Glitch defs:
   golden axe: 0x78
   succubus: 0xEE
   
+  backdashjump: true
   cutallsuper: cutall | cinquedia | alucard sword
   axesuper: axe | battle axe | bhuj | great axe | golden axe
   hwarpseal: cutallsuper & seal
@@ -49,7 +50,6 @@ Defs:
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
-  backdashjump: true
 Final room: 00-0B-1F
 Enemy locations:
   - 00-00-0B_02
