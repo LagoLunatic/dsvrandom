@@ -228,6 +228,17 @@ module BossRandomizer
   end
   
   def por_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    case new_boss.name
+    when "Legion"
+      if boss_entity.room.width < 2
+        return false
+      end
+    when "Medusa"
+      if boss_entity.room.width < 2
+        return false
+      end
+    end
+    
     return true
   end
   
@@ -262,11 +273,7 @@ module BossRandomizer
     when "Gergoth"
       if GAME == "dos" && boss_entity.room.sector_index == 5
         # Condemned Tower. Replace the boss death flag checked by the floors of the tower so they check the new boss instead.
-        boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id]
-        if boss_index.nil?
-          boss_index = 0
-        end
-        
+        boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
         game.fs.replace_hardcoded_bit_constant(0x0219EF44, boss_index)
       end
     when "Paranoia"
@@ -417,6 +424,14 @@ module BossRandomizer
         # Scripted Behemoth that chases you down the hallway.
         return :skip
       end
+    when "Legion"
+      # Legion's horizontal boss door is hardcoded to check Legion's boss death flag.
+      # Update these checks to check the updated boss death flag.
+      game.fs.load_overlay(98)
+      boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
+      
+      game.fs.replace_hardcoded_bit_constant(0x022E8B94, boss_index)
+      game.fs.replace_hardcoded_bit_constant(0x022E888C, boss_index)
     end
     
     case new_boss.name
@@ -424,6 +439,9 @@ module BossRandomizer
       boss_entity.var_b = 0 # Normal
       
       # TODO: Behemoth can be undodgeable without those jumpthrough platforms in the room, so add those
+    when "Astarte"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0xB0
     when "Death"
       boss_entity.var_a = 0 # Solo Death (not with Dracula)
       boss_entity.var_b = 0 # Starts fighting immediately, not waiting for cutscene to finish
