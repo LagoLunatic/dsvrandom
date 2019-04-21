@@ -398,6 +398,12 @@ module BossRandomizer
       
       # TODO: he doesn't set boss music at all.
     when "Death"
+      boss_entity.var_a = 1
+      boss_entity.var_b = 1
+      
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0x50
+      
       # If there are any extra objects in Death's room, he will softlock the game when you kill him.
       # That's because Death's GFX takes up so much space that there's barely any room for his magic seal's GFX to be loaded.
       # So remove any candles in the room, since they're not necessary.
@@ -481,6 +487,18 @@ module BossRandomizer
           end
         end
       end
+    when "Barlowe"
+      # Barlowe's boss room has Ecclesia doors instead of regular doors.
+      # We want it to have a normal boss door so that it sets the "in a boss fight" flag when you enter the room.
+      # But we only want the normal boss door to appear when the fight is active - not before the story has progressed that far.
+      # So we make use of the boss door in the room that usually only appears in boss rush.
+      # By changing the boss rush entity hider to hide 2 entities instead of 3, it no longer hides the boss door.
+      # But there's an earlier entity hider in the list that still hides it before the story has progressed to the Barlowe fight.
+      boss_rush_entity_hider = boss_entity.room.entities[8]
+      boss_rush_entity_hider.byte_8 = 2
+      boss_rush_entity_hider.write_to_rom()
+      
+      # TODO: after the cutscene before the fight, the screen stays white. the player needs to pause and unpause to fix it.
     end
     
     case new_boss.name
@@ -506,6 +524,11 @@ module BossRandomizer
       # The boss version of the Giant Skeleton doesn't wake up until the searchlight is on him, but there's no searchlight in other boss rooms.
       # So we modify the line of code that checks if he should wake up to use the code for the common enemy Giant Skeleton instead.
       game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
+    when "Rusalka"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0xA0
+      
+      # TODO: rusalka (in barlowe's room at least) doesn't play all sound effects, and her splash attack is invisible.
     when "Wallman"
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
