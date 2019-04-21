@@ -7,22 +7,22 @@ module BossRandomizer
     
     boss_entities = []
     game.each_room do |room|
-      boss_entities_for_room = room.entities.select do |e|
-        if !e.is_boss?
+      boss_entities_for_room = room.entities.select do |entity|
+        if !entity.is_boss?
           next
         end
-        boss_id = e.subtype
+        boss_id = entity.subtype
         if !RANDOMIZABLE_BOSS_IDS.include?(boss_id)
           next
         end
         
         boss = game.enemy_dnas[boss_id]
-        if GAME == "por" && room.room_str == "00-0B-01" && boss.name == "Stella"
-          # Don't randomize the Stella who starts the sisters fight in Master's Keep.
+        if GAME == "por" && boss.name == "Stella" && entity.var_a == 1
+          # Don't randomize the Stella who initiates the sisters fight (in either Master's Keep or Nest of Evil).
           next
         end
-        if GAME == "por" && room.room_str == "09-00-3D" && boss.name == "Stella"
-          # Don't randomize the Stella in the doppelganger room in Nest of Evil
+        if GAME == "por" && boss.name == "The Creature" && entity.var_a == 0
+          # Don't randomize the common enemy version of The Creature.
           next
         end
         
@@ -420,10 +420,28 @@ module BossRandomizer
     end
     
     case new_boss.name
+    when "Behemoth"
+      boss_entity.var_b = 0 # Normal
+      
+      # TODO: Behemoth can be undodgeable without those jumpthrough platforms in the room, so add those
+    when "Death"
+      boss_entity.var_a = 0 # Solo Death (not with Dracula)
+      boss_entity.var_b = 0 # Starts fighting immediately, not waiting for cutscene to finish
+      
+      # TODO: doesn't play boss music
     when "Stella"
       boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
+      
+      # TODO: doesn't play boss music
+    when "The Creature"
+      boss_entity.var_a = 0 # Boss version, not the common enemy version
+    when "Mummy Man"
+      boss_entity.y_pos = boss_entity.room.height * SCREEN_HEIGHT_IN_PIXELS - 0x2C
     when "Brauner"
       boss_entity.var_a = 0 # Boss rush Brauner, doesn't try to reload the room when he dies.
+      
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0xB0
     when "Balore", "Gergoth", "Zephyr", "Aguni", "Abaddon"
       dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     end
@@ -560,7 +578,7 @@ module BossRandomizer
     when "dos"
       [0x61, 0x63, 0x64, 0x69]
     when "por"
-      []
+      [0xA0]
     when "ooe"
       []
     end
