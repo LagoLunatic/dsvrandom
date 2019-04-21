@@ -256,11 +256,30 @@ class Randomizer
         reset_rng()
         
         @portraits_to_remove = []
-        possible_portraits = (PORTRAIT_NAMES - [:portraitnestofevil])
-        4.times do
-          portrait_to_remove = possible_portraits.sample(random: rng)
+        
+        # Select the portraits to remove.
+        # We always remove 2/4 of the early game portraits and 2/4 of the late game portraits.
+        early_game_portraits = [
+          :portraitcityofhaze,
+          :portraitsandygrave,
+          :portraitnationoffools,
+          :portraitforestofdoom,
+        ]
+        late_game_portraits = [
+          :portraitdarkacademy,
+          :portraitburntparadise,
+          :portraitforgottencity,
+          :portrait13thstreet,
+        ]
+        2.times do
+          portrait_to_remove = early_game_portraits.sample(random: rng)
           @portraits_to_remove << portrait_to_remove
-          possible_portraits.delete(portrait_to_remove)
+          early_game_portraits.delete(portrait_to_remove)
+        end
+        2.times do
+          portrait_to_remove = late_game_portraits.sample(random: rng)
+          @portraits_to_remove << portrait_to_remove
+          late_game_portraits.delete(portrait_to_remove)
         end
         
         # Keep track of unused rooms (every room in the 4 unused portraits).
