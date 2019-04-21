@@ -333,6 +333,17 @@ module Tweaks
       game.fs.write(0x02300808, [0xE1A00000].pack("V"))
     end
     
+    if GAME == "dos" && options[:randomize_bosses]
+      # When you kill a boss, they depend on the magic seal being created properly, otherwise they softlock the game and never die.
+      # Death has so many GFX pages that if there are any other things in the room with him (such as Gergoth's floors) the magic seal doesn't have enough extra memory to load in.
+      # So when boss randomizer is on we need to make the magic seal still set 020F6E0B,1 on to indicate the magic seal was completed.
+      # In MakeMagicSeal, nop out the 2 lines that would return early if the magic seals's GFX couldn't be loaded.
+      # Even without its graphics, the magic seal still functions as normal - it's just the "completed visual" won't show up.
+      # Also, Death's body and scythes get sucked into the upper left corner of the room instead of the magic seal, since the magic seal doesn't exist.
+      game.fs.write(0x02215800, [0xE1A00000].pack("V"))
+      game.fs.write(0x02215804, [0xE1A00000].pack("V"))
+    end
+    
     if options[:randomize_enemies] && GAME == "por"
       # Remove the line of code that spawns the sand to go along with Sand Worm/Poison Worm.
       # This sand can cause various bugs depending on the room, such as teleporting the player out of bounds, preventing the player from picking up items, and turning the background into an animated rainbow.

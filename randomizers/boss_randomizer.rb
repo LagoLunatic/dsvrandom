@@ -398,8 +398,9 @@ module BossRandomizer
       
       # TODO: he doesn't set boss music at all.
     when "Death"
-      # If there are any candle's in Death's room, he will softlock the game when you kill him.
-      # Why? I dunno.
+      # If there are any extra objects in Death's room, he will softlock the game when you kill him.
+      # That's because Death's GFX takes up so much space that there's barely any room for his magic seal's GFX to be loaded.
+      # So remove any candles in the room, since they're not necessary.
       boss_entity.room.entities.each do |entity|
         if entity.is_special_object? && entity.subtype == 1 && entity.var_a != 0
           entity.type = 0
