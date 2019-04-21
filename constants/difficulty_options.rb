@@ -45,7 +45,7 @@ DIFFICULTY_RANGES = {
 }
 
 DIFFICULTY_LEVELS = {
-  "Easy" => {
+  "Normal" => {
     :item_price_range               => 500,
     :weapon_attack_range            => 30,
     :weapon_iframes_range           => 26,
@@ -90,7 +90,7 @@ DIFFICULTY_LEVELS = {
     :starting_room_max_difficulty   => 22,
   },
   
-  "Normal" => {
+  "Hard" => {
     :item_price_range               => 1500,
     :weapon_attack_range            => 20,
     :weapon_iframes_range           => 33,
