@@ -47,6 +47,24 @@ module DialogueRandomizer
     end
     intro_text.decoded_string = new_intro_text
     
+    # Update the text that appears onscreen after Dracula's castle crumbles.
+    if GAME == "ooe"
+      num_outro_lines = 6
+      outro_max_line_length = 36
+      new_outro_lines = []
+      num_outro_lines.times do
+        sentence = markov.generate_sentence()
+        wordwrapped_sentence_lines = word_wrap_string(sentence, outro_max_line_length)
+        new_outro_lines += wordwrapped_sentence_lines
+      end
+      
+      (0x623..0x628).each do |text_id|
+        new_outro_line_string = new_outro_lines.shift()
+        outro_line_text = game.text_database.text_list[text_id]
+        outro_line_text.decoded_string = new_outro_line_string
+      end
+    end
+    
     # Randomize library entry descriptions.
     num_library_lines = 4
     library_max_line_length = 24
