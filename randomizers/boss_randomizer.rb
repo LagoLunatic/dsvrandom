@@ -7,7 +7,28 @@ module BossRandomizer
     
     boss_entities = []
     game.each_room do |room|
-      boss_entities += room.entities.select{|e| e.is_boss? && RANDOMIZABLE_BOSS_IDS.include?(e.subtype)}
+      boss_entities_for_room = room.entities.select do |e|
+        if !e.is_boss?
+          next
+        end
+        boss_id = e.subtype
+        if !RANDOMIZABLE_BOSS_IDS.include?(boss_id)
+          next
+        end
+        
+        boss = game.enemy_dnas[boss_id]
+        if GAME == "por" && room.room_str == "00-0B-01" && boss.name == "Stella"
+          # Don't randomize the Stella who starts the sisters fight in Master's Keep.
+          next
+        end
+        if GAME == "por" && room.room_str == "09-00-3D" && boss.name == "Stella"
+          # Don't randomize the Stella in the doppelganger room in Nest of Evil
+          next
+        end
+        
+        true
+      end
+      boss_entities += boss_entities_for_room
     end
     
     remove_boss_cutscenes()

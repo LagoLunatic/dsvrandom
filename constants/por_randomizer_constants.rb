@@ -85,7 +85,9 @@ STOLAS_UNFRIENDLY_ENEMY_IDS = []
 
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x99, 0x9A] - # Remove Dracula and True Dracula.
-  [0x88, 0x89] # Also remove Fake Grant and Sypha as they're placed together with Trevor.
+  [0x98] - # Remove Whip's Memory since he overwrites and disables Charlotte, and spawns in a bunch of walls and room graphics.
+  [0x92] - # Remove Loretta, since the sisters fight can't be randomized and Loretta doesn't work when placed herself anyway.
+  [0x81, 0x82, 0x83, 0x84, 0x85, 0x87, 0x88, 0x89, 0x86] # Remove all Nest of Evil bosses since they don't set a boss death flag.
 
 ORIGINAL_BOSS_IDS_ORDER = [
   0x8A, # Dullahan
