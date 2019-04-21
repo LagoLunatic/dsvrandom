@@ -247,6 +247,10 @@ module ItemSkillStatRandomizer
           if (0x75..0x7B).include?(item["Item ID"])
             possible_types.delete(7)
           end
+          if item.name == "Poor Photo"
+            # Don't allow poor photo to restore HP, hearts, or increase attribute points. Infinite access to these is OP.
+            possible_types -= [0, 2, 0xB]
+          end
           
           # If the player has an infinite magical ticket, don't bother letting any other items be magical tickets too.
           if needs_infinite_magical_tickets?
@@ -327,7 +331,7 @@ module ItemSkillStatRandomizer
           skill["IFrames"] = orig_iframes
         end
       end
-    
+      
       if options[:randomize_weapon_and_skill_elements]
         randomize_skill_damage_types(skill, skill_global_id)
       end
