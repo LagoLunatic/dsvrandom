@@ -425,20 +425,45 @@ module BossRandomizer
   end
   
   def por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    new_boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
+    
     case old_boss.name
+    when "Dullahan"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+1, [new_boss_index].pack("C"))
     when "Behemoth"
       if boss_entity.var_b == 2
         # Scripted Behemoth that chases you down the hallway.
         return :skip
       end
+    when "Astarte"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+3, [new_boss_index].pack("C"))
     when "Legion"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+5, [new_boss_index].pack("C"))
+      
       # Legion's horizontal boss door is hardcoded to check Legion's boss death flag.
       # Update these checks to check the updated boss death flag.
       game.fs.load_overlay(98)
-      boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
       
-      game.fs.replace_hardcoded_bit_constant(0x022E8B94, boss_index)
-      game.fs.replace_hardcoded_bit_constant(0x022E888C, boss_index)
+      game.fs.replace_hardcoded_bit_constant(0x022E8B94, new_boss_index)
+      game.fs.replace_hardcoded_bit_constant(0x022E888C, new_boss_index)
+    when "Dagon"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+7, [new_boss_index].pack("C"))
+    when "The Creature"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+8, [new_boss_index].pack("C"))
+    when "Werewolf"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+2, [new_boss_index].pack("C"))
+    when "Medusa"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+6, [new_boss_index].pack("C"))
+    when "Mummy Man"
+      # Update the boss index for this portrait.
+      game.fs.write(0x020F4E78+4, [new_boss_index].pack("C"))
     end
     
     case new_boss.name
