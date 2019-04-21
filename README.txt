@@ -29,6 +29,10 @@ Maps: Randomly generates entirely new maps and connects rooms to match the map.
 Starting Room: Randomizes which room you start in.
 Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)
 Area Connections (Not map-friendly): Randomizes which areas connect to each other.
+Background Music: Randomizes what songs play in what areas.
+Cutscene Dialogue: Generates random dialogue for all cutscenes.
+Player Sprites: Randomizes the graphics of player characters.
+Skill Sprites: Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).
 
 As well as several other options that change how the game is played:
 Scavenger Mode: Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.
@@ -39,13 +43,14 @@ Allow Requiring Glitches to Win: If checked, certain glitches may be necessary t
 Bonus Starting Items: Starts you out with 3 random extra items and 3 random extra skills.
 
 There are also some buggy, experimental randomization options:
-Players: Randomizes player graphics and movement stats.
+Players: Randomizes player movement stats.
 Boss Locations: Randomizes which bosses appear where.
-Enemy AI: Shuffles the AI of non-boss enemies (extremely buggy).
-Skill Sprites: Randomizes the graphics used by each skill.
+World Map Exits: Randomizes the order areas are unlocked on the world map (OoE linear mode only).
+Enemy Sprites: Randomizes the graphics of non-boss enemies.
+Boss Sprites: Randomizes the graphics of bosses.
 
 Every seed should be completable as long as you don't use the experimental options.
-If you think you've found a seed that's unwinnable, first check the spoiler log (located at /logs/spoiler_log.txt) to make sure you haven't missed something.
+If you think you've found a seed that's unwinnable, first check the spoiler log (located in the same folder as the randomized ROM) to make sure you haven't missed something.
 If you haven't missed anything then you can report the bug here: https://github.com/LagoLunatic/dsvrandom/issues
 When making a bug report be sure to include the seed, randomizer version number, and all the options you checked. The easiest way to do that is to simply copy paste the relevant entry from the spoiler log, which lists all of those.
 
@@ -70,7 +75,7 @@ Q: I can't find something I need to progress!
 
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.
 If you check the "Reveal breakable walls" option in the Game Tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.
-You can also check the spoiler log located at /logs/spoiler_log.txt. This lists the area that each progression item got placed in.
+You can also check the spoiler log located in the same folder as the randomized ROM. This lists the area that each progression item got placed in.
 
 Q: I fell into a pit and can't get back out without jump upgrades!
 

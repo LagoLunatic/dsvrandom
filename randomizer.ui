@@ -435,6 +435,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_sprites">
+              <property name="toolTip">
+               <string>Randomizes the graphics of non-boss enemies.</string>
+              </property>
               <property name="text">
                <string>Enemy Sprites</string>
               </property>
@@ -442,6 +445,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_boss_sprites">
+              <property name="toolTip">
+               <string>Randomizes the graphics of bosses.</string>
+              </property>
               <property name="text">
                <string>Boss Sprites</string>
               </property>
@@ -546,8 +552,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>675</width>
+            <height>378</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -930,6 +936,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_19">
             <item>
              <widget class="QCheckBox" name="randomize_bgm">
+              <property name="toolTip">
+               <string>Randomizes what songs play in what areas.</string>
+              </property>
               <property name="text">
                <string>BGM</string>
               </property>
@@ -937,6 +946,9 @@
             </item>
             <item>
              <widget class="QCheckBox" name="randomize_dialogue">
+              <property name="toolTip">
+               <string>Generates random dialogue for all cutscenes.</string>
+              </property>
               <property name="text">
                <string>Dialogue</string>
               </property>
@@ -948,6 +960,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
              <widget class="QCheckBox" name="randomize_player_sprites">
+              <property name="toolTip">
+               <string>Randomizes the graphics of player characters.</string>
+              </property>
               <property name="text">
                <string>Player Sprites</string>
               </property>
@@ -956,7 +971,7 @@
             <item>
              <widget class="QCheckBox" name="randomize_skill_sprites">
               <property name="toolTip">
-               <string>Randomizes the graphics used by each skill.</string>
+               <string>Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).</string>
               </property>
               <property name="text">
                <string>Skill Sprites</string>
