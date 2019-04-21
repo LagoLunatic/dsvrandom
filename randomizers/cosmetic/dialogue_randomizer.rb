@@ -72,7 +72,10 @@ module DialogueRandomizer
     events.each do |text|
       new_lines = []
       
-      text.decoded_string.split(/((?:\{[^}]+\})+)/).each do |line|
+      # Remove button icons from the string so they don't screw up the line length.
+      string_without_buttons = text.decoded_string.gsub(/\{BUTTON[^}]+\}/, "")
+      
+      string_without_buttons.split(/((?:\{[^}]+\})+)/).each do |line|
         next if line.length == 0
         
         if line.start_with?("{")
