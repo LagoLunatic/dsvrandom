@@ -13,6 +13,13 @@ module Tweaks
       tiled.read(filename, room)
     end
     
+    if GAME == "dos"
+      # Modify the level design of the room after Flying Armor to not require a backdash jump to go from right to left.
+      filename = "./dsvrandom/roomedits/dos_00-00-08.tmx"
+      room = game.areas[0].sectors[0].rooms[8]
+      tiled.read(filename, room)
+    end
+    
     if GAME == "ooe" && options[:open_world_map]
       game.apply_armips_patch("ooe_nonlinear")
     end

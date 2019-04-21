@@ -397,8 +397,8 @@ Rooms:
   00-00-08:
     000-001: 
     000-e02: 
-    001-000: height | distance | backdashjump
-    001-e02: height | distance | backdashjump
+    001-000: # Level design modified so nothing is necessary. ("height | distance | backdashjump" in vanilla.)
+    001-e02: # Level design modified so nothing is necessary. ("height | distance | backdashjump" in vanilla.)
     e02-000: 
     e02-001: seal 1
   00-00-09:
