@@ -333,6 +333,17 @@ module PickupRandomizer
         # Don't place the starting portrait anywhere, it's already in Dracula's Castle.
         pickups_by_locations.delete(starting_portrait_name)
       end
+      if GAME == "por" && options[:randomize_portraits] && (!room_rando? || !options[:rebalance_enemies_in_room_rando])
+        # If portraits are randomized but we can't rebalance enemies, try to avoid placing late game portraits in the early game.
+        if progression_pickups_placed < 5
+          pickups_by_locations_filtered = pickups_by_locations.reject do |pickup, usefulness|
+            [:portraitdarkacademy, :portraitburntparadise, :portraitforgottencity, :portrait13thstreet].include?(pickup)
+          end
+          if pickups_by_locations_filtered.any?
+            pickups_by_locations = pickups_by_locations_filtered
+          end
+        end
+      end
       pickups_by_usefulness = pickups_by_locations.select{|pickup, num_locations| num_locations > 0}
       currently_useless_pickups = pickups_by_locations.select{|pickup, num_locations| num_locations == 0}
       puts "Num useless pickups: #{currently_useless_pickups.size}" if verbose
