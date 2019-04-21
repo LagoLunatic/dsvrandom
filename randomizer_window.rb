@@ -245,6 +245,9 @@ class RandomizerWindow < Qt::Dialog
       @ui.num_seeds_to_create.setCurrentIndex(num_seeds_index)
     end
     
+    if @settings[:difficulty_level].nil?
+      @settings[:difficulty_level] = "Normal"
+    end
     difficulty_level_options = DIFFICULTY_LEVELS[@settings[:difficulty_level]]
     if difficulty_level_options
       # Preset difficulty level.
