@@ -474,6 +474,14 @@ module BossRandomizer
     when "Astarte"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
+    when "Dagon"
+      if boss_entity.room.height == 1
+        # Dagon's water level maximum would normally be at the Y pos (0x48*room_height).
+        # But for rooms that are only 1 screen tall, that would make the water fill up too slowly to dodge Dagon's water spitting attack.
+        # So in this case change the maximum water level Y position to -0x30, which puts it at the some position relative to Dagon as it would be in vanilla.
+        game.fs.load_overlay(59)
+        game.fs.write(0x022DB854, [0xE3E0202F].pack("V")) # mov r2, -30h
+      end
     when "Death"
       boss_entity.var_a = 0 # Solo Death (not with Dracula)
       boss_entity.var_b = 0 # Starts fighting immediately, not waiting for cutscene to finish
