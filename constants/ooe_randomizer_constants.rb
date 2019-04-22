@@ -82,10 +82,11 @@ SPAWNER_ENEMY_IDS = [
 STOLAS_UNFRIENDLY_ENEMY_IDS = []
 
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
-  [0x78] - # Remove the final boss, Dracula. 
+  [0x78] - # Remove the final boss, Dracula.
   [0x6D, 0x76] - # Also remove Brachyura and Eligor since they need their own huge rooms.
   [0x71] - # Remove Gravedorcus because he relies on code and objects specific to Oblivion Ridge.
-  [0x74] # Remove Wallman because his instant kill attack can be undodgeable in some boss rooms, and because he's the only boss who can drop a progress glyph.
+  [0x74] - # Remove Wallman because his instant kill attack can be undodgeable in some boss rooms, and because he's the only boss who can drop a progress glyph.
+  [0x67] # Remove Jiang Shi because it doesn't die permanently, which would break things in certain rooms, and just be annoying in others.
 
 ORIGINAL_BOSS_IDS_ORDER = [
   0x6C, # Arthroverta
