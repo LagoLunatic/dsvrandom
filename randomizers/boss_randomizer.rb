@@ -498,6 +498,8 @@ module BossRandomizer
   end
   
   def ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    new_boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
+    
     case old_boss.name
     when "Giant Skeleton"
       if boss_entity.var_a == 0
@@ -512,6 +514,21 @@ module BossRandomizer
           end
         end
       end
+    when "Albus"
+      # Fix the cutscene before the boss fight leaving the screen faded out to white forever.
+      game.fs.load_overlay(60)
+      game.fs.write(0x022C2494, [0xE3A01010].pack("V")) # mov r1, 10h (Number of frames for the fade in to take)
+      game.fs.write(0x022C2494, [0xE3A02010].pack("V")) # mov r2, 10h (Make the fade in start at white since that's what the fade out left it at)
+      
+      # Change the X pos you get put at by the cutscene right before the boss.
+      # Originally it put you at X pos 0xC0, but that could cause you to immediately take unavoidable damage from big bosses.
+      game.fs.load_overlay(60)
+      game.fs.write(0x022C24E4, [0x80].pack("C"))
+      
+      # Update the boss death flag checked by the entity hider so the cutscene after the boss triggers when the randomized boss is dead, instead of Albus.
+      entity_hider = boss_entity.room.entities[5]
+      entity_hider.subtype = new_boss_index
+      entity_hider.write_to_rom()
     when "Barlowe"
       # Barlowe's boss room has Ecclesia doors instead of regular doors.
       # We want it to have a normal boss door so that it sets the "in a boss fight" flag when you enter the room.
@@ -523,7 +540,19 @@ module BossRandomizer
       boss_rush_entity_hider.byte_8 = 2
       boss_rush_entity_hider.write_to_rom()
       
-      # TODO: after the cutscene before the fight, the screen stays white. the player needs to pause and unpause to fix it.
+      # Fix the cutscene before the boss fight leaving the screen faded out to white forever.
+      game.fs.load_overlay(42)
+      game.fs.write(0x022C5FDC, [0xE3A01010].pack("V")) # mov r1, 10h (Number of frames for the fade in to take)
+      game.fs.write(0x022C5FEC, [0xE3A02010].pack("V")) # mov r2, 10h (Make the fade in start at white since that's what the fade out left it at)
+      
+      # Change the X pos you get put at by the cutscene right before the boss.
+      # Originally it kept whatever X pos the player was at when the cutscene finished, but depending on what the randomized boss isand when the player skips the cutscene, that could cause you to immediately take unavoidable damage from big bosses.
+      game.fs.load_overlay(42)
+      game.fs.write(0x022C6054, [0xE3A03080].pack("V")) # mov r3, 80h
+      
+      # Fix the cutscene after the boss so that it knows to start when the randomized boss is dead, instead of Barlowe.
+      game.fs.load_overlay(42)
+      game.fs.replace_hardcoded_bit_constant(0x0223790C, new_boss_index)
     end
     
     case new_boss.name
