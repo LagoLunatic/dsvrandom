@@ -79,6 +79,7 @@ module BossRandomizer
         boss_swaps_that_work[new_boss_id].include?(old_boss_id)
       end
     end
+    # Print all swaps that work.
     boss_swaps_that_work.each do |old_boss_id, valid_new_boss_ids|
       old_boss = game.enemy_dnas[old_boss_id]
       puts "Boss %02X (#{old_boss.name}) can be swapped with:" % [old_boss_id]
@@ -112,6 +113,11 @@ module BossRandomizer
           # Nothing this could possibly randomize into and work correctly. Skip.
           puts "BOSS %02X FAILED!" % old_boss_id
           next
+        end
+        
+        if possible_boss_ids_for_this_boss.length > 1
+          # Don't allow the boss to be in its vanilla location unless that's the only valid option left.
+          possible_boss_ids_for_this_boss -= [old_boss_id]
         end
         
         new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
