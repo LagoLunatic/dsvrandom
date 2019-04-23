@@ -214,6 +214,10 @@ module BossRandomizer
       if boss_entity.room.width < 2
         return false
       end
+    when "Brauner"
+      if boss_entity.room.width < 2
+        return false
+      end
     end
     
     return true
@@ -476,14 +480,35 @@ module BossRandomizer
     end
     
     case new_boss.name
+    when "Dullahan"
+      boss_entity.var_b = 1 # Normal, not boss rush
     when "Behemoth"
       boss_entity.var_b = 0 # Normal
       
       # TODO: Behemoth can be undodgeable without those jumpthrough platforms in the room, so add those
+    when "Keremet"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0xB0
     when "Astarte"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
+    when "Legion"
+      if old_boss.name == "Legion"
+        boss_entity.var_b = 1 # Normal
+        
+        boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+        boss_entity.y_pos = 0x150
+      else
+        boss_entity.var_b = 0 # Boss rush
+        
+        boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+        boss_entity.y_pos = 0xB0
+        
+        # TODO: doesn't play boss music
+      end
     when "Dagon"
+      boss_entity.var_b = 1 # Normal, with intro
+      
       if boss_entity.room.height == 1
         # Dagon's water level maximum would normally be at the Y pos (0x48*room_height).
         # But for rooms that are only 1 screen tall, that would make the water fill up too slowly to dodge Dagon's water spitting attack.
@@ -510,6 +535,7 @@ module BossRandomizer
       boss_entity.y_pos = boss_entity.room.height * SCREEN_HEIGHT_IN_PIXELS - 0x2C
     when "Brauner"
       boss_entity.var_a = 0 # Boss rush Brauner, doesn't try to reload the room when he dies.
+      boss_entity.var_b = 0 # Don't flash the screen white
       
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
@@ -725,7 +751,7 @@ module BossRandomizer
     when "dos"
       [0x61, 0x63, 0x64, 0x69]
     when "por"
-      [0x9D, 0xA0]
+      [0x9A, 0x9D, 0xA0]
     when "ooe"
       []
     end
