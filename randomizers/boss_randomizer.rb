@@ -698,7 +698,7 @@ module BossRandomizer
     when "dos"
       [0x61, 0x63, 0x64, 0x69]
     when "por"
-      [0xA0]
+      [0x9D, 0xA0]
     when "ooe"
       []
     end
