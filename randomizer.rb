@@ -463,6 +463,13 @@ class Randomizer
       end
     end
     
+    # Preserve the original enemy DNAs so we know how hard rooms were in the base game.
+    @original_enemy_dnas = []
+    ENEMY_IDS.each do |enemy_id|
+      enemy_dna = EnemyDNA.new(enemy_id, game)
+      @original_enemy_dnas << enemy_dna
+    end
+    
     if options[:randomize_bosses]
       yield [options_completed, "Shuffling bosses..."]
       reset_rng()
@@ -499,13 +506,6 @@ class Randomizer
         randomize_non_transition_doors()
         options_completed += 1
       end
-    end
-    
-    # Preserve the original enemy DNAs so we know how hard rooms were in the base game.
-    @original_enemy_dnas = []
-    ENEMY_IDS.each do |enemy_id|
-      enemy_dna = EnemyDNA.new(enemy_id, game)
-      @original_enemy_dnas << enemy_dna
     end
     
     # Calculate the average difficulty of common enemies in each subsector.
