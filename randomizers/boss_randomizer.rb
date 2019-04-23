@@ -443,9 +443,30 @@ module BossRandomizer
       # Legion's horizontal boss door is hardcoded to check Legion's boss death flag.
       # Update these checks to check the updated boss death flag.
       game.fs.load_overlay(98)
-      
       game.fs.replace_hardcoded_bit_constant(0x022E8B94, new_boss_index)
       game.fs.replace_hardcoded_bit_constant(0x022E888C, new_boss_index)
+      
+      if new_boss.name != "Legion" && boss_entity.room.room_str == "05-02-0C"
+        # The big Nation of Fools boss room for Legion can be entered from multiple angles, but the boss should only activate when entered from the top.
+        # In vanilla Legion is coded to not appear until you get the item in the center, but other bosses are not coded to do that.
+        # So instead we need to use an entity hider to hide the boss entity under normal circumstances.
+        # We modify the horizontal boss door's create code to set a flag that tells that entity hider to stop hiding the entity when the player enters from the top.
+        # The reason this works is because the game engine calls the create code for an entity while it's still in the middle of reading the entity list. So we have a chance to set the flag before the engine gets to the entity hider and checks that condition.
+        
+        # Add an entity hider that hides the boss when the flag for being in a boss fight is NOT set.
+        entity_hider = boss_entity.room.add_new_entity()
+        entity_hider.type = 8 # Entity hider
+        entity_hider.var_a = 3 # Check if the flag for being in a boss fight is set.
+        entity_hider.byte_8 = 1 # Hide 1 entity
+        # Reorder it so the entity hider comes before the boss (entity index 2).
+        boss_entity.room.entities.delete(entity_hider)
+        boss_entity.room.entities.insert(2, entity_hider)
+        boss_entity.room.write_entities_to_rom()
+        
+        # Originally this line set global game flag 01. Change it to set both 01 and 02, since 02 is the flag for being in a boss fight.
+        game.fs.load_overlay(98)
+        game.fs.replace_arm_shifted_immediate_integer(0x022E88E4, 0x03)
+      end
     when "Dagon"
       @boss_id_for_each_portrait[:portraitforestofdoom] = new_boss_id
       
