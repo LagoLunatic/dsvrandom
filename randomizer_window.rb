@@ -747,6 +747,14 @@ class RandomizerWindow < Qt::Dialog
     @about_dialog.windowIcon = self.windowIcon
     @about_dialog.show()
   end
+
+  def keyPressEvent(event)
+    if event.key() == Qt::Key_Return
+      self.randomize_n_seeds()
+    else
+      super(event)
+    end
+  end
   
   def read_seed_info
     input_seed_info(@ui.paste_seed_info_field.plainText)
