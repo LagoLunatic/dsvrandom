@@ -375,6 +375,7 @@ class Randomizer
         possible_max_up_ids -= [0x4B] # Don't let castle map 1 be a max up since it will get put in the shop.
         possible_max_up_ids -= [0x4C, 0x4D] # Don't let castle maps 2 and 3 be max ups either since then they won't reveal the map
         possible_max_up_ids -= [0x45, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F] # Don't let magical tickets and records be max ups since other types of items can't be made magical tickets or max ups.
+        possible_max_up_ids -= [0x2A, 0x2B, 0x2C, 0x29, 0x2D, 0x2E] # Don't let the cake items given by the City of Haze cash register be max ups, since the player could get them over and over again as they only disappear when the player has one in their inventory.
         
         # Don't allow quest rewards to be max ups since the player could use it infinitely.
         game.quests.each do |quest|
