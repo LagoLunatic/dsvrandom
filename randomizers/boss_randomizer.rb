@@ -164,29 +164,6 @@ module BossRandomizer
       queued_dna_changes[new_boss_id]["Defense"]          = old_boss["Defense"]
       queued_dna_changes[new_boss_id]["Physical Defense"] = old_boss["Physical Defense"]
       queued_dna_changes[new_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
-      
-      if new_boss_id == 0x87 # Fake Trevor
-        [0x88, 0x89].each do |other_boss_id| # Fake Grant and Sypha
-          queued_dna_changes[other_boss_id]["HP"]               = old_boss["HP"]
-          queued_dna_changes[other_boss_id]["MP"]               = old_boss["MP"]
-          queued_dna_changes[other_boss_id]["SP"]               = old_boss["SP"]
-          queued_dna_changes[other_boss_id]["AP"]               = old_boss["AP"]
-          queued_dna_changes[other_boss_id]["EXP"]              = old_boss["EXP"]
-          queued_dna_changes[other_boss_id]["Attack"]           = old_boss["Attack"]
-          queued_dna_changes[other_boss_id]["Defense"]          = old_boss["Defense"]
-          queued_dna_changes[other_boss_id]["Physical Defense"] = old_boss["Physical Defense"]
-          queued_dna_changes[other_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
-        end
-      end
-      
-      if old_boss.name == "Wallman"
-        # Don't copy Wallman's 9999 HP, use a more reasonable value instead.
-        queued_dna_changes[new_boss_id]["HP"] = 4000
-      end
-      if new_boss.name == "Wallman"
-        # Make sure Wallman always has 9999 HP.
-        queued_dna_changes[new_boss_id]["HP"] = 9999
-      end
     end
     
     queued_dna_changes.each do |boss_id, changes|
