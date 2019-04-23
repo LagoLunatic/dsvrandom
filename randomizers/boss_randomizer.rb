@@ -593,6 +593,20 @@ module BossRandomizer
       boss_entity.y_pos = 0xA0
       
       # TODO: rusalka (in barlowe's room at least) doesn't play all sound effects, and her splash attack is invisible.
+    when "Albus"
+      if !["Albus", "Barlowe"].include?(old_boss.name)
+        # We don't want Albus to reload the room when he dies in most boss rooms.
+        # Only for Albus or Barlowe's rooms since those have a cutscene that needs to play after it.
+        game.fs.load_overlay(36)
+        game.fs.write(0x022B8DB4, [0xEA000008].pack("V")) # "b 022B8DDCh" Always jump to the code he would use in Albus/boss rush mode
+      end
+    when "Barlowe"
+      if !["Albus", "Barlowe"].include?(old_boss.name)
+        # We don't want Barlowe to reload the room when he dies in most boss rooms.
+        # Only for Albus or Barlowe's rooms since those have a cutscene that needs to play after it.
+        game.fs.load_overlay(37)
+        game.fs.write(0x022B8230, [0xEA00000D].pack("V")) # "b 022B826Ch" Always jump to the code he would use in Albus mode
+      end
     when "Wallman"
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
