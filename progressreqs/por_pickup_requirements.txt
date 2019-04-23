@@ -88,7 +88,7 @@ Defs:
   portraitnationoffools: portraitnationoffools
   bosslegion: nationoffools
   
-  forestofdoom: portraitforestofdoom & bossstella & wind
+  forestofdoom: portraitforestofdoom
   portraitforestofdoom: portraitforestofdoom
   forestofdoomcenter: forestofdoom & height
   forestofdoomunderground: forestofdoomcenter & partnerpush & strength cube

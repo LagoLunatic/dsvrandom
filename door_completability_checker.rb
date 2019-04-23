@@ -34,7 +34,6 @@ class DoorCompletabilityChecker < CompletabilityChecker
     @current_items = []
     @return_portraits = {}
     @required_accessible_doors_to_unlock_regular_portraits = {
-      :portraitforestofdoom  => [["00-08-0F_000", "00-08-0F_001"], ["00-01-06_000", "00-01-06_001"]], # Stella and Wind
       :portrait13thstreet    => [["04-01-08_000", "04-01-08_001"]], # Mummy Man
       :portraitburntparadise => [["08-00-04_000", "08-00-04_001"]], # The Creature
     }
@@ -380,7 +379,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
           
           required_doors_for_this_portrait = @required_accessible_doors_to_unlock_regular_portraits[portrait_name]
           if required_doors_for_this_portrait
-            # Can't count 13th street/burnt paradise/forest of doom as accessible by default.
+            # Can't count 13th street/burnt paradise as accessible by default.
             # In the middle of the main door crawling logic we will repeatedly check to see if the bosses needed to unlock these are reachable yet.
             locked_accessible_portraits << portrait_name
             next

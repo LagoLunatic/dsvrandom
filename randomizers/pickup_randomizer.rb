@@ -246,11 +246,6 @@ module PickupRandomizer
         portrait.type = 0
         portrait.write_to_rom()
       end
-      
-      # Remove the cutscene where Charlotte stops you from entering the Forest of Doom portrait until you've talked to Wind about Stella's Locket.
-      forest_cutscene = game.entity_by_str("00-08-01_03")
-      forest_cutscene.type = 0
-      forest_cutscene.write_to_rom()
     end
   end
   

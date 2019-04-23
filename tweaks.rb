@@ -242,12 +242,15 @@ module Tweaks
       dos_implement_magical_tickets()
     end
     
-    if GAME == "por" && options[:randomize_portraits]
-      # We apply a patch in portrait randomizer that will show a text popup when the player tries to enter the Forest of Doom early.
-      # Without this patch there is no indication as to why you can't enter the portrait, as the normal event doesn't work outside the sector the portrait is normally in.
-      game.apply_armips_patch("por_show_popup_for_locked_portrait")
-      game.text_database.text_list[0x4BE].decoded_string = "You must beat Stella and talk to Wind\\nto unlock the Forest of Doom."
-      game.text_database.write_to_rom()
+    if GAME == "por"
+      # Remove the requirement that you must beat Stella and talk to Wind about her locket before entering the Forest of Doom portrait.
+      game.fs.write(0x02079280, [0xEA000005].pack("V")) # "b 0207929Ch" Skip the forest of doom specific code
+      
+      # And remove the cutscene where Charlotte stops you from entering the Forest of Doom portrait.
+      # This cutscene softlocks the game if it plays but the portrait also lets you go in.
+      forest_cutscene = game.entity_by_str("00-08-01_03")
+      forest_cutscene.type = 0
+      forest_cutscene.write_to_rom()
     end
     
     # Fix the bugs where an incorrect map tile would get revealed when going through doors in the room randomizer (or sliding puzzle in vanilla DoS).
