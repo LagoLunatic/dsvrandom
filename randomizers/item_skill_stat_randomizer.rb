@@ -570,7 +570,7 @@ module ItemSkillStatRandomizer
       skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
     end
     if skill.name.include?("Culter")
-      # Reduce damage of the knife glyphs since they usually throw multiply projectiles.
+      # Reduce damage of the knife glyphs since they usually throw multiple projectiles.
       skill["DMG multiplier"] = skill["DMG multiplier"] / 5
       skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
     end
