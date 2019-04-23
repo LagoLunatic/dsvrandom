@@ -12,6 +12,14 @@ module EnemyAnimSpeedRandomizer
       end
       
       speed_mult = named_rand_range_weighted(:enemy_anim_speed_mult_range)
+      
+      if GAME == "ooe" && ["Brachyura", "Eligor"].include?(enemy_dna.name)
+        # Prevent Brachyura and Eligor from being too fast or too slow.
+        # If they get too fast they can be undodgeable, and too slow can be annoying to wait for them.
+        speed_mult = [speed_mult, 1.5].min
+        speed_mult = [speed_mult, 0.75].max
+      end
+      
       delay_mult = 1.0 / speed_mult
       
       begin
