@@ -414,33 +414,28 @@ module Tweaks
       game.apply_armips_patch("por_nerf_enemy_resistances")
     end
     
-    if GAME == "por" && options[:por_short_mode]
-      portraits_needed_to_open_studio_portrait = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - @portraits_to_remove
+    if GAME == "por"
+      # Update the boss indexes corresponding to each of the portraits.
+      # These can be changed by the boss randomizer.
+      # These must be updated so Burnt Paradise and 13th Street know what boss unlocks them.
+      # Also so the monster overlay on the front of the portrait knows when to disappear.
+      @boss_id_for_each_portrait.each do |portrait_name, boss_id|
+        boss_index = BOSS_ID_TO_BOSS_INDEX[boss_id]
+        area_index = PickupRandomizer::PORTRAIT_NAME_TO_DATA[portrait_name][:var_a]
+        game.fs.write(0x020F4E78+area_index, [boss_index].pack("C"))
+      end
+    end
+    
+    if GAME == "por"
+      # Update the boss death flags checked by the studio portrait.
+      # These can be modified by both short mode and the boss randomizer.
       boss_flag_checking_code_locations = [0x02076B84, 0x02076BA4, 0x02076BC4, 0x02076BE4]
-      portraits_needed_to_open_studio_portrait.each_with_index do |portrait_name, i|
-        new_boss_flag = case portrait_name
-        when :portraitcityofhaze
-          0x2
-        when :portraitsandygrave
-          0x80
-        when :portraitnationoffools
-          0x20
-        when :portraitforestofdoom
-          0x40
-        when :portraitdarkacademy
-          0x200
-        when :portraitburntparadise
-          0x800
-        when :portraitforgottencity
-          0x400
-        when :portrait13thstreet
-          0x100
-        else
-          raise "Invalid portrait name: #{portrait_name}"
-        end
+      @portraits_needed_to_open_studio_portrait.each_with_index do |portrait_name, i|
+        boss_id = @boss_id_for_each_portrait[portrait_name]
+        boss_index = BOSS_ID_TO_BOSS_INDEX[boss_id]
         
         code_location = boss_flag_checking_code_locations[i]
-        game.fs.replace_arm_shifted_immediate_integer(code_location, new_boss_flag)
+        game.fs.replace_hardcoded_bit_constant(code_location, boss_index)
       end
     end
     

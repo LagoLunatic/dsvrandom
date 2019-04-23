@@ -250,6 +250,26 @@ class Randomizer
     @unused_rooms = [] # This will be a list of rooms unused by the map rando/PoR short mode.
     
     if GAME == "por"
+      @boss_id_for_each_portrait = {
+        :portraitcityofhaze => 0x8A,
+        :portraitsandygrave => 0x8D,
+        :portraitnationoffools => 0x8E,
+        :portraitforestofdoom => 0x8F,
+        :portraitdarkacademy => 0x94,
+        :portrait13thstreet => 0x95,
+        :portraitburntparadise => 0x96,
+        :portraitforgottencity => 0x97,
+      }
+      
+      @portraits_needed_to_open_studio_portrait = [
+        :portrait13thstreet,
+        :portraitdarkacademy,
+        :portraitburntparadise,
+        :portraitforgottencity,
+      ]
+    end
+    
+    if GAME == "por"
       if options[:por_short_mode]
         reset_rng()
         
@@ -279,6 +299,9 @@ class Randomizer
           @portraits_to_remove << portrait_to_remove
           late_game_portraits.delete(portrait_to_remove)
         end
+        
+        @portraits_needed_to_open_studio_portrait = PickupRandomizer::PORTRAIT_NAMES -
+          [:portraitnestofevil] - @portraits_to_remove
         
         # Keep track of unused rooms (every room in the 4 unused portraits).
         @portraits_to_remove.each do |portrait_name|

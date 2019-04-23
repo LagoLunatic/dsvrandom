@@ -429,19 +429,16 @@ module BossRandomizer
     
     case old_boss.name
     when "Dullahan"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+1, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitcityofhaze] = new_boss_id
     when "Behemoth"
       if boss_entity.var_b == 2
         # Scripted Behemoth that chases you down the hallway.
         return :skip
       end
     when "Astarte"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+3, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitsandygrave] = new_boss_id
     when "Legion"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+5, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitnationoffools] = new_boss_id
       
       # Legion's horizontal boss door is hardcoded to check Legion's boss death flag.
       # Update these checks to check the updated boss death flag.
@@ -450,20 +447,23 @@ module BossRandomizer
       game.fs.replace_hardcoded_bit_constant(0x022E8B94, new_boss_index)
       game.fs.replace_hardcoded_bit_constant(0x022E888C, new_boss_index)
     when "Dagon"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+7, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitforestofdoom] = new_boss_id
     when "The Creature"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+8, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitdarkacademy] = new_boss_id
     when "Werewolf"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+2, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portrait13thstreet] = new_boss_id
     when "Medusa"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+6, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitburntparadise] = new_boss_id
     when "Mummy Man"
-      # Update the boss index for this portrait.
-      game.fs.write(0x020F4E78+4, [new_boss_index].pack("C"))
+      @boss_id_for_each_portrait[:portraitforgottencity] = new_boss_id
+    when "Brauner"
+      # Modify the entity hiders that swap the studio portrait object after Brauner is dead to instead check the new boss.
+      entity_hider = game.entity_by_str("00-0B-00_05")
+      entity_hider.subtype = new_boss_index
+      entity_hider.write_to_rom()
+      entity_hider = game.entity_by_str("00-0B-00_07")
+      entity_hider.subtype = new_boss_index
+      entity_hider.write_to_rom()
     end
     
     case new_boss.name
