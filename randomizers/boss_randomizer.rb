@@ -448,6 +448,17 @@ module BossRandomizer
       game.fs.replace_hardcoded_bit_constant(0x022E888C, new_boss_index)
     when "Dagon"
       @boss_id_for_each_portrait[:portraitforestofdoom] = new_boss_id
+      
+      if new_boss.name != "Dagon"
+        # If Dagon's not in his own room, there won't be any water there, so you can't get out of the room without griffon wing/owl morph.
+        # So add a platform to Dagon's room that moves up and down to prevent this.
+        platform = boss_entity.room.add_new_entity()
+        platform.type = SPECIAL_OBJECT_ENTITY_TYPE
+        platform.subtype = 0x3F
+        platform.x_pos = 0x80
+        platform.y_pos = 0x80
+        platform.write_to_rom()
+      end
     when "The Creature"
       @boss_id_for_each_portrait[:portraitdarkacademy] = new_boss_id
     when "Werewolf"
@@ -493,6 +504,10 @@ module BossRandomizer
       # TODO: doesn't play boss music
     when "The Creature"
       boss_entity.var_a = 0 # Boss version, not the common enemy version
+    when "Werewolf"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      
+      boss_entity.var_a = 1 # Normal version with intro, not boss rush. Stays dead when boss death flag is set.
     when "Mummy Man"
       boss_entity.y_pos = boss_entity.room.height * SCREEN_HEIGHT_IN_PIXELS - 0x2C
     when "Brauner"
@@ -500,8 +515,6 @@ module BossRandomizer
       
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
-    when "Balore", "Gergoth", "Zephyr", "Aguni", "Abaddon"
-      dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     end
   end
   
@@ -588,11 +601,27 @@ module BossRandomizer
       # The boss version of the Giant Skeleton doesn't wake up until the searchlight is on him, but there's no searchlight in other boss rooms.
       # So we modify the line of code that checks if he should wake up to use the code for the common enemy Giant Skeleton instead.
       game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
+    when "Maneater"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0xB0
     when "Rusalka"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xA0
       
       # TODO: rusalka (in barlowe's room at least) doesn't play all sound effects, and her splash attack is invisible.
+    when "Gravedorcus"
+      # Gravedorcus normally crashes because it calls functions in Oblivion Ridge's sector overlay.
+      # It's possible to avoid the crashes by replacing all calls in the missing sector overlay with "mov r0, 0h".
+      # These are the known places Gravedorcus makes calls like that:
+      # 0x022BA234
+      # 0x022BA23C
+      # 0x022BA270
+      # 0x022BA278
+      # 0x022B8400
+      # 0x022B8430
+      # 0x022B954C
+      # 0x022B9554
+      # However Gravedorcus constantly goes offscreen in any boss room besides its own because the room isn't wide enough, so it's not the most interesting boss to randomize.
     when "Albus"
       if !["Albus", "Barlowe"].include?(old_boss.name)
         # We don't want Albus to reload the room when he dies in most boss rooms.
