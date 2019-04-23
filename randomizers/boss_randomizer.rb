@@ -560,6 +560,8 @@ module BossRandomizer
       
       # Fix the cutscene after the boss so that it knows to start when the randomized boss is dead, instead of Barlowe.
       game.fs.load_overlay(42)
+      game.fs.replace_hardcoded_bit_constant(0x0223784C, new_boss_index)
+      # And make it so the NPC Barlowe no longer spawns after the randomized boss is dead.
       game.fs.replace_hardcoded_bit_constant(0x0223790C, new_boss_index)
     end
     
