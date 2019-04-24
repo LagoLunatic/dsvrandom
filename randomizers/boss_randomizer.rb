@@ -705,6 +705,17 @@ module BossRandomizer
       # Blackmore needs to be in this position or he becomes very aggressive and corners the player up against the wall.
       boss_entity.x_pos = 0x100
       boss_entity.y_pos = 0xA0
+    when "Death"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 0x70
+      
+      if old_boss.name != "Death"
+        # Death knows when to come out of the background by checking the relative scroll positions of two of the background layers.
+        # But when placed into a room that doesn't scroll the same as his vanilla room he will never come out of the background, softlocking the game.
+        # So remove the background scrolling requirement and have him immediately come out of the background.
+        game.fs.load_overlay(25)
+        game.fs.write(0x022BBD68, [0xE1A00000].pack("V")) # nop
+      end
     when "Jiang Shi"
       unless old_boss.name == "Jiang Shi"
         # Jiang Shi needs a special object in his room for the boss doors to open since he doesn't die.
