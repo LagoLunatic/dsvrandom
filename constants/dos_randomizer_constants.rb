@@ -10,7 +10,7 @@ NONOFFENSIVE_SKILL_NAMES = [
   "Zephyr",
   "Paranoia",
   "Imp",
-  "Bat Form", # TODO: this one doesn't work since it's unnamed in vanilla
+  "Bat Form",
   "Flying Armor",
   "Bat Company",
   "Ghost",

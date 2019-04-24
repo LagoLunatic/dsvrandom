@@ -40,12 +40,11 @@ class RandomizerWindow < Qt::Dialog
     rebalance_enemies_in_room_rando
     
     scavenger_mode
-    name_unnamed_skills
+    revise_item_descriptions
     unlock_all_modes
     reveal_breakable_walls
     reveal_bestiary
     remove_area_names
-    revise_item_descriptions
     fix_luck
     no_touch_screen
     unlock_boss_doors

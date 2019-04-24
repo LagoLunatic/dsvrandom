@@ -3,6 +3,8 @@ module Tweaks
   def apply_pre_randomization_tweaks
     @tiled = TMXInterface.new
     
+    game.fix_unnamed_skills()
+    
     if GAME == "dos"
       # Make the drawbridge stay permanently down once the player has lowered it.
       game.apply_armips_patch("dos_drawbridge_stays_down")
@@ -725,10 +727,6 @@ module Tweaks
       boss_door = game.entity_by_str("09-00-05_03")
       boss_door.type = 0
       boss_door.write_to_rom()
-    end
-    
-    if options[:name_unnamed_skills]
-      game.fix_unnamed_skills()
     end
     
     if options[:unlock_all_modes]

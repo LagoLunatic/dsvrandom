@@ -587,19 +587,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="name_unnamed_skills">
-            <property name="toolTip">
-             <string>Gives Julius/Yoko/Alucard/Arma Felix/Arma Chiroptera's skills names so they can be distinguished from one another.</string>
-            </property>
-            <property name="text">
-             <string>Name unnamed skills</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="unlock_all_modes">
             <property name="toolTip">
@@ -646,7 +633,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="0" column="1">
            <widget class="QCheckBox" name="revise_item_descriptions">
             <property name="toolTip">
              <string>Updates all weapon, armor, and skill descriptions to indicate what their randomized attributes are.</string>
@@ -1231,12 +1218,11 @@
   <tabstop>rebalance_enemies_in_room_rando</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>scavenger_mode</tabstop>
-  <tabstop>name_unnamed_skills</tabstop>
+  <tabstop>revise_item_descriptions</tabstop>
   <tabstop>unlock_all_modes</tabstop>
   <tabstop>reveal_breakable_walls</tabstop>
   <tabstop>reveal_bestiary</tabstop>
   <tabstop>remove_area_names</tabstop>
-  <tabstop>revise_item_descriptions</tabstop>
   <tabstop>fix_luck</tabstop>
   <tabstop>no_touch_screen</tabstop>
   <tabstop>unlock_boss_doors</tabstop>
