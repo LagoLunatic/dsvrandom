@@ -5,6 +5,7 @@ module SkillSpriteRandomizer
     
     all_skill_sprites = {}
     all_orig_skill_sprites = {}
+    weapon_glyph_sprite_indexes = []
     remaining_sprite_indexes = []
     skills.each do |skill|
       next if skill["Sprite"] == 0 # Skill with no sprite
@@ -18,6 +19,14 @@ module SkillSpriteRandomizer
       if !remaining_sprite_indexes.include?(skill["Sprite"])
         remaining_sprite_indexes << skill["Sprite"]
       end
+      
+      if GAME == "ooe" && skill["Code"] == 0x02070890
+        weapon_glyph_sprite_indexes << skill["Sprite"]
+      end
+    end
+    if GAME == "ooe"
+      # Add some glyph unions that animate the same as melee glyphs.
+      weapon_glyph_sprite_indexes += [0x45, 0x46, 0x4A, 0x4B]
     end
     
     skill_sprites_to_fix = []
@@ -55,12 +64,28 @@ module SkillSpriteRandomizer
       old_sprite_index = new_sprite_index_to_old_sprite_index[new_sprite_index]
       old_sprite = all_orig_skill_sprites[old_sprite_index]
       
-      fix_skill_or_enemy_sprite(new_sprite, old_sprite)
+      old_is_weapon_glyph_sprite = weapon_glyph_sprite_indexes.include?(old_sprite_index)
+      new_is_weapon_glyph_sprite = weapon_glyph_sprite_indexes.include?(new_sprite_index)
+      
+      fix_skill_or_enemy_sprite(new_sprite, old_sprite, new_is_weapon_glyph_sprite, old_is_weapon_glyph_sprite)
     end
   end
   
-  def fix_skill_or_enemy_sprite(sprite, old_sprite)
+  def fix_skill_or_enemy_sprite(sprite, old_sprite, new_is_weapon_glyph_sprite, old_is_weapon_glyph_sprite)
     any_changes_made_to_this_sprite = false
+    
+    # Fix OoE weapon glyphs being stuck on your feet when they get a non-weapon glyph sprite.
+    if old_is_weapon_glyph_sprite && !new_is_weapon_glyph_sprite
+      sprite.parts.each do |part|
+        part.x_pos += 0x20
+        part.y_pos -= 0x20
+      end
+      sprite.hitboxes.each do |hitbox|
+        hitbox.x_pos += 0x20
+        hitbox.y_pos -= 0x20
+      end
+      any_changes_made_to_this_sprite = true
+    end
     
     # Add a hitbox to every frame if it had no hitboxes originally.
     sprite.frames.each do |frame|
