@@ -411,6 +411,20 @@ module Tweaks
       game.apply_armips_patch("dos_julius_start_with_tower_key")
     end
     
+    if GAME == "dos" && !options[:randomize_rooms_map_friendly]
+      # Update the vanilla map to show mirror rooms in orange.
+      # (The map rando handles doing this when it's on, so this tweak only needs to be run when the map rando is off.)
+      map = game.get_map(0, 0)
+      map.tiles.each do |tile|
+        next if tile.is_blank
+        
+        room = game.areas[0].sectors[tile.sector_index].rooms[tile.room_index]
+        
+        tile.is_entrance = room.entities.any?{|e| e.is_special_object? && e.subtype == 0xA} # Mirror
+      end
+      map.write_to_rom()
+    end
+    
     if GAME == "por" && options[:fix_infinite_quest_rewards]
       game.apply_armips_patch("por_fix_infinite_quest_rewards")
     end
