@@ -1589,6 +1589,7 @@ module MapRandomizer
       
       tile.is_save = false
       tile.is_warp = false
+      tile.is_entrance = false
       
       tile.top_secret = false
       tile.top_door = false
@@ -1669,6 +1670,7 @@ module MapRandomizer
         
         tile.is_save = room.entities.any?{|e| e.is_special_object? && e.subtype == SAVE_POINT_SUBTYPE}
         tile.is_warp = room.entities.any?{|e| e.is_special_object? && e.subtype == WARP_POINT_SUBTYPE}
+        tile.is_entrance = room.entities.any?{|e| e.is_special_object? && e.subtype == 0xA} # Mirror
         
         tile.sector_index = sector_index
         tile.room_index = room_index

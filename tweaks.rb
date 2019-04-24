@@ -299,6 +299,10 @@ module Tweaks
       game.apply_armips_patch("ooe_boss_orb_reloads_room")
     end
     
+    if GAME == "dos"
+      game.apply_armips_patch("dos_new_map_tile_color")
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
