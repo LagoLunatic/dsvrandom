@@ -20,6 +20,18 @@ module EnemyAnimSpeedRandomizer
         speed_mult = [speed_mult, 0.75].max
       end
       
+      if GAME == "ooe" && enemy_dna.name == "Blackmore"
+        # If Blackmore's speed is reduced, he backs the player closer towards the wall than normal, making it impossible to dodge him.
+        speed_mult = [speed_mult, 1.0].max
+        # He's also too hard to dodge is his speed is increased too much.
+        speed_mult = [speed_mult, 1.5].min
+      end
+      
+      if GAME == "ooe" && enemy_dna.name == "Arthroverta"
+        # If Arthroverta's speed is reduced too much, his roll attack will clip into the floor and he can't move.
+        speed_mult = [speed_mult, 0.85].max
+      end
+      
       delay_mult = 1.0 / speed_mult
       
       begin
