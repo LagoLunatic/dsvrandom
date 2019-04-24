@@ -253,7 +253,6 @@ module BossRandomizer
         # Not actually Balore, this is the wall of ice blocks right before Balore.
         # We need to get rid of this because having this + a different boss besides Balore in the same room will load two different overlays into the same spot and crash the game.
         boss_entity.type = 0
-        boss_entity.subtype = 0
         boss_entity.write_to_rom()
         return :skip
       end
@@ -265,19 +264,23 @@ module BossRandomizer
       end
     when "Paranoia"
       if boss_entity.var_a == 1
-        # Mini-paranoia.
+        # Mini-Paranoia. Remove him since he doesn't work properly when Paranoia is randomized.
+        boss_entity.type = 0
+        boss_entity.write_to_rom()
+        
+        # And remove Mini-Paranoia's boss doors.
+        inside_boss_door_right = game.entity_by_str("00-01-20_03")
+        inside_boss_door_right.type = 0
+        inside_boss_door_right.write_to_rom()
+        outside_boss_door = game.entity_by_str("00-01-22_00")
+        outside_boss_door.type = 0
+        outside_boss_door.write_to_rom()
+        # And change the boss door connecting Mini-Paranoia's room to Paranoias to not require killing a boss to open.
+        inside_boss_door_left = game.entity_by_str("00-01-20_04")
+        inside_boss_door_left.var_a = 0
+        inside_boss_door_left.write_to_rom()
+        
         return :skip
-      elsif boss_entity.var_a == 2
-        # Normal Paranoia.
-        
-        # Mini Paranoia is hardcoded to disappear once Paranoia's boss death flag is set, so we need to switch him to use the new boss's boss death flag.
-        boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id]
-        if boss_index.nil?
-          boss_index = 0
-        end
-        
-        game.fs.load_overlay(35)
-        game.fs.replace_hardcoded_bit_constant(0x02305B1C, boss_index)
       end
     end
     
@@ -733,7 +736,9 @@ module BossRandomizer
     # Update the boss doors for the new boss
     old_boss_index = BOSS_ID_TO_BOSS_INDEX[old_boss_id] || 0
     new_boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
-    ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
+    rooms_to_check = [boss_entity.room]
+    rooms_to_check += boss_entity.room.connected_rooms
+    rooms_to_check.each do |room|
       room.entities.each do |entity|
         if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE && entity.var_b == old_boss_index
           entity.var_b = new_boss_index
