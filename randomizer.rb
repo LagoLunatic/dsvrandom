@@ -19,7 +19,6 @@ require_relative 'randomizers/enemy_stat_randomizer'
 require_relative 'randomizers/weapon_synth_randomizer'
 require_relative 'randomizers/starting_room_randomizer'
 require_relative 'randomizers/starting_items_randomizer'
-require_relative 'randomizers/skill_sprites_randomizer'
 require_relative 'randomizers/enemy_anim_speed_randomizer'
 require_relative 'randomizers/red_wall_randomizer'
 require_relative 'randomizers/map_randomizer'
@@ -27,6 +26,7 @@ require_relative 'randomizers/world_map_exits_randomizer'
 
 require_relative 'randomizers/cosmetic/bgm_randomizer'
 require_relative 'randomizers/cosmetic/dialogue_randomizer'
+require_relative 'randomizers/cosmetic/skill_sprites_randomizer'
 require_relative 'randomizers/cosmetic/enemy_sprite_randomizer'
 
 class Randomizer
