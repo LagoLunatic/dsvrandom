@@ -22,6 +22,7 @@ module PlayerRandomizer
       game.save_state_anims_for_player(3, state_anims)
     end
     
+    give_ooe_transformation_player_sprites_sliding_hitboxes()
     
     players = game.players
     
@@ -75,6 +76,76 @@ module PlayerRandomizer
       end
       
       player.write_to_rom()
+    end
+  end
+  
+  def give_ooe_transformation_player_sprites_sliding_hitboxes
+    return unless GAME == "ooe"
+    
+    # Fix the three transformation character sprites so they have a new animation for sliding, and that animation has a hitbox.
+    # If they don't have a hitbox for sliding, the player has no way of opening up glyph statues at the start of the run when they have no weapons.
+    (1..3).each do |player_index|
+      player = game.players[player_index]
+      state_anims = game.state_anims_for_player(player_index)
+      sprite = Sprite.new(player["Sprite pointer"], game.fs)
+      
+      frame = Frame.new
+      new_frame_index = sprite.frames.length
+      sprite.frames << frame
+      
+      # This hitbox must be placed first since the damaging hitbox needs to be the second one.
+      hitbox = Hitbox.new
+      hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height = [-8, -15, 12, 12]
+      if player["??? bitfield"][0] # Horizontal sprite flip
+        hitbox.x_pos = -(hitbox.x_pos + hitbox.width)
+      end
+      frame.hitboxes << hitbox
+      sprite.hitboxes << hitbox
+      
+      # This is the actual damaging hitbox.
+      hitbox = Hitbox.new
+      hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height = [4, -20, 18, 20]
+      if player["??? bitfield"][0] # Horizontal sprite flip
+        hitbox.x_pos = -(hitbox.x_pos + hitbox.width)
+      end
+      frame.hitboxes << hitbox
+      sprite.hitboxes << hitbox
+      
+      # Need to copy some parts so the frame has visuals.
+      orig_frame = case player.name
+      when "Arma Felix"
+        sprite.frames[7]
+      when "Arma Chiroptera"
+        sprite.frames[0]
+      when "Arma Machina"
+        sprite.frames[0]
+      end
+      orig_frame.parts.each do |part|
+        if sprite.sprite_file
+          # Sprites in individual files can't reuse the same part multiple times.
+          new_part = part.dup
+          sprite.parts << new_part
+        end
+        frame.parts << part
+      end
+      
+      animation = Animation.new
+      new_anim_index = sprite.animations.length
+      sprite.animations << animation
+      
+      frame_delay = FrameDelay.new
+      frame_delay.delay = 0xFF
+      frame_delay.frame_index = new_frame_index
+      sprite.frame_delays << frame_delay
+      animation.frame_delays << frame_delay
+      
+      sprite.write_to_rom()
+      
+      ["Sliding on flat ground", "Sliding on slope", "Slidejumping"].each do |state_anim_name|
+        state_anim_index = PLAYER_ANIM_STATE_NAMES.index(state_anim_name)
+        state_anims[state_anim_index] = new_anim_index
+      end
+      game.save_state_anims_for_player(player_index, state_anims)
     end
   end
   
