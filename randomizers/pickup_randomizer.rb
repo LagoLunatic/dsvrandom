@@ -194,25 +194,27 @@ module PickupRandomizer
       #  
       #  # And also output an image of the map with accessible rooms highlighted in red.
       #  unique_rooms_accessed = @rooms_by_progression_order_accessed.flatten.uniq
-      #  map = game.get_map(0, 0)
-      #  for tile in map.tiles
-      #    if tile.sector_index.nil? || tile.room_index.nil?
-      #      next
+      #  game.areas.each_index do |area_index|
+      #    map = game.get_map(area_index, 0)
+      #    for tile in map.tiles
+      #      if tile.sector_index.nil? || tile.room_index.nil?
+      #        next
+      #      end
+      #      room_str_for_tile = "%02X-%02X-%02X" % [area_index, tile.sector_index, tile.room_index]
+      #      if unique_rooms_accessed.include?(room_str_for_tile)
+      #        tile.is_save = true
+      #        tile.is_warp = false
+      #        tile.is_entrance = false
+      #      else
+      #        tile.is_save = false
+      #        tile.is_warp = false
+      #        tile.is_entrance = false
+      #      end
       #    end
-      #    room_str_for_tile = "%02X-%02X-%02X" % [0, tile.sector_index, tile.room_index]
-      #    if unique_rooms_accessed.include?(room_str_for_tile)
-      #      tile.is_save = true
-      #      tile.is_warp = false
-      #      tile.is_entrance = false
-      #    else
-      #      tile.is_save = false
-      #      tile.is_warp = false
-      #      tile.is_entrance = false
-      #    end
+      #    hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
+      #    filename = "./logs/map debug #{GAME} area %02X #{seed}.png" % area_index
+      #    renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
       #  end
-      #  hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
-      #  filename = "./logs/map debug #{GAME} #{seed}.png"
-      #  renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
       #end
       
       item_names = checker.current_items.map do |global_id|
