@@ -114,9 +114,19 @@ module WorldMapExitsRandomizer
     if entrance_type >= 0
       area_exit.var_a = entrance_type
       area_exit.var_b = 0
+      
+      if entrance_type == 6
+        # When unlocking the front entrance of Kalidus, also need to set var B to 3 so our custom code knows to set the front entrance room as explored.
+        area_exit.var_b = 3
+      end
     else # Negative value indicates var B should be used instead of var A.
       area_exit.var_a = 0
       area_exit.var_b = -entrance_type
+      
+      if entrance_type == -1
+        # When unlocking the back entrance of Kalidus, also need to unlock Kalidus on the world map.
+        area_exit.var_a = 6
+      end
     end
     area_exit.write_to_rom()
     

@@ -45,11 +45,6 @@ module Tweaks
     end
     
     if GAME == "ooe"
-      # Fixes a crash that happens if you exit the Lighthouse and enter Kalidus without having entered Kalidus before the Lighthouse.
-      game.apply_armips_patch("ooe_fix_kalidus_back_entrance_crash")
-    end
-    
-    if GAME == "ooe"
       # We need to unset the prerequisite event flag for certain events manually.
       # The ooe_nonlinear patch does this but we might already have those rooms cached by now in memory so the changes won't get read in correctly.
       # Also, we unset these event flags even if the nonlinear option is off just in case the player sequence breaks the game somehow.
@@ -301,6 +296,19 @@ module Tweaks
     
     if GAME == "dos"
       game.apply_armips_patch("dos_new_map_tile_color")
+    end
+    
+    if GAME == "ooe"
+      # Apply a patch to fix a crash that happens in vanilla when you unlock the back Kalidus entrance before ever visiting the front entrance.
+      # Which patch we use depends on whether world map exits are randomized or not.
+      if options[:randomize_world_map_exits]
+        # If world map exits are randomized, we need unlocking the back entrance to not automatically unlock the front entrance as well.
+        # So this patch allows setting var B to 3 to unlock the front entrance, or 1 to unlock the back entrance.
+        game.apply_armips_patch("ooe_allow_separate_kalidus_entrance_unlocks")
+      else
+        # If world map exits are not randomized, we can just have it so unlocking the back exit unlocks both the front and back entrances at the same time.
+        game.apply_armips_patch("ooe_fix_kalidus_back_entrance_crash")
+      end
     end
     
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
