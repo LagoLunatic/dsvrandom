@@ -236,6 +236,11 @@ module BossRandomizer
       if boss_entity.room.width < 2
         return false
       end
+    when "Goliath"
+      # Goliath never attacks the player in a 1x1 room. (Also the intro cutscene can make the player take unavoidable damage.)
+      if boss_entity.room.width < 2
+        return false
+      end
     when "Blackmore"
       # Blackmore needs a wide room.
       if boss_entity.room.width < 2
@@ -247,6 +252,8 @@ module BossRandomizer
   end
   
   def dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    new_boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
+    
     case old_boss.name
     when "Balore"
       if boss_entity.var_a == 2
@@ -255,12 +262,26 @@ module BossRandomizer
         boss_entity.type = 0
         boss_entity.write_to_rom()
         return :skip
+      else
+        # Update the entity hider so the common enemies in the room don't appear until the randomized boss is dead.
+        entity_hider = game.entity_by_str("00-02-06_03")
+        entity_hider.subtype = new_boss_index
+        entity_hider.write_to_rom()
       end
+    when "Dmitrii"
+      # Update the entity hider so the common enemy in the room doesn't appear until the randomized boss is dead.
+      entity_hider = game.entity_by_str("00-04-10_08")
+      entity_hider.subtype = new_boss_index
+      entity_hider.write_to_rom()
     when "Gergoth"
       if GAME == "dos" && boss_entity.room.sector_index == 5
         # Condemned Tower. Replace the boss death flag checked by the floors of the tower so they check the new boss instead.
-        boss_index = BOSS_ID_TO_BOSS_INDEX[new_boss_id] || 0
-        game.fs.replace_hardcoded_bit_constant(0x0219EF44, boss_index)
+        game.fs.replace_hardcoded_bit_constant(0x0219EF44, new_boss_index)
+        
+        # Update the entity hider so the common enemies in the room don't appear until the randomized boss is dead.
+        entity_hider = game.entity_by_str("00-05-07_14")
+        entity_hider.subtype = new_boss_index
+        entity_hider.write_to_rom()
       end
     when "Paranoia"
       if boss_entity.var_a == 1
@@ -479,6 +500,13 @@ module BossRandomizer
     when "Mummy Man"
       @boss_id_for_each_portrait[:portraitforgottencity] = new_boss_id
     when "Brauner"
+      # Modify the entity hiders in Brauner's room that make the post-Brauner cutscene appear to check the new boss.
+      entity_hider = game.entity_by_str("0B-00-00_04")
+      entity_hider.subtype = new_boss_index
+      entity_hider.write_to_rom()
+      entity_hider = game.entity_by_str("0B-00-00_08")
+      entity_hider.subtype = new_boss_index
+      entity_hider.write_to_rom()
       # Modify the entity hiders that swap the studio portrait object after Brauner is dead to instead check the new boss.
       entity_hider = game.entity_by_str("00-0B-00_05")
       entity_hider.subtype = new_boss_index
