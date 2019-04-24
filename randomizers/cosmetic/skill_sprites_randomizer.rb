@@ -85,6 +85,46 @@ module SkillSpriteRandomizer
       any_changes_made_to_this_sprite = true
     end
     
+    # Pad out the total number of frames so that all the unanimated frame indexes of the original exist in the new one too.
+    old_animated_frame_indexes = []
+    old_sprite.animations.each do |anim|
+      anim.frame_delays.each do |frame_delay|
+        old_animated_frame_indexes << frame_delay.frame_index
+      end
+    end
+    old_highest_unanimated_frame_index = 0
+    old_sprite.frames.each_with_index do |frame, frame_index|
+      next if old_animated_frame_indexes.include?(frame_index)
+      old_highest_unanimated_frame_index = frame_index
+    end
+    if sprite.animations.length > 0
+      orig_frame = sprite.frames[sprite.animations[0].frame_delays[0].frame_index]
+    else
+      orig_frame = sprite.frames[0]
+    end
+    while sprite.frames.length <= old_highest_unanimated_frame_index
+      new_frame = Frame.new
+      orig_frame.hitboxes.each do |hitbox|
+        if sprite.sprite_file
+          # Sprites in individual files can't reuse the same hitbox multiple times.
+          new_hitbox = hitbox.dup
+          sprite.hitboxes << new_hitbox
+        end
+        new_frame.hitboxes << hitbox
+      end
+      orig_frame.parts.each do |part|
+        if sprite.sprite_file
+          # Sprites in individual files can't reuse the same part multiple times.
+          new_part = part.dup
+          sprite.parts << new_part
+        end
+        new_frame.parts << part
+      end
+      sprite.frames << new_frame
+      
+      any_changes_made_to_this_sprite = true
+    end
+    
     # Pad every existing animation with duplicate keyframes to get it up to the same number of keyframes the original sprite had for this animation. (Assuming we can do so without affecting the actual time the animation takes to play out.)
     # The reason we need to make the animation have a lot of keyframes is to to fix the issue of some skills/enemies not advancing until a certain keyframe index is reached (e.g. Vol Arcus doesn't fire until keyframe 0xD is reached).
     # So instead of having one keyframe that lasts for a certain number of frames, we have a bunch of keyframes that only last for 1 frame each.
