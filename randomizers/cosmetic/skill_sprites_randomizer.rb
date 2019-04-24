@@ -4,67 +4,62 @@ module SkillSpriteRandomizer
     skills = game.items[SKILL_GLOBAL_ID_RANGE]
     
     all_skill_sprites = {}
+    all_orig_skill_sprites = {}
+    remaining_sprite_indexes = []
     skills.each do |skill|
       next if skill["Sprite"] == 0 # Skill with no sprite
       
       skill_gfx = SkillGfx.new(skill["Sprite"]-1, game.fs)
       sprite = Sprite.new(skill_gfx.sprite_file_pointer, game.fs)
       all_skill_sprites[skill["Sprite"]] = sprite
+      orig_sprite = Sprite.new(skill_gfx.sprite_file_pointer, game.fs)
+      all_orig_skill_sprites[skill["Sprite"]] = orig_sprite
+      
+      if !remaining_sprite_indexes.include?(skill["Sprite"])
+        remaining_sprite_indexes << skill["Sprite"]
+      end
     end
     
     skill_sprites_to_fix = []
+    old_sprite_index_to_new_sprite_index = {}
+    new_sprite_index_to_old_sprite_index = {}
     skills.each do |skill|
       next if skill["Sprite"] == 0 # Skill with no sprite
       
-      if GAME == "dos" || GAME == "por"
-        skills_of_same_type = skills.select do |other_skill|
-          other_skill["Type"] == skill["Type"]
-        end
-      elsif GAME == "ooe"
-        case skill["Item ID"]
-        when 0x00..0x36
-          skills_of_same_type = skills[0x00..0x36]
-        when 0x37..0x4F
-          skills_of_same_type = skills[0x37..0x4F]
-        when 0x50..0x6E
-          skills_of_same_type = skills[0x50..0x6E]
-        end
+      if old_sprite_index_to_new_sprite_index[skill["Sprite"]]
+        # Always replace one sprite with a specific other one.
+        # This simplifies fixing the sprite later on.
+        skill["Sprite"] = old_sprite_index_to_new_sprite_index[skill["Sprite"]]
+        skill.write_to_rom()
+        next
       end
       
-      possible_sprite_indexes = skills_of_same_type.map{|skill| skill["Sprite"]}.uniq
-      possible_sprite_indexes -= [0] # Not a valid sprite
+      if remaining_sprite_indexes.empty?
+        raise "Ran out of unique skill sprite indexes to use"
+      end
       
-      new_sprite_index = possible_sprite_indexes.sample(random: rng)
+      new_sprite_index = remaining_sprite_indexes.sample(random: rng) || 0
+      old_sprite_index_to_new_sprite_index[skill["Sprite"]] = new_sprite_index
+      new_sprite_index_to_old_sprite_index[new_sprite_index] = skill["Sprite"]
+      remaining_sprite_indexes.delete(new_sprite_index)
       skill["Sprite"] = new_sprite_index
       skill.write_to_rom()
       
       skill_sprites_to_fix << new_sprite_index
-      
-      skill_gfx = SkillGfx.new(new_sprite_index-1, game.fs)
-      sprite = Sprite.new(skill_gfx.sprite_file_pointer, game.fs)
-      
-      if GAME == "dos"
-        no_hitbox_frames = sprite.frames.select{|frame| frame.number_of_hitboxes == 0}
-        hitbox_frames = sprite.frames.select{|frame| frame.number_of_hitboxes > 0}
-        if hitbox_frames.any?
-          no_hitbox_frames.each do |no_hitbox_frame|
-            hitbox_frame = hitbox_frames.first
-            no_hitbox_frame.number_of_hitboxes = hitbox_frame.number_of_hitboxes
-            no_hitbox_frame.first_hitbox_offset = hitbox_frame.first_hitbox_offset
-          end
-        end
-        sprite.write_to_rom()
-      end
     end
     
     skill_sprites_to_fix.uniq!
-    skill_sprites_to_fix.each do |skill_sprite_index|
-      sprite = all_skill_sprites[skill_sprite_index]
-      fix_skill_or_enemy_sprite(sprite)
+    skill_sprites_to_fix.each do |new_sprite_index|
+      new_sprite = all_skill_sprites[new_sprite_index]
+      
+      old_sprite_index = new_sprite_index_to_old_sprite_index[new_sprite_index]
+      old_sprite = all_orig_skill_sprites[old_sprite_index]
+      
+      fix_skill_or_enemy_sprite(new_sprite, old_sprite)
     end
   end
   
-  def fix_skill_or_enemy_sprite(sprite)
+  def fix_skill_or_enemy_sprite(sprite, old_sprite)
     any_changes_made_to_this_sprite = false
     
     # Add a hitbox to every frame if it had no hitboxes originally.
@@ -90,11 +85,15 @@ module SkillSpriteRandomizer
       any_changes_made_to_this_sprite = true
     end
     
-    # Pad every existing animation with duplicate keyframes to get it up to 20 keyframes. (Assuming we can do so without affecting the actual time the animation takes to play out.)
+    # Pad every existing animation with duplicate keyframes to get it up to the same number of keyframes the original sprite had for this animation. (Assuming we can do so without affecting the actual time the animation takes to play out.)
     # The reason we need to make the animation have a lot of keyframes is to to fix the issue of some skills/enemies not advancing until a certain keyframe index is reached (e.g. Vol Arcus doesn't fire until keyframe 0xD is reached).
     # So instead of having one keyframe that lasts for a certain number of frames, we have a bunch of keyframes that only last for 1 frame each.
-    sprite.animations.each do |animation|
-      remaining_keyframes_to_add = (20 - animation.frame_delays.length)
+    sprite.animations.each_with_index do |animation, anim_index|
+      if anim_index >= old_sprite.animations.length
+        break
+      end
+      old_animation = old_sprite.animations[anim_index]
+      remaining_keyframes_to_add = (old_animation.frame_delays.length - animation.frame_delays.length)
       
       next if remaining_keyframes_to_add <= 0
       
