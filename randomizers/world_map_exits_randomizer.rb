@@ -70,11 +70,15 @@ module WorldMapExitsRandomizer
         # Otherwise we would exhaust all the remaining exits and the player would have no way to progress.
         # (Unless this is the very last exit overall - in that case it's fine that we exhaust the last one.)
         
+        #puts "Possible unfiltered: #{possible_entrances}"
+        
         # First prioritize ones that lead to a new area (i.e. don't place the second entrance into Kalidus).
         possible_entrances_that_lead_to_a_new_area = possible_entrances.select do |unused_entrance_key|
           unused_area_index = WORLD_MAP_ENTRANCES[unused_entrance_key][0..1].to_i(16)
-          next if @world_map_entrances_used.find{|used_area_index| used_area_index == unused_area_index}
-          true
+          @world_map_entrances_used.none? do |used_entrance_key|
+            used_area_index = WORLD_MAP_ENTRANCES[used_entrance_key][0..1].to_i(16)
+            used_area_index == unused_area_index
+          end
         end
         #puts "Possible filtered 1: #{possible_entrances_that_lead_to_a_new_area}"
         if possible_entrances_that_lead_to_a_new_area.any?
