@@ -23,6 +23,7 @@ require_relative 'randomizers/skill_sprites_randomizer'
 require_relative 'randomizers/enemy_anim_speed_randomizer'
 require_relative 'randomizers/red_wall_randomizer'
 require_relative 'randomizers/map_randomizer'
+require_relative 'randomizers/world_map_exits_randomizer'
 
 require_relative 'randomizers/cosmetic/bgm_randomizer'
 require_relative 'randomizers/cosmetic/dialogue_randomizer'
@@ -48,6 +49,7 @@ class Randomizer
   include EnemyAnimSpeedRandomizer
   include RedWallRandomizer
   include MapRandomizer
+  include WorldMapExitsRandomizer
   
   include BgmRandomizer
   include DialogueRandomizer
@@ -80,6 +82,8 @@ class Randomizer
     if room_rando?
       options[:unlock_boss_doors] = true
       options[:add_magical_tickets] = true
+    else
+      options[:randomize_world_map_exits] = false
     end
     if options[:randomize_rooms_map_friendly]
       # The map rando won't necessarily place the rooms containing the normal bosses/portraits/villagers.
