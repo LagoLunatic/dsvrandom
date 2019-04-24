@@ -694,7 +694,7 @@ module Tweaks
           skill = game.items[skill_global_id]
           is_spell = skill["??? bitfield"][2]
           next unless is_spell
-          next if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+          next if SKILLS_THAT_CANT_GAIN_SP.include?(skill.name)
           
           skill_extra_data = game.items[skill_global_id+0x6C]
           case skill.name

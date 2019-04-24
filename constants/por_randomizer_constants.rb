@@ -13,7 +13,6 @@ NONOFFENSIVE_SKILL_NAMES = [
   "Offensive Form",
   "Defensive Form",
   "Taunt",
-  "Knee Strike", # Knee Strike is offensive, but with the way it's coded it can't gain SP anyway.
   "Toad Morph",
   "Owl Morph",
   "Berserker",
@@ -28,6 +27,10 @@ NONOFFENSIVE_SKILL_NAMES = [
   "MIND Boost",
   "LUCK Boost",
   "ALL Boost",
+]
+
+SKILLS_THAT_CANT_GAIN_SP = NONOFFENSIVE_SKILL_NAMES + [
+  "Knee Strike",
 ]
 
 MAX_WARP_ROOMS_PER_AREA = 12

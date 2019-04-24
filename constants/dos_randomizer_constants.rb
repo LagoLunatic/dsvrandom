@@ -5,6 +5,23 @@ NONRANDOMIZABLE_PICKUP_GLOBAL_IDS =
 
 ITEMS_WITH_OP_HARDCODED_EFFECT = []
 
+NONOFFENSIVE_SKILL_NAMES = [
+  "Puppet Master",
+  "Zephyr",
+  "Paranoia",
+  "Imp",
+  "Bat Form", # TODO: this one doesn't work since it's unnamed in vanilla
+  "Flying Armor",
+  "Bat Company",
+  "Ghost",
+  "Flying Humanoid",
+  "Devil",
+  "Medusa Head",
+  "Final Guard",
+  "Werewolf",
+  "Bone Ark",
+]
+
 MAX_WARP_ROOMS_PER_AREA = nil
 
 WEAPON_SWING_ANIM_NAMES = {

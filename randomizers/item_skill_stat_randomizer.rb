@@ -664,7 +664,7 @@ module ItemSkillStatRandomizer
         if is_spell && !options[:allow_mastering_charlottes_skills]
           skill_extra_data["SP to Master"] = 0
         else
-          if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+          if SKILLS_THAT_CANT_GAIN_SP.include?(skill.name)
             skill_extra_data["SP to Master"] = 0
           else
             skill_extra_data["SP to Master"] = named_rand_range_weighted(:subweapon_sp_to_master_range)/100*100
@@ -919,8 +919,8 @@ module ItemSkillStatRandomizer
       # Relic.
       return
     end
-    if GAME == "ooe" && NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
-      # Non-offensive back glyph.
+    if NONOFFENSIVE_SKILL_NAMES.include?(skill.name)
+      # No point updating skills that can't damage enemies anyway.
       return
     end
     
