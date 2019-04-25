@@ -298,6 +298,10 @@ module Tweaks
       game.apply_armips_patch("dos_new_map_tile_color")
     end
     
+    if GAME == "dos"
+      game.apply_armips_patch("dos_prevent_multiple_cutscenes_in_first_room")
+    end
+    
     if GAME == "ooe"
       # Apply a patch to fix a crash that happens in vanilla when you unlock the back Kalidus entrance before ever visiting the front entrance.
       # Which patch we use depends on whether world map exits are randomized or not.
