@@ -499,7 +499,7 @@ module Tweaks
           
           tile_x_off = (tile.x_pos - room.room_xpos_on_map) * SCREEN_WIDTH_IN_PIXELS
           tile_y_off = (tile.y_pos - room.room_ypos_on_map) * SCREEN_HEIGHT_IN_PIXELS
-          tile.is_entrance = room.entities.find do |e|
+          tile.is_entrance = room.entities.any? do |e|
             if e.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(e.subtype)
               # Portrait.
               # Clamp the portrait's X and Y within the bounds of the room so we can detect that it's on a tile even if it's slightly off the edge of the room.
@@ -508,8 +508,6 @@ module Tweaks
               
               # Then check if the clamped X and Y are within the current tile.
               (tile_x_off..tile_x_off+SCREEN_WIDTH_IN_PIXELS-1).include?(x) && (tile_y_off..tile_y_off+SCREEN_HEIGHT_IN_PIXELS-1).include?(y)
-            else
-              false
             end
           end
         end
