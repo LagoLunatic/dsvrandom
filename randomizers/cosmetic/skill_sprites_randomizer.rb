@@ -3,12 +3,21 @@ module SkillSpriteRandomizer
   def randomize_skill_sprites
     skills = game.items[SKILL_GLOBAL_ID_RANGE]
     
+    skills_to_randomize = []
     all_skill_sprites = {}
     all_orig_skill_sprites = {}
     weapon_glyph_sprite_indexes = []
     remaining_sprite_indexes = []
     skills.each do |skill|
       next if skill["Sprite"] == 0 # Skill with no sprite
+      
+      if GAME == "ooe" && skill["Item ID"] == 0x68
+        # Don't randomize the sprite of the Dominus union.
+        # It doesn't look good with other sprites and other glyphs with this sprite don't look good either.
+        next
+      end
+      
+      skills_to_randomize << skill
       
       skill_gfx = SkillGfx.new(skill["Sprite"]-1, game.fs)
       sprite = Sprite.new(skill_gfx.sprite_file_pointer, game.fs)
@@ -32,9 +41,7 @@ module SkillSpriteRandomizer
     skill_sprites_to_fix = []
     old_sprite_index_to_new_sprite_index = {}
     new_sprite_index_to_old_sprite_index = {}
-    skills.each do |skill|
-      next if skill["Sprite"] == 0 # Skill with no sprite
-      
+    skills_to_randomize.each do |skill|
       if old_sprite_index_to_new_sprite_index[skill["Sprite"]]
         # Always replace one sprite with a specific other one.
         # This simplifies fixing the sprite later on.
@@ -104,7 +111,6 @@ module SkillSpriteRandomizer
       hitbox.height = max_part_y - min_part_y
       
       frame.hitboxes << hitbox
-      frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
       sprite.hitboxes << hitbox
       
       any_changes_made_to_this_sprite = true
