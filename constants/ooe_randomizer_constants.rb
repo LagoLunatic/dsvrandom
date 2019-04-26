@@ -133,7 +133,7 @@ BGM_RANDO_AVAILABLE_SONG_INDEXES = [
   0x12, # Tower of Dolls
   0x12, # Tower of Dolls
   0x0F, # Ebony Wings
-  0x0D, # Ambience
+  #0x0D, # Ambience
   0x13, # The Colossus
   0x13, # The Colossus
   0x0E, # An Empty Tome
