@@ -893,6 +893,14 @@ module Tweaks
       dos_set_soma_mode_final_boss(:somacula)
     end
     
+    if GAME == "ooe" && options[:randomize_world_map_exits]
+      # Don't make the castle's back exit unlock Training Hall in world map exit rando, since something else was randomized to unlock it.
+      # (The castle back exit still unlocks Large Cavern though, that's not randomized.)
+      castle_back_exit = game.entity_by_str("00-02-1B_00")
+      castle_back_exit.var_a = 0
+      castle_back_exit.write_to_rom()
+    end
+    
     if room_rando?
       center_bosses_for_room_rando()
     end

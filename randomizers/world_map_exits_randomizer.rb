@@ -1,7 +1,7 @@
 
 module WorldMapExitsRandomizer
   WORLD_MAP_EXITS = [
-    #"00-02-1B_000", # Exit from the castle. Don't randomize this.
+    #"00-02-1B_000", # Exit from the castle. Don't randomize this, it should always unlock Large Cavern.
     "02-00-03_000", # Modified Ecclesia exit
     "04-00-03_000",
     "05-00-00_000",
@@ -11,7 +11,7 @@ module WorldMapExitsRandomizer
     "08-02-07_000",
     "09-00-07_000",
     "0A-00-0A_000",
-    #"0A-00-13_000", # Alternate exit from Tymeo. Not randomized separately from the other one.
+    "0A-00-13_000", # Alternate exit from Tymeo. In vanilla this unlocked the same thing as the first exit, but the rando makes them separate.
     "0B-00-10_000",
     "0D-00-09_000",
     "0F-00-00_000",
@@ -20,7 +20,7 @@ module WorldMapExitsRandomizer
     "12-00-14_000", # Newly added Monastery exit
   ]
   WORLD_MAP_ENTRANCES = {
-       #3 => "03-00-00_000", # Training Hall. Not randomized because we don't randomize the castle exit.
+       3 => "03-00-00_000", # Training Hall.
        4 => "04-00-00_000",
        5 => "05-00-03_000",
        6 => "06-00-00_000",
@@ -142,12 +142,6 @@ module WorldMapExitsRandomizer
     puts "Setting world map unlock: #{world_map_exit_door_str} -> #{entrance_door_str}"
     
     checker.set_world_map_exit_destination_area(world_map_exit_door_str, entrance_door_str)
-    
-    if world_map_exit_door_str == "0A-00-0A_000"
-      # For now we sync up the two Tymeo exits to always unlock the same area like in vanilla.
-      # In the future consider randomizing these seperately.
-      set_world_map_exit_destination_area("0A-00-13_000", entrance_type)
-    end
     
     if world_map_exit_door_str == "02-00-03_000"
       # The Ecclesia exit. We need to update the Albus mode code to auto-unlock whatever entrance this leads to, in place of the vanilla Monastery unlock.
