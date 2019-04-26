@@ -131,11 +131,15 @@ World map exits:
   - 0E-00-0C_000
   - 0F-00-00_000
   - 0F-00-08_000
+  - 10-00-00_000 # Newly added back exit in Oblivion Ridge
   - 10-01-06_000
   - 11-00-00_000
+  - 11-00-08_000 # Newly added back exit in Skeleton Cave
+  - 12-00-14_000 # Newly added back exit in Monastery
   - 12-01-00_000
 World map unlocks:
   00-02-1B_000: 03-00-00_000, 0C-00-00_000 # castle secret -> training and cavern
+  02-00-03_000: 12-01-00_000 # ecclesia -> monastery (modified, this unlocked nothing in vanilla)
   04-00-03_000: 06-00-00_000 # ruvas -> kalidus upper
   05-00-00_000: 0E-00-0C_000 # argila -> mystery
   06-00-0A_000: 08-00-00_000 # kalidus upper -> minera
@@ -148,6 +152,9 @@ World map unlocks:
   0B-00-10_000: 10-01-06_000 # tristis -> oblivion
   0D-00-09_000: 0B-00-00_000 # giant -> tristis
   0F-00-00_000: 11-00-00_000 # misty -> skeleton
+  10-00-00_000: 05-00-03_000 # oblivion -> argila (newly added)
+  11-00-08_000: 07-00-00_000 # skeleton -> somnus (newly added)
+  12-00-14_000: 04-00-00_000 # skeleton -> somnus (newly added)
 Progress important rooms:
   - 00-09-05 # Cerberus gate
   - 00-09-01 # Tall room above Cerberus gate
@@ -155,7 +162,7 @@ Progress important rooms:
   - 02-00-06 # Barlowe boss fight
   - 06-01-09 # Lower Kalidus entrance, the lighthouse lets you enter from here
   - 0E-00-09 # Albus boss fight
-  - 11-00-08 # Event where you rescue George
+  - 11-00-08 # Event where you rescue George in Skeleton Cave
   
   - 10-00-00 # Albus at Oblivion Ridge, only necessary for linear mode
   - 12-00-14 # Event at end of Monastery, only necessary for linear mode

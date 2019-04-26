@@ -22,8 +22,66 @@ module Tweaks
       tiled.read(filename, room)
     end
     
-    if GAME == "ooe" && options[:open_world_map]
-      game.apply_armips_patch("ooe_nonlinear")
+    if GAME == "ooe"
+      if options[:open_world_map]
+        game.apply_armips_patch("ooe_nonlinear")
+      else
+        # Even if the user doesn't want the world map opened up we still make the events capable of being accessed nonlinearly.
+        game.apply_armips_patch("ooe_nonlinear_events")
+      end
+    end
+    
+    if GAME == "ooe" && !options[:open_world_map]
+      # Make both Ecclesia and Wygol unlocked at the start instead of just Ecclesia.
+      game.apply_armips_patch("ooe_wygol_unlocked_at_start")
+    end
+    
+    if GAME == "ooe"
+      # Change various things so that most of the hardcoded world map unlocks are removed and instead done via exit objects.
+      # (Note that this also means you don't need to talk to Barlowe to unlocks certain things anymore.)
+      
+      # Make Ecclesia unlock Monastery via its exit instead of via a cutscene.
+      ecclesia_exit = game.entity_by_str("02-00-03_00")
+      ecclesia_exit.var_a = 0x12 # Unlock Monastery
+      ecclesia_exit.write_to_rom()
+      
+      # Add new back exits to areas that would normally have the next area unlocked via a cutscenes.
+      # To do this the level design of the rooms needs to be modified to add a hole to them.
+      [
+        [0x12, 0, 0x14], # Monastery. (Unlocks Ruvas Forest.)
+        [0x11, 0, 0x08], # Skeleton Cave. (Unlocks Somnus Reef.)
+        [0x10, 0, 0x00], # Oblivion Ridge. (Unlocks Argila Swamp.)
+      ].each do |area_index, sector_index, room_index|
+        filename = "./dsvrandom/roomedits/ooe_linear_%02X-%02X-%02X.tmx" % [area_index, sector_index, room_index]
+        room = game.areas[area_index].sectors[sector_index].rooms[room_index]
+        tiled.read(filename, room)
+        
+        # Also update the map tile to be an entrance.
+        map = game.get_map(area_index, sector_index)
+        map_tile = map.tiles.find{|tile| tile.x_pos == room.x_pos &&  tile.y_pos == room.y_pos}
+        map_tile.is_entrance = true
+        map.write_to_rom()
+      end
+      
+      # Remove the hardcoded world map unlocks from cutscene code.
+      # Remove the code in Ecclesia that unlocks Monastery.
+      game.fs.load_overlay(42)
+      game.fs.write(0x022C49F4, [0xE1A00000].pack("V")) # nop
+      # Remove the code in Monastery that unlocks Wygol.
+      game.fs.load_overlay(78)
+      game.fs.write(0x022C2AD4, [0xE1A00000].pack("V")) # nop
+      # Remove the code in Wygol that unlocks Ruvas, and makes Minera visible.
+      game.fs.load_overlay(41)
+      game.fs.write(0x022C2B30, [0xE1A00000].pack("V")) # nop
+      game.fs.write(0x022C2B3C, [0xE1A00000].pack("V")) # nop
+      # Remove the code in Ecclesia that unlocks Argila, and makes Mystery Manor visible.
+      game.fs.load_overlay(42)
+      game.fs.write(0x022C51EC, [0xE1A00000].pack("V")) # nop
+      game.fs.write(0x022C51F8, [0xE1A00000].pack("V")) # nop
+      # Remove the code in Wygol that unlocks Somnus, and makes Giant's Dwelling visible.
+      game.fs.load_overlay(41)
+      game.fs.write(0x022C2680, [0xE1A00000].pack("V")) # nop
+      game.fs.write(0x022C268C, [0xE1A00000].pack("V")) # nop
     end
     
     if GAME == "ooe" && options[:open_world_map] && !room_rando?

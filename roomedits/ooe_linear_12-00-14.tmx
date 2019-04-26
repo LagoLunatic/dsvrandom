@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="16" tileheight="16" nextobjectid="1">
+  <properties>
+    <property name="map_x" value="08"/>
+    <property name="map_y" value="01"/>
+  </properties>
+  <tileset firstgid="1" name="022D355C-022D4558_022AF1E8-02_022AF208" tilewidth="16" tileheight="16">
+    <image source="./Tilesets/022D355C-022D4558_022AF1E8-02_022AF208" width="256" height="1024"/>
+  </tileset>
+  <layer name="layer 1" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="1B"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="01"/>
+      <property name="tileset" value="022D355C"/>
+      <property name="collision_tileset" value="022D4558"/>
+    </properties>
+    <data encoding="csv">
+17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,
+33,34,35,36,37,38,2147483684,40,41,36,2147483686,2147483685,2147483684,2147483683,2147483682,2147483681,
+49,50,51,52,53,54,55,56,57,2147483703,2147483702,2147483701,2147483700,2147483699,2147483698,2147483697,
+65,66,67,68,69,70,71,72,73,2147483719,2147483718,2147483717,2147483716,2147483715,2147483714,2147483713,
+81,82,83,84,85,86,87,88,89,90,2147483734,2147483733,93,2147483731,2147483730,2147483729,
+97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,2147483745,
+113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,2147483761,
+129,130,131,0,0,0,0,0,0,0,0,0,0,0,2147483778,2147483777,
+1073741889,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3221225537,
+1073741873,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3221225521,
+1073741857,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3221225505,
+1073741841,1073741842,1073741843,1073741844,1073741845,1073741846,1073741847,1073741848,1073741849,1073741850,1073741851,1073741852,1073741853,1073741854,1073741855,1073741856
+</data>
+  </layer>
+  <layer name="layer 0" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="16"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="01"/>
+      <property name="tileset" value="022D355C"/>
+      <property name="collision_tileset" value="022D4558"/>
+    </properties>
+    <data encoding="csv">
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,
+2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,
+2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,
+0,130,131,132,133,134,135,136,137,138,139,140,141,142,143,0,
+0,146,147,148,149,150,151,152,153,154,155,156,157,158,159,0,
+0,162,163,164,165,166,167,168,169,170,171,172,173,174,175,0,
+0,178,179,180,181,182,183,184,185,186,187,188,189,190,191,0,
+2,194,195,196,197,198,199,200,201,202,203,204,205,206,207,2,
+2,210,211,212,213,214,215,216,217,218,219,220,221,222,223,2,
+2,226,227,228,229,230,231,232,233,234,235,236,237,238,239,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+</data>
+  </layer>
+  <layer name="layer 2" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="00"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="00"/>
+      <property name="tileset" value="00000000"/>
+      <property name="collision_tileset" value="00000000"/>
+    </properties>
+    <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer name="layer 3" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="00"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="00"/>
+      <property name="tileset" value="00000000"/>
+      <property name="collision_tileset" value="00000000"/>
+    </properties>
+    <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <objectgroup name="Doors" color="purple">
+    <object id="1" x="-256" y="0" width="256" height="192">
+      <properties>
+        <property name="door_ram_pointer" value="022AF7E0"/>
+        <property name="destination_room" value="022AF7C0"/>
+        <property name="dest_x" value="0000"/>
+        <property name="dest_y" value="0000"/>
+        <property name="dest_x_2" value="0000"/>
+        <property name="dest_y_2" value="0000"/>
+      </properties>
+    </object>
+  </objectgroup>
+  <objectgroup name="Entities">
+    <object id="1" x="0" y="0">
+      <properties>
+        <property name="entity_ram_pointer" value="022D8320"/>
+        <property name="05 (unique_id)" value="00"/>
+        <property name="06 (type)" value="02"/>
+        <property name="07 (subtype)" value="66"/>
+        <property name="08" value="00"/>
+        <property name="09 (var_a)" value="0006"/>
+        <property name="11 (var_b)" value="0005"/>
+      </properties>
+    </object>
+    <object id="2" x="256" y="96">
+      <properties>
+        <property name="entity_ram_pointer" value="022D832C"/>
+        <property name="05 (unique_id)" value="00"/>
+        <property name="06 (type)" value="02"/>
+        <property name="07 (subtype)" value="2B"/>
+        <property name="08" value="00"/>
+        <property name="09 (var_a)" value="0004"/>
+        <property name="11 (var_b)" value="0000"/>
+      </properties>
+    </object>
+  </objectgroup>
+</map>

@@ -2,6 +2,7 @@
 module WorldMapExitsRandomizer
   WORLD_MAP_EXITS = [
     #"00-02-1B_000", # Exit from the castle. Don't randomize this.
+    "02-00-03_000", # Modified Ecclesia exit
     "04-00-03_000",
     "05-00-00_000",
     "06-00-0A_000",
@@ -14,10 +15,16 @@ module WorldMapExitsRandomizer
     "0B-00-10_000",
     "0D-00-09_000",
     "0F-00-00_000",
+    "10-00-00_000", # Newly added Oblivion Ridge exit
+    "11-00-08_000", # Newly added Skeleton Cave exit
+    "12-00-14_000", # Newly added Monastery exit
   ]
   WORLD_MAP_ENTRANCES = {
        #3 => "03-00-00_000", # Training Hall. Not randomized because we don't randomize the castle exit.
+       4 => "04-00-00_000",
+       5 => "05-00-03_000",
        6 => "06-00-00_000",
+       7 => "07-00-00_000",
        8 => "08-00-00_000",
        9 => "09-00-00_000", # Lighthouse. My logic has a special case here due to the spikes but it can still be randomized.
      0xA => "0A-00-00_000",
@@ -27,6 +34,7 @@ module WorldMapExitsRandomizer
      0xF => "0F-00-08_000",
     0x10 => "10-01-06_000",
     0x11 => "11-00-00_000",
+    0x12 => "12-01-00_000",
       -1 => "06-01-09_000", # Lower Kalidus entrance.
       #-2 => "0C-00-00_000", # Large Cavern. Not randomized because we don't randomize the castle exit.
   }
@@ -109,8 +117,8 @@ module WorldMapExitsRandomizer
   
   def set_world_map_exit_destination_area(world_map_exit_door_str, entrance_type)
     room_str = world_map_exit_door_str[0,8]
-    area_exit_entity_str = room_str + "_00"
-    area_exit = game.entity_by_str(area_exit_entity_str)
+    room = game.room_by_str(room_str)
+    area_exit = room.entities.find{|e| e.type == SPECIAL_OBJECT_ENTITY_TYPE && e.subtype == 0x2B}
     if entrance_type >= 0
       area_exit.var_a = entrance_type
       area_exit.var_b = 0
@@ -139,6 +147,43 @@ module WorldMapExitsRandomizer
       # For now we sync up the two Tymeo exits to always unlock the same area like in vanilla.
       # In the future consider randomizing these seperately.
       set_world_map_exit_destination_area("0A-00-13_000", entrance_type)
+    end
+    
+    if world_map_exit_door_str == "02-00-03_000"
+      # The Ecclesia exit. We need to update the Albus mode code to auto-unlock whatever entrance this leads to, in place of the vanilla Monastery unlock.
+      if entrance_type > 0
+        entrance_area_index = entrance_type
+      elsif entrance_type == -1 # Back entrance of Kalidus
+        entrance_area_index = 6
+      else
+        raise "Unsupported world map entrance type: #{entrance_type}"
+      end
+      
+      game.fs.write(0x0223B818, [0xEBF9BC4F].pack("V")) # bl 020AA95Ch ; UnlockWorldMapArea (for Wygol, simplifying vanilla code)
+      game.fs.write(0x0223B81C, [entrance_area_index].pack("C")) # Update what the other area to start Albus unlocked with is, instead of Monastery
+      game.fs.write(0x0223B820, [0xE3A01001].pack("V")) # mov r1, 1h
+      
+      if entrance_type == 6 || entrance_type == -1
+        # If the first area happens to be Kalidus, we need to add more code to properly unlock one of the two entrances.
+        game.fs.write(0x0223B828, [0xE3A00006].pack("V")) # mov r0, 6h
+        if entrance_type == 6
+          # Front entrance
+          game.fs.write(0x0223B82C, [0xE3A01000].pack("V")) # mov r1, 0h
+          game.fs.write(0x0223B830, [0xE3A02000].pack("V")) # mov r2, 0h
+        else
+          # Back entrance
+          game.fs.write(0x0223B82C, [0xE3A01001].pack("V")) # mov r1, 1h
+          game.fs.write(0x0223B830, [0xE3A02009].pack("V")) # mov r2, 9h
+        end
+        game.fs.write(0x0223B834, [0xEBF82A42].pack("V")) # bl 02046144h ; MapSetRoomExplored
+        game.fs.write(0x0223B838, [0xE1A00000].pack("V")) # nop
+        game.fs.write(0x0223B83C, [0xE1A00000].pack("V")) # nop
+      else  
+        # Otherwise we don't need these extra lines.
+        (0x0223B828..0x0223B83C).step(4) do |address|
+          game.fs.write(address, [0xE1A00000].pack("V")) # nop
+        end
+      end
     end
   end
   
