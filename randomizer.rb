@@ -737,6 +737,17 @@ class Randomizer
             bosses_in_room.reject!{|e| e.subtype == 0x6B && e.var_a != 1}
           end
           
+          if GAME == "ooe" && room_str == "0E-00-09" && !progression_region.include?("00-0C-00")
+            # Albus's room is accessible, but the first room of Dracula's Castle is not.
+            # This means the player doesn't meet all the conditions to fight Albus if they want the true ending, so we shouldn't mark Albus's boss fight as accessible yet.
+            next
+          end
+          if GAME == "ooe" && room_str == "02-00-06" && !progression_region.include?("00-0C-00")
+            # Barlowe's room is accessible, but the first room of Dracula's Castle is not.
+            # This means the player doesn't meet all the conditions to fight Barlowe, so we shouldn't mark Barlowe's boss fight as accessible yet.
+            next
+          end
+          
           bosses_in_room.each do |boss_entity|
             boss_id = boss_entity.subtype
             boss_ids_by_order_you_reach_them_for_this_region << boss_id
