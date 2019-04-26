@@ -788,6 +788,9 @@ module PickupRandomizer
     if PORTRAIT_NAMES.include?(pickup_global_id)
       bad_portrait_locations = [
         "05-02-0C_01", # Legion's room. If a portrait gets placed here the player won't be able to activate Legion because using a portrait doesn't set the pickup flag Legion checks.
+        
+        "05-01-13_00", # This location overlaps a ring of flaming skulls that would damage the player on return.
+        "06-01-0D_02", # This location overlaps a ring of flaming skulls that would damage the player on return.
       ]
       
       locations.select! do |location|
