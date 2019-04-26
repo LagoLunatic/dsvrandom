@@ -786,31 +786,12 @@ module PickupRandomizer
       end
     end
     if PORTRAIT_NAMES.include?(pickup_global_id)
-      # Don't put portraits in certain rooms that, when you return to this room via the return portrait, would put you out of bounds.
-      bad_portrait_rooms = [
-        "03-00-05",
-        "03-00-06",
-        "03-00-07",
-        "03-00-08",
-        "03-00-09",
-        "03-00-0A",
-        "04-00-05",
-        "04-00-06",
-        "04-00-07",
-        "04-00-08",
-        "04-00-09",
-        "04-00-0A",
-        "05-01-01",
-        "05-01-14",
-        "06-01-14",
-        "00-05-02", # This great stairway room doesn't put you out of bounds, but does let you sequence break the button lock and needing height.
-        "00-05-04", # This great stairway room doesn't put you out of bounds, but does let you sequence break needing height.
-        "05-02-0C", # Legion's room. If a portrait gets placed here the player won't be able to activate Legion because using a portrait doesn't set the pickup flag Legion checks.
+      bad_portrait_locations = [
+        "05-02-0C_01", # Legion's room. If a portrait gets placed here the player won't be able to activate Legion because using a portrait doesn't set the pickup flag Legion checks.
       ]
       
       locations.select! do |location|
-        room_str = location[0,8]
-        !bad_portrait_rooms.include?(room_str)
+        !bad_portrait_locations.include?(location)
       end
     end
     if GAME == "ooe" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
