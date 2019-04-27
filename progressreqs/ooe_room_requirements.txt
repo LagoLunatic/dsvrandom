@@ -67,6 +67,7 @@ Villager locations:
   - 0A-00-13_01 # Marcel
   - 0B-01-03_00 # Irina
   - 0D-00-05_00 # Daniela
+  - 11-00-08_02 # George (modified by the randomizer, originally a cutscene)
 Hidden locations:
   - 00-00-03_01
   - 00-02-11_06
@@ -2631,7 +2632,9 @@ Rooms:
     001-000: 
   11-00-08:
     000-e00: 
+    000-e02: 
     e00-000: 
+    e02-000: 
   11-00-09:
     000-001: 
     000-e00: medium height

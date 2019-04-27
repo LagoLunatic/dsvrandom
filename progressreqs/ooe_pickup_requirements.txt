@@ -71,7 +71,7 @@ Defs:
   mistyroad: tymeomid | nonlinear
   
   skelecave: mistyroad | nonlinear
-  villagergeorge: skelecave
+  villagergeorge: villagergeorge
   
   somnus: skelecave | nonlinear
   somnusmid: somnus & serpent scale
@@ -589,6 +589,7 @@ Rooms:
   11-00-08:
     room: skelecave
     00 (Ordinary Rock): 
+    02 (George) (Villager): 
   11-00-09:
     room: skelecave
     00 (HEART Max Up) (No glyphs): medium height

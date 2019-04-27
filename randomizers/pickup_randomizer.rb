@@ -12,6 +12,7 @@ module PickupRandomizer
     :villageranna => 0x4B,
     :villagerdaniela => 0x57,
     :villageririna => 0x53,
+    :villagergeorge => 0x0D,
   }
   RANDOMIZABLE_VILLAGER_NAMES = VILLAGER_NAME_TO_EVENT_FLAG.keys
   

@@ -286,6 +286,22 @@ module Tweaks
       game.fs.write(0x0206D994, [25].pack("C"))
     end
     
+    if GAME == "ooe" && options[:randomize_villagers]
+      # Add support for randomizing George, since in vanilla his rescue seen was part of a cutscene tied to Skeleton Cave.
+      game.apply_armips_patch("ooe_allow_moving_george")
+      
+      # Replace the cutscene where you see Albus and then rescue George with the generic villager object so George can be randomized.
+      albus_event = game.entity_by_str("11-00-08_01")
+      albus_event.type = 0
+      albus_event.write_to_rom()
+      george_event = game.entity_by_str("11-00-08_02")
+      george_event.x_pos = 0x40
+      george_event.y_pos = 0xB0
+      george_event.subtype = 0x89 # Generic object for a villager trapped in Torpor
+      george_event.var_b = 0
+      george_event.write_to_rom()
+    end
+    
     # Add a free space overlay so we can add entities as much as we want.
     if !game.fs.has_free_space_overlay?
       game.add_new_overlay()
