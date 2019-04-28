@@ -1361,7 +1361,7 @@ module PickupRandomizer
   def get_villager_name_by_entity_location(location)
     entity = get_entity_by_location_str(location)
     
-    if GAME == "ooe" && entity.type == 2 && entity.subtype == 0x89
+    if GAME == "ooe" && entity.type == 2 && [0x89, 0x6D].include?(entity.subtype)
       villager_name = VILLAGER_NAME_TO_EVENT_FLAG.invert[entity.var_a]
       return villager_name
     else
