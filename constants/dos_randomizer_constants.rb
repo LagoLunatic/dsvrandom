@@ -71,6 +71,7 @@ SPAWNER_ENEMY_IDS = [
 STOLAS_UNFRIENDLY_ENEMY_IDS = [
   0x30, # Guillotiner bugs out and constantly teleports on top of the player before Stolas even summons him.
   0x4B, # Procel. Too many in a room and they start rendering strangely. That may also crash the game on real hardware (unconfirmed).
+  0x58, # Mud Demon. Too many in a room and they start rendering strangely. That may also crash the game on real hardware (unconfirmed).
 ]
 
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
