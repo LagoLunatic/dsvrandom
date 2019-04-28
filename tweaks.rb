@@ -389,6 +389,11 @@ module Tweaks
       end
     end
     
+    if GAME == "por"
+      # Allow using warp points to go between different area maps.
+      game.apply_armips_patch("por_inter-area_warps")
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
