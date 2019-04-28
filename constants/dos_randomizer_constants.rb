@@ -68,7 +68,10 @@ SPAWNER_ENEMY_IDS = [
   0x40, # Medusa Head
 ]
 
-STOLAS_UNFRIENDLY_ENEMY_IDS = [0x30] # Guillotiner bugs out and constantly teleports on top of the player before Stolas even summons him.
+STOLAS_UNFRIENDLY_ENEMY_IDS = [
+  0x30, # Guillotiner bugs out and constantly teleports on top of the player before Stolas even summons him.
+  0x4B, # Procel. Too many in a room and they start rendering strangely. That may also crash the game on real hardware (unconfirmed).
+]
 
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
   [0x73, 0x74, 0x75] # Remove Menace, Soma, and Dracula.
