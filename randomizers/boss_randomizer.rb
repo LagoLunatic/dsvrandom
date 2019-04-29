@@ -565,7 +565,7 @@ module BossRandomizer
       
       # TODO: doesn't play boss music
     when "The Creature"
-      boss_entity.var_a = 0 # Boss version, not the common enemy version
+      boss_entity.var_a = 1 # Boss version, not the common enemy version
     when "Werewolf"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       
