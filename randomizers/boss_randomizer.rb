@@ -500,6 +500,8 @@ module BossRandomizer
     when "Mummy Man"
       @boss_id_for_each_portrait[:portraitforgottencity] = new_boss_id
     when "Brauner"
+      @boss_id_inside_studio_portrait = new_boss_id
+      
       # Modify the entity hiders in Brauner's room that make the post-Brauner cutscene appear to check the new boss.
       entity_hider = game.entity_by_str("0B-00-00_04")
       entity_hider.subtype = new_boss_index

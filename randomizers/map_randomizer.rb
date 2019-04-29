@@ -223,6 +223,9 @@ module MapRandomizer
         # Update the white barrier to check Brauner's boss death flag instead of the misc flag set by the event you see in the stairway room.
         game.fs.load_overlay(88)
         game.fs.write(0x022E8878, [0xE590176C, 0xE2111902].pack("VV"))
+        # And then update the boss death flag checked in case the boss randomizer changed it to something besides Brauner.
+        boss_index = BOSS_ID_TO_BOSS_INDEX[@boss_id_inside_studio_portrait]
+        game.fs.replace_hardcoded_bit_constant(0x022E887C, boss_index)
       end
     end
     

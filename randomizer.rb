@@ -271,6 +271,8 @@ class Randomizer
         :portraitburntparadise,
         :portraitforgottencity,
       ]
+      
+      @boss_id_inside_studio_portrait = 0x93
     end
     
     if GAME == "por"
