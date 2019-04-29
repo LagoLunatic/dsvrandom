@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>725</width>
+    <width>800</width>
     <height>649</height>
    </rect>
   </property>
@@ -552,7 +552,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>675</width>
+            <width>750</width>
             <height>378</height>
            </rect>
           </property>
@@ -1077,9 +1077,29 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="reset_settings_to_default">
+       <property name="text">
+        <string>Reset All Settings to Default</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Number of seeds to generate:</string>
+        <string>Seeds to create:</string>
        </property>
       </widget>
      </item>

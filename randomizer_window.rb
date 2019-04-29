@@ -134,6 +134,7 @@ class RandomizerWindow < Qt::Dialog
   slots "generate_seed()"
   slots "randomize_n_seeds()"
   slots "open_about()"
+  slots "reset_settings_to_default()"
   slots "read_seed_info()"
   slots "experimental_enabled_changed(bool)"
   
@@ -143,6 +144,8 @@ class RandomizerWindow < Qt::Dialog
     @ui.setup_ui(self)
     
     initialize_difficulty_sliders()
+    
+    preserve_default_settings()
     
     load_settings()
     
@@ -163,6 +166,7 @@ class RandomizerWindow < Qt::Dialog
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize_n_seeds()"))
     connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
+    connect(@ui.reset_settings_to_default, SIGNAL("clicked()"), self, SLOT("reset_settings_to_default()"))
     
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
@@ -250,14 +254,11 @@ class RandomizerWindow < Qt::Dialog
     difficulty_level_options = DIFFICULTY_LEVELS[@settings[:difficulty_level]]
     if difficulty_level_options
       # Preset difficulty level.
-      @ui.difficulty_level.count.times do |i|
-        if @ui.difficulty_level.itemText(i) == @settings[:difficulty_level]
-          difficulty_level_changed(i)
-          break
-        end
-      end
-    elsif @settings[:difficulty_options]
+      difficulty_level_changed_by_name(@settings[:difficulty_level])
+    else
       # Custom difficulty.
+      difficulty_level_changed_by_name("Custom")
+      
       form_layout = @ui.scrollAreaWidgetContents.layout
       
       DIFFICULTY_RANGES.keys.each do |option_name|
@@ -274,9 +275,6 @@ class RandomizerWindow < Qt::Dialog
         line_edit = @difficulty_line_edit_widgets_by_name[option_name]
         line_edit.text = slider.true_value.to_s
       end
-    else
-      # First boot, default to easy difficulty.
-      difficulty_level_changed(1)
     end
   end
   
@@ -480,6 +478,15 @@ class RandomizerWindow < Qt::Dialog
       @ui.difficulty_level.setCurrentIndex(0)
       
       update_settings()
+    end
+  end
+  
+  def difficulty_level_changed_by_name(diff_name)
+    @ui.difficulty_level.count.times do |i|
+      if @ui.difficulty_level.itemText(i) == diff_name
+        difficulty_level_changed(i)
+        break
+      end
     end
   end
   
@@ -746,6 +753,41 @@ class RandomizerWindow < Qt::Dialog
     @about_dialog.windowIcon = self.windowIcon
     @about_dialog.show()
   end
+  
+  def preserve_default_settings
+    @default_settings = {}
+    OPTIONS.each do |option_name|
+      @default_settings[option_name] = @ui.send(option_name).checked
+    end
+    
+    @default_difficulty_level = "Normal"
+  end
+  
+  def reset_settings_to_default
+    any_setting_changed = false
+    OPTIONS.each do |option_name|
+      if @default_settings.key?(option_name)
+        default_value = @default_settings[option_name]
+        current_value = @ui.send(option_name).checked
+        if default_value != current_value
+          any_setting_changed = true
+        end
+        @ui.send(option_name).checked = default_value
+      end
+    end
+    
+    if @ui.difficulty_level.currentText != @default_difficulty_level
+      difficulty_level_changed_by_name(@default_difficulty_level)
+      any_setting_changed = true
+    end
+    
+    if !any_setting_changed
+      Qt::MessageBox.information(self,
+        "Settings already default",
+        "You already have all the default randomization settings."
+      )
+    end
+  end
 
   def keyPressEvent(event)
     if event.key() == Qt::Key_Return
@@ -809,15 +851,10 @@ class RandomizerWindow < Qt::Dialog
     difficulty_level_options = DIFFICULTY_LEVELS[difficulty]
     if difficulty_level_options
       # Preset difficulty level.
-      @ui.difficulty_level.count.times do |i|
-        if @ui.difficulty_level.itemText(i) == difficulty
-          difficulty_level_changed(i)
-          break
-        end
-      end
+      difficulty_level_changed_by_name(difficulty)
     elsif difficulty =~ /Custom/
       # Custom difficulty.
-      difficulty_level_changed(0)
+      difficulty_level_changed_by_name("Custom")
       
       custom_difficulty_options = {}
       on_difficulty_options = false
