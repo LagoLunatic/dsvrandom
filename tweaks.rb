@@ -862,6 +862,12 @@ module Tweaks
       game.apply_armips_patch("por_fix_the_creature_boss_death_flag")
     end
     
+    if GAME == "por"
+      # Make Speed Up's effect not run out after 60 seconds.
+      # Change conditional branch for the timer being above 0 into an unconditional branch.
+      game.fs.write(0x021EE19C, [0xEA000003].pack("V"))
+    end
+    
     if GAME == "dos"
       # When you walk over an item you already have 9 of, the game plays a sound effect every 0.5 seconds.
       # We change it to play once a second so it's less annoying.
