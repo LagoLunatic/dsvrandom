@@ -20,8 +20,13 @@ module StartingRoomRandomizer
       room_doors = filter_valid_doors_for_starting_door(room.doors)
       next if room_doors.empty?
       
-      # Limit to save rooms.
-      next unless room.entities.find{|e| e.is_save_point?}
+      if GAME == "dos"
+        # Limit to save rooms.
+        next unless room.entities.find{|e| e.is_save_point?}
+      else
+        # Limit to warp rooms.
+        next unless room.entities.find{|e| e.is_warp_point?}
+      end
       
       next if room.area.name.include?("Boss Rush")
       next if room.sector.name.include?("Boss Rush")
@@ -117,6 +122,10 @@ module StartingRoomRandomizer
     else
       game.set_starting_room(room.area_index, room.sector_index, room.room_index)
       game.set_starting_position(x_pos, y_pos)
+    end
+    
+    if GAME != "dos"
+      add_save_or_warp_to_room(room, :save)
     end
     
     @starting_room = room
