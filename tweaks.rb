@@ -857,6 +857,11 @@ module Tweaks
       game.apply_armips_patch("por_always_show_drop_percentages")
     end
     
+    if GAME == "por"
+      # Fix common enemy creature setting boss death flag.
+      game.apply_armips_patch("por_fix_the_creature_boss_death_flag")
+    end
+    
     if GAME == "dos"
       # When you walk over an item you already have 9 of, the game plays a sound effect every 0.5 seconds.
       # We change it to play once a second so it's less annoying.
