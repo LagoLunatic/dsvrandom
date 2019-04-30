@@ -2890,9 +2890,9 @@ Rooms:
   05-00-21:
     000-001: 
     000-002: 
-    001-000: double jump & puppet master | jumpglitch & puppet master | quad jump height
+    001-000: quad jump height # There's another way to do this with (double jump & puppet master | jumpglitch & puppet master), but it's not in logic because it's very precise.
     001-002: 
-    002-000: double jump & puppet master | jumpglitch & puppet master | quad jump height
+    002-000: quad jump height # There's another way to do this with (double jump & puppet master | jumpglitch & puppet master), but it's not in logic because it's very precise.
     002-001: 
   05-00-23:
     000-001: 
