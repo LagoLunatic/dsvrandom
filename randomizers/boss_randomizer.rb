@@ -522,6 +522,8 @@ module BossRandomizer
     when "Dullahan"
       boss_entity.var_b = 1 # Normal, not boss rush
     when "Behemoth"
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
+      
       boss_entity.var_b = 0 # Normal
       
       # TODO: Behemoth can be undodgeable without those jumpthrough platforms in the room, so add those
@@ -562,6 +564,7 @@ module BossRandomizer
       # TODO: doesn't play boss music
     when "Stella"
       boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
+      boss_entity.var_b = 0 # Boss rush.
       
       # TODO: doesn't play boss music
     when "The Creature"
