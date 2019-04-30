@@ -1,4 +1,56 @@
 
+DIFFICULTY_OPTION_PRETTY_NAMES = {
+  :item_stat_label                => "<b>Average Item Stats</b>",
+  :item_price_range               => "Item Price",
+  :weapon_attack_range            => "Weapon ATK",
+  :weapon_iframes_range           => "Weapon IFrames",
+  :armor_defense_range            => "Armor DEF",
+  :item_extra_stats_range         => "Other stats",
+  :restorative_amount_range       => "Restorative Amount",
+  :heart_restorative_amount_range => "Heart Repair Amount",
+  :ap_increase_amount_range       => "Attribute Point Boost Amount",
+  
+  :skill_stat_label               => "<b>Average Skill Stats</b>",
+  :skill_price_range              => "Subweapon/Spell Price",
+  :skill_dmg_range                => "Skill Damage Multiplier",
+  :crush_or_union_dmg_range       => "Dual Crush/Glyph Union Damage Mult",
+  :skill_iframes_range            => "Skill IFrames",
+  :subweapon_sp_to_master_range   => "Subweapon SP To Master",
+  :spell_charge_time_range        => "Spell Charge Time",
+  :skill_mana_cost_range          => "Skill Mana Cost",
+  :crush_mana_cost_range          => "Dual Crush Mana Cost",
+  :union_heart_cost_range         => "Glyph Union Heart Cost",
+  :skill_max_at_once_range        => "Skill Max-on-screen",
+  :glyph_attack_delay_range       => "Glyph Attack Delay",
+  
+  :drop_chances_label             => "<b>Average Enemy Drop Chances</b>",
+  :item_drop_chance_range         => "Item Drop Chance",
+  :skill_drop_chance_range        => "Soul/Glyph Drop Chance",
+  
+  :pickup_placement_weight_label  => "<b>Proportions of Pickup Types</b>",
+  :item_placement_weight          => "Item Placement Weight",
+  :soul_candle_placement_weight   => "Soul Candle Placement Weight (DoS)",
+  :por_skill_placement_weight     => "Skill Placement Weight (PoR)",
+  :glyph_placement_weight         => "Glyph Placement Weight (OoE)",
+  :max_up_placement_weight        => "Max Up Placement Weight",
+  :money_placement_weight         => "Money Placement Weight",
+  
+  :enemy_difficulty_label         => "<b>Enemy Placement Difficulty</b>",
+  :max_room_difficulty_mult       => "Max Room Total Attack Multiplier",
+  :max_enemy_difficulty_mult      => "Max Enemy Attack Difference Multiplier",
+  :enemy_id_preservation_exponent => "Enemy ID Number Difference Weighting",
+  
+  :enemy_stat_label               => "<b>Average Enemy Stats</b>",
+  :enemy_stat_mult_range          => "Common Enemy Stat Multiplier",
+  :enemy_num_weaknesses_range     => "Common Enemy # of Weaknesses",
+  :enemy_num_resistances_range    => "Common Enemy # of Resistances",
+  :boss_stat_mult_range           => "Boss Stat Multiplier",
+  :enemy_anim_speed_mult_range    => "Enemy Anim Speed Multiplier",
+  
+  :starting_room_label            => "<b>Starting Room Difficulty</b>",
+  :starting_room_max_difficulty   => "Max Average Attack of Starting Area",
+}
+
 DIFFICULTY_RANGES = {
   :item_price_range               => 100..15000,
   :weapon_attack_range            => 0..150,
