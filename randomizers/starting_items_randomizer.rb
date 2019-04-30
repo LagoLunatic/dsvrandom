@@ -1,17 +1,28 @@
 
 module StartingItemsRandomizer
-  def randomize_starting_items
+  def select_random_bonus_starting_items
+    num_bonus_items = @difficulty_settings[:num_bonus_starting_items].round
+    num_bonus_skills = @difficulty_settings[:num_bonus_starting_skills].round
     non_progress_items = all_non_progression_pickups & ITEM_GLOBAL_ID_RANGE.to_a
     non_progress_skills = all_non_progression_pickups & SKILL_GLOBAL_ID_RANGE.to_a
-    if GAME == "ooe"
-      # Need to give the player at least one free glyph, or they may not be able to open the glyph statue and get a weapon.
-      free_glyph_attack_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32]
-      starting_pickups = [free_glyph_attack_glyph_ids.sample(random: rng)]
+    
+    starting_pickups = []
+    starting_pickups += non_progress_items.sample(num_bonus_items, random: rng)
+    if GAME == "ooe" && num_bonus_skills > 0
+      # Need to give the player at least one free floating glyph, or they may not be able to open the glyph statue and get a weapon.
+      free_floating_glyph_attack_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32]
+      starting_pickups << free_floating_glyph_attack_glyph_ids.sample(random: rng)
+      
+      # Then for any remaining starting glyphs, put them in glyph statues.
+      num_bonus_skills -= 1
       non_progress_skills -= starting_pickups
-      starting_pickups += non_progress_items.sample(3, random: rng) + non_progress_skills.sample(2, random: rng)
-    else
-      starting_pickups = non_progress_items.sample(3, random: rng) + non_progress_skills.sample(3, random: rng)
     end
+    starting_pickups += non_progress_skills.sample(num_bonus_skills, random: rng)
+    
+    if starting_pickups.empty?
+      return
+    end
+    
     
     room = @starting_room
     @coll = RoomCollision.new(room, game.fs)

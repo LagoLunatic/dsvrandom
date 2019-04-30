@@ -896,11 +896,9 @@ class Randomizer
       options_completed += 7
     end
     
-    if options[:bonus_starting_items]
-      yield [options_completed, "Placing starting items..."]
-      reset_rng()
-      randomize_starting_items()
-    end
+    yield [options_completed, "Placing starting items..."]
+    reset_rng()
+    select_random_bonus_starting_items()
     
     if options[:randomize_player_sprites]
       yield [options_completed, "Randomizing player sprites..."]

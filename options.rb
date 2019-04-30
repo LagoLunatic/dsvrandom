@@ -32,7 +32,6 @@ OPTIONS = %i(
   randomize_boss_sprites
   
   enable_glitch_reqs
-  bonus_starting_items
   rebalance_enemies_in_room_rando
   
   scavenger_mode

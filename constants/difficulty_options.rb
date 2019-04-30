@@ -49,6 +49,10 @@ DIFFICULTY_OPTION_PRETTY_NAMES = {
   
   :starting_room_label            => "<b>Starting Room Difficulty</b>",
   :starting_room_max_difficulty   => "Max Average Attack of Starting Area",
+  
+  :bonus_starting_pickups_label   => "<b>Bonus Starting Items and Skills</b>",
+  :num_bonus_starting_items       => "Number of Bonus Items to Add to Start With",
+  :num_bonus_starting_skills      => "Number of Bonus Skills to Add to Start With",
 }
 
 DIFFICULTY_RANGES = {
@@ -94,6 +98,9 @@ DIFFICULTY_RANGES = {
   :enemy_anim_speed_mult_range    => 0.33..3.0,
   
   :starting_room_max_difficulty   => 15..75,
+  
+  :num_bonus_starting_items       => 0..5,
+  :num_bonus_starting_skills      => 0..5,
 }
 
 DIFFICULTY_LEVELS = {
@@ -140,6 +147,9 @@ DIFFICULTY_LEVELS = {
     :enemy_anim_speed_mult_range    => 0.8,
     
     :starting_room_max_difficulty   => 15,
+    
+    :num_bonus_starting_items       => 4,
+    :num_bonus_starting_skills      => 4,
   },
   
   "Normal" => {
@@ -185,6 +195,9 @@ DIFFICULTY_LEVELS = {
     :enemy_anim_speed_mult_range    => 0.9,
     
     :starting_room_max_difficulty   => 22,
+    
+    :num_bonus_starting_items       => 2,
+    :num_bonus_starting_skills      => 2,
   },
   
   "Hard" => {
@@ -230,5 +243,8 @@ DIFFICULTY_LEVELS = {
     :enemy_anim_speed_mult_range    => 1.3,
     
     :starting_room_max_difficulty   => 35,
+    
+    :num_bonus_starting_items       => 0,
+    :num_bonus_starting_skills      => 0,
   },
 }
