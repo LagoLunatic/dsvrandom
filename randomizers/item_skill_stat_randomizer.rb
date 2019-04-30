@@ -928,7 +928,7 @@ module ItemSkillStatRandomizer
     
     new_desc = ""
     
-    new_desc << "DMG: #{skill["DMG multiplier"]}"
+    new_desc << "Power: #{skill["DMG multiplier"]}"
     
     if GAME == "por"
       new_desc << ", MP: #{skill["Mana cost"]}"
