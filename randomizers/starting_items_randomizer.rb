@@ -60,7 +60,7 @@ module StartingItemsRandomizer
     entity.x_pos = @starting_x_pos
     entity.y_pos = @starting_y_pos
     
-    if (GAME == "dos" && (0x3D..0x41).include?(pickup_global_id)) || (GAME == "por" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id))
+    if (GAME == "dos" && MAGIC_SEAL_GLOBAL_ID_RANGE.include?(pickup_global_id)) || (GAME == "por" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id))
       @coll = RoomCollision.new(@starting_room, game.fs)
       floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
       entity.y_pos = floor_y - 0x18

@@ -749,7 +749,7 @@ module PickupRandomizer
       # Don't let soul candles be inside specific locations that can be broken without reaching them.
       locations -= checker.no_soul_locations
     end
-    if GAME == "dos" && (0x3D..0x41).include?(pickup_global_id)
+    if GAME == "dos" && MAGIC_SEAL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Magic seals can't be given by easter egg locations.
       locations -= checker.easter_egg_locations
     end
@@ -1400,7 +1400,7 @@ module PickupRandomizer
     if event_entity.subtype == 0x65 # Mina's Talisman
       item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
       
-      if (0x3D..0x41).include?(pickup_global_id)
+      if MAGIC_SEAL_GLOBAL_ID_RANGE.include?(pickup_global_id)
         # Magic seal. These need to call a different function to be properly given.
         
         seal_index = pickup_global_id - 0x3D
