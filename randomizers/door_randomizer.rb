@@ -910,13 +910,15 @@ module DoorRandomizer
         num_boss_doors_on_each_side = 2
       end
       
-      doors = boss_room.doors
-      if GAME == "dos" && boss_index == 7 # Gergoth
+      doors = boss_room.doors.dup
+      if GAME == "dos" && boss_room.room_str == "00-05-07" # Gergoth
         doors = doors[0..1] # Only do the top two doors in the tower.
+      else
+        # For most bosses, we update all left and right doors connected to the boss room.
+        doors.select!{|door| [:left, :right].include?(door.direction)}
       end
       
       doors.each do |door|
-        next unless [:left, :right].include?(door.direction)
         next if checker.inaccessible_doors.include?(door.door_str)
         
         dest_door = door.destination_door
@@ -945,7 +947,7 @@ module DoorRandomizer
             new_boss_door.x_pos += dup_boss_door_num*0x10
           end
           
-          new_boss_door.type = 2
+          new_boss_door.type = SPECIAL_OBJECT_ENTITY_TYPE
           new_boss_door.subtype = BOSS_DOOR_SUBTYPE
           new_boss_door.var_a = 0
           new_boss_door.var_b = boss_index
@@ -967,6 +969,26 @@ module DoorRandomizer
           dest_room.entities.insert(index_to_insert_at, new_boss_door)
           dest_room.write_entities_to_rom()
         end
+      end
+    end
+    
+    
+    if GAME == "por"
+      # Handle fixing Legion's room's doors.
+      # The left, right, and down doors don't actually trigger the fight, so no need to put boss doors there.
+      # The up door does trigger the fight, but we can't necessarily put a boss door there, only if the room above Legion is the vanilla room that would normally be there. And in that case, we just put the vanilla boss door object back how it was.
+      boss_room = game.room_by_str("05-02-0C")
+      boss_id = boss_room.entities.find{|e| e.is_boss?}.subtype
+      boss_index = BOSS_ID_TO_BOSS_INDEX[boss_id] || 0
+      
+      up_door = boss_room.doors[0]
+      if up_door.destination_room.room_str == "05-02-04"
+        orig_outside_boss_door = game.entity_by_str("05-02-04_04")
+        orig_outside_boss_door.type = SPECIAL_OBJECT_ENTITY_TYPE
+        orig_outside_boss_door.subtype = BOSS_DOOR_SUBTYPE
+        orig_outside_boss_door.var_a = 0
+        orig_outside_boss_door.var_b = boss_index
+        orig_outside_boss_door.write_to_rom()
       end
     end
     
