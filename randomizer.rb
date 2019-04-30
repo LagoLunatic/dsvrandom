@@ -734,6 +734,15 @@ class Randomizer
           bosses_in_room = room.entities.select do |e|
             e.is_enemy? && ORIGINAL_BOSS_IDS_ORDER.include?(e.subtype)
           end
+          
+          if GAME == "por"
+            # Don't count the scripted chase Behemoth as a boss.
+            bosses_in_room.reject!{|e| e.subtype == 0x94 && e.var_a == 0}
+          end
+          if GAME == "por"
+            # Don't count common enemy The Creature as a boss.
+            bosses_in_room.reject!{|e| e.subtype == 0x8B && e.var_b == 2}
+          end
           if GAME == "ooe"
             # Don't count common enemy Giant Skeleton as a boss.
             bosses_in_room.reject!{|e| e.subtype == 0x6B && e.var_a != 1}
