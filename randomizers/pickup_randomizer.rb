@@ -792,6 +792,9 @@ module PickupRandomizer
         
         "05-01-13_00", # This location overlaps a ring of flaming skulls that would damage the player on return.
         "06-01-0D_02", # This location overlaps a ring of flaming skulls that would damage the player on return.
+        
+        "03-00-12_00", # Enemies overlap this location.
+        "04-00-12_00", # Enemies overlap this location.
       ]
       
       locations.select! do |location|
