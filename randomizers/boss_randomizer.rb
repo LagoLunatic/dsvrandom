@@ -155,7 +155,7 @@ module BossRandomizer
       queued_dna_changes[new_boss_id]["Soul"] = old_boss["Soul"]
       if old_boss["Soul"] == 0xFF
         # Some bosses such as Flying Armor won't open the boss doors until the player gets their soul drop.
-        # So we have to make sure no bosses have no soul drop (FF).
+        # So we have to make sure no bosses have no soul drop (FF). Just give them a non-progress soul so they drop something.
         non_progression_souls = SKILL_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
         queued_dna_changes[new_boss_id]["Soul"] = non_progression_souls.sample(random: rng) - SKILL_GLOBAL_ID_RANGE.begin
       end
@@ -214,6 +214,11 @@ module BossRandomizer
     case new_boss.name
     when "Legion"
       if boss_entity.room.width < 2
+        return false
+      end
+    when "Dagon"
+      if old_boss.name == "Legion"
+        # Legion's strange room won't work with Dagon.
         return false
       end
     when "Medusa"
@@ -365,6 +370,11 @@ module BossRandomizer
         game.fs.write(0x02305374, [boss_entity.x_pos+0x68, boss_entity.y_pos+0x38+0x17].pack("vv"))
         game.fs.write(0x02305378, [boss_entity.x_pos-0x68, boss_entity.y_pos-0x38+0x17].pack("vv"))
         game.fs.write(0x0230537C, [boss_entity.x_pos-0x68, boss_entity.y_pos+0x38+0x17].pack("vv"))
+        # And the positions of the blood created when Soma is damaged by the iron maidens.
+        game.fs.write(0x02305390, [boss_entity.x_pos+0x68, boss_entity.y_pos-0x38+0x14].pack("vv"))
+        game.fs.write(0x02305394, [boss_entity.x_pos+0x68, boss_entity.y_pos+0x38+0x14].pack("vv"))
+        game.fs.write(0x02305398, [boss_entity.x_pos-0x68, boss_entity.y_pos-0x38+0x14].pack("vv"))
+        game.fs.write(0x0230539C, [boss_entity.x_pos-0x68, boss_entity.y_pos+0x38+0x14].pack("vv"))
         
         # And remove the code that usually sets the minimum screen scrolling position to hide the missing left side of the screen.
         game.fs.write(0x022FFC1C, [0xE1A00000].pack("V")) # nop (for when he's alive)
