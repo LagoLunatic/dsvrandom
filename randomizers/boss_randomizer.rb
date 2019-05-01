@@ -221,6 +221,11 @@ module BossRandomizer
         # Legion's strange room won't work with Dagon.
         return false
       end
+    when "Werewolf"
+      if old_boss.name == "Brauner"
+        # Brauner's room uses up too many GFX pages because of the portrait to the throne room, so Werewolf can't load in.
+        return false
+      end
     when "Medusa"
       if boss_entity.room.width < 2
         return false
