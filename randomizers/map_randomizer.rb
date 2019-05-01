@@ -242,12 +242,6 @@ module MapRandomizer
   def add_extra_helper_rooms
     case GAME
     when "por"
-      sector = game.areas[0].sectors[9]
-      sector.add_new_room()
-      room = sector.rooms[-1]
-      filename = "./dsvrandom/roomedits/por_map_rando_00-09-04.tmx"
-      tiled.read(filename, room)
-      
       # Add two save rooms to a Nation of Fools sector that originally had no save rooms.
       sector = game.areas[5].sectors[1]
       filename = "./dsvrandom/roomedits/por_map_rando_05-01_new_save.tmx"
