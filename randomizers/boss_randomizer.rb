@@ -313,6 +313,7 @@ module BossRandomizer
     case new_boss.name
     when "Flying Armor"
       boss_entity.var_a = 0 # Boss rush
+      boss_entity.var_b = 0 # Boss rush
       
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0x50
@@ -320,6 +321,7 @@ module BossRandomizer
       # Defaults to right-facing Balore.
       # But Balore's code has been modified so that he will face left and reposition himself if the player comes from the left.
       boss_entity.var_a = 1
+      boss_entity.var_b = 0
       boss_entity.x_pos = 0x10
       boss_entity.y_pos = 0xB0
       
@@ -328,15 +330,19 @@ module BossRandomizer
         boss_entity.x_pos += 0x90
       end
     when "Malphas"
+      boss_entity.var_a = 0
+      boss_entity.var_b = 0 # Normal
+      
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
-      boss_entity.var_b = 0
     when "Dmitrii"
       boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
-    when "Dario"
       boss_entity.var_b = 0
+    when "Dario"
+      boss_entity.var_a = 0
+      boss_entity.var_b = 0 # Normal (not with Aguni)
     when "Puppet Master"
-      # Regular Puppet Master.
-      boss_entity.var_a = 1
+      boss_entity.var_a = 1 # Normal
+      boss_entity.var_b = 0
       
       if old_boss.name == "Puppet Master"
         # Puppet Master's in his original room.
@@ -388,6 +394,7 @@ module BossRandomizer
         # Set Gergoth to boss rush mode.
         boss_entity.var_a = 0
       end
+      boss_entity.var_b = 0
     when "Zephyr"
       # Center him in the room.
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
@@ -399,21 +406,24 @@ module BossRandomizer
         # Normal Zephyr, with the cutscene.
         boss_entity.var_a = 1
       end
+      boss_entity.var_b = 0
     when "Bat Company"
-      
+      boss_entity.var_a = 1 # Normal
+      boss_entity.var_b = 0
     when "Paranoia"
+      boss_entity.var_a = 2 # Normal
+      boss_entity.var_b = 0
+      
       # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
       # This combination of x and y seems to be one of the least buggy.
       boss_entity.x_pos = 0x1F
       boss_entity.y_pos = 0x80
-      
-      boss_entity.var_a = 2
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
     when "Death"
-      boss_entity.var_a = 1
-      boss_entity.var_b = 1
+      boss_entity.var_a = 1 # Normal
+      boss_entity.var_b = 1 # Normal
       
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0x50
@@ -428,11 +438,12 @@ module BossRandomizer
         end
       end
     when "Abaddon"
+      boss_entity.var_a = 1 # Normal
+      boss_entity.var_b = 0
+      
       # Abaddon's locusts always appear on the top left screen, so make sure he's there as well.
       boss_entity.x_pos = 0x80
       boss_entity.y_pos = 0xB0
-    else
-      boss_entity.var_a = 1
     end
   end
   
@@ -521,35 +532,45 @@ module BossRandomizer
     
     case new_boss.name
     when "Dullahan"
-      boss_entity.var_b = 1 # Normal, not boss rush
+      boss_entity.var_a = 1 # Normal with intro, not boss rush
+      boss_entity.var_b = 0
     when "Behemoth"
-      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
-      
+      boss_entity.var_a = 0
       boss_entity.var_b = 0 # Normal
+      
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       
       # TODO: Behemoth can be undodgeable without those jumpthrough platforms in the room, so add those
     when "Keremet"
+      boss_entity.var_a = 1 # Normal
+      boss_entity.var_b = 0
+      
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
     when "Astarte"
+      boss_entity.var_a = 0
+      boss_entity.var_b = 0
+      
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
     when "Legion"
       if old_boss.name == "Legion"
-        boss_entity.var_b = 1 # Normal
+        boss_entity.var_a = 1 # Normal
         
         boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
         boss_entity.y_pos = 0x150
       else
-        boss_entity.var_b = 0 # Boss rush
+        boss_entity.var_a = 0 # Boss rush
         
         boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
         boss_entity.y_pos = 0xB0
         
         # TODO: doesn't play boss music
       end
+      boss_entity.var_b = 0
     when "Dagon"
-      boss_entity.var_b = 1 # Normal, with intro
+      boss_entity.var_a = 1 # Normal, with intro
+      boss_entity.var_b = 0
       
       if boss_entity.room.height == 1
         # Dagon's water level maximum would normally be at the Y pos (0x48*room_height).
@@ -570,11 +591,16 @@ module BossRandomizer
       # TODO: doesn't play boss music
     when "The Creature"
       boss_entity.var_a = 1 # Boss version, not the common enemy version
+      boss_entity.var_b = 0
     when "Werewolf"
-      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
-      
       boss_entity.var_a = 1 # Normal version with intro, not boss rush. Stays dead when boss death flag is set.
+      boss_entity.var_b = 0
+      
+      boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
     when "Mummy Man"
+      boss_entity.var_a = 1 # Normal version with intro.
+      boss_entity.var_b = 0
+      
       boss_entity.y_pos = boss_entity.room.height * SCREEN_HEIGHT_IN_PIXELS - 0x2C
     when "Brauner"
       boss_entity.var_a = 0 # Boss rush Brauner, doesn't try to reload the room when he dies.
