@@ -307,6 +307,8 @@ module BossRandomizer
     
     case new_boss.name
     when "Flying Armor"
+      boss_entity.var_a = 0 # Boss rush
+      
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0x50
     when "Balore"
@@ -325,13 +327,8 @@ module BossRandomizer
       boss_entity.var_b = 0
     when "Dmitrii"
       boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
-      
-      # TODO: he doesn't set boss music properly.
-      # to get that to work, make a new func called PlaySongOverrideBGM which calls PlaySong and then also sets bit 00040000 in bitfield 020F6DFC. replace both of dmitrii's PlaySong calls with this new func.
     when "Dario"
       boss_entity.var_b = 0
-      
-      # TODO: he doesn't set boss music at all.
     when "Puppet Master"
       # Regular Puppet Master.
       boss_entity.var_a = 1
@@ -388,8 +385,6 @@ module BossRandomizer
       if boss_entity.room.width < 2
         # Small room, so we need boss rush Zephyr. Normal Zephyr's intro cutscene doesn't work unless the room is 2 screens tall or more.
         boss_entity.var_a = 0
-        
-        # TODO: he doesn't set boss music at all.
       else
         # Normal Zephyr, with the cutscene.
         boss_entity.var_a = 1
@@ -406,8 +401,6 @@ module BossRandomizer
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
-      
-      # TODO: he doesn't set boss music at all.
     when "Death"
       boss_entity.var_a = 1
       boss_entity.var_b = 1
@@ -424,8 +417,6 @@ module BossRandomizer
           entity.write_to_rom()
         end
       end
-      
-      # TODO: he doesn't set boss music at all.
     when "Abaddon"
       # Abaddon's locusts always appear on the top left screen, so make sure he's there as well.
       boss_entity.x_pos = 0x80
