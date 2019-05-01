@@ -694,6 +694,7 @@ module MapRandomizer
                 
                 valid_room_positions << {
                   room: room,
+                  dest_room: dest_room,
                   x: x_to_place_room_at,
                   y: y_to_place_room_at,
                   inside_door_str_used_to_attach: door.door_str,
@@ -727,25 +728,40 @@ module MapRandomizer
         if placement_mode == :placing_skeleton
           # Only placing the skeleton of the sector for now.
           
+          # First prioritize placing save/warp rooms in places where there haven't been any saves/warps for a while.
           possible_room_positions = valid_room_positions.select do |room_position|
             room = room_position[:room]
-            if @transition_rooms.include?(room)
-              true
-            elsif checker.progress_important_rooms.include?(room) && room_position[:diff_in_num_spots] >= 0 # Progress rooms that aren't dead ends.
-              true
-            elsif room_position[:diff_in_num_spots] >= 1
-              true
-            elsif room.entities.find{|e| e.is_save_point?} && room_position[:diff_in_num_spots] >= 0 # Save rooms with doors on both sides.
-              true
+            if room.entities.find{|e| e.is_save_point?} && room_position[:diff_in_num_spots] >= 0 # Save rooms with doors on both sides.
+              save_dist = get_distance_to_save_room(room_position[:dest_room])
+              save_dist >= 8
             elsif room.entities.find{|e| e.is_warp_point?} && room_position[:diff_in_num_spots] >= 0 # Warp rooms with doors on both sides.
-              true
+              warp_dist = get_distance_to_warp_room(room_position[:dest_room])
+              warp_dist >= 8
             else
               false
             end
           end
           
+          possible_room_positions = []
+          
           if possible_room_positions.empty?
-            # If there are no rooms that increase the number of available doors or progress important rooms that keep the number of doors the same, use a normal room that keeps the number of doors the same.
+            # Then prioritize progress rooms, rooms that increase the number of available doors, and transition rooms.
+            possible_room_positions = valid_room_positions.select do |room_position|
+              room = room_position[:room]
+              if @transition_rooms.include?(room)
+                true
+              elsif checker.progress_important_rooms.include?(room) && room_position[:diff_in_num_spots] >= 0 # Progress rooms that aren't dead ends.
+                true
+              elsif room_position[:diff_in_num_spots] >= 1
+                true
+              else
+                false
+              end
+            end
+          end
+          
+          if possible_room_positions.empty?
+            # Then use rooms that keeps the number of doors the same.
             possible_room_positions = valid_room_positions.select do |room_position|
               if room_position[:diff_in_num_spots] == 0
                 true
@@ -2144,5 +2160,53 @@ module MapRandomizer
     end
     
     return valid_positions
+  end
+  
+  def get_distance_to_room_type(base_room, room_type=:save_room)
+    checked_rooms = []
+    accessible_unchecked_rooms = [{room: base_room, degree_of_separation: 0}]
+    min_distance_to_destination = 9999
+    while true
+      if accessible_unchecked_rooms.empty?
+        break
+      end
+      
+      curr_room_hash = accessible_unchecked_rooms.shift()
+      curr_room = curr_room_hash[:room]
+      curr_degree_of_separation = curr_room_hash[:degree_of_separation]
+      
+      save_point = curr_room.entities.find{|e| e.is_special_object? && e.subtype == SAVE_POINT_SUBTYPE}
+      warp_point = curr_room.entities.find{|e| e.is_special_object? && e.subtype == WARP_POINT_SUBTYPE}
+      if save_point && room_type == :save_room
+        if min_distance_to_destination > curr_degree_of_separation
+          min_distance_to_destination = curr_degree_of_separation
+        end
+      elsif warp_point && room_type == :warp_room
+        if min_distance_to_destination > curr_degree_of_separation
+          min_distance_to_destination = curr_degree_of_separation
+        end
+      end
+      
+      curr_room.doors.each do |door|
+        next if door.destination_room_metadata_ram_pointer == 0 # Door dummied out by the map rando
+        
+        dest_room = door.destination_room
+        if !checked_rooms.include?(dest_room)
+          accessible_unchecked_rooms << {room: door.destination_room, degree_of_separation: curr_degree_of_separation+1}
+        end
+      end
+      
+      checked_rooms << curr_room
+    end
+    
+    return min_distance_to_destination
+  end
+  
+  def get_distance_to_save_room(base_room)
+    return get_distance_to_room_type(base_room, room_type=:save_room)
+  end
+  
+  def get_distance_to_warp_room(base_room)
+    return get_distance_to_room_type(base_room, room_type=:warp_room)
   end
 end
