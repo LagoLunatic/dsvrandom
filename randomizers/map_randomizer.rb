@@ -247,6 +247,26 @@ module MapRandomizer
       room = sector.rooms[-1]
       filename = "./dsvrandom/roomedits/por_map_rando_00-09-04.tmx"
       tiled.read(filename, room)
+      
+      # Add two save rooms to a Nation of Fools sector that originally had no save rooms.
+      sector = game.areas[5].sectors[1]
+      filename = "./dsvrandom/roomedits/por_map_rando_05-01_new_save.tmx"
+      sector.add_new_room()
+      room = sector.rooms[-1]
+      tiled.read(filename, room)
+      sector.add_new_room()
+      room = sector.rooms[-1]
+      tiled.read(filename, room)
+      
+      # Add two save rooms to a Burnt Paradise sector that originally had no save rooms.
+      sector = game.areas[6].sectors[1]
+      filename = "./dsvrandom/roomedits/por_map_rando_06-01_new_save.tmx"
+      sector.add_new_room()
+      room = sector.rooms[-1]
+      tiled.read(filename, room)
+      sector.add_new_room()
+      room = sector.rooms[-1]
+      tiled.read(filename, room)
     end
   end
   

@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="16" tileheight="16" nextobjectid="1">
+  <properties>
+    <property name="map_x" value="00"/>
+    <property name="map_y" value="00"/>
+    <property name="gfx_list_pointer" value="020EB5D0"/>
+    <property name="palette_wrapper_pointer" value="020EB5B8"/>
+    <property name="palette_page_index" value="01"/>
+  </properties>
+  <tileset firstgid="1" name="022EB820-022EC81C_020EB5B8-01_020EB5D0" tilewidth="16" tileheight="16">
+    <image source="./Tilesets/022EB820-022EC81C_020EB5B8-01_020EB5D0" width="256" height="1024"/>
+  </tileset>
+  <layer name="layer 3" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="1F"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="00"/>
+      <property name="tileset" value="022EB820"/>
+      <property name="collision_tileset" value="022EC81C"/>
+    </properties>
+    <data encoding="csv">
+929,930,931,932,933,934,935,936,2147484584,2147484583,2147484582,2147484581,2147484580,2147484579,2147484578,2147484577,
+945,946,947,948,949,950,951,952,2147484600,2147484599,2147484598,2147484597,2147484596,2147484595,2147484594,2147484593,
+961,962,963,964,965,966,967,968,2147484616,2147484615,2147484614,2147484613,2147484612,2147484611,2147484610,2147484609,
+977,978,979,980,981,982,984,984,984,984,2147484630,2147484629,2147484628,2147484627,2147484626,2147484625,
+993,994,995,996,984,984,984,984,984,984,984,984,2147484644,2147484643,2147484642,2147484641,
+1009,1010,1011,1012,984,984,984,984,984,984,984,984,2147484660,2147484659,2147484658,2147484657,
+1073742833,1073742834,1073742835,1073742836,984,984,984,984,984,984,984,984,3221226484,3221226483,3221226482,3221226481,
+1073742817,1073742818,1073742819,1073742820,984,984,984,984,984,984,984,984,3221226468,3221226467,3221226466,3221226465,
+1073742801,1073742802,1073742803,1073742804,1073742805,1073742806,984,984,984,984,3221226454,3221226453,3221226452,3221226451,3221226450,3221226449,
+1073742785,1073742786,1073742787,1073742788,1073742789,1073742790,1073742791,1073742792,3221226440,3221226439,3221226438,3221226437,3221226436,3221226435,3221226434,3221226433,
+1073742769,1073742770,1073742771,1073742772,1073742773,1073742774,1073742775,1073742776,3221226424,3221226423,3221226422,3221226421,3221226420,3221226419,3221226418,3221226417,
+1073742753,1073742754,1073742755,1073742756,1073742757,1073742758,1073742759,1073742760,3221226408,3221226407,3221226406,3221226405,3221226404,3221226403,3221226402,3221226401
+</data>
+  </layer>
+  <layer name="layer 2" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="1C"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="00"/>
+      <property name="tileset" value="022EB820"/>
+      <property name="collision_tileset" value="022EC81C"/>
+    </properties>
+    <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+721,0,0,0,725,726,727,0,0,730,731,732,733,734,735,736,
+737,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,
+753,754,755,756,757,758,759,760,761,762,763,764,765,766,767,768,
+769,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,
+785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,
+801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,
+817,818,819,820,821,822,823,824,825,826,827,828,829,830,831,832,
+833,834,835,836,837,838,839,840,841,842,843,844,845,846,847,848,
+849,850,851,852,853,854,855,856,857,858,859,860,861,862,863,864,
+865,866,867,868,869,870,869,869,869,874,869,876,877,878,879,869,
+869,869,869,869,869,869,869,869,869,869,869,869,869,869,869,869
+</data>
+  </layer>
+  <layer name="layer 1" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="1B"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="00"/>
+      <property name="tileset" value="022EB820"/>
+      <property name="collision_tileset" value="022EC81C"/>
+    </properties>
+    <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+  </layer>
+  <layer name="layer 0" width="16" height="12" opacity="1.0">
+    <properties>
+      <property name="layer_width" value="01"/>
+      <property name="layer_height" value="01"/>
+      <property name="z_index" value="16"/>
+      <property name="colors_per_palette" value="10"/>
+      <property name="main_gfx_page_index" value="00"/>
+      <property name="scroll_mode" value="00"/>
+      <property name="tileset" value="022EB820"/>
+      <property name="collision_tileset" value="022EC81C"/>
+    </properties>
+    <data encoding="csv">
+1073741878,1073741879,389,390,391,392,392,391,392,391,391,392,2147484038,2147484037,3221225527,3221225526,
+3221226084,3221226083,0,0,0,0,0,0,0,0,0,0,0,0,1073742435,1073742436,
+3221226098,3221226097,0,0,0,0,0,0,0,0,0,0,0,0,1073742449,1073742450,
+3221226082,3221226081,0,0,0,0,0,0,0,0,0,0,0,0,1073742433,1073742434,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+3221225569,2147483739,2147483738,2147483737,0,0,0,0,0,0,0,0,89,90,91,1073741921,
+3221225553,2147483755,2147483754,2147483753,2147483738,2147483737,0,0,0,0,89,90,105,106,107,1073741905,
+3221225537,0,0,2147483755,2147483754,2147483753,558,559,558,559,105,106,107,0,0,1073741889,
+3221225521,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1073741873
+</data>
+  </layer>
+  <objectgroup name="Doors" color="purple">
+    <object id="1" x="-256" y="0" width="256" height="192">
+      <properties>
+        <property name="door_ram_pointer" value="02306364"/>
+        <property name="destination_room" value="020EB690"/>
+        <property name="dest_x" value="0000"/>
+        <property name="dest_y" value="0000"/>
+        <property name="dest_x_2" value="0000"/>
+        <property name="dest_y_2" value="0000"/>
+      </properties>
+    </object>
+    <object id="2" x="256" y="0" width="256" height="192">
+      <properties>
+        <property name="door_ram_pointer" value="02306374"/>
+        <property name="destination_room" value="020EB690"/>
+        <property name="dest_x" value="0000"/>
+        <property name="dest_y" value="0000"/>
+        <property name="dest_x_2" value="0000"/>
+        <property name="dest_y_2" value="0000"/>
+      </properties>
+    </object>
+  </objectgroup>
+  <objectgroup name="Entities">
+    <object id="1" x="128" y="160">
+      <properties>
+        <property name="entity_ram_pointer" value="0230634C"/>
+        <property name="05 (unique_id)" value="00"/>
+        <property name="06 (type)" value="02"/>
+        <property name="07 (subtype)" value="1D"/>
+        <property name="08" value="00"/>
+        <property name="09 (var_a)" value="0000"/>
+        <property name="11 (var_b)" value="0000"/>
+      </properties>
+    </object>
+  </objectgroup>
+</map>
