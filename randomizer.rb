@@ -657,11 +657,11 @@ class Randomizer
       case GAME
       when "dos"
         # If the player can't access the drawbridge room give them Magic Seal 1.
-        accessible_doors = checker.get_accessible_doors()
-        if !accessible_doors.include?("00-00-15_000")
-          #add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
-          # (Commented out because room rando unlocks all boss doors.)
-        end
+        # (Commented out because room rando unlocks all boss doors.)
+        #accessible_doors = checker.get_accessible_doors()
+        #if !accessible_doors.include?("00-00-15_000")
+        #  add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
+        #end
       when "por"
         # Always start with Lizard Tail, Call Cube, Skill Cube, and possibly Change Cube.
         # Even if the player technically could reach the vanilla location, they could be very far away on some seeds.
