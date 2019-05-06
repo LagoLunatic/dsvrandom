@@ -716,6 +716,11 @@ module EnemyRandomizer
         return :redo
       end
     when "Flying Humanoid"
+      if !@unplaced_enemy_ids.include?(enemy_dna.enemy_id)
+        # Don't allow more than one accessible Flying Humanoid in the whole game, like vanilla.
+        return :redo
+      end
+      
       # Don't let Flying Humanoid in large rooms. His hitbox is only on the upper left screen, and we don't want them to be disjointed.
       if enemy.room.width > 1 || enemy.room.height > 1
         return :redo
@@ -744,6 +749,11 @@ module EnemyRandomizer
       room.entities << searchlight
       room.write_entities_to_rom()
     when "Yeti"
+      if !@unplaced_enemy_ids.include?(enemy_dna.enemy_id)
+        # Don't allow more than one accessible Yeti in the whole game, like vanilla.
+        return :redo
+      end
+      
       if enemy.room.width < 2
         # The Yeti will appear off the right edge of the screen if the room isn't wide enough.
         return :redo
