@@ -629,7 +629,7 @@
              <string>Updates all weapon, armor, and skill descriptions to indicate what their randomized attributes are.</string>
             </property>
             <property name="text">
-             <string>Revise Item Descriptions</string>
+             <string>Revise item descriptions</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -733,7 +733,7 @@
              <string>Makes the map in DoS look like the map in PoR and OoE - doors have a hole in them and the colors have better contrast.</string>
             </property>
             <property name="text">
-             <string>New Style Map</string>
+             <string>New style map</string>
             </property>
            </widget>
           </item>
