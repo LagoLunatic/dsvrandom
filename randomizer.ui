@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>649</height>
+    <width>820</width>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,6 +118,20 @@
              </widget>
             </item>
             <item>
+             <widget class="QCheckBox" name="randomize_world_map_exits">
+              <property name="toolTip">
+               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
+              </property>
+              <property name="text">
+               <string>World Map Exits</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
              <widget class="QCheckBox" name="randomize_red_walls">
               <property name="toolTip">
                <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
@@ -127,10 +141,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_15">
             <item>
              <widget class="QCheckBox" name="randomize_portraits">
               <property name="toolTip">
@@ -157,9 +167,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QWidget" name="widget" native="true"/>
-            </item>
            </layout>
           </item>
           <item>
@@ -178,6 +185,16 @@
              </widget>
             </item>
             <item>
+             <widget class="QCheckBox" name="randomize_bosses">
+              <property name="toolTip">
+               <string>Randomizes which bosses appear where.</string>
+              </property>
+              <property name="text">
+               <string>Boss Locations</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QCheckBox" name="randomize_enemy_drops">
               <property name="toolTip">
                <string>Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
@@ -190,6 +207,10 @@
               </property>
              </widget>
             </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_stats">
               <property name="toolTip">
@@ -200,10 +221,6 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
              <widget class="QCheckBox" name="randomize_enemy_anim_speed">
               <property name="toolTip">
@@ -223,9 +240,6 @@
                <string>Enemy Tolerances</string>
               </property>
              </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="widget_2" native="true"/>
             </item>
            </layout>
           </item>
@@ -354,7 +368,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QWidget" name="widget_3" native="true"/>
+             <widget class="QWidget" name="widget" native="true"/>
             </item>
            </layout>
           </item>
@@ -379,6 +393,9 @@
                <string>Area Connections (Not map-friendly)</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_2" native="true"/>
             </item>
            </layout>
           </item>
@@ -410,30 +427,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="randomize_bosses">
-              <property name="toolTip">
-               <string>Randomizes which bosses appear where.</string>
-              </property>
-              <property name="text">
-               <string>Boss Locations</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_world_map_exits">
-              <property name="toolTip">
-               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
-              </property>
-              <property name="text">
-               <string>World Map Exits</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
              <widget class="QCheckBox" name="randomize_enemy_sprites">
               <property name="toolTip">
                <string>Randomizes the graphics of non-boss enemies.</string>
@@ -453,13 +446,9 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QWidget" name="widget_4" native="true"/>
-            </item>
            </layout>
           </item>
          </layout>
-         <zorder></zorder>
          <zorder></zorder>
         </widget>
        </item>
@@ -542,8 +531,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>750</width>
-            <height>378</height>
+            <width>770</width>
+            <height>349</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -1192,10 +1181,12 @@
   <tabstop>generate_seed_button</tabstop>
   <tabstop>randomize_pickups</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
+  <tabstop>randomize_world_map_exits</tabstop>
   <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_enemies</tabstop>
+  <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>randomize_enemy_anim_speed</tabstop>
@@ -1215,9 +1206,8 @@
   <tabstop>randomize_area_connections</tabstop>
   <tabstop>experimental_options_enabled</tabstop>
   <tabstop>randomize_players</tabstop>
-  <tabstop>randomize_bosses</tabstop>
-  <tabstop>randomize_world_map_exits</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
+  <tabstop>randomize_boss_sprites</tabstop>
   <tabstop>about_button</tabstop>
   <tabstop>num_seeds_to_create</tabstop>
   <tabstop>randomize_button</tabstop>

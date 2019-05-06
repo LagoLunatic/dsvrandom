@@ -2,23 +2,25 @@
 OPTIONS = %i(
   randomize_pickups
   randomize_boss_souls
+  randomize_world_map_exits
+  randomize_red_walls
   randomize_portraits
   randomize_villagers
   randomize_enemies
+  randomize_bosses
   randomize_enemy_drops
   randomize_enemy_stats
   randomize_enemy_anim_speed
   randomize_enemy_tolerances
-  randomize_equipment_stats
   randomize_consumable_behavior
   randomize_weapon_behavior
-  randomize_skill_stats
   randomize_skill_behavior
+  randomize_equipment_stats
+  randomize_skill_stats
   randomize_weapon_and_skill_elements
   randomize_shop
   randomize_wooden_chests
   randomize_weapon_synths
-  randomize_red_walls
   randomize_rooms_map_friendly
   randomize_starting_room
   randomize_room_connections
@@ -26,8 +28,6 @@ OPTIONS = %i(
   
   experimental_options_enabled
   randomize_players
-  randomize_bosses
-  randomize_world_map_exits
   randomize_enemy_sprites
   randomize_boss_sprites
   
