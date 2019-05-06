@@ -662,6 +662,8 @@ class RandomizerWindow < Qt::Dialog
       any_setting_changed = true
     end
     
+    ensure_valid_combination_of_options()
+    
     if !any_setting_changed
       Qt::MessageBox.information(self,
         "Settings already default",
