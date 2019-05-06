@@ -1,6 +1,6 @@
 
 require_relative 'ui_randomizer'
-require_relative 'options'
+require_relative 'constants/options'
 require_relative 'randomizer'
 
 class RandomizerWindow < Qt::Dialog
