@@ -402,8 +402,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>770</width>
-            <height>358</height>
+            <width>57</width>
+            <height>22</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -514,13 +514,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="always_start_with_rare_ring">
-            <property name="text">
-             <string>Always start with Rare Ring</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="unlock_boss_doors">
             <property name="text">
@@ -532,23 +525,20 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QCheckBox" name="add_magical_tickets">
+           <widget class="QCheckBox" name="always_start_with_rare_ring">
             <property name="text">
-             <string>Add Magical Tickets</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Always start with Rare Ring</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="1" column="2">
            <widget class="QCheckBox" name="menace_to_somacula">
             <property name="text">
              <string>Replace Menace</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="2" column="0">
            <widget class="QCheckBox" name="dos_new_style_map">
             <property name="text">
              <string>New style map</string>
@@ -1002,7 +992,6 @@
   <tabstop>no_touch_screen</tabstop>
   <tabstop>unlock_boss_doors</tabstop>
   <tabstop>remove_slot_machines</tabstop>
-  <tabstop>add_magical_tickets</tabstop>
   <tabstop>always_start_with_rare_ring</tabstop>
   <tabstop>menace_to_somacula</tabstop>
   <tabstop>dos_new_style_map</tabstop>

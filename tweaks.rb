@@ -318,7 +318,7 @@ module Tweaks
     
     # Now apply any ASM patches that go in the free space overlay first.
     
-    if options[:add_magical_tickets] && GAME == "dos"
+    if GAME == "dos"
       dos_implement_magical_tickets()
     end
     

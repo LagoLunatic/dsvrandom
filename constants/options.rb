@@ -44,10 +44,10 @@ OPTIONS = {
   no_touch_screen: "Seals auto-draw, no name signing, melee weapons destroy ice blocks.",
   unlock_boss_doors: "You don't need magic seals to open boss doors.",
   remove_slot_machines: "Removes golden slot machines that require specific amounts of gold to open.",
-  add_magical_tickets: "Implements a new magical ticket item that functions like it does in PoR and OoE.",
   always_start_with_rare_ring: "Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.",
   menace_to_somacula: "Changes the final boss of Soma mode to be Somacula instead of Menace.",
   dos_new_style_map: "Makes the map in DoS look like the map in PoR and OoE - doors have a hole in them and the colors have better contrast.",
+  
   por_short_mode: "Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).",
   dont_randomize_change_cube: "The change cube will always be the first item you get.",
   por_nerf_enemy_resistances: "Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.",
@@ -55,6 +55,7 @@ OPTIONS = {
   fix_infinite_quest_rewards: "Fixes a bug where you could get any quest reward over and over again.",
   always_show_drop_percentages: "Drop chances always display as percentages instead of stars.",
   allow_mastering_charlottes_skills: "Allow Charlotte's skills to gain SP like Jonathan's. When mastered they act fully charged at half charge, and when both mastered and fully charged they act supercharged.",
+  
   open_world_map: "Make all areas except Dracula's Castle accessible from the start.",
   always_dowsing: "Hidden blue chests always make a beeping sound.",
   gain_extra_attribute_points: "You gain 25x more AP when killing enemies or absorbing glyphs.",

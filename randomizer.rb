@@ -81,7 +81,6 @@ class Randomizer
     end
     if room_rando?
       options[:unlock_boss_doors] = true
-      options[:add_magical_tickets] = true
     else
       options[:randomize_world_map_exits] = false
     end
