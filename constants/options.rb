@@ -27,7 +27,7 @@ OPTIONS = {
   randomize_area_connections: "Randomizes which areas connect to each other.",
   
   experimental_options_enabled: "",
-  randomize_players: "Randomizes player graphics and movement stats.",
+  randomize_players: "Randomizes player movement stats.",
   randomize_enemy_sprites: "Randomizes the graphics of non-boss enemies.",
   randomize_boss_sprites: "Randomizes the graphics of bosses.",
   
