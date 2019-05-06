@@ -59,7 +59,7 @@ class RandomizerWindow < Qt::Dialog
     
     connect(@ui.read_seed_info_button, SIGNAL("clicked()"), self, SLOT("read_seed_info()"))
     
-    self.resize(640, 1)
+    self.resize(self.width, 1)
     
     self.show()
   end
