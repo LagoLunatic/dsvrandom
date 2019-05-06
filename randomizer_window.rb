@@ -256,6 +256,10 @@ class RandomizerWindow < Qt::Dialog
       should_enable_options[:randomize_rooms_map_friendly] &&= false
     end
     
+    if @ui.open_world_map.checked
+      should_enable_options[:randomize_world_map_exits] &&= false
+    end
+    
     OPTIONS.each do |option_name|
       if should_enable_options[option_name]
         @ui.send(option_name).enabled = true
