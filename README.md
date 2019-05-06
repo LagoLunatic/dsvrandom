@@ -47,7 +47,7 @@ Bonus Starting Items: Starts you out with 3 random extra items and 3 random extr
 There are also some buggy, experimental randomization options:  
 Players: Randomizes player movement stats.  
 Boss Locations: Randomizes which bosses appear where.  
-World Map Exits: Randomizes the order areas are unlocked on the world map (OoE linear mode only).  
+World Map Exits: Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).  
 Enemy Sprites: Randomizes the graphics of non-boss enemies.  
 Boss Sprites: Randomizes the graphics of bosses.  
 

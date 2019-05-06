@@ -2,7 +2,7 @@
 OPTIONS = {
   randomize_pickups: "Randomizes items and skills you find lying on the ground.",
   randomize_boss_souls: "Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).",
-  randomize_world_map_exits: "Randomizes the order areas are unlocked on the world map (OoE linear mode only).",
+  randomize_world_map_exits: "Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).",
   randomize_red_walls: "Randomizes which bullet souls are needed to open red walls (DoS only).",
   randomize_portraits: "Randomizes where portraits are located (PoR only).",
   randomize_villagers: "Randomizes where villagers are located (OoE only).",
