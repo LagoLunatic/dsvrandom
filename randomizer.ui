@@ -97,9 +97,6 @@
          <layout class="QGridLayout" name="gridLayout_7">
           <item row="3" column="0">
            <widget class="QCheckBox" name="randomize_enemy_stats">
-            <property name="toolTip">
-             <string>Randomizes enemy attack, defense, HP, EXP given, and other stats.</string>
-            </property>
             <property name="text">
              <string>Enemy Stats</string>
             </property>
@@ -107,9 +104,6 @@
           </item>
           <item row="4" column="1">
            <widget class="QCheckBox" name="randomize_weapon_behavior">
-            <property name="toolTip">
-             <string>Randomizes how weapons behave.</string>
-            </property>
             <property name="text">
              <string>Weapon Behavior</string>
             </property>
@@ -117,9 +111,6 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="randomize_pickups">
-            <property name="toolTip">
-             <string>Randomizes items and skills you find lying on the ground.</string>
-            </property>
             <property name="text">
              <string>Item/Skill Locations</string>
             </property>
@@ -130,9 +121,6 @@
           </item>
           <item row="5" column="0">
            <widget class="QCheckBox" name="randomize_equipment_stats">
-            <property name="toolTip">
-             <string>Randomizes weapon and armor stats.</string>
-            </property>
             <property name="text">
              <string>Equipment Stats</string>
             </property>
@@ -140,9 +128,6 @@
           </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="randomize_world_map_exits">
-            <property name="toolTip">
-             <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
-            </property>
             <property name="text">
              <string>World Map Exits</string>
             </property>
@@ -150,9 +135,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="randomize_red_walls">
-            <property name="toolTip">
-             <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
-            </property>
             <property name="text">
              <string>Red Soul Walls</string>
             </property>
@@ -160,9 +142,6 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="randomize_boss_souls">
-            <property name="toolTip">
-             <string>Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).</string>
-            </property>
             <property name="text">
              <string>Boss Souls</string>
             </property>
@@ -173,9 +152,6 @@
           </item>
           <item row="2" column="2">
            <widget class="QCheckBox" name="randomize_enemy_drops">
-            <property name="toolTip">
-             <string>Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
-            </property>
             <property name="text">
              <string>Enemy Drops</string>
             </property>
@@ -186,9 +162,6 @@
           </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="randomize_enemies">
-            <property name="toolTip">
-             <string>Randomizes which non-boss enemies appear where.</string>
-            </property>
             <property name="text">
              <string>Enemy Locations</string>
             </property>
@@ -199,9 +172,6 @@
           </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="randomize_portraits">
-            <property name="toolTip">
-             <string>Randomizes where portraits are located (PoR only).</string>
-            </property>
             <property name="text">
              <string>Portraits</string>
             </property>
@@ -212,9 +182,6 @@
           </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="randomize_villagers">
-            <property name="toolTip">
-             <string>Randomizes where villagers are located (OoE only).</string>
-            </property>
             <property name="text">
              <string>Villagers</string>
             </property>
@@ -225,9 +192,6 @@
           </item>
           <item row="3" column="2">
            <widget class="QCheckBox" name="randomize_enemy_tolerances">
-            <property name="toolTip">
-             <string>Randomizes enemy elemental weaknesses and resistances.</string>
-            </property>
             <property name="text">
              <string>Enemy Tolerances</string>
             </property>
@@ -235,9 +199,6 @@
           </item>
           <item row="4" column="2">
            <widget class="QCheckBox" name="randomize_skill_behavior">
-            <property name="toolTip">
-             <string>Randomizes how skills behave.</string>
-            </property>
             <property name="text">
              <string>Skill Behavior</string>
             </property>
@@ -245,9 +206,6 @@
           </item>
           <item row="4" column="0">
            <widget class="QCheckBox" name="randomize_consumable_behavior">
-            <property name="toolTip">
-             <string>Randomizes what consumables do and how powerful they are.</string>
-            </property>
             <property name="text">
              <string>Consumable Behavior</string>
             </property>
@@ -255,9 +213,6 @@
           </item>
           <item row="2" column="1">
            <widget class="QCheckBox" name="randomize_bosses">
-            <property name="toolTip">
-             <string>Randomizes which bosses appear where.</string>
-            </property>
             <property name="text">
              <string>Boss Locations</string>
             </property>
@@ -265,9 +220,6 @@
           </item>
           <item row="3" column="1">
            <widget class="QCheckBox" name="randomize_enemy_anim_speed">
-            <property name="toolTip">
-             <string>Randomizes the speed at which each enemy's animations play at, which affects their attack speed.</string>
-            </property>
             <property name="text">
              <string>Enemy Animation Speed</string>
             </property>
@@ -275,9 +227,6 @@
           </item>
           <item row="7" column="1">
            <widget class="QCheckBox" name="randomize_starting_room">
-            <property name="toolTip">
-             <string>Randomizes which room you start in.</string>
-            </property>
             <property name="text">
              <string>Starting Room</string>
             </property>
@@ -285,9 +234,6 @@
           </item>
           <item row="5" column="2">
            <widget class="QCheckBox" name="randomize_weapon_and_skill_elements">
-            <property name="toolTip">
-             <string>Randomizes what elemental damage types and status effects each weapon/skill does.</string>
-            </property>
             <property name="text">
              <string>Weapon and Skill Elements</string>
             </property>
@@ -295,9 +241,6 @@
           </item>
           <item row="6" column="0">
            <widget class="QCheckBox" name="randomize_shop">
-            <property name="toolTip">
-             <string>Randomizes what items are for sale in the shop as well as item prices.</string>
-            </property>
             <property name="text">
              <string>Shop Items</string>
             </property>
@@ -305,9 +248,6 @@
           </item>
           <item row="6" column="2">
            <widget class="QCheckBox" name="randomize_weapon_synths">
-            <property name="toolTip">
-             <string>Randomizes which items Yoko can synthesize (DoS only).</string>
-            </property>
             <property name="text">
              <string>Weapon Synthesis</string>
             </property>
@@ -315,9 +255,6 @@
           </item>
           <item row="7" column="0">
            <widget class="QCheckBox" name="randomize_rooms_map_friendly">
-            <property name="toolTip">
-             <string>Randomly generates entirely new maps and connects rooms to match the map.</string>
-            </property>
             <property name="text">
              <string>Maps</string>
             </property>
@@ -325,9 +262,6 @@
           </item>
           <item row="6" column="1">
            <widget class="QCheckBox" name="randomize_wooden_chests">
-            <property name="toolTip">
-             <string>Randomizes the pool of items for wooden chests in each area (OoE only).</string>
-            </property>
             <property name="text">
              <string>Wooden Chest Items</string>
             </property>
@@ -335,9 +269,6 @@
           </item>
           <item row="8" column="0">
            <widget class="QCheckBox" name="randomize_room_connections">
-            <property name="toolTip">
-             <string>Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)</string>
-            </property>
             <property name="text">
              <string>Room Connections (Not map-friendly)</string>
             </property>
@@ -345,9 +276,6 @@
           </item>
           <item row="8" column="1">
            <widget class="QCheckBox" name="randomize_area_connections">
-            <property name="toolTip">
-             <string>Randomizes which areas connect to each other.</string>
-            </property>
             <property name="text">
              <string>Area Connections (Not map-friendly)</string>
             </property>
@@ -355,9 +283,6 @@
           </item>
           <item row="5" column="1">
            <widget class="QCheckBox" name="randomize_skill_stats">
-            <property name="toolTip">
-             <string>Randomizes skill stats.</string>
-            </property>
             <property name="text">
              <string>Skill Stats</string>
             </property>
@@ -386,9 +311,6 @@
          <layout class="QGridLayout" name="gridLayout_8">
           <item row="0" column="0">
            <widget class="QCheckBox" name="randomize_players">
-            <property name="toolTip">
-             <string>Randomizes player graphics and movement stats.</string>
-            </property>
             <property name="text">
              <string>Players</string>
             </property>
@@ -396,9 +318,6 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="randomize_enemy_sprites">
-            <property name="toolTip">
-             <string>Randomizes the graphics of non-boss enemies.</string>
-            </property>
             <property name="text">
              <string>Enemy Sprites</string>
             </property>
@@ -406,9 +325,6 @@
           </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="randomize_boss_sprites">
-            <property name="toolTip">
-             <string>Randomizes the graphics of bosses.</string>
-            </property>
             <property name="text">
              <string>Boss Sprites</string>
             </property>
@@ -442,9 +358,6 @@
         <layout class="QHBoxLayout" name="horizontalLayout_14">
          <item>
           <widget class="QCheckBox" name="enable_glitch_reqs">
-           <property name="toolTip">
-            <string>If checked, certain glitches may be necessary to beat the game.</string>
-           </property>
            <property name="text">
             <string>Allow requiring glitches to win</string>
            </property>
@@ -452,9 +365,6 @@
          </item>
          <item>
           <widget class="QCheckBox" name="rebalance_enemies_in_room_rando">
-           <property name="toolTip">
-            <string>Balances enemy and boss difficulty around the order you will reach them, as opposed to how difficult they were in the vanilla game. (Has no effect if all room randomizer options are off.)</string>
-           </property>
            <property name="text">
             <string>Rebalance enemies by order you reach them (room randomizers only)</string>
            </property>
@@ -519,9 +429,6 @@
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="1" column="1">
            <widget class="QCheckBox" name="reveal_bestiary">
-            <property name="toolTip">
-             <string>All enemies will appear in the bestiary, even before you kill them once.</string>
-            </property>
             <property name="text">
              <string>Reveal bestiary</string>
             </property>
@@ -529,9 +436,6 @@
           </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="unlock_all_modes">
-            <property name="toolTip">
-             <string>Unlocks alternate modes that normally require you to beat the main game first.</string>
-            </property>
             <property name="text">
              <string>Unlock all modes</string>
             </property>
@@ -542,9 +446,6 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="scavenger_mode">
-            <property name="toolTip">
-             <string>Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.</string>
-            </property>
             <property name="text">
              <string>Scavenger Mode</string>
             </property>
@@ -552,9 +453,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="reveal_breakable_walls">
-            <property name="toolTip">
-             <string>Breakable walls will always blink as if you have Peeping Eye/Eye for Decay on.</string>
-            </property>
             <property name="text">
              <string>Reveal breakable walls</string>
             </property>
@@ -562,9 +460,6 @@
           </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="remove_area_names">
-            <property name="toolTip">
-             <string>Removes the area names that appear on screen when you first enter an area.</string>
-            </property>
             <property name="text">
              <string>Remove area names</string>
             </property>
@@ -575,9 +470,6 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="revise_item_descriptions">
-            <property name="toolTip">
-             <string>Updates all weapon, armor, and skill descriptions to indicate what their randomized attributes are.</string>
-            </property>
             <property name="text">
              <string>Revise item descriptions</string>
             </property>
@@ -597,9 +489,6 @@
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
            <widget class="QCheckBox" name="fix_luck">
-            <property name="toolTip">
-             <string>Make each point of luck give +0.1% drop chances (as opposed to almost nothing).</string>
-            </property>
             <property name="text">
              <string>Fix luck</string>
             </property>
@@ -610,9 +499,6 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="no_touch_screen">
-            <property name="toolTip">
-             <string>Seals auto-draw, no name signing, melee weapons destroy ice blocks.</string>
-            </property>
             <property name="text">
              <string>No required touch screen</string>
             </property>
@@ -623,9 +509,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="remove_slot_machines">
-            <property name="toolTip">
-             <string>Removes golden slot machines that require specific amounts of gold to open.</string>
-            </property>
             <property name="text">
              <string>Remove slot machines</string>
             </property>
@@ -633,9 +516,6 @@
           </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="always_start_with_rare_ring">
-            <property name="toolTip">
-             <string>Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.</string>
-            </property>
             <property name="text">
              <string>Always start with Rare Ring</string>
             </property>
@@ -643,9 +523,6 @@
           </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="unlock_boss_doors">
-            <property name="toolTip">
-             <string>You don't need magic seals to open boss doors.</string>
-            </property>
             <property name="text">
              <string>Unlock boss doors</string>
             </property>
@@ -656,9 +533,6 @@
           </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="add_magical_tickets">
-            <property name="toolTip">
-             <string>Implements a new magical ticket item that functions like it does in PoR and OoE.</string>
-            </property>
             <property name="text">
              <string>Add Magical Tickets</string>
             </property>
@@ -669,9 +543,6 @@
           </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="menace_to_somacula">
-            <property name="toolTip">
-             <string>Changes the final boss of Soma mode to be Somacula instead of Menace.</string>
-            </property>
             <property name="text">
              <string>Replace Menace</string>
             </property>
@@ -679,9 +550,6 @@
           </item>
           <item row="2" column="1">
            <widget class="QCheckBox" name="dos_new_style_map">
-            <property name="toolTip">
-             <string>Makes the map in DoS look like the map in PoR and OoE - doors have a hole in them and the colors have better contrast.</string>
-            </property>
             <property name="text">
              <string>New style map</string>
             </property>
@@ -698,9 +566,6 @@
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="1" column="1">
            <widget class="QCheckBox" name="fix_infinite_quest_rewards">
-            <property name="toolTip">
-             <string>Fixes a bug where you could get any quest reward over and over again.</string>
-            </property>
             <property name="text">
              <string>Fix infinite quest rewards bug</string>
             </property>
@@ -711,9 +576,6 @@
           </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="always_show_drop_percentages">
-            <property name="toolTip">
-             <string>Drop chances always display as percentages instead of stars.</string>
-            </property>
             <property name="text">
              <string>Always have Gambler Glasses effect</string>
             </property>
@@ -721,9 +583,6 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="dont_randomize_change_cube">
-            <property name="toolTip">
-             <string>The change cube will always be the first item you get.</string>
-            </property>
             <property name="text">
              <string>Don't randomize Change Cube</string>
             </property>
@@ -734,9 +593,6 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="por_short_mode">
-            <property name="toolTip">
-             <string>Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).</string>
-            </property>
             <property name="text">
              <string>Short Mode</string>
             </property>
@@ -744,9 +600,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="skip_emblem_drawing">
-            <property name="toolTip">
-             <string>Skips the screen where you have to use the touch screen to draw an emblem when starting a new game.</string>
-            </property>
             <property name="text">
              <string>Skip emblem drawing</string>
             </property>
@@ -757,9 +610,6 @@
           </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="por_nerf_enemy_resistances">
-            <property name="toolTip">
-             <string>Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.</string>
-            </property>
             <property name="text">
              <string>Nerf enemy resistances</string>
             </property>
@@ -770,9 +620,6 @@
           </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="allow_mastering_charlottes_skills">
-            <property name="toolTip">
-             <string>Allow Charlotte's skills to gain SP like Jonathan's. When mastered they act fully charged at half charge, and when both mastered and fully charged they act supercharged.</string>
-            </property>
             <property name="text">
              <string>Allow Charlotte to master skills</string>
             </property>
@@ -792,9 +639,6 @@
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="1" column="2">
            <widget class="QCheckBox" name="summons_gain_extra_exp">
-            <property name="toolTip">
-             <string>Your summons gain far more EXP every time they hit an enemy.</string>
-            </property>
             <property name="text">
              <string>Summons gain EXP faster</string>
             </property>
@@ -805,9 +649,6 @@
           </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="gain_extra_attribute_points">
-            <property name="toolTip">
-             <string>You gain 25x more AP when killing enemies or absorbing glyphs.</string>
-            </property>
             <property name="text">
              <string>Gain Attribute Points faster</string>
             </property>
@@ -818,9 +659,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="always_dowsing">
-            <property name="toolTip">
-             <string>Hidden blue chests always make a beeping sound.</string>
-            </property>
             <property name="text">
              <string>Always have Dowsing Hat effect</string>
             </property>
@@ -828,9 +666,6 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="open_world_map">
-            <property name="toolTip">
-             <string>Make all areas except Dracula's Castle accessible from the start.</string>
-            </property>
             <property name="text">
              <string>Open world map</string>
             </property>
@@ -861,9 +696,6 @@
          <layout class="QGridLayout" name="gridLayout_6">
           <item row="1" column="1">
            <widget class="QCheckBox" name="randomize_skill_sprites">
-            <property name="toolTip">
-             <string>Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).</string>
-            </property>
             <property name="text">
              <string>Skill Sprites</string>
             </property>
@@ -871,9 +703,6 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="randomize_bgm">
-            <property name="toolTip">
-             <string>Randomizes what songs play in what areas.</string>
-            </property>
             <property name="text">
              <string>BGM</string>
             </property>
@@ -881,9 +710,6 @@
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="randomize_dialogue">
-            <property name="toolTip">
-             <string>Generates random dialogue for all cutscenes.</string>
-            </property>
             <property name="text">
              <string>Dialogue</string>
             </property>
@@ -891,9 +717,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="randomize_player_sprites">
-            <property name="toolTip">
-             <string>Randomizes the graphics of player characters.</string>
-            </property>
             <property name="text">
              <string>Player Sprites</string>
             </property>

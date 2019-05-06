@@ -37,7 +37,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.generate_seed_button, SIGNAL("clicked()"), self, SLOT("generate_seed()"))
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       connect(@ui.send(option_name), SIGNAL("clicked(bool)"), self, SLOT("update_settings()"))
       
       @ui.send(option_name).installEventFilter(self)
@@ -73,7 +73,7 @@ class RandomizerWindow < Qt::Dialog
       seed = i.to_s
       
       options_hash = {}
-      OPTIONS.each do |option_name|
+      OPTIONS.each_key do |option_name|
         options_hash[option_name] = @ui.send(option_name).checked
       end
       
@@ -98,7 +98,8 @@ class RandomizerWindow < Qt::Dialog
   
   def eventFilter(target, event)
     if event.type() == Qt::Event::Enter
-      @ui.option_description.text = target.toolTip()
+      option_description = OPTIONS[target.objectName.to_sym]
+      @ui.option_description.text = option_description
       return true
     elsif event.type() == Qt::Event::Leave
       @ui.option_description.text = ""
@@ -120,7 +121,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.output_folder.setText(@settings[:output_folder]) if @settings[:output_folder]
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       @ui.send(option_name).setChecked(@settings[option_name]) unless @settings[option_name].nil?
     end
     
@@ -198,7 +199,7 @@ class RandomizerWindow < Qt::Dialog
     
     ensure_valid_combination_of_options()
     
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       @settings[option_name] = @ui.send(option_name).checked
     end
     
@@ -217,7 +218,7 @@ class RandomizerWindow < Qt::Dialog
   
   def ensure_valid_combination_of_options
     should_enable_options = {}
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       should_enable_options[option_name] = true
     end
     
@@ -260,7 +261,7 @@ class RandomizerWindow < Qt::Dialog
       should_enable_options[:randomize_world_map_exits] &&= false
     end
     
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       if should_enable_options[option_name]
         @ui.send(option_name).enabled = true
       else
@@ -463,7 +464,7 @@ class RandomizerWindow < Qt::Dialog
     @sanitized_seed = seed
     
     options_hash = {}
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       options_hash[option_name] = @ui.send(option_name).checked
     end
     
@@ -641,7 +642,7 @@ class RandomizerWindow < Qt::Dialog
   
   def preserve_default_settings
     @default_settings = {}
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       @default_settings[option_name] = @ui.send(option_name).checked
     end
     
@@ -650,7 +651,7 @@ class RandomizerWindow < Qt::Dialog
   
   def reset_settings_to_default
     any_setting_changed = false
-    OPTIONS.each do |option_name|
+    OPTIONS.each_key do |option_name|
       if @default_settings.key?(option_name)
         default_value = @default_settings[option_name]
         current_value = @ui.send(option_name).checked
