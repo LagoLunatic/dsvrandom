@@ -737,17 +737,23 @@ module EnemyRandomizer
         return :redo
       end
     when "Mothman"
-      # Mothman needs a searchlight in his room for him to appear.
       room = enemy.room
-      searchlight = Entity.new(room, room.fs)
       
-      searchlight.x_pos = enemy.x_pos
-      searchlight.y_pos = enemy.y_pos
-      searchlight.type = 2
-      searchlight.subtype = 0x4B
-      
-      room.entities << searchlight
-      room.write_entities_to_rom()
+      existing_searchlight = room.entities.find do |e|
+        e.type == SPECIAL_OBJECT_ENTITY_TYPE && e.subtype == 0x4B
+      end
+      if existing_searchlight.nil?
+        # Mothman needs a searchlight in his room for him to appear.
+        searchlight = Entity.new(room, room.fs)
+        
+        searchlight.x_pos = enemy.x_pos
+        searchlight.y_pos = enemy.y_pos
+        searchlight.type = 2
+        searchlight.subtype = 0x4B
+        
+        room.entities << searchlight
+        room.write_entities_to_rom()
+      end
     when "Yeti"
       if !@unplaced_enemy_ids.include?(enemy_dna.enemy_id)
         # Don't allow more than one accessible Yeti in the whole game, like vanilla.
