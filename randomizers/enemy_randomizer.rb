@@ -743,6 +743,34 @@ module EnemyRandomizer
       
       room.entities << searchlight
       room.write_entities_to_rom()
+    when "Yeti"
+      if enemy.room.width < 2
+        # The Yeti will appear off the right edge of the screen if the room isn't wide enough.
+        return :redo
+      end
+      
+      # The Yeti is hardcoded to appear around here.
+      # We only want to allow placing the Yeti in this room if this spot has solid ground, otherwise it would be harder than normal to use Waiter Skeleton.
+      min_x = 0x110
+      max_x = 0x160
+      y = 0x90
+      valid_spots_found = 0
+      (min_x..max_x).step(0x10) do |x|
+        if !coll[x,y].is_blank?
+          # The spot itself should just be air
+          next
+        end
+        if coll[x,y+0x10].is_solid? || coll[x,y+0x10].is_jumpthrough_platform?
+          # The tile below the spot should be something the Waiter Skeleton dish can land on
+          valid_spots_found += 1
+        elsif coll[x,y+0x10].is_blank? && (coll[x,y+0x20].is_solid? || coll[x,y+0x20].is_jumpthrough_platform?)
+          # But it's fine if the tile directly below the spot is air as along as the tile below that is something it can land on
+          valid_spots_found += 1
+        end
+      end
+      if valid_spots_found < 2
+        return :redo
+      end
     end
   end
   
