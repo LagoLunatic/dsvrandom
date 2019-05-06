@@ -302,6 +302,15 @@ module Tweaks
       george_event.write_to_rom()
     end
     
+    if options[:randomize_enemies] && GAME == "dos"
+      # Remove Mothman's vanilla searchlight if enemy randomizer is on, since it won't do anything without Mothman himself.
+      vanilla_searchlight = game.entity_by_str("00-09-12_00")
+      vanilla_searchlight.type = 0
+      vanilla_searchlight.write_to_rom()
+    end
+    
+    
+    
     # Add a free space overlay so we can add entities as much as we want.
     if !game.fs.has_free_space_overlay?
       game.add_new_overlay()
