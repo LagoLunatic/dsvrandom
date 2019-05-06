@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>620</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,8 +57,12 @@
          <item row="1" column="1">
           <widget class="QLineEdit" name="output_folder"/>
          </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="seed"/>
+         <item row="2" column="2">
+          <widget class="QPushButton" name="generate_seed_button">
+           <property name="text">
+            <string>New seed</string>
+           </property>
+          </widget>
          </item>
          <item row="0" column="2">
           <widget class="QPushButton" name="clean_rom_browse_button">
@@ -67,6 +71,9 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="seed"/>
+         </item>
          <item row="1" column="2">
           <widget class="QPushButton" name="output_folder_browse_button">
            <property name="text">
@@ -74,336 +81,299 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="generate_seed_button">
-           <property name="text">
-            <string>New seed</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_7">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Randomization options</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QCheckBox" name="randomize_pickups">
-              <property name="toolTip">
-               <string>Randomizes items and skills you find lying on the ground.</string>
-              </property>
-              <property name="text">
-               <string>Item/Skill Locations</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_boss_souls">
-              <property name="toolTip">
-               <string>Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).</string>
-              </property>
-              <property name="text">
-               <string>Boss Souls</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_world_map_exits">
-              <property name="toolTip">
-               <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
-              </property>
-              <property name="text">
-               <string>World Map Exits</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="randomize_enemy_stats">
+            <property name="toolTip">
+             <string>Randomizes enemy attack, defense, HP, EXP given, and other stats.</string>
+            </property>
+            <property name="text">
+             <string>Enemy Stats</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_15">
-            <item>
-             <widget class="QCheckBox" name="randomize_red_walls">
-              <property name="toolTip">
-               <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
-              </property>
-              <property name="text">
-               <string>Red Soul Walls</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_portraits">
-              <property name="toolTip">
-               <string>Randomizes where portraits are located (PoR only).</string>
-              </property>
-              <property name="text">
-               <string>Portraits</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_villagers">
-              <property name="toolTip">
-               <string>Randomizes where villagers are located (OoE only).</string>
-              </property>
-              <property name="text">
-               <string>Villagers</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="randomize_weapon_behavior">
+            <property name="toolTip">
+             <string>Randomizes how weapons behave.</string>
+            </property>
+            <property name="text">
+             <string>Weapon Behavior</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QCheckBox" name="randomize_enemies">
-              <property name="toolTip">
-               <string>Randomizes which non-boss enemies appear where.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Locations</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_bosses">
-              <property name="toolTip">
-               <string>Randomizes which bosses appear where.</string>
-              </property>
-              <property name="text">
-               <string>Boss Locations</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_drops">
-              <property name="toolTip">
-               <string>Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Drops</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="randomize_pickups">
+            <property name="toolTip">
+             <string>Randomizes items and skills you find lying on the ground.</string>
+            </property>
+            <property name="text">
+             <string>Item/Skill Locations</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_stats">
-              <property name="toolTip">
-               <string>Randomizes enemy attack, defense, HP, EXP given, and other stats.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Stats</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_anim_speed">
-              <property name="toolTip">
-               <string>Randomizes the speed at which each enemy's animations play at, which affects their attack speed.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Animation Speed</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_tolerances">
-              <property name="toolTip">
-               <string>Randomizes enemy elemental weaknesses and resistances.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Tolerances</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="5" column="0">
+           <widget class="QCheckBox" name="randomize_equipment_stats">
+            <property name="toolTip">
+             <string>Randomizes weapon and armor stats.</string>
+            </property>
+            <property name="text">
+             <string>Equipment Stats</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <item>
-             <widget class="QCheckBox" name="randomize_consumable_behavior">
-              <property name="toolTip">
-               <string>Randomizes what consumables do and how powerful they are.</string>
-              </property>
-              <property name="text">
-               <string>Consumable Behavior</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_weapon_behavior">
-              <property name="toolTip">
-               <string>Randomizes how weapons behave.</string>
-              </property>
-              <property name="text">
-               <string>Weapon Behavior</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_skill_behavior">
-              <property name="toolTip">
-               <string>Randomizes how skills behave.</string>
-              </property>
-              <property name="text">
-               <string>Skill Behavior</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="randomize_world_map_exits">
+            <property name="toolTip">
+             <string>Randomizes the order areas are unlocked on the world map (OoE linear mode only).</string>
+            </property>
+            <property name="text">
+             <string>World Map Exits</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QCheckBox" name="randomize_equipment_stats">
-              <property name="toolTip">
-               <string>Randomizes weapon and armor stats.</string>
-              </property>
-              <property name="text">
-               <string>Equipment Stats</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_skill_stats">
-              <property name="toolTip">
-               <string>Randomizes skill stats.</string>
-              </property>
-              <property name="text">
-               <string>Skill Stats</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_weapon_and_skill_elements">
-              <property name="toolTip">
-               <string>Randomizes what elemental damage types and status effects each weapon/skill does.</string>
-              </property>
-              <property name="text">
-               <string>Weapon and Skill Elements</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="randomize_red_walls">
+            <property name="toolTip">
+             <string>Randomizes which bullet souls are needed to open red walls (DoS only).</string>
+            </property>
+            <property name="text">
+             <string>Red Soul Walls</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_13">
-            <item>
-             <widget class="QCheckBox" name="randomize_shop">
-              <property name="toolTip">
-               <string>Randomizes what items are for sale in the shop as well as item prices.</string>
-              </property>
-              <property name="text">
-               <string>Shop Items</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_wooden_chests">
-              <property name="toolTip">
-               <string>Randomizes the pool of items for wooden chests in each area (OoE only).</string>
-              </property>
-              <property name="text">
-               <string>Wooden Chest Items</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_weapon_synths">
-              <property name="toolTip">
-               <string>Randomizes which items Yoko can synthesize (DoS only).</string>
-              </property>
-              <property name="text">
-               <string>Weapon Synthesis</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_boss_souls">
+            <property name="toolTip">
+             <string>Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).</string>
+            </property>
+            <property name="text">
+             <string>Boss Souls</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <widget class="QCheckBox" name="randomize_rooms_map_friendly">
-              <property name="toolTip">
-               <string>Randomly generates entirely new maps and connects rooms to match the map.</string>
-              </property>
-              <property name="text">
-               <string>Maps</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_starting_room">
-              <property name="toolTip">
-               <string>Randomizes which room you start in.</string>
-              </property>
-              <property name="text">
-               <string>Starting Room</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="widget" native="true"/>
-            </item>
-           </layout>
+          <item row="2" column="2">
+           <widget class="QCheckBox" name="randomize_enemy_drops">
+            <property name="toolTip">
+             <string>Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.</string>
+            </property>
+            <property name="text">
+             <string>Enemy Drops</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_17">
-            <item>
-             <widget class="QCheckBox" name="randomize_room_connections">
-              <property name="toolTip">
-               <string>Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)</string>
-              </property>
-              <property name="text">
-               <string>Room Connections (Not map-friendly)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_area_connections">
-              <property name="toolTip">
-               <string>Randomizes which areas connect to each other.</string>
-              </property>
-              <property name="text">
-               <string>Area Connections (Not map-friendly)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="widget_2" native="true"/>
-            </item>
-           </layout>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="randomize_enemies">
+            <property name="toolTip">
+             <string>Randomizes which non-boss enemies appear where.</string>
+            </property>
+            <property name="text">
+             <string>Enemy Locations</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="randomize_portraits">
+            <property name="toolTip">
+             <string>Randomizes where portraits are located (PoR only).</string>
+            </property>
+            <property name="text">
+             <string>Portraits</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="randomize_villagers">
+            <property name="toolTip">
+             <string>Randomizes where villagers are located (OoE only).</string>
+            </property>
+            <property name="text">
+             <string>Villagers</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QCheckBox" name="randomize_enemy_tolerances">
+            <property name="toolTip">
+             <string>Randomizes enemy elemental weaknesses and resistances.</string>
+            </property>
+            <property name="text">
+             <string>Enemy Tolerances</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QCheckBox" name="randomize_skill_behavior">
+            <property name="toolTip">
+             <string>Randomizes how skills behave.</string>
+            </property>
+            <property name="text">
+             <string>Skill Behavior</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="randomize_consumable_behavior">
+            <property name="toolTip">
+             <string>Randomizes what consumables do and how powerful they are.</string>
+            </property>
+            <property name="text">
+             <string>Consumable Behavior</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="randomize_bosses">
+            <property name="toolTip">
+             <string>Randomizes which bosses appear where.</string>
+            </property>
+            <property name="text">
+             <string>Boss Locations</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="randomize_enemy_anim_speed">
+            <property name="toolTip">
+             <string>Randomizes the speed at which each enemy's animations play at, which affects their attack speed.</string>
+            </property>
+            <property name="text">
+             <string>Enemy Animation Speed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QCheckBox" name="randomize_starting_room">
+            <property name="toolTip">
+             <string>Randomizes which room you start in.</string>
+            </property>
+            <property name="text">
+             <string>Starting Room</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QCheckBox" name="randomize_weapon_and_skill_elements">
+            <property name="toolTip">
+             <string>Randomizes what elemental damage types and status effects each weapon/skill does.</string>
+            </property>
+            <property name="text">
+             <string>Weapon and Skill Elements</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QCheckBox" name="randomize_shop">
+            <property name="toolTip">
+             <string>Randomizes what items are for sale in the shop as well as item prices.</string>
+            </property>
+            <property name="text">
+             <string>Shop Items</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QCheckBox" name="randomize_weapon_synths">
+            <property name="toolTip">
+             <string>Randomizes which items Yoko can synthesize (DoS only).</string>
+            </property>
+            <property name="text">
+             <string>Weapon Synthesis</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QCheckBox" name="randomize_rooms_map_friendly">
+            <property name="toolTip">
+             <string>Randomly generates entirely new maps and connects rooms to match the map.</string>
+            </property>
+            <property name="text">
+             <string>Maps</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QCheckBox" name="randomize_wooden_chests">
+            <property name="toolTip">
+             <string>Randomizes the pool of items for wooden chests in each area (OoE only).</string>
+            </property>
+            <property name="text">
+             <string>Wooden Chest Items</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QCheckBox" name="randomize_room_connections">
+            <property name="toolTip">
+             <string>Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)</string>
+            </property>
+            <property name="text">
+             <string>Room Connections (Not map-friendly)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QCheckBox" name="randomize_area_connections">
+            <property name="toolTip">
+             <string>Randomizes which areas connect to each other.</string>
+            </property>
+            <property name="text">
+             <string>Area Connections (Not map-friendly)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="randomize_skill_stats">
+            <property name="toolTip">
+             <string>Randomizes skill stats.</string>
+            </property>
+            <property name="text">
+             <string>Skill Stats</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="experimental_options_enabled">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Experimental randomization options (buggy and not guaranteed completable)</string>
          </property>
@@ -413,43 +383,38 @@
          <property name="checked">
           <bool>false</bool>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
-            <item>
-             <widget class="QCheckBox" name="randomize_players">
-              <property name="toolTip">
-               <string>Randomizes player graphics and movement stats.</string>
-              </property>
-              <property name="text">
-               <string>Players</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_enemy_sprites">
-              <property name="toolTip">
-               <string>Randomizes the graphics of non-boss enemies.</string>
-              </property>
-              <property name="text">
-               <string>Enemy Sprites</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_boss_sprites">
-              <property name="toolTip">
-               <string>Randomizes the graphics of bosses.</string>
-              </property>
-              <property name="text">
-               <string>Boss Sprites</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="randomize_players">
+            <property name="toolTip">
+             <string>Randomizes player graphics and movement stats.</string>
+            </property>
+            <property name="text">
+             <string>Players</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_enemy_sprites">
+            <property name="toolTip">
+             <string>Randomizes the graphics of non-boss enemies.</string>
+            </property>
+            <property name="text">
+             <string>Enemy Sprites</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="randomize_boss_sprites">
+            <property name="toolTip">
+             <string>Randomizes the graphics of bosses.</string>
+            </property>
+            <property name="text">
+             <string>Boss Sprites</string>
+            </property>
+           </widget>
           </item>
          </layout>
-         <zorder></zorder>
         </widget>
        </item>
       </layout>
@@ -485,10 +450,6 @@
            </property>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
           <widget class="QCheckBox" name="rebalance_enemies_in_room_rando">
            <property name="toolTip">
@@ -532,7 +493,7 @@
             <x>0</x>
             <y>0</y>
             <width>770</width>
-            <height>349</height>
+            <height>358</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -897,54 +858,46 @@
          <property name="title">
           <string>Cosmetic randomization options</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_9">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_19">
-            <item>
-             <widget class="QCheckBox" name="randomize_bgm">
-              <property name="toolTip">
-               <string>Randomizes what songs play in what areas.</string>
-              </property>
-              <property name="text">
-               <string>BGM</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_dialogue">
-              <property name="toolTip">
-               <string>Generates random dialogue for all cutscenes.</string>
-              </property>
-              <property name="text">
-               <string>Dialogue</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="randomize_skill_sprites">
+            <property name="toolTip">
+             <string>Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).</string>
+            </property>
+            <property name="text">
+             <string>Skill Sprites</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
-            <item>
-             <widget class="QCheckBox" name="randomize_player_sprites">
-              <property name="toolTip">
-               <string>Randomizes the graphics of player characters.</string>
-              </property>
-              <property name="text">
-               <string>Player Sprites</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="randomize_skill_sprites">
-              <property name="toolTip">
-               <string>Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).</string>
-              </property>
-              <property name="text">
-               <string>Skill Sprites</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="randomize_bgm">
+            <property name="toolTip">
+             <string>Randomizes what songs play in what areas.</string>
+            </property>
+            <property name="text">
+             <string>BGM</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_dialogue">
+            <property name="toolTip">
+             <string>Generates random dialogue for all cutscenes.</string>
+            </property>
+            <property name="text">
+             <string>Dialogue</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="randomize_player_sprites">
+            <property name="toolTip">
+             <string>Randomizes the graphics of player characters.</string>
+            </property>
+            <property name="text">
+             <string>Player Sprites</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
