@@ -58,7 +58,7 @@ Defs:
   
   garden: wizardry & balore | medium height & backdashjump | medium height & puppet master | medium height & distance | big height | lowergarden & rahab  | wizardry & height
   midgarden: garden & height | garden & vwarpseal
-  bossdario: midgarden & seal 3 | midgarden & hwarp
+  bossdario: midgarden & seal 2 | midgarden & hwarp
   uppergarden: bossdario | towerguesthouse | garden & vwarp | clocktower
   upperrightgarden: uppergarden & cutallsuper | garden & vwarp | clocktower
   lowergarden: garden & rahab | hell
