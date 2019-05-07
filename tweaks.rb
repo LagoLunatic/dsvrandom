@@ -412,6 +412,36 @@ module Tweaks
       game.apply_armips_patch("ooe_inter-area_warps")
     end
     
+    if GAME == "por" && options[:show_map_markers_on_top_screen]
+      game.apply_armips_patch("por_map_markers_on_top_screen")
+      
+      # The patch handles the code, but the top screen doesn't normally have the correct GFX or palette to display the markers.
+      # So we need to copy the appropriate parts of the GFX image and the appropriate palette from the bottom screen to the top screen.
+      
+      bottom_screen_ui_palette_ptr = 0x022C1554
+      bottom_screen_ui_palette_index = 4
+      top_screen_ui_palette_ptr = 0x022C1490
+      top_screen_ui_palette_index = 5
+      
+      marker_palette = renderer.generate_palettes(bottom_screen_ui_palette_ptr, 16)[bottom_screen_ui_palette_index]
+      renderer.save_palette(marker_palette, top_screen_ui_palette_ptr, top_screen_ui_palette_index, 16)
+      
+      bottom_screen_ui_gfx_ptr = 0x022CDA9C
+      top_screen_ui_gfx_ptr = 0x022CBA90
+      bottom_gfx = GfxWrapper.new(bottom_screen_ui_gfx_ptr, game.fs)
+      top_gfx = GfxWrapper.new(top_screen_ui_gfx_ptr, game.fs)
+      
+      bottom_image = renderer.render_gfx_page(bottom_gfx, marker_palette)
+      marker_image = bottom_image.crop(32, 0, 16, 16)
+      top_image = renderer.render_gfx_1_dimensional_mode(top_gfx, marker_palette)
+      top_image.compose!(marker_image, 112, 0)
+      renderer.save_gfx_page_1_dimensional_mode(top_image, top_gfx, top_screen_ui_palette_ptr, 16, top_screen_ui_palette_index)
+    end
+    
+    if GAME == "ooe" && options[:show_map_markers_on_top_screen]
+      game.apply_armips_patch("ooe_map_markers_on_top_screen")
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]

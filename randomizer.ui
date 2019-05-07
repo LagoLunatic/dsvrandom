@@ -437,10 +437,20 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="unlock_all_modes">
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="remove_area_names">
             <property name="text">
-             <string>Unlock all modes</string>
+             <string>Remove area names</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="revise_item_descriptions">
+            <property name="text">
+             <string>Revise item descriptions</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -461,23 +471,20 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="remove_area_names">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="unlock_all_modes">
             <property name="text">
-             <string>Remove area names</string>
+             <string>Unlock all modes</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="revise_item_descriptions">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="show_map_markers_on_top_screen">
             <property name="text">
-             <string>Revise item descriptions</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>Show markers on top screen map</string>
             </property>
            </widget>
           </item>
