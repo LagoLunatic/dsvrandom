@@ -1454,7 +1454,7 @@ module PickupRandomizer
       sprite_info = SpecialObjectType.new(0x4D, game.fs).extract_gfx_and_palette_and_sprite_from_create_code # We extract sprite info again to get the updated palette pointer after we changed it.
       gfx = sprite_info.gfx_pages.first
       palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
-      chunky_image = renderer.render_gfx_page(gfx.file, palettes[icon_palette_index], gfx.canvas_width)
+      chunky_image = renderer.render_gfx_page(gfx, palettes[icon_palette_index], gfx.canvas_width)
       new_icon = renderer.render_icon_by_item(item)
       x_offset = 16*easter_egg_index
       y_offset = 0
