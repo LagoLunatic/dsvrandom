@@ -53,7 +53,7 @@ Defs:
   minera: kalidus | nonlinear
   villagerabram: villagerabram
   villageraeon: villageraeon
-  mineraend: minera & magnes | minera & medium height # double jump is enough because you can kickbounce off the breakable wall to get an effective quadruple jump.
+  mineraend: minera & magnes | minera & big height # It's possible to get up here with just double jump by kickbouncing off the breakable wall, but this isn't in logic since it's obscure. Especially since a diagonal kick doesn't work like you'd expect, it has to be straight down.
   
   lighthouse: mineraend | nonlinear
   bossbrachyura: lighthouse & magnes | lighthouse & medium height & small distance | lighthouse & distance | lighthouse & big height | lighthouse & cat tackle # cat tackle gives you tons of iframes
