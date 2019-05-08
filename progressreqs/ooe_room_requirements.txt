@@ -1898,15 +1898,15 @@ Rooms:
     000-001: 
     000-002: 
     000-e00: 
-    000-e02: magnes | big height | medium height # double jump is enough because you can kickbounce off the breakable wall to get an effective quadruple jump.
-    001-000: magnes | big height | medium height
+    000-e02: magnes | big height # It's possible to get up here with just double jump by kickbouncing off the breakable wall, but this isn't in logic since it's obscure. Especially since a diagonal kick doesn't work like you'd expect, it has to be straight down.
+    001-000: magnes | big height
     001-002: 
-    001-e00: magnes | big height | medium height
-    001-e02: magnes | big height | medium height
-    002-000: magnes | big height | medium height
+    001-e00: magnes | big height
+    001-e02: magnes | big height
+    002-000: magnes | big height
     002-001: 
-    002-e00: magnes | big height | medium height
-    002-e02: magnes | big height | medium height
+    002-e00: magnes | big height
+    002-e02: magnes | big height
     e00-000: 
     e00-001: 
     e00-002: 
