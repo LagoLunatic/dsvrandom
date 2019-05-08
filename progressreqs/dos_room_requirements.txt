@@ -893,13 +893,13 @@ Rooms:
     002-001: medium height
     002-003: 
     002-004: 
-    003-000: height | distance
+    003-000: height | distance & backdashjump
     003-001: medium height
-    003-002: height | distance
+    003-002: height | distance & backdashjump
     003-004: 
-    004-000: height | distance
+    004-000: height | distance & backdashjump
     004-001: medium height
-    004-002: height | distance
+    004-002: height | distance & backdashjump
     004-003: 
   00-01-1E:
     000-001: 
