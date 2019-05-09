@@ -695,9 +695,9 @@ Rooms:
   00-01-09:
     000-001: 
     000-002: 
-    001-000: # Can be done with backdash jump but is somewhat tricky so not in the logic
+    001-000: height | distance # Can be done with backdash jump but is somewhat tricky so not in the logic
     001-002: 
-    002-000: # Can be done with backdash jump but is somewhat tricky so not in the logic
+    002-000: height | distance # Can be done with backdash jump but is somewhat tricky so not in the logic
     002-001: 
   00-01-0A: # sliding puzzle
     000-001: 
@@ -2148,7 +2148,7 @@ Rooms:
     e00-00E: false
     e00-00F: false
   00-05-08:
-    000-001: 
+    000-001: height | distance | backdashjump # Can be made with just a regular jump, but that's too precise so not in logic.
     000-002: 
     001-000: seal 3
     001-002: 
