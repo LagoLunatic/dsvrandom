@@ -127,6 +127,6 @@ If you want to run the latest development (unstable) version of DSVRandom from s
 
 * First you must download DSVEdit's source code and follow the instructions in its readme to get DSVEdit running from source: https://github.com/LagoLunatic/DSVEdit
 * Then download DSVRandom's source code and put the dsvrandom folder inside the DSVEdit folder.
-* Run build_ui to compile DSVRandom's UI files.
-* Finally run "ruby dsvrandom/dsvrandom.rb" to launch DSVRandom.
+* Run the `build_ui` batch file located in the dsvrandom folder to compile DSVRandom's UI files. (Not to be confused with the `build_ui` file in the DSVEdit folder - that one only compiles DSVEdit's UI files.)
+* Finally run `ruby dsvrandom/dsvrandom.rb` to launch DSVRandom.
 * Note that later on when updating to a future version of DSVRandom, you should also update DSVEdit at the same time.
