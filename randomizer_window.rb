@@ -732,7 +732,7 @@ class RandomizerWindow < Qt::Dialog
     options.each do |option_name|
       @ui.send(option_name).checked = true
     end
-    (OPTIONS-options).each do |option_name|
+    (OPTIONS.keys-options).each do |option_name|
       @ui.send(option_name).checked = false
     end
     
