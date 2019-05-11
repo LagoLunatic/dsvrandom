@@ -30,7 +30,8 @@ class RandomizerWindow < Qt::Dialog
     
     load_settings()
     
-    connect(@ui.clean_rom, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
+    connect(@ui.clean_rom, SIGNAL("activated(int)"), self, SLOT("update_settings()"))
+    connect(@ui.clean_rom, SIGNAL("editTextChanged(QString)"), self, SLOT("update_settings()"))
     connect(@ui.clean_rom_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_clean_rom()"))
     connect(@ui.output_folder, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     connect(@ui.output_folder_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_output_folder()"))
@@ -69,7 +70,7 @@ class RandomizerWindow < Qt::Dialog
     total_tests = 100
     total_tests.times do |i|
       game = Game.new
-      game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
+      game.initialize_from_rom(@ui.clean_rom.currentText, extract_to_hard_drive = false)
       seed = i.to_s
       
       options_hash = {}
@@ -111,13 +112,15 @@ class RandomizerWindow < Qt::Dialog
   
   def load_settings
     @settings_path = "randomizer_settings.yml"
-    if File.exist?(@settings_path)
+    if File.file?(@settings_path)
       @settings = YAML::load_file(@settings_path)
     else
       @settings = {}
     end
     
-    @ui.clean_rom.setText(@settings[:clean_rom_path]) if @settings[:clean_rom_path]
+    update_last_used_clean_rom_combobox_items()
+    
+    @ui.clean_rom.setEditText(@settings[:clean_rom_path]) if @settings[:clean_rom_path]
     @ui.output_folder.setText(@settings[:output_folder]) if @settings[:output_folder]
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
@@ -177,7 +180,24 @@ class RandomizerWindow < Qt::Dialog
     
     clean_rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS ROM Files (*.nds)")
     return if clean_rom_path.nil?
-    @ui.clean_rom.text = clean_rom_path
+    
+    if File.file?(clean_rom_path)
+      title = File.read(clean_rom_path, 16)
+      case title
+      when "CASTLEVANIA1ACVE"
+        @settings[:last_used_dos_clean_rom_path] = clean_rom_path
+        update_last_used_clean_rom_combobox_items()
+      when "CASTLEVANIA2ACBE"
+        @settings[:last_used_por_clean_rom_path] = clean_rom_path
+        update_last_used_clean_rom_combobox_items()
+      when "CASTLEVANIA3YR9E"
+        @settings[:last_used_ooe_clean_rom_path] = clean_rom_path
+        update_last_used_clean_rom_combobox_items()
+      end
+    end
+    
+    @ui.clean_rom.setEditText(clean_rom_path)
+    
     update_settings()
   end
   
@@ -193,7 +213,7 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def update_settings
-    @settings[:clean_rom_path] = @ui.clean_rom.text
+    @settings[:clean_rom_path] = @ui.clean_rom.currentText
     @settings[:output_folder] = @ui.output_folder.text
     @settings[:seed] = @ui.seed.text
     
@@ -278,6 +298,21 @@ class RandomizerWindow < Qt::Dialog
       
       if response == Qt::MessageBox::No
         @ui.experimental_options_enabled.checked = false
+      end
+    end
+  end
+  
+  def update_last_used_clean_rom_combobox_items
+    @ui.clean_rom.clear()
+    [
+      :last_used_dos_clean_rom_path,
+      :last_used_por_clean_rom_path,
+      :last_used_ooe_clean_rom_path,
+    ].each do |last_used_path_key|
+      if @settings[last_used_path_key] && File.file?(@settings[last_used_path_key])
+        @ui.clean_rom.addItem(@settings[last_used_path_key])
+      else
+        @settings[last_used_path_key] = nil
       end
     end
   end
@@ -422,7 +457,7 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def randomize
-    unless File.file?(@ui.clean_rom.text)
+    unless File.file?(@ui.clean_rom.currentText)
       Qt::MessageBox.warning(self, "No ROM specified", "Must specify clean ROM path.")
       return
     end
@@ -432,7 +467,7 @@ class RandomizerWindow < Qt::Dialog
     end
     
     game = Game.new
-    game.initialize_from_rom(@ui.clean_rom.text, extract_to_hard_drive = false)
+    game.initialize_from_rom(@ui.clean_rom.currentText, extract_to_hard_drive = false)
     
     if !["dos", "por", "ooe"].include?(GAME)
       Qt::MessageBox.warning(self, "Unsupported game", "ROM is not a supported game.")
@@ -442,8 +477,6 @@ class RandomizerWindow < Qt::Dialog
       Qt::MessageBox.warning(self, "Unsupported region", "Only the US versions are supported.")
       return
     end
-    
-    @settings["last_used_#{GAME}_clean_rom_path".to_sym] = @ui.clean_rom.text
     
     seed = @settings[:seed].to_s.strip.gsub(/\s/, "")
     
@@ -720,11 +753,11 @@ class RandomizerWindow < Qt::Dialog
       raise "Invalid game name: #{game}"
     end
     last_used_rom_path_for_this_game = @settings["last_used_#{short_game_name}_clean_rom_path".to_sym]
-    if last_used_rom_path_for_this_game
-      @ui.clean_rom.text = last_used_rom_path_for_this_game
+    if last_used_rom_path_for_this_game && File.file?(last_used_rom_path_for_this_game)
+      @ui.clean_rom.setEditText(last_used_rom_path_for_this_game)
       successfully_changed_clean_rom_path = true
     else
-      @ui.clean_rom.text = ""
+      @ui.clean_rom.setEditText("")
       successfully_changed_clean_rom_path = false
     end
     
