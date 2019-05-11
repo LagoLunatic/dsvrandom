@@ -120,7 +120,7 @@ class RandomizerWindow < Qt::Dialog
     
     update_last_used_clean_rom_combobox_items()
     
-    @ui.clean_rom.setEditText(@settings[:clean_rom_path]) if @settings[:clean_rom_path]
+    set_clean_rom_combobox_text(@settings[:clean_rom_path]) if @settings[:clean_rom_path]
     @ui.output_folder.setText(@settings[:output_folder]) if @settings[:output_folder]
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
@@ -196,7 +196,7 @@ class RandomizerWindow < Qt::Dialog
       end
     end
     
-    @ui.clean_rom.setEditText(clean_rom_path)
+    set_clean_rom_combobox_text(clean_rom_path)
     
     update_settings()
   end
@@ -314,6 +314,17 @@ class RandomizerWindow < Qt::Dialog
       else
         @settings[last_used_path_key] = nil
       end
+    end
+  end
+  
+  def set_clean_rom_combobox_text(text)
+    # If this text is one of the items in the dropdown, set that item as the selected one.
+    # Otherwise just set the text itself.
+    index = @ui.clean_rom.findText(text)
+    if index == -1
+      @ui.clean_rom.setEditText(text)
+    else
+      @ui.clean_rom.setCurrentIndex(index)
     end
   end
   
@@ -754,10 +765,10 @@ class RandomizerWindow < Qt::Dialog
     end
     last_used_rom_path_for_this_game = @settings["last_used_#{short_game_name}_clean_rom_path".to_sym]
     if last_used_rom_path_for_this_game && File.file?(last_used_rom_path_for_this_game)
-      @ui.clean_rom.setEditText(last_used_rom_path_for_this_game)
+      set_clean_rom_combobox_text(last_used_rom_path_for_this_game)
       successfully_changed_clean_rom_path = true
     else
-      @ui.clean_rom.setEditText("")
+      set_clean_rom_combobox_text("")
       successfully_changed_clean_rom_path = false
     end
     
