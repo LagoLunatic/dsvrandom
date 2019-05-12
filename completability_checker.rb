@@ -19,12 +19,9 @@ class CompletabilityChecker
               :no_progression_locations,
               :portrait_locations
   
-  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers, por_randomize_portraits)
+  def initialize(game, options)
     @game = game
-    @enable_glitches = enable_glitches
-    @ooe_nonlinear = ooe_nonlinear
-    @ooe_randomize_villagers = ooe_randomize_villagers
-    @por_randomize_portraits = por_randomize_portraits
+    @options = options
     
     load_room_reqs()
     @current_items = []
@@ -53,7 +50,7 @@ class CompletabilityChecker
       end
     end
     
-    if @enable_glitches
+    if @options[:enable_glitch_reqs]
       @defs.merge!(@glitch_defs)
     end
     
@@ -185,7 +182,7 @@ class CompletabilityChecker
     puts "Checking req: #{req}" if @debug
     
     if req == :nonlinear && GAME == "ooe"
-      return @ooe_nonlinear
+      return @options[:open_world_map]
     end
     
     if @defs[req]
@@ -222,7 +219,7 @@ class CompletabilityChecker
       @cached_checked_reqs[req] = req_met
       return req_met
     else
-      if !@enable_glitches && @glitch_defs.include?(req)
+      if !@options[:enable_glitch_reqs] && @glitch_defs.include?(req)
         # When glitches are disabled, always consider a glitch requirement false.
         return false
       end
@@ -290,10 +287,10 @@ class CompletabilityChecker
       @defs.each do |name, req|
         pickups << req if req.is_a?(Integer)
       end
-      if GAME == "ooe" && @ooe_randomize_villagers
+      if GAME == "ooe" && @options[:randomize_villagers]
         pickups += PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES
       end
-      if GAME == "por" && @por_randomize_portraits
+      if GAME == "por" && @options[:randomize_portraits]
         pickups += PickupRandomizer::PORTRAIT_NAMES
         pickups -= @removed_portraits
       end

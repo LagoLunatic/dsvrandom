@@ -22,13 +22,9 @@ class DoorCompletabilityChecker < CompletabilityChecker
               :no_progression_locations,
               :portrait_locations
   
-  def initialize(game, enable_glitches, ooe_nonlinear, ooe_randomize_villagers, por_randomize_portraits, ooe_randomize_world_map_exits)
+  def initialize(game, options)
     @game = game
-    @enable_glitches = enable_glitches
-    @ooe_nonlinear = ooe_nonlinear
-    @ooe_randomize_villagers = ooe_randomize_villagers
-    @por_randomize_portraits = por_randomize_portraits
-    @ooe_randomize_world_map_exits = ooe_randomize_world_map_exits
+    @options = options
     
     load_room_reqs()
     @current_items = []
@@ -38,7 +34,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
       :portraitburntparadise => [["08-00-04_000", "08-00-04_001"]], # The Creature
     }
     @post_brauner_teleport_dest_door = "00-09-03_001"
-    if @ooe_nonlinear
+    if @options[:open_world_map]
       @world_map_areas_unlocked_from_beginning = [
         "02-00-03_000",
         "03-00-00_000",
@@ -64,7 +60,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
     end
     @debug = false
     
-    if @ooe_randomize_world_map_exits
+    if @options[:randomize_world_map_exits]
       # Remove default world map values. These will be set as they are randomized.
       @world_map_unlocks = {
         "00-02-1B_000": "03-00-00_000, 0C-00-00_000", # Dracula's castle back exit unlocks are not randomized
@@ -94,16 +90,11 @@ class DoorCompletabilityChecker < CompletabilityChecker
       end
     end
     
-    if @enable_glitches
+    if @options[:enable_glitch_reqs]
       @defs.merge!(@glitch_defs)
     end
     
     @inaccessible_doors = yaml["Inaccessible doors"] || []
-    
-    @progress_important_rooms = yaml["Progress important rooms"]
-    @progress_important_rooms.map! do |room_str|
-      game.room_by_str(room_str)
-    end
     
     @preferences = {}
     if yaml["Preferences"]
@@ -127,6 +118,12 @@ class DoorCompletabilityChecker < CompletabilityChecker
     @portrait_locations = yaml["Portrait locations"] || []
     @world_map_exits = yaml["World map exits"] || []
     @world_map_unlocks = yaml["World map unlocks"] || []
+    
+    @progress_important_rooms = yaml["Progress important rooms"]
+    
+    @progress_important_rooms.map! do |room_str|
+      game.room_by_str(room_str)
+    end
     
     @warp_connections = yaml["Warp connections"] || {}
     
@@ -257,7 +254,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
     puts "Checking req: #{req}" if @debug
     
     if req == :nonlinear && GAME == "ooe"
-      return @ooe_nonlinear
+      return @options[:open_world_map]
     end
     if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(req) || [:villagernikolai, :villagergeorge].include?(req))
       return @current_items.include?(req)
@@ -297,7 +294,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
       @cached_checked_reqs[req] = req_met
       return req_met
     else
-      if !@enable_glitches && @glitch_defs.include?(req)
+      if !@options[:enable_glitch_reqs] && @glitch_defs.include?(req)
         # When glitches are disabled, always consider a glitch requirement false.
         return false
       end
@@ -358,7 +355,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
       george_accessible = false
       albus_fight_accessible = false
       wygol_accessible = true
-      lighthouse_accessible = @ooe_nonlinear
+      lighthouse_accessible = @options[:open_world_map]
       lighthouse_past_spikes_accessible = false
       has_all_randomizable_villagers = false
       if (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES - @current_items).empty?

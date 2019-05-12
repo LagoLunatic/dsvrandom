@@ -93,22 +93,9 @@ class Randomizer
     end
     
     if room_rando?
-      @checker = DoorCompletabilityChecker.new(
-        game,
-        options[:enable_glitch_reqs],
-        options[:open_world_map],
-        options[:randomize_villagers],
-        options[:randomize_portraits],
-        options[:randomize_world_map_exits],
-      )
+      @checker = DoorCompletabilityChecker.new(game, options)
     else
-      @checker = CompletabilityChecker.new(
-        game,
-        options[:enable_glitch_reqs],
-        options[:open_world_map],
-        options[:randomize_villagers],
-        options[:randomize_portraits],
-      )
+      @checker = CompletabilityChecker.new(game, options)
     end
     
     @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
