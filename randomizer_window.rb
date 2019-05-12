@@ -24,6 +24,11 @@ class RandomizerWindow < Qt::Dialog
     @ui = Ui_Randomizer.new
     @ui.setup_ui(self)
     
+    # Add three empty items to the clean ROM recent files dropdown, one for each game.
+    @ui.clean_rom.addItem("")
+    @ui.clean_rom.addItem("")
+    @ui.clean_rom.addItem("")
+    
     initialize_difficulty_sliders()
     
     preserve_default_settings()
@@ -181,21 +186,6 @@ class RandomizerWindow < Qt::Dialog
     clean_rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS ROM Files (*.nds)")
     return if clean_rom_path.nil?
     
-    if File.file?(clean_rom_path)
-      title = File.read(clean_rom_path, 16)
-      case title
-      when "CASTLEVANIA1ACVE"
-        @settings[:last_used_dos_clean_rom_path] = clean_rom_path
-        update_last_used_clean_rom_combobox_items()
-      when "CASTLEVANIA2ACBE"
-        @settings[:last_used_por_clean_rom_path] = clean_rom_path
-        update_last_used_clean_rom_combobox_items()
-      when "CASTLEVANIA3YR9E"
-        @settings[:last_used_ooe_clean_rom_path] = clean_rom_path
-        update_last_used_clean_rom_combobox_items()
-      end
-    end
-    
     set_clean_rom_combobox_text(clean_rom_path)
     
     update_settings()
@@ -213,6 +203,11 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def update_settings
+    if @ui.clean_rom.currentText != @settings[:clean_rom_path]
+      # Clean ROM text changed, so update the record of what the last used ROM path is, if it's a valid DSVania ROM file.
+      update_last_used_clean_rom_settings_from_combobox_text()
+    end
+    
     @settings[:clean_rom_path] = @ui.clean_rom.currentText
     @settings[:output_folder] = @ui.output_folder.text
     @settings[:seed] = @ui.seed.text
@@ -303,16 +298,34 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def update_last_used_clean_rom_combobox_items
-    @ui.clean_rom.clear()
     [
       :last_used_dos_clean_rom_path,
       :last_used_por_clean_rom_path,
       :last_used_ooe_clean_rom_path,
-    ].each do |last_used_path_key|
+    ].each_with_index do |last_used_path_key, i|
       if @settings[last_used_path_key] && File.file?(@settings[last_used_path_key])
-        @ui.clean_rom.addItem(@settings[last_used_path_key])
+        @ui.clean_rom.setItemText(i, @settings[last_used_path_key])
       else
         @settings[last_used_path_key] = nil
+        @ui.clean_rom.setItemText(i, "")
+      end
+    end
+  end
+  
+  def update_last_used_clean_rom_settings_from_combobox_text
+    clean_rom_path = @ui.clean_rom.currentText
+    if File.file?(clean_rom_path)
+      title = File.read(clean_rom_path, 16)
+      case title
+      when "CASTLEVANIA1ACVE"
+        @settings[:last_used_dos_clean_rom_path] = clean_rom_path
+        update_last_used_clean_rom_combobox_items()
+      when "CASTLEVANIA2ACBE"
+        @settings[:last_used_por_clean_rom_path] = clean_rom_path
+        update_last_used_clean_rom_combobox_items()
+      when "CASTLEVANIA3YR9E"
+        @settings[:last_used_ooe_clean_rom_path] = clean_rom_path
+        update_last_used_clean_rom_combobox_items()
       end
     end
   end
