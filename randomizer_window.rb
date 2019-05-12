@@ -29,6 +29,8 @@ class RandomizerWindow < Qt::Dialog
     @ui.clean_rom.addItem("")
     @ui.clean_rom.addItem("")
     
+    @currently_selected_game = nil
+    
     initialize_difficulty_sliders()
     
     preserve_default_settings()
@@ -121,6 +123,9 @@ class RandomizerWindow < Qt::Dialog
     @ui.output_folder.setText(@settings[:output_folder]) if @settings[:output_folder]
     @ui.seed.setText(@settings[:seed]) if @settings[:seed]
     
+    # Detects what the selected game is so we know what options to disable.
+    detect_current_game_by_clean_rom_combobox_text()
+    
     OPTIONS.each_key do |option_name|
       @ui.send(option_name).setChecked(@settings[option_name]) unless @settings[option_name].nil?
     end
@@ -197,7 +202,7 @@ class RandomizerWindow < Qt::Dialog
   def update_settings
     if @ui.clean_rom.currentText != @settings[:clean_rom_path]
       # Clean ROM text changed, so update the record of what the last used ROM path is, if it's a valid DSVania ROM file.
-      update_last_used_clean_rom_settings_from_combobox_text()
+      detect_current_game_by_clean_rom_combobox_text()
     end
     
     @settings[:clean_rom_path] = @ui.clean_rom.currentText
@@ -276,6 +281,34 @@ class RandomizerWindow < Qt::Dialog
         @ui.send(option_name).checked = false
       end
     end
+    
+    disable_options_not_for_current_game()
+  end
+  
+  def disable_options_not_for_current_game
+    all_game_specific_options = []
+    GAME_SPECIFIC_OPTIONS.each do |game, options_for_game|
+      all_game_specific_options += options_for_game
+    end
+    all_game_specific_options.uniq!
+    
+    all_game_specific_options.each do |option_name|
+      if !@ui.send(option_name).enabled
+        # This option was already disabled by ensure_valid_combination_of_options, so don't enable it regardless of the game it's for.
+        next
+      end
+      
+      if @currently_selected_game.nil?
+        # If no game is selected, enable all options.
+        @ui.send(option_name).enabled = true
+      elsif GAME_SPECIFIC_OPTIONS[@currently_selected_game].include?(option_name)
+        # Enable all options for the selected game.
+        @ui.send(option_name).enabled = true
+      else
+        # Disable all options specific to the other games that the selected game does not also support.
+        @ui.send(option_name).enabled = false
+      end
+    end
   end
   
   def experimental_enabled_changed(enabled)
@@ -304,18 +337,23 @@ class RandomizerWindow < Qt::Dialog
     end
   end
   
-  def update_last_used_clean_rom_settings_from_combobox_text
+  def detect_current_game_by_clean_rom_combobox_text
+    @currently_selected_game = nil
+    
     clean_rom_path = @ui.clean_rom.currentText
     if File.file?(clean_rom_path)
       title = File.read(clean_rom_path, 16)
       case title
       when "CASTLEVANIA1ACVE"
+        @currently_selected_game = "dos"
         @settings[:last_used_dos_clean_rom_path] = clean_rom_path
         update_last_used_clean_rom_combobox_items()
       when "CASTLEVANIA2ACBE"
+        @currently_selected_game = "por"
         @settings[:last_used_por_clean_rom_path] = clean_rom_path
         update_last_used_clean_rom_combobox_items()
       when "CASTLEVANIA3YR9E"
+        @currently_selected_game = "ooe"
         @settings[:last_used_ooe_clean_rom_path] = clean_rom_path
         update_last_used_clean_rom_combobox_items()
       end

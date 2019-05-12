@@ -75,3 +75,45 @@ OPTIONS = {
   randomize_player_sprites: "Randomizes the graphics of player characters.",
   randomize_skill_sprites: "Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).",
 }
+
+GAME_SPECIFIC_OPTIONS = {
+  "dos" => [
+    :randomize_boss_souls,
+    :randomize_red_walls,
+    :randomize_weapon_synths,
+    
+    :fix_luck,
+    :no_touch_screen,
+    :unlock_boss_doors,
+    :remove_slot_machines,
+    :always_start_with_rare_ring,
+    :menace_to_somacula,
+    :dos_new_style_map,
+  ],
+  "por" => [
+    :randomize_portraits,
+    
+    :show_map_markers_on_top_screen,
+    
+    :por_short_mode,
+    :dont_randomize_change_cube,
+    :por_nerf_enemy_resistances,
+    :skip_emblem_drawing,
+    :fix_infinite_quest_rewards,
+    :always_show_drop_percentages,
+    :allow_mastering_charlottes_skills,
+  ],
+  "ooe" => [
+    :randomize_boss_souls,
+    :randomize_world_map_exits,
+    :randomize_villagers,
+    :randomize_wooden_chests,
+    
+    :show_map_markers_on_top_screen,
+    
+    :open_world_map,
+    :always_dowsing,
+    :gain_extra_attribute_points,
+    :summons_gain_extra_exp,
+  ],
+}
