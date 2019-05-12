@@ -78,17 +78,9 @@ class RandomizerWindow < Qt::Dialog
       game.initialize_from_rom(@ui.clean_rom.currentText, extract_to_hard_drive = false)
       seed = i.to_s
       
-      options_hash = {}
-      OPTIONS.each_key do |option_name|
-        options_hash[option_name] = @ui.send(option_name).checked
-      end
+      options_hash = get_current_options_hash()
       
-      difficulty_settings_averages = {}
-      DIFFICULTY_RANGES.keys.each do |option_name|
-        slider = @slider_widgets_by_name[option_name]
-        average = slider.true_value
-        difficulty_settings_averages[option_name] = average
-      end
+      difficulty_settings_averages = get_current_difficulty_settings_averages()
       
       randomizer = Randomizer.new(seed, game, options_hash, @settings[:difficulty_level], difficulty_settings_averages)
       begin
@@ -458,6 +450,28 @@ class RandomizerWindow < Qt::Dialog
     update_settings()
   end
   
+  def get_current_options_hash
+    options_hash = {}
+    
+    OPTIONS.each_key do |option_name|
+      options_hash[option_name] = @ui.send(option_name).checked
+    end
+    
+    return options_hash
+  end
+  
+  def get_current_difficulty_settings_averages
+    difficulty_settings_averages = {}
+    
+    DIFFICULTY_RANGES.keys.each do |option_name|
+      slider = @slider_widgets_by_name[option_name]
+      average = slider.true_value
+      difficulty_settings_averages[option_name] = average
+    end
+    
+    return difficulty_settings_averages
+  end
+  
   def generate_seed
     # Generate a new random seed composed of 2 adjectives and a noun.
     adjectives = File.read("./dsvrandom/seedgen_adjectives.txt").split("\n").sample(2)
@@ -520,17 +534,9 @@ class RandomizerWindow < Qt::Dialog
     
     @sanitized_seed = seed
     
-    options_hash = {}
-    OPTIONS.each_key do |option_name|
-      options_hash[option_name] = @ui.send(option_name).checked
-    end
+    options_hash = get_current_options_hash()
     
-    difficulty_settings_averages = {}
-    DIFFICULTY_RANGES.keys.each do |option_name|
-      slider = @slider_widgets_by_name[option_name]
-      average = slider.true_value
-      difficulty_settings_averages[option_name] = average
-    end
+    difficulty_settings_averages = get_current_difficulty_settings_averages()
     
     begin
       randomizer = Randomizer.new(seed, game, options_hash, @settings[:difficulty_level], difficulty_settings_averages)
