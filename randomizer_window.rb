@@ -247,8 +247,6 @@ class RandomizerWindow < Qt::Dialog
       :randomize_villagers,
       :randomize_portraits,
       :randomize_red_walls,
-      :randomize_area_connections,
-      :randomize_room_connections,
       :randomize_starting_room,
       :randomize_rooms_map_friendly,
       :randomize_world_map_exits,
@@ -258,15 +256,6 @@ class RandomizerWindow < Qt::Dialog
       pickup_randomizer_dependant_options.each do |option_name|
         should_enable_options[option_name] &&= false
       end
-    end
-    
-    if @ui.randomize_rooms_map_friendly.checked
-      should_enable_options[:randomize_area_connections] &&= false
-      should_enable_options[:randomize_room_connections] &&= false
-    end
-    
-    if @ui.randomize_area_connections.checked || @ui.randomize_room_connections.checked
-      should_enable_options[:randomize_rooms_map_friendly] &&= false
     end
     
     if @ui.open_world_map.checked

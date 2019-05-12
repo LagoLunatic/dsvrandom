@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>760</height>
+    <height>733</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -165,6 +165,9 @@
           <string>Room randomization options</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="2">
+           <widget class="QWidget" name="widget" native="true"/>
+          </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="randomize_rooms_map_friendly">
             <property name="text">
@@ -178,23 +181,6 @@
              <string>Starting Room</string>
             </property>
            </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="randomize_area_connections">
-            <property name="text">
-             <string>Area Connections (Not map-friendly)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="randomize_room_connections">
-            <property name="text">
-             <string>Room Connections (Not map-friendly)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QWidget" name="widget" native="true"/>
           </item>
          </layout>
         </widget>
@@ -449,7 +435,7 @@
             <x>0</x>
             <y>0</y>
             <width>770</width>
-            <height>518</height>
+            <height>491</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -1025,8 +1011,6 @@
   <tabstop>randomize_villagers</tabstop>
   <tabstop>randomize_rooms_map_friendly</tabstop>
   <tabstop>randomize_starting_room</tabstop>
-  <tabstop>randomize_room_connections</tabstop>
-  <tabstop>randomize_area_connections</tabstop>
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>

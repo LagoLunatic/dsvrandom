@@ -9,8 +9,6 @@ OPTIONS = {
   
   randomize_rooms_map_friendly: "Randomly generates entirely new maps and connects rooms to match the map.",
   randomize_starting_room: "Randomizes which room you start in.",
-  randomize_room_connections: "Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)",
-  randomize_area_connections: "Randomizes which areas connect to each other.",
   
   randomize_enemies: "Randomizes which non-boss enemies appear where.",
   randomize_bosses: "Randomizes which bosses appear where.",
