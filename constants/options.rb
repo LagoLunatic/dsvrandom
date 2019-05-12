@@ -6,33 +6,39 @@ OPTIONS = {
   randomize_red_walls: "Randomizes which bullet souls are needed to open red walls (DoS only).",
   randomize_portraits: "Randomizes where portraits are located (PoR only).",
   randomize_villagers: "Randomizes where villagers are located (OoE only).",
+  
+  randomize_rooms_map_friendly: "Randomly generates entirely new maps and connects rooms to match the map.",
+  randomize_starting_room: "Randomizes which room you start in.",
+  randomize_room_connections: "Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)",
+  randomize_area_connections: "Randomizes which areas connect to each other.",
+  
   randomize_enemies: "Randomizes which non-boss enemies appear where.",
   randomize_bosses: "Randomizes which bosses appear where.",
   randomize_enemy_drops: "Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.",
   randomize_enemy_stats: "Randomizes enemy attack, defense, HP, EXP given, and other stats.",
   randomize_enemy_anim_speed: "Randomizes the speed at which each enemy's animations play at, which affects their attack speed.",
   randomize_enemy_tolerances: "Randomizes enemy elemental weaknesses and resistances.",
+  
   randomize_consumable_behavior: "Randomizes what consumables do and how powerful they are.",
   randomize_weapon_behavior: "Randomizes how weapons behave.",
   randomize_skill_behavior: "Randomizes how skills behave.",
   randomize_equipment_stats: "Randomizes weapon and armor stats.",
   randomize_skill_stats: "Randomizes skill stats.",
   randomize_weapon_and_skill_elements: "Randomizes what elemental damage types and status effects each weapon/skill does.",
+  
   randomize_shop: "Randomizes what items are for sale in the shop as well as item prices.",
-  randomize_wooden_chests: "Randomizes the pool of items for wooden chests in each area (OoE only).",
   randomize_weapon_synths: "Randomizes which items Yoko can synthesize (DoS only).",
-  randomize_rooms_map_friendly: "Randomly generates entirely new maps and connects rooms to match the map.",
-  randomize_starting_room: "Randomizes which room you start in.",
-  randomize_room_connections: "Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)",
-  randomize_area_connections: "Randomizes which areas connect to each other.",
+  randomize_wooden_chests: "Randomizes the pool of items for wooden chests in each area (OoE only).",
   
   experimental_options_enabled: "",
   randomize_players: "Randomizes player movement stats.",
   randomize_enemy_sprites: "Randomizes the graphics of non-boss enemies.",
   randomize_boss_sprites: "Randomizes the graphics of bosses.",
   
+  
   enable_glitch_reqs: "If checked, certain glitches may be necessary to beat the game.",
   rebalance_enemies_in_room_rando: "Balances enemy and boss difficulty around the order you will reach them, as opposed to how difficult they were in the vanilla game. (Has no effect if all room randomizer options are off.)",
+  
   
   scavenger_mode: "Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.",
   revise_item_descriptions: "Updates all weapon, armor, and skill descriptions to indicate what their randomized attributes are.",
@@ -62,6 +68,7 @@ OPTIONS = {
   always_dowsing: "Hidden blue chests always make a beeping sound.",
   gain_extra_attribute_points: "You gain 25x more AP when killing enemies or absorbing glyphs.",
   summons_gain_extra_exp: "Your summons gain far more EXP every time they hit an enemy.",
+  
   
   randomize_bgm: "Randomizes what songs play in what areas.",
   randomize_dialogue: "Generates random dialogue for all cutscenes.",
