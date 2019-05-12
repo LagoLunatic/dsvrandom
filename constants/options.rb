@@ -7,7 +7,7 @@ OPTIONS = {
   randomize_portraits: "Randomizes where portraits are located (PoR only).",
   randomize_villagers: "Randomizes where villagers are located (OoE only).",
   
-  randomize_rooms_map_friendly: "Randomly generates entirely new maps and connects rooms to match the map.",
+  randomize_maps: "Randomly generates entirely new maps and connects rooms to match the map.",
   randomize_starting_room: "Randomizes which room you start in.",
   
   randomize_enemies: "Randomizes which non-boss enemies appear where.",

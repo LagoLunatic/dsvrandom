@@ -169,7 +169,7 @@
            <widget class="QWidget" name="widget" native="true"/>
           </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="randomize_rooms_map_friendly">
+           <widget class="QCheckBox" name="randomize_maps">
             <property name="text">
              <string>Maps</string>
             </property>
@@ -434,8 +434,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>770</width>
-            <height>491</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -1009,7 +1009,7 @@
   <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_villagers</tabstop>
-  <tabstop>randomize_rooms_map_friendly</tabstop>
+  <tabstop>randomize_maps</tabstop>
   <tabstop>randomize_starting_room</tabstop>
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_bosses</tabstop>

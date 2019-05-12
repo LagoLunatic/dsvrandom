@@ -248,7 +248,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_portraits,
       :randomize_red_walls,
       :randomize_starting_room,
-      :randomize_rooms_map_friendly,
+      :randomize_maps,
       :randomize_world_map_exits,
       :por_short_mode,
     ]
@@ -575,7 +575,7 @@ class RandomizerWindow < Qt::Dialog
     max_val = options_hash.select{|k,v| k.to_s.start_with?("randomize_") && v}.length
     max_val += 20 if options_hash[:randomize_pickups]
     max_val += 7 if options_hash[:randomize_enemies]
-    max_val += 75 if options_hash[:randomize_rooms_map_friendly]
+    max_val += 75 if options_hash[:randomize_maps]
     max_val += 2 # Initialization
     max_val += 1 # Applying tweaks and finishing up
     @progress_dialog = ProgressDialog.new("Randomizing", "Initializing...", max_val)

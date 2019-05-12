@@ -144,7 +144,7 @@ module PickupRandomizer
     end
     
     if !checker.game_beatable?
-      #if options[:randomize_rooms_map_friendly]
+      #if options[:randomize_maps]
       #  # When debugging logic errors in map rando, output a list of what room strings were accessible at the end.
       #  File.open("./logs/accessed rooms debug #{GAME} #{seed}.txt", "w") do |f|
       #    for room_str in @rooms_by_progression_order_accessed

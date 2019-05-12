@@ -255,7 +255,7 @@ module Tweaks
       end
     end
     
-    if GAME == "dos" && options[:randomize_rooms_map_friendly]
+    if GAME == "dos" && options[:randomize_maps]
       # Remove the cutscene where Yoko gives you a magic seal in the drawbridge room for map rando.
       # This cutscene puts you in the topleft door - but that door might be removed and blocked off in map rando, in which case the player will be put out of bounds.
       room = game.room_by_str("00-00-15")
@@ -550,7 +550,7 @@ module Tweaks
       game.apply_armips_patch("dos_julius_start_with_tower_key")
     end
     
-    if GAME == "dos" && !options[:randomize_rooms_map_friendly]
+    if GAME == "dos" && !options[:randomize_maps]
       # Update the vanilla map to show mirror rooms in orange.
       # (The map rando handles doing this when it's on, so this tweak only needs to be run when the map rando is off.)
       map = game.get_map(0, 0)
@@ -779,14 +779,14 @@ module Tweaks
       end
     end
     
-    if GAME == "por" && (options[:randomize_starting_room] || options[:randomize_rooms_map_friendly])
+    if GAME == "por" && (options[:randomize_starting_room] || options[:randomize_maps])
       # If the starting room (or map) is randomized, we need to lower the drawbridge by default or the player can't ever reach the first few rooms of the entrance.
       # Do this by making the drawbridge think the game mode is Richter mode, since it automatically lowers itself in that case.
       game.fs.load_overlay(78)
       game.fs.write(0x022E8880, [0xE3A01001].pack("V")) # mov r1, 1h
     end
     
-    if GAME == "por" && (options[:randomize_area_connections] || options[:randomize_rooms_map_friendly])
+    if GAME == "por" && (options[:randomize_area_connections] || options[:randomize_maps])
       # Some bosses (e.g. Stella) connect directly to a transition room.
       # This means the boss door gets placed in whatever transition room gets connected to the boss by the area randomizer.
       # But almost all transition room hiders have a higher Z-position than boss doors, hiding the boss door.
@@ -939,7 +939,7 @@ module Tweaks
       game.fs.write(0x021C7518, [0xE1A00000].pack("V")) # Same as above, but this is for if the player watched the cutscene instead of skipping it.
     end
     
-    if GAME == "dos" && options[:randomize_rooms_map_friendly]
+    if GAME == "dos" && options[:randomize_maps]
       # The game doesn't let you explore the center of the Abyss map because that's where Menace's room normally is.
       # We need to allow exploring the center since other rooms can get placed there by the map rando.
       game.fs.write(0x02023264, [0xE1A00000].pack("V"))

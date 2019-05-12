@@ -84,7 +84,7 @@ class Randomizer
     else
       options[:randomize_world_map_exits] = false
     end
-    if options[:randomize_rooms_map_friendly]
+    if options[:randomize_maps]
       # The map rando won't necessarily place the rooms containing the normal bosses/portraits/villagers.
       # So forcibly enable these options so these things can be placed wherever.
       options[:randomize_boss_souls] = true
@@ -221,7 +221,7 @@ class Randomizer
   end
   
   def room_rando?
-    options[:randomize_rooms_map_friendly] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room] || options[:randomize_world_map_exits]
+    options[:randomize_maps] || options[:randomize_room_connections] || options[:randomize_area_connections] || options[:randomize_starting_room] || options[:randomize_world_map_exits]
   end
   
   def needs_infinite_magical_tickets?
@@ -487,7 +487,7 @@ class Randomizer
       remove_door_blockers()
     end
     
-    if options[:randomize_rooms_map_friendly]
+    if options[:randomize_maps]
       yield [options_completed, "Generating map..."]
       reset_rng()
       randomize_doors_no_overlap() do |percent|
