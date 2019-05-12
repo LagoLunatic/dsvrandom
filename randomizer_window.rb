@@ -278,7 +278,6 @@ class RandomizerWindow < Qt::Dialog
         @ui.send(option_name).enabled = true
       else
         @ui.send(option_name).enabled = false
-        @ui.send(option_name).checked = false
       end
     end
     
@@ -492,7 +491,8 @@ class RandomizerWindow < Qt::Dialog
     options_hash = {}
     
     OPTIONS.each_key do |option_name|
-      options_hash[option_name] = @ui.send(option_name).checked
+      # Options that are disabled don't count as being checked, even though they visually remain checked when disabled.
+      options_hash[option_name] = @ui.send(option_name).checked && @ui.send(option_name).enabled
     end
     
     return options_hash
