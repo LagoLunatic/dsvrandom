@@ -236,7 +236,6 @@ module PickupRandomizer
     
     # First place progression pickups needed to beat the game.
     spoiler_log.puts "Placing main route progression pickups:"
-    on_first_item = true
     while true
       case GAME
       when "por"
@@ -480,9 +479,9 @@ module PickupRandomizer
         end
       elsif filtered_new_possible_locations.empty? && valid_previous_accessible_regions.empty?
         # No new locations, but there's no old locations either.
-        if on_first_item
-          # If we're placing the very first item yet there's no accessible spots, then the room/map randomizer must have resulted in a bad start.
-          # So we place the first progression item in the starting room.
+        if @locations_randomized_to_have_useful_pickups.size < 2
+          # If we're still very early in placing items yet there's no accessible spots, then the room/map randomizer must have resulted in a bad start.
+          # So we place the this progression item in the starting room.
           entity = @starting_room.add_new_entity()
           
           entity.x_pos = @starting_x_pos
@@ -555,8 +554,6 @@ module PickupRandomizer
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
       
       checker.add_item(pickup_global_id)
-      
-      on_first_item = false
       
       if room_rando? && GAME == "ooe"
         if accessible_doors.include?("01-01-00_000") && !checker.current_items.include?(:villagernikolai)
