@@ -580,6 +580,13 @@ module PickupRandomizer
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
       area_name = SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
+      if area_name == "Condemned Tower & Mine of Judgment"
+        if MapRandomizer::CONDEMNED_TOWER_ROOM_INDEXES.include?(room_index)
+          area_name = "Condemned Tower"
+        else
+          area_name = "Mine of Judgment"
+        end
+      end
     else
       area_name = AREA_INDEX_TO_AREA_NAME[area_index]
     end
