@@ -121,6 +121,25 @@ class DoorCompletabilityChecker < CompletabilityChecker
     
     @progress_important_rooms = yaml["Progress important rooms"]
     
+    # If boss souls/portraits/villagers aren't randomized, then we don't have the freedom to place them wherever we want.
+    # So we need to ensure their vanilla rooms are placed by the map randomizer.
+    if !@options[:randomize_boss_souls]
+      @progress_important_rooms += @enemy_locations.map do |location|
+        location[0,8]
+      end
+    end
+    if !@options[:randomize_portraits]
+      @progress_important_rooms += @portrait_locations.map do |location|
+        location[0,8]
+      end
+    end
+    if !@options[:randomize_villagers]
+      @progress_important_rooms += @villager_locations.map do |location|
+        location[0,8]
+      end
+    end
+    @progress_important_rooms.uniq!
+    
     @progress_important_rooms.map! do |room_str|
       game.room_by_str(room_str)
     end

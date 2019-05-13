@@ -84,13 +84,6 @@ class Randomizer
     else
       options[:randomize_world_map_exits] = false
     end
-    if options[:randomize_maps]
-      # The map rando won't necessarily place the rooms containing the normal bosses/portraits/villagers.
-      # So forcibly enable these options so these things can be placed wherever.
-      options[:randomize_boss_souls] = true
-      options[:randomize_portraits] = true
-      options[:randomize_villagers] = true
-    end
     
     if room_rando?
       @checker = DoorCompletabilityChecker.new(game, options)
