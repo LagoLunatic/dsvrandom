@@ -479,42 +479,29 @@ module MapRandomizer
     
     transition_rooms_to_start_sector = []
     unplaced_transition_rooms_to_start_sector = []
-    if sector_index != area_starting_room.sector_index && placement_mode == :placing_skeleton
-      if GAME == "por" && area_index == 0
-        # We need to make sure a Master's Keep transition room connects to the Throne Room so we can put the white barrier in that transition room.
-        transition_for_throne_room = game.room_by_str("00-0A-17")
-        if sector_index == 9
-          unless unplaced_transition_rooms.include?(transition_for_throne_room)
-            raise "Transition for Throne Room (00-0A-17) has already been placed."
-          end
-          possible_transition_rooms = [transition_for_throne_room]
-        else
-          possible_transition_rooms = (unplaced_transition_rooms - [transition_for_throne_room])
-        end
+    transition_room_to_connect_to_dracula = nil
+    if placement_mode == :placing_skeleton
+      if sector_index == area_starting_room.sector_index
+        on_starting_room = true
       else
-        possible_transition_rooms = unplaced_transition_rooms.dup
+        on_starting_room = false
+        
+        if GAME == "ooe" && area_index == 0 && sector_index == 9
+          # Decide on the transition room that will be between Forsaken Cloister and Dracula.
+          transition_room_to_connect_to_dracula = unplaced_transition_rooms.sample(random: rng)
+          unplaced_sector_rooms << transition_room_to_connect_to_dracula
+        end
+        
+        unplaced_transition_rooms_temp = unplaced_transition_rooms - [transition_room_to_connect_to_dracula]
+        
+        transition_rooms_to_start_sector = pick_all_transition_rooms_for_sector(
+          area_index, sector_index,
+          unplaced_transition_rooms_temp, unplaced_sector_rooms,
+          redo_count_for_this_sector,
+          num_other_sectors_left_to_place
+        )
+        unplaced_transition_rooms_to_start_sector = transition_rooms_to_start_sector.dup
       end
-      
-      if GAME == "ooe" && area_index == 0 && sector_index == 9 && placement_mode == :placing_skeleton
-        # Decide on the transition room that will be between Forsaken Cloister and Dracula.
-        transition_room_to_connect_to_dracula = possible_transition_rooms.sample(random: rng)
-        unplaced_sector_rooms << transition_room_to_connect_to_dracula
-        possible_transition_rooms -= [transition_room_to_connect_to_dracula]
-      end
-      
-      transition_rooms_to_start_sector << pick_transition_room_for_sector(possible_transition_rooms, sector_index)
-      possible_transition_rooms -= transition_rooms_to_start_sector
-      
-      can_be_a_noncontiguous_sector = ALLOWABLE_NONCONTIGUOUS_SECTORS.include?([area_index, sector_index])
-      has_spare_transition_rooms = (possible_transition_rooms.size > num_other_sectors_left_to_place)
-      if redo_count_for_this_sector > 1 && has_spare_transition_rooms && can_be_a_noncontiguous_sector
-        # If this sector has failed several times already, and we have transition rooms left to spare, allow this sector to be split into two parts, placed off of 2 transition rooms instead of 1.
-        transition_rooms_to_start_sector << pick_transition_room_for_sector(possible_transition_rooms, sector_index)
-      end
-      
-      unplaced_transition_rooms_to_start_sector = transition_rooms_to_start_sector.dup
-      
-      puts "transition_rooms_to_start_sector: #{transition_rooms_to_start_sector.inspect}" if @map_rando_debug
     end
     
     total_sector_rooms = unplaced_sector_rooms.size
@@ -525,11 +512,6 @@ module MapRandomizer
     
     num_placed_non_transition_rooms = 0
     num_placed_transition_rooms = 0
-    if placement_mode == :placing_skeleton
-      on_starting_room = (sector_index == area_starting_room.sector_index)
-    else
-      on_starting_room = false
-    end
     while true
       debug = false
       #debug = (area_index == 0 && sector_index == 5)
@@ -1000,6 +982,44 @@ module MapRandomizer
     end
     
     return [number_of_spots_opened_up, number_of_spots_closed_up]
+  end
+  
+  def pick_all_transition_rooms_for_sector(
+    area_index, sector_index,
+    unplaced_transition_rooms, unplaced_sector_rooms,
+    redo_count_for_this_sector,
+    num_other_sectors_left_to_place
+  )
+    transition_rooms_to_start_sector = []
+    
+    if GAME == "por" && area_index == 0
+      # We need to make sure a Master's Keep transition room connects to the Throne Room so we can put the white barrier in that transition room.
+      transition_for_throne_room = game.room_by_str("00-0A-17")
+      if sector_index == 9
+        unless unplaced_transition_rooms.include?(transition_for_throne_room)
+          raise "Transition for Throne Room (00-0A-17) has already been placed."
+        end
+        possible_transition_rooms = [transition_for_throne_room]
+      else
+        possible_transition_rooms = (unplaced_transition_rooms - [transition_for_throne_room])
+      end
+    else
+      possible_transition_rooms = unplaced_transition_rooms.dup
+    end
+    
+    transition_rooms_to_start_sector << pick_transition_room_for_sector(possible_transition_rooms, sector_index)
+    possible_transition_rooms -= transition_rooms_to_start_sector
+    
+    can_be_a_noncontiguous_sector = ALLOWABLE_NONCONTIGUOUS_SECTORS.include?([area_index, sector_index])
+    has_spare_transition_rooms = (possible_transition_rooms.size > num_other_sectors_left_to_place)
+    if redo_count_for_this_sector > 1 && has_spare_transition_rooms && can_be_a_noncontiguous_sector
+      # If this sector has failed several times already, and we have transition rooms left to spare, allow this sector to be split into two parts, placed off of 2 transition rooms instead of 1.
+      transition_rooms_to_start_sector << pick_transition_room_for_sector(possible_transition_rooms, sector_index)
+    end
+    
+    puts "transition_rooms_to_start_sector: #{transition_rooms_to_start_sector.inspect}" if @map_rando_debug
+    
+    return transition_rooms_to_start_sector
   end
   
   def pick_transition_room_for_sector(possible_transition_rooms, sector_index)
