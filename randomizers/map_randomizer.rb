@@ -345,6 +345,9 @@ module MapRandomizer
       
       unplaced_sector_rooms = unplaced_rooms_for_each_sector[sector_index]
       
+      num_other_sectors_left_to_place = remaining_sectors_to_place.size - 1
+      redo_count_for_this_sector = redo_counts_per_sector[sector_index]
+      
       orig_unplaced_sector_rooms     = unplaced_sector_rooms.dup
       orig_map_spots                 = Array.new(map_width) { Array.new(map_height) }
       map_spots.each_with_index do |col, x|
@@ -360,7 +363,9 @@ module MapRandomizer
         area_starting_room,
         unplaced_transition_rooms, placed_transition_rooms,
         unreachable_subroom_doors,
-        placement_mode
+        placement_mode,
+        num_other_sectors_left_to_place,
+        redo_count_for_this_sector
       )
       
       if result == :mustredo || (result == :shouldredo && redo_counts_per_sector[sector_index] <= 7)
@@ -453,12 +458,23 @@ module MapRandomizer
     @all_unreachable_subroom_doors += unreachable_subroom_doors
   end
   
-  def randomize_doors_no_overlap_for_sector(sector_index, unplaced_sector_rooms, map_spots, map_width, map_height, area_starting_room, unplaced_transition_rooms, placed_transition_rooms, unreachable_subroom_doors, placement_mode)
+  def randomize_doors_no_overlap_for_sector(
+    sector_index, unplaced_sector_rooms,
+    map_spots, map_width, map_height,
+    area_starting_room,
+    unplaced_transition_rooms, placed_transition_rooms,
+    unreachable_subroom_doors,
+    placement_mode,
+    num_other_sectors_left_to_place,
+    redo_count_for_this_sector
+  )
     area_index = area_starting_room.area_index
     
     puts if @map_rando_debug
     puts "ON AREA %02X, SECTOR: %02X" % [area_index, sector_index] if @map_rando_debug
     
+    transition_rooms_to_start_sector = []
+    unplaced_transition_rooms_to_start_sector = []
     if sector_index != area_starting_room.sector_index && placement_mode == :placing_skeleton
       if GAME == "por" && area_index == 0
         # We need to make sure a Master's Keep transition room connects to the Throne Room so we can put the white barrier in that transition room.
@@ -472,22 +488,29 @@ module MapRandomizer
           possible_transition_rooms = (unplaced_transition_rooms - [transition_for_throne_room])
         end
       else
-        possible_transition_rooms = unplaced_transition_rooms
+        possible_transition_rooms = unplaced_transition_rooms.dup
       end
       
-      possible_transition_rooms_from_same_sector = possible_transition_rooms.select{|room| room.sector_index == sector_index}
-      if possible_transition_rooms_from_same_sector.any?
-        transition_room_to_start_sector = possible_transition_rooms_from_same_sector.sample(random: rng)
-      else
-        transition_room_to_start_sector = possible_transition_rooms.sample(random: rng)
+      if GAME == "ooe" && area_index == 0 && sector_index == 9 && placement_mode == :placing_skeleton
+        # Decide on the transition room that will be between Forsaken Cloister and Dracula.
+        transition_room_to_connect_to_dracula = possible_transition_rooms.sample(random: rng)
+        unplaced_sector_rooms << transition_room_to_connect_to_dracula
+        possible_transition_rooms -= [transition_room_to_connect_to_dracula]
       end
       
-      puts "transition_room_to_start_sector: #{transition_room_to_start_sector.room_str} (#{transition_room_to_start_sector.room_xpos_on_map},#{transition_room_to_start_sector.room_ypos_on_map})" if @map_rando_debug
-    end
-    
-    if GAME == "ooe" && area_index == 0 && sector_index == 9
-      transition_room_to_connect_to_dracula = unplaced_transition_rooms.sample(random: rng)
-      unplaced_sector_rooms << transition_room_to_connect_to_dracula
+      transition_rooms_to_start_sector << pick_transition_room_for_sector(possible_transition_rooms, sector_index)
+      possible_transition_rooms -= transition_rooms_to_start_sector
+      
+      can_be_a_noncontiguous_sector = ALLOWABLE_NONCONTIGUOUS_SECTORS.include?([area_index, sector_index])
+      has_spare_transition_rooms = (possible_transition_rooms.size > num_other_sectors_left_to_place)
+      if redo_count_for_this_sector > 1 && has_spare_transition_rooms && can_be_a_noncontiguous_sector
+        # If this sector has failed several times already, and we have transition rooms left to spare, allow this sector to be split into two parts, placed off of 2 transition rooms instead of 1.
+        transition_rooms_to_start_sector << pick_transition_room_for_sector(possible_transition_rooms, sector_index)
+      end
+      
+      unplaced_transition_rooms_to_start_sector = transition_rooms_to_start_sector.dup
+      
+      puts "transition_rooms_to_start_sector: #{transition_rooms_to_start_sector.inspect}" if @map_rando_debug
     end
     
     total_sector_rooms = unplaced_sector_rooms.size
@@ -500,10 +523,8 @@ module MapRandomizer
     num_placed_transition_rooms = 0
     if placement_mode == :placing_skeleton
       on_starting_room = (sector_index == area_starting_room.sector_index)
-      on_starting_transition_room = !on_starting_room
     else
       on_starting_room = false
-      on_starting_transition_room = false
     end
     while true
       debug = false
@@ -519,10 +540,8 @@ module MapRandomizer
           x: map_width/2, # Place at the center of the map.
           y: map_height/2,
         }
-      elsif on_starting_transition_room
-        on_starting_transition_room = false
-        
-        room = transition_room_to_start_sector
+      elsif unplaced_transition_rooms_to_start_sector.any?
+        room = unplaced_transition_rooms_to_start_sector.pop()
         
         open_spots = get_open_spots(
           map_spots, map_width, map_height,
@@ -584,7 +603,7 @@ module MapRandomizer
       else
         break if unplaced_sector_rooms.empty?
         
-        transition_rooms_to_allow_connecting_to = [transition_room_to_start_sector]
+        transition_rooms_to_allow_connecting_to = transition_rooms_to_start_sector.dup
         if transition_room_to_connect_to_dracula
           transition_rooms_to_allow_connecting_to << transition_room_to_connect_to_dracula
         end
@@ -977,6 +996,16 @@ module MapRandomizer
     end
     
     return [number_of_spots_opened_up, number_of_spots_closed_up]
+  end
+  
+  def pick_transition_room_for_sector(possible_transition_rooms, sector_index)
+    # Try to prefer connecting a sector to a transition room that visually matches that sector, when possible.
+    possible_transition_rooms_from_same_sector = possible_transition_rooms.select{|room| room.sector_index == sector_index}
+    if possible_transition_rooms_from_same_sector.any?
+      return possible_transition_rooms_from_same_sector.sample(random: rng)
+    else
+      return possible_transition_rooms.sample(random: rng)
+    end
   end
   
   def remove_useless_transition_rooms(map_spots, map_width, map_height, placed_transition_rooms)

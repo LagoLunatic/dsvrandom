@@ -168,6 +168,13 @@ CUSTOM_LOAD_SPRITE_MULTI_GFX_FUNC_PTR = 0x02309040
 
 BAD_NEW_SAVE_WARP_ROOMS = []
 
+ALLOWABLE_NONCONTIGUOUS_SECTORS = [
+  [5, 0], # Nation of Fools
+  [5, 1], # Nation of Fools
+  [6, 0], # Burnt Paradise
+  [6, 1], # Burnt Paradise
+]
+
 
 
 HARDCODED_SKILL_IFRAMES_LOCATIONS = {

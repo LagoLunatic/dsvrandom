@@ -174,6 +174,10 @@ BAD_NEW_SAVE_WARP_ROOMS = [
   "0A-01-09", # pneuma puzzle
 ]
 
+ALLOWABLE_NONCONTIGUOUS_SECTORS = [
+  [6, 1], # Kalidus Channel
+]
+
 
 
 HARDCODED_SKILL_IFRAMES_LOCATIONS = {
