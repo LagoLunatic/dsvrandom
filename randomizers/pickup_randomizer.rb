@@ -47,6 +47,7 @@ module PickupRandomizer
   }
   
   def randomize_pickups_completably(&block)
+    spoiler_log.puts
     spoiler_log.puts "Randomizing pickups:"
     
     case GAME
@@ -564,13 +565,15 @@ module PickupRandomizer
   def get_item_placement_spoiler_string(location, pickup_global_id)
     if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
       # Villager
-      pickup_str = "villager #{pickup_global_id}"
+      # Remove the word villager and capitalize the name.
+      pickup_str = pickup_global_id[8..-1].capitalize
     elsif PORTRAIT_NAMES.include?(pickup_global_id)
       # Portrait
-      pickup_str = "portrait #{pickup_global_id.to_s[8..-1]}" # Add a space between portrait and the area name
+      # Remove the word portrait and capitalize the name.
+      pickup_str = pickup_global_id[8..-1].capitalize
     else
-      pickup_name = checker.defs.invert[pickup_global_id].to_s
-      pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
+      pickup_str = checker.defs.invert[pickup_global_id].to_s
+      pickup_str = pickup_str.tr("_", " ").split.map(&:capitalize).join(" ")
     end
     
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
@@ -580,13 +583,14 @@ module PickupRandomizer
     else
       area_name = AREA_INDEX_TO_AREA_NAME[area_index]
     end
-    is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
-    is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
-    is_easter_egg_str = checker.easter_egg_locations.include?(location) ? " (easter egg)" : ""
-    is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
-    is_mirror_str = checker.mirror_locations.include?(location) ? " (mirror)" : ""
+    is_enemy_str = checker.enemy_locations.include?(location) ? " (Boss)" : ""
+    is_event_str = checker.event_locations.include?(location) ? " (Event)" : ""
+    is_easter_egg_str = checker.easter_egg_locations.include?(location) ? " (Easter Egg)" : ""
+    is_hidden_str = checker.hidden_locations.include?(location) ? " (Hidden)" : ""
+    is_mirror_str = checker.mirror_locations.include?(location) ? " (Mirror)" : ""
+    location_str = "#{area_name} (#{location})#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str}"
     
-    spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
+    spoiler_str = "  %-16s %s" % [pickup_str+":", location_str]
     
     return spoiler_str
   end
