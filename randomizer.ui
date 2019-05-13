@@ -434,8 +434,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>770</width>
+            <height>491</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -550,6 +550,9 @@
            <widget class="QCheckBox" name="remove_slot_machines">
             <property name="text">
              <string>Remove slot machines</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
