@@ -525,29 +525,7 @@ module PickupRandomizer
         checker.set_current_location_by_entity(location)
       end
       
-      if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
-        # Villager
-        pickup_str = "villager #{pickup_global_id}"
-      elsif PORTRAIT_NAMES.include?(pickup_global_id)
-        # Portrait
-        pickup_str = "portrait #{pickup_global_id.to_s[8..-1]}" # Add a space between portrait and the area name
-      else
-        pickup_name = checker.defs.invert[pickup_global_id].to_s
-        pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
-      end
-      location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
-      area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
-      if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
-        area_name = SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
-      else
-        area_name = AREA_INDEX_TO_AREA_NAME[area_index]
-      end
-      is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
-      is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
-      is_easter_egg_str = checker.easter_egg_locations.include?(location) ? " (easter egg)" : ""
-      is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
-      is_mirror_str = checker.mirror_locations.include?(location) ? " (mirror)" : ""
-      spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
+      spoiler_str = get_item_placement_spoiler_string(location, pickup_global_id)
       spoiler_log.puts spoiler_str
       puts spoiler_str if verbose
       
@@ -581,6 +559,36 @@ module PickupRandomizer
     end
     
     spoiler_log.puts "All progression pickups placed successfully."
+  end
+  
+  def get_item_placement_spoiler_string(location, pickup_global_id)
+    if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+      # Villager
+      pickup_str = "villager #{pickup_global_id}"
+    elsif PORTRAIT_NAMES.include?(pickup_global_id)
+      # Portrait
+      pickup_str = "portrait #{pickup_global_id.to_s[8..-1]}" # Add a space between portrait and the area name
+    else
+      pickup_name = checker.defs.invert[pickup_global_id].to_s
+      pickup_str = "pickup %04X (#{pickup_name})" % pickup_global_id
+    end
+    
+    location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+    if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
+      area_name = SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
+    else
+      area_name = AREA_INDEX_TO_AREA_NAME[area_index]
+    end
+    is_enemy_str = checker.enemy_locations.include?(location) ? " (boss)" : ""
+    is_event_str = checker.event_locations.include?(location) ? " (event)" : ""
+    is_easter_egg_str = checker.easter_egg_locations.include?(location) ? " (easter egg)" : ""
+    is_hidden_str = checker.hidden_locations.include?(location) ? " (hidden)" : ""
+    is_mirror_str = checker.mirror_locations.include?(location) ? " (mirror)" : ""
+    
+    spoiler_str = "  Placing #{pickup_str} at #{location}#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str} (#{area_name})"
+    
+    return spoiler_str
   end
   
   def output_map_rando_error_debug_info
