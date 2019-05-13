@@ -144,39 +144,6 @@ module PickupRandomizer
     end
     
     if !checker.game_beatable?
-      #if options[:randomize_maps]
-      #  # When debugging logic errors in map rando, output a list of what room strings were accessible at the end.
-      #  File.open("./logs/accessed rooms debug #{GAME} #{seed}.txt", "w") do |f|
-      #    for room_str in @rooms_by_progression_order_accessed
-      #      f.puts(room_str)
-      #    end
-      #  end
-      #  
-      #  # And also output an image of the map with accessible rooms highlighted in red.
-      #  unique_rooms_accessed = @rooms_by_progression_order_accessed.flatten.uniq
-      #  game.areas.each_index do |area_index|
-      #    map = game.get_map(area_index, 0)
-      #    for tile in map.tiles
-      #      if tile.sector_index.nil? || tile.room_index.nil?
-      #        next
-      #      end
-      #      room_str_for_tile = "%02X-%02X-%02X" % [area_index, tile.sector_index, tile.room_index]
-      #      if unique_rooms_accessed.include?(room_str_for_tile)
-      #        tile.is_save = true
-      #        tile.is_warp = false
-      #        tile.is_entrance = false
-      #      else
-      #        tile.is_save = false
-      #        tile.is_warp = false
-      #        tile.is_entrance = false
-      #      end
-      #    end
-      #    hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
-      #    filename = "./logs/map debug #{GAME} area %02X #{seed}.png" % area_index
-      #    renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
-      #  end
-      #end
-      
       item_names = checker.current_items.map do |global_id|
         if global_id.is_a?(Symbol)
           global_id
@@ -209,6 +176,10 @@ module PickupRandomizer
         portrait.write_to_rom()
       end
     end
+  rescue StandardError => e
+    #output_map_rando_error_debug_info()
+    
+    raise e
   end
   
   def place_progression_pickups(&block)
@@ -613,6 +584,41 @@ module PickupRandomizer
     end
     
     spoiler_log.puts "All progression pickups placed successfully."
+  end
+  
+  def output_map_rando_error_debug_info
+    return unless options[:randomize_maps]
+    
+    # When debugging logic errors in map rando, output a list of what room strings were accessible at the end.
+    File.open("./logs/accessed rooms debug #{GAME} #{seed}.txt", "w") do |f|
+      for room_str in @rooms_by_progression_order_accessed
+        f.puts(room_str)
+      end
+    end
+    
+    # And also output an image of the map with accessible rooms highlighted in red.
+    unique_rooms_accessed = @rooms_by_progression_order_accessed.flatten.uniq
+    game.areas.each_index do |area_index|
+      map = game.get_map(area_index, 0)
+      for tile in map.tiles
+        if tile.sector_index.nil? || tile.room_index.nil?
+          next
+        end
+        room_str_for_tile = "%02X-%02X-%02X" % [area_index, tile.sector_index, tile.room_index]
+        if unique_rooms_accessed.include?(room_str_for_tile)
+          tile.is_save = true
+          tile.is_warp = false
+          tile.is_entrance = false
+        else
+          tile.is_save = false
+          tile.is_warp = false
+          tile.is_entrance = false
+        end
+      end
+      hardcoded_transition_rooms = (GAME == "dos" ? @transition_rooms : [])
+      filename = "./logs/map debug #{GAME} area %02X #{seed}.png" % area_index
+      renderer.render_map(map, scale=3, hardcoded_transition_rooms=hardcoded_transition_rooms).save(filename)
+    end
   end
   
   def place_non_progression_pickups
