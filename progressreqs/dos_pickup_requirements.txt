@@ -323,7 +323,7 @@ Rooms:
     00 (Hoop Earring) (No souls): medium height & backdashjump | big height | black panther | medium height & flying armor
   00-04-14:
     room: chapel
-    00 (Potion): 
+    00 (Potion): height | distance | backdashjump
   00-04-15:
     room: condemntower
     00 (UMA News 3-2): height | chapel & small

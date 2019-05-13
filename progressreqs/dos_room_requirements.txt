@@ -1779,27 +1779,27 @@ Rooms:
     000-002: 
     000-003: 
     000-004: 
-    000-e00: 
+    000-e00: height | distance | backdashjump
     001-000: 
     001-002: 
     001-003: 
     001-004: 
-    001-e00: 
+    001-e00: height | distance | backdashjump
     002-000: 
     002-001: 
     002-003: 
     002-004: 
-    002-e00: 
+    002-e00: height | distance | backdashjump
     003-000: 
     003-001: 
     003-002: 
     003-004: 
-    003-e00: 
+    003-e00: height | distance | backdashjump
     004-000: 
     004-001: 
     004-002: 
     004-003: 
-    004-e00: 
+    004-e00: height | distance | backdashjump
     e00-000: 
     e00-001: 
     e00-002: 
