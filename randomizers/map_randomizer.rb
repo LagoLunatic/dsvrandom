@@ -346,6 +346,10 @@ module MapRandomizer
       unplaced_sector_rooms = unplaced_rooms_for_each_sector[sector_index]
       
       num_other_sectors_left_to_place = remaining_sectors_to_place.size - 1
+      if GAME == "ooe" && area_index == 0 && remaining_sectors_to_place.include?(9)
+        # The Forsaken Cloister sector is counted as having the Dracula sector in it.
+        num_other_sectors_left_to_place += 1
+      end
       redo_count_for_this_sector = redo_counts_per_sector[sector_index]
       
       orig_unplaced_sector_rooms     = unplaced_sector_rooms.dup
