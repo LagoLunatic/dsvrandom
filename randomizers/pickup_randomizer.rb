@@ -591,7 +591,7 @@ module PickupRandomizer
     
     # When debugging logic errors in map rando, output a list of what room strings were accessible at the end.
     File.open("./logs/accessed rooms debug #{GAME} #{seed}.txt", "w") do |f|
-      for room_str in @rooms_by_progression_order_accessed
+      for room_str in @rooms_by_progression_order_accessed.flatten.uniq
         f.puts(room_str)
       end
     end
