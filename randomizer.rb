@@ -614,17 +614,17 @@ class Randomizer
       checker.add_item(0x144)
     end
     
-    if GAME == "por"
-      # Always start the player with Critical Art.
-      add_bonus_item_to_starting_room(0x1B8) # Critical Art
-      checker.add_item(0x1B8)
-    end
-    
     if GAME == "por" && options[:dont_randomize_change_cube] && !room_rando?
       # Always start the player with Skill Cube.
       # (If change cube is randomized, Skill Cube takes Change Cube's place, so we don't need to put Skill Cube in the starting room in that case.)
       add_bonus_item_to_starting_room(0x1AE) # Skill Cube
       checker.add_item(0x1AE)
+    end
+    
+    if GAME == "por"
+      # Always start the player with Critical Art.
+      add_bonus_item_to_starting_room(0x1B8) # Critical Art
+      checker.add_item(0x1B8)
     end
     
     if room_rando?
