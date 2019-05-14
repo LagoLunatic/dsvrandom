@@ -843,6 +843,13 @@ module PickupRandomizer
       locations.select! do |location|
         !bad_portrait_locations.include?(location)
       end
+      
+      if !room_rando? && pickup_global_id != :portraitnestofevil
+        # This is the location where Nest of Evil was in vanilla.
+        # If room rando is off, you need to do the quest with the map percentages to unlock this location.
+        # That quest requires you to be able to access the other 8 portraits, so we can't allow any of them to be placed here.
+        locations -= ["00-00-05_00"]
+      end
     end
     if GAME == "ooe" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id)
       # Don't put progression glyph in certain locations where the player could easily get them early.
