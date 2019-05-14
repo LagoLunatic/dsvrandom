@@ -275,7 +275,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
     if req == :nonlinear && GAME == "ooe"
       return @options[:open_world_map]
     end
-    if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(req) || [:villagernikolai, :villagergeorge].include?(req))
+    if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(req) || req == :villagernikolai)
       return @current_items.include?(req)
     end
     
