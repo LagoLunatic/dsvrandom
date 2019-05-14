@@ -813,14 +813,20 @@ module PickupRandomizer
       locations -= checker.event_locations
       locations -= checker.enemy_locations
       
+      # Villagers can't appear in Dracula's Castle since the castle can't be unlocked until you have all villagers.
+      locations.reject! do |location|
+        area_index = location[0,2].to_i(16)
+        area_index == 0
+      end
+      
       # Locations too close to the top of the room shouldn't be villagers, as the Torpor glyph would spawn above the screen and not be absorbable.
       locations_too_high_to_be_a_villager = ["00-05-07_01", "00-05-07_02", "00-05-08_02", "00-05-08_03", "00-05-0C_01", "00-06-09_00", "0D-00-04_00", "0D-00-0C_00"]
       locations -= locations_too_high_to_be_a_villager
       
       # Two villagers shouldn't be placed in the same room, or their events will conflict and not work correctly.
-      locations.select! do |location|
+      locations.reject! do |location|
         room_str = location[0,8]
-        !@rooms_that_already_have_an_event.include?(room_str)
+        @rooms_that_already_have_an_event.include?(room_str)
       end
     end
     if PORTRAIT_NAMES.include?(pickup_global_id)
