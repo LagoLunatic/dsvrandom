@@ -4,10 +4,14 @@ require 'yaml'
 class CompletabilityChecker
   attr_reader :game,
               :current_items,
+              
               :defs,
               :preferences,
+              
               :inaccessible_doors,
+              
               :all_progression_pickups,
+              
               :enemy_locations,
               :event_locations,
               :easter_egg_locations,
@@ -324,6 +328,10 @@ class CompletabilityChecker
   
   def add_item(new_item_global_id)
     @current_items << new_item_global_id
+  end
+  
+  def restore_current_items(prev_current_items)
+    @current_items = prev_current_items.dup
   end
   
   def set_red_wall_souls(red_wall_souls)

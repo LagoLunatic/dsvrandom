@@ -4,13 +4,18 @@ require 'yaml'
 class DoorCompletabilityChecker < CompletabilityChecker
   attr_reader :game,
               :current_items,
+              :return_portraits,
+              
               :defs,
               :preferences,
+              
               :inaccessible_doors,
               :progress_important_rooms,
               :subrooms_doors_only,
               :subroom_map_tiles,
+              
               :all_progression_pickups,
+              
               :enemy_locations,
               :event_locations,
               :easter_egg_locations,
@@ -664,6 +669,10 @@ class DoorCompletabilityChecker < CompletabilityChecker
     @current_room = starting_room.room_str
     @current_location_in_room = "%03X" % starting_room_door_index
     @starting_location = "#{@current_room}_#{@current_location_in_room}"
+  end
+  
+  def restore_return_portraits(old_return_portraits)
+    @return_portraits = old_return_portraits
   end
   
   def set_removed_portraits(removed_portraits)
