@@ -49,6 +49,18 @@ module PickupRandomizer
     :portrait13thstreet => "00-0B-00_02",
     :portraitnestofevil => "00-00-05_00",
   }
+  EARLY_GAME_PORTRAITS = [
+    :portraitcityofhaze,
+    :portraitsandygrave,
+    :portraitnationoffools,
+    :portraitforestofdoom,
+  ]
+  LATE_GAME_PORTRAITS = [
+    :portraitdarkacademy,
+    :portraitburntparadise,
+    :portraitforgottencity,
+    :portrait13thstreet
+  ]
   
   def randomize_pickups_completably(&block)
     spoiler_log.puts
@@ -254,7 +266,7 @@ module PickupRandomizer
         # If portraits are randomized but we can't rebalance enemies, try to avoid placing late game portraits in the early game.
         if progression_pickups_placed < 5
           pickups_by_locations_filtered = pickups_by_locations.reject do |pickup, usefulness|
-            [:portraitdarkacademy, :portraitburntparadise, :portraitforgottencity, :portrait13thstreet].include?(pickup)
+            LATE_GAME_PORTRAITS.include?(pickup)
           end
           if pickups_by_locations_filtered.any?
             pickups_by_locations = pickups_by_locations_filtered

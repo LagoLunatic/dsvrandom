@@ -262,18 +262,8 @@ class Randomizer
         
         # Select the portraits to remove.
         # We always remove 2/4 of the early game portraits and 2/4 of the late game portraits.
-        early_game_portraits = [
-          :portraitcityofhaze,
-          :portraitsandygrave,
-          :portraitnationoffools,
-          :portraitforestofdoom,
-        ]
-        late_game_portraits = [
-          :portraitdarkacademy,
-          :portraitburntparadise,
-          :portraitforgottencity,
-          :portrait13thstreet,
-        ]
+        early_game_portraits = PickupRandomizer::EARLY_GAME_PORTRAITS.dup
+        late_game_portraits = PickupRandomizer::LATE_GAME_PORTRAITS.dup
         2.times do
           portrait_to_remove = early_game_portraits.sample(random: rng)
           @portraits_to_remove << portrait_to_remove
