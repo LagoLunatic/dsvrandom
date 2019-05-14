@@ -757,9 +757,9 @@ class DoorCompletabilityChecker < CompletabilityChecker
   
   def get_destination_of_portrait(portrait_name)
     portrait_data = PickupRandomizer::PORTRAIT_NAME_TO_DATA[portrait_name]
-    area_index = portrait_data[:var_a]
-    room_index = portrait_data[:var_b] & 0x3F
-    sector_index = (portrait_data[:var_b] >> 6) & 0xF
+    area_index = portrait_data[:area_index]
+    sector_index = portrait_data[:sector_index]
+    room_index = portrait_data[:room_index]
     case area_index
     when 5 # Nation of Fools
       door_indexes = [1, 2]

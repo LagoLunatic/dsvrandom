@@ -583,7 +583,7 @@ module Tweaks
       # Also so the monster overlay on the front of the portrait knows when to disappear.
       @boss_id_for_each_portrait.each do |portrait_name, boss_id|
         boss_index = BOSS_ID_TO_BOSS_INDEX[boss_id]
-        area_index = PickupRandomizer::PORTRAIT_NAME_TO_DATA[portrait_name][:var_a]
+        area_index = PickupRandomizer::PORTRAIT_NAME_TO_DATA[portrait_name][:area_index]
         game.fs.write(0x020F4E78+area_index, [boss_index].pack("C"))
       end
     end

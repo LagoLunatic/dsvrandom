@@ -17,22 +17,26 @@ module PickupRandomizer
   RANDOMIZABLE_VILLAGER_NAMES = VILLAGER_NAME_TO_EVENT_FLAG.keys
   
   PORTRAIT_NAME_TO_DATA = {
-    :portraitcityofhaze => {subtype: 0x1A, var_a: 1, var_b: 0x1A},
-    :portraitsandygrave => {subtype: 0x1A, var_a: 3, var_b: 0},
-    :portraitnationoffools => {subtype: 0x1A, var_a: 5, var_b: 0x21},
-    :portraitforestofdoom => {subtype: 0x1A, var_a: 7, var_b: 0},
-    :portraitdarkacademy => {subtype: 0x76, var_a: 8, var_b: 0x46},
-    :portraitburntparadise => {subtype: 0x76, var_a: 6, var_b: 0x20},
-    :portraitforgottencity => {subtype: 0x76, var_a: 4, var_b: 0},
-    :portrait13thstreet => {subtype: 0x76, var_a: 2, var_b: 7},
-    :portraitnestofevil => {subtype: 0x86, var_a: 9, var_b: 0},
+    :portraitcityofhaze =>    {subtype: 0x1A, area_index: 1, sector_index: 0, room_index: 0x1A},
+    :portraitsandygrave =>    {subtype: 0x1A, area_index: 3, sector_index: 0, room_index: 0},
+    :portraitnationoffools => {subtype: 0x1A, area_index: 5, sector_index: 0, room_index: 0x21},
+    :portraitforestofdoom =>  {subtype: 0x1A, area_index: 7, sector_index: 0, room_index: 0},
+    :portraitdarkacademy =>   {subtype: 0x76, area_index: 8, sector_index: 1, room_index: 6},
+    :portraitburntparadise => {subtype: 0x76, area_index: 6, sector_index: 0, room_index: 0x20},
+    :portraitforgottencity => {subtype: 0x76, area_index: 4, sector_index: 0, room_index: 0},
+    :portrait13thstreet =>    {subtype: 0x76, area_index: 2, sector_index: 0, room_index: 7},
+    :portraitnestofevil =>    {subtype: 0x86, area_index: 9, sector_index: 0, room_index: 0},
   }
+  PORTRAIT_NAME_TO_DATA.each do |portrait_name, portrait_data|
+    portrait_data[:var_a] = portrait_data[:area_index]
+    portrait_data[:var_b] = ((portrait_data[:sector_index] << 6) & 0x03C0) | (portrait_data[:room_index] & 0x003F)
+  end
   PORTRAIT_NAMES = PORTRAIT_NAME_TO_DATA.keys
   AREA_INDEX_TO_PORTRAIT_NAME = PORTRAIT_NAME_TO_DATA.map do |name, data|
-    [data[:var_a], name]
+    [data[:area_index], name]
   end.to_h
   PORTRAIT_NAME_TO_AREA_INDEX = PORTRAIT_NAME_TO_DATA.map do |name, data|
-    [name, data[:var_a]]
+    [name, data[:area_index]]
   end.to_h
   PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION = {
     :portraitcityofhaze => "00-01-00_00",
@@ -984,7 +988,7 @@ module PickupRandomizer
       end
       
       portrait_data = PORTRAIT_NAME_TO_DATA[pickup_global_id]
-      entity.type = 2
+      entity.type = SPECIAL_OBJECT_ENTITY_TYPE
       entity.subtype = portrait_data[:subtype]
       entity.var_a = portrait_data[:var_a]
       entity.var_b = portrait_data[:var_b]
@@ -1003,9 +1007,9 @@ module PickupRandomizer
       curr_room_index = entity.room.room_index
       
       # Find the return portrait.
-      dest_area_index = entity.var_a
-      dest_sector_index = (entity.var_b & 0x3C0) >> 6
-      dest_room_index = entity.var_b & 0x3F
+      dest_area_index = portrait_data[:area_index]
+      dest_sector_index = portrait_data[:sector_index]
+      dest_room_index = portrait_data[:room_index]
       dest_room = game.areas[dest_area_index].sectors[dest_sector_index].rooms[dest_room_index]
       dest_portrait = dest_room.entities.find{|entity| entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)}
       return_portraits = [dest_portrait]

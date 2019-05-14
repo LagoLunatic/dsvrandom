@@ -290,7 +290,7 @@ class Randomizer
         
         # Keep track of unused rooms (every room in the 4 unused portraits).
         @portraits_to_remove.each do |portrait_name|
-          area_index = PORTRAIT_NAME_TO_DATA[portrait_name][:var_a]
+          area_index = PORTRAIT_NAME_TO_DATA[portrait_name][:area_index]
           game.areas[area_index].sectors.each do |sector|
             @unused_rooms += sector.rooms
           end
