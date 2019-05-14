@@ -1429,7 +1429,7 @@ module PickupRandomizer
       portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[entity.var_a]
       return portrait_name
     else
-      raise "Not a portrait: #{location}"
+      raise "Not a portrait: #{location} #{entity.inspect}"
     end
   end
   
