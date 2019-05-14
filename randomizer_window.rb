@@ -258,6 +258,13 @@ class RandomizerWindow < Qt::Dialog
       end
     end
     
+    room_rando = @ui.randomize_maps.checked || @ui.randomize_starting_room.checked || @ui.randomize_world_map_exits.checked
+    #room_rando ||= @ui.randomize_room_connections.checked || @ui.randomize_area_connections.checked
+    
+    if !room_rando
+      should_enable_options[:rebalance_enemies_in_room_rando] &&= false
+    end
+    
     if @ui.open_world_map.checked
       should_enable_options[:randomize_world_map_exits] &&= false
     end
