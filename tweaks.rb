@@ -461,7 +461,6 @@ module Tweaks
     end
     text = game.text_database.text_list[game_start_text_id]
     text.decoded_string = "Starts a new game. Seed:\\n#{@seed}"
-    game.text_database.write_to_rom()
     
     if GAME == "dos"
       # Modify that one pit in the Demon Guest House so the player can't get stuck in it without double jump.
@@ -1003,7 +1002,6 @@ module Tweaks
     desc = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + item["Item ID"]]
     name.decoded_string = "Magical Ticket"
     desc.decoded_string = "An old pass that returns\\nyou to the Lost Village."
-    game.text_database.write_to_rom()
     
     gfx_file = game.fs.files_by_path["/sc/f_item2.dat"]
     palette_pointer = 0x022C4684
@@ -1099,7 +1097,6 @@ module Tweaks
     when "ooe"
       desc.decoded_string = "A one-way pass to return\\nto your starting room immediately."
     end
-    game.text_database.write_to_rom()
     
     # Also set the magical ticket's price to 0 so it can't be sold.
     item["Price"] = 0

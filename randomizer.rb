@@ -921,9 +921,6 @@ class Randomizer
       options_completed += 1
     end
     
-    # The various item/skill randomization options probably updated the descriptions, so save the whole database now instead of multiple times for each option.
-    game.text_database.write_to_rom()
-    
     if options[:randomize_skill_sprites]
       yield [options_completed, "Shuffling skill sprites..."]
       reset_rng()
@@ -978,6 +975,9 @@ class Randomizer
     
     yield [options_completed, "Applying tweaks..."]
     apply_tweaks()
+    
+    # Save all changes made to the game's text once at the end.
+    game.text_database.write_to_rom()
   rescue StandardError => e
     if spoiler_log
       @logs.each do |log|
