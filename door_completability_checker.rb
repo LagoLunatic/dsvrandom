@@ -744,6 +744,13 @@ class DoorCompletabilityChecker < CompletabilityChecker
   def add_return_portrait(return_portrait_room_str, enter_portrait_entity_str)
     # Create a mapping of doors in return portrait rooms to the enter portrait entity locations they lead to.
     
+    if return_portrait_room_str !~ /^\h\h-\h\h-\h\h$/
+      raise "Invalid room string for return portrait: #{return_portrait_room_str.inspect}"
+    end
+    if enter_portrait_entity_str !~ /^\h\h-\h\h-\h\h_\h\h$/
+      raise "Invalid entity string for enter portrait: #{enter_portrait_entity_str.inspect}"
+    end
+    
     # Add the e prefix to the entity string to further distinguish it from a door string.
     enter_portrait_entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h)$/
     room_str, entity_index = $1, $2
