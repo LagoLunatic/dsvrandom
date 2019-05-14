@@ -209,25 +209,8 @@ module PickupRandomizer
     if GAME == "por" && options[:randomize_starting_room] && options[:randomize_portraits]
       starting_portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[@starting_room.area_index]
       if starting_portrait_name
-        # The starting room randomizer started the player in a portrait.
-        # This is problematic because the portrait randomizer will traditionally never place a portrait back to Dracula's castle, making it inaccessible.
-        # So we need to place the starting portrait at a random location in Dracula's Castle and register it with the logic.
+        starting_portrait_location_in_castle = pick_starting_portrait_location_in_castle()
         
-        # First pick a random valid location.
-        possible_portrait_locations = checker.all_locations.keys
-        possible_portrait_locations = filter_locations_valid_for_pickup(possible_portrait_locations, starting_portrait_name)
-        unused_room_strs = @unused_rooms.map{|room| room.room_str}
-        possible_portrait_locations.reject! do |location|
-          room_str = location[0,8]
-          unused_room_strs.include?(room_str)
-        end
-        possible_portrait_locations.select! do |location|
-          area_index = location[0,2].to_i(16)
-          area_index == 0
-        end
-        starting_portrait_location_in_castle = possible_portrait_locations.sample(random: rng)
-        
-        # Then place the portrait.
         change_entity_location_to_pickup_global_id(starting_portrait_location_in_castle, starting_portrait_name)
         @locations_randomized_to_have_useful_pickups << starting_portrait_location_in_castle
       end
@@ -557,6 +540,37 @@ module PickupRandomizer
     end
     
     spoiler_log.puts "All progression pickups placed successfully."
+  end
+  
+  def pick_starting_portrait_location_in_castle
+    if GAME != "por" || !options[:randomize_starting_room] || !options[:randomize_portraits]
+      raise "Cannot choose random location for starting portrait with these settings"
+    end
+    
+    starting_portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[@starting_room.area_index]
+    if starting_portrait_name.nil?
+      raise "Starting area is not in a portrait"
+    end
+    
+    # The starting room randomizer started the player in a portrait.
+    # This is problematic because the portrait randomizer will traditionally never place a portrait back to Dracula's castle, making it inaccessible.
+    # So we need to place the starting portrait at a random location in Dracula's Castle and register it with the logic.
+    
+    # First pick a random valid location.
+    possible_portrait_locations = checker.all_locations.keys
+    possible_portrait_locations = filter_locations_valid_for_pickup(possible_portrait_locations, starting_portrait_name)
+    unused_room_strs = @unused_rooms.map{|room| room.room_str}
+    possible_portrait_locations.reject! do |location|
+      room_str = location[0,8]
+      unused_room_strs.include?(room_str)
+    end
+    possible_portrait_locations.select! do |location|
+      area_index = location[0,2].to_i(16)
+      area_index == 0
+    end
+    starting_portrait_location_in_castle = possible_portrait_locations.sample(random: rng)
+    
+    return starting_portrait_location_in_castle
   end
   
   def get_item_placement_spoiler_string(location, pickup_global_id)
