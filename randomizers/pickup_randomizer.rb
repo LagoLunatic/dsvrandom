@@ -154,6 +154,20 @@ module PickupRandomizer
       chest_b.write_to_rom()
     end
     
+    @locations_randomized_to_have_useful_pickups = []
+    @rooms_by_progression_order_accessed = []
+    
+    @rooms_that_already_have_an_event = []
+    game.each_room do |room|
+      room.entities.each do |entity|
+        if entity.is_special_object? && (0x5F..0x88).include?(entity.subtype)
+          room_str = "%02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index]
+          @rooms_that_already_have_an_event << room_str
+          break
+        end
+      end
+    end
+    
     total_progression_pickups = checker.all_progression_pickups.length
     place_progression_pickups() do |progression_pickups_placed|
       percent_done = progression_pickups_placed.to_f / total_progression_pickups
@@ -201,25 +215,12 @@ module PickupRandomizer
   
   def place_progression_pickups(&block)
     previous_accessible_locations = []
-    @locations_randomized_to_have_useful_pickups = []
-    @rooms_that_already_have_an_event = []
     progression_pickups_placed = 0
     total_progression_pickups = checker.all_progression_pickups.length
     on_leftovers = false
-    @rooms_by_progression_order_accessed = []
     
     if GAME == "ooe" && options[:randomize_world_map_exits]
       initialize_world_map_exit_randomization_variables()
-    end
-    
-    game.each_room do |room|
-      room.entities.each do |entity|
-        if entity.is_special_object? && (0x5F..0x88).include?(entity.subtype)
-          room_str = "%02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index]
-          @rooms_that_already_have_an_event << room_str
-          break
-        end
-      end
     end
     
     if GAME == "por" && options[:randomize_starting_room] && options[:randomize_portraits]
