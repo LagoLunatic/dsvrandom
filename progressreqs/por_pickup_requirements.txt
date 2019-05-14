@@ -67,6 +67,8 @@ Defs:
   wind: midentrance
   vincent: midentrance
   
+  can complete nest of evil quest: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
+  
   cityofhaze: portraitcityofhaze
   portraitcityofhaze: portraitcityofhaze
   midcityofhaze: cityofhaze & call cube & change cube
@@ -147,7 +149,7 @@ Rooms:
     #02 (Call Cube): # Don't randomize call cube
     03 (ALL Boost): quad jump height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
   00-00-05:
-    room: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
+    room: can complete nest of evil quest
     00 (Nest of Evil) (Portrait) (No progression): 
   00-00-08:
     room: entrance & height

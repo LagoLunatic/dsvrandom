@@ -342,6 +342,10 @@ class CompletabilityChecker
   end
   
   def set_removed_portraits(removed_portraits)
+    if GAME != "por"
+      raise "Cannot set removed portraits in any game but PoR"
+    end
+    
     @removed_portraits = removed_portraits
     
     if removed_portraits.empty?
@@ -373,6 +377,28 @@ class CompletabilityChecker
       end
       
       @defs[:four_seal_bosses_killed] = [bosses_needed]
+      
+      # Update the requirements for completing the Nest of Evil quest to only require the portraits that weren't removed.
+      nest_of_evil_quest_reqs = portraits_needed.map do |portrait_name|
+        # Remove the word portrait from the start
+        portrait_name[8..-1].to_sym
+      end
+      @defs[:can_complete_nest_of_evil_quest] = [nest_of_evil_quest_reqs]
+      
+      # Now update the actual game code that checks the map percentage for teh quest.
+      num_area_maps_required = 1 + portraits_needed.size
+      total_percent_required = ((num_area_maps_required-1)*100) + ((num_area_maps_required-1)*10) + (num_area_maps_required-1)
+      if total_percent_required > 888
+        total_percent_required = 888
+      end
+      game.fs.write(0x02041458, [total_percent_required*10].pack("V"))
+      
+      # Also update the description of the quest to reflect the new percentage.
+      text = game.text_database.text_list[0x65C]
+      File.write("tmp.txt", text.decoded_string)
+      text.decoded_string = ("When %d%% of the map is filled,\n" % total_percent_required) +
+        "the path to the \"Nest of Evil\"\n"
+        "will open at the castle gates."
     end
   end
   
