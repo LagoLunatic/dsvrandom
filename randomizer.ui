@@ -434,8 +434,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>770</width>
-            <height>491</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -497,6 +497,9 @@
            <widget class="QCheckBox" name="reveal_breakable_walls">
             <property name="text">
              <string>Reveal breakable walls</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -693,6 +696,9 @@
            <widget class="QCheckBox" name="always_dowsing">
             <property name="text">
              <string>Always have Dowsing Hat effect</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
