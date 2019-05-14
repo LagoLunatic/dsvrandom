@@ -538,9 +538,6 @@ module PickupRandomizer
         if accessible_doors.include?("01-01-00_000") && !checker.current_items.include?(:villagernikolai)
           checker.add_item(:villagernikolai)
         end
-        if accessible_doors.include?("11-00-08_000") && !checker.current_items.include?(:villagergeorge)
-          checker.add_item(:villagergeorge)
-        end
       end
       
       progression_pickups_placed += 1
