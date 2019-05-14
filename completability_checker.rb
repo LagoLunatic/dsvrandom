@@ -261,12 +261,12 @@ class CompletabilityChecker
     end
   end
   
-  def get_accessible_locations
+  def get_accessible_locations(locations_to_check: all_locations.keys)
     accessible_locations = []
     
-    all_locations.each do |entity_str, reqs|
-      room_reqs = reqs[:room_reqs]
-      entity_reqs = reqs[:entity_reqs]
+    locations_to_check.each do |entity_str|
+      room_reqs = all_locations[entity_str][:room_reqs]
+      entity_reqs = all_locations[entity_str][:entity_reqs]
       
       if check_reqs(room_reqs) && check_reqs(entity_reqs)
         accessible_locations << entity_str
