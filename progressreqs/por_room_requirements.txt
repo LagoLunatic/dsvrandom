@@ -218,8 +218,8 @@ Rooms:
     # The bottom door is considered always accessible, since room rando has special code to always unlock it without needing to complete the Nest of Evil quest.
     000-001: 
     000-002: 
-    000-e01: # Player always starts with change/call cube in the starting room with room rando.
-    000-e02: # So we do randomize these two spots to have other things in them, unlike in non-room-rando.
+    000-e01: 
+    000-e02: 
     000-e03: double jump & shoulderjump & puppet master | quad jump height
     001-000: 
     001-002: 

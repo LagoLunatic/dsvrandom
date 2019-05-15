@@ -84,21 +84,6 @@ module PickupRandomizer
       checker.add_item(0x6C) # encyclopedia
       checker.add_item(0xAA) # casual clothes
       
-      checker.add_item(0x1AD) # call cube
-      
-      if options[:dont_randomize_change_cube]
-        checker.add_item(0x1AC) # change cube
-        unless room_rando? # In room rando this item is placed in the player's starting room instead.
-          change_entity_location_to_pickup_global_id("00-00-01_01", 0x1AC)
-        end
-      else
-        # If the player doesn't start with change cube, give them skill cube instead so they can still use Charlotte's spells.
-        checker.add_item(0x1AE) # skill cube
-        unless room_rando? # In room rando this item is placed in the player's starting room instead.
-          change_entity_location_to_pickup_global_id("00-00-01_01", 0x1AE)
-        end
-      end
-      
       # In the corridor where Behemoth chases you, change the code of the platform to not permanently disappear.
       # This is so the player can't get stuck if they miss an important item up there.
       game.fs.load_overlay(79)

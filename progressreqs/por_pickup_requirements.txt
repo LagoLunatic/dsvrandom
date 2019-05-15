@@ -145,8 +145,8 @@ Rooms:
 #Entrance:
   00-00-01:
     room: 
-    #01 (Change Cube): # Don't randomize change cube
-    #02 (Call Cube): # Don't randomize call cube
+    01 (Change Cube): 
+    02 (Call Cube): 
     03 (ALL Boost): quad jump height # you can get this with just the double jump glitch, but ONLY if the drawbridge is down.
   00-00-05:
     room: can complete nest of evil quest

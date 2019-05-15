@@ -615,60 +615,47 @@ class Randomizer
       enemy.write_to_rom()
     end
     
-    if GAME == "dos"
+    # Handle putting certain items in the starting room.
+    case GAME
+    when "dos"
       # Always start the player with Doppelganger.
       add_bonus_item_to_starting_room(0x144) # Doppelganger
       checker.add_item(0x144)
-    end
-    
-    if GAME == "por" && options[:dont_randomize_change_cube] && !room_rando?
-      # Always start the player with Skill Cube.
-      # (If change cube is randomized, Skill Cube takes Change Cube's place, so we don't need to put Skill Cube in the starting room in that case.)
-      add_bonus_item_to_starting_room(0x1AE) # Skill Cube
-      checker.add_item(0x1AE)
-    end
-    
-    if GAME == "por"
-      # Always start the player with Critical Art.
-      add_bonus_item_to_starting_room(0x1B8) # Critical Art
-      checker.add_item(0x1B8)
       
-      # Always start the player with Lizard Tail.
-      add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
-      checker.add_item(0x1B2) # Lizard Tail
-    end
-    
-    if room_rando?
-      # We need to put certain items the logic assumes the player starts with in the player's starting room if they can't reach them.
-      case GAME
-      when "dos"
+      if room_rando?
         # If the player can't access the drawbridge room give them Magic Seal 1.
         # (Commented out because room rando unlocks all boss doors.)
         #accessible_doors = checker.get_accessible_doors()
         #if !accessible_doors.include?("00-00-15_000")
         #  add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
         #end
-      when "por"
-        # Always start with Call Cube, Skill Cube, and possibly Change Cube.
-        # Even if the player technically could reach the vanilla location, they could be very far away on some seeds.
-        add_bonus_item_to_starting_room(0x1AD) # Call Cube
-        checker.add_item(0x1AD) # Call Cube
-        
-        add_bonus_item_to_starting_room(0x1AE) # Skill Cube
-        checker.add_item(0x1AE) # Skill Cube
-        
-        if options[:dont_randomize_change_cube]
-          add_bonus_item_to_starting_room(0x1AC) # Change Cube
-          checker.add_item(0x1AC) # Change Cube
-        end
-      when "ooe"
-        if options[:randomize_starting_room]
-          # Put the glyph Barlowe would normally give you at the start in the randomized starting room.
-          if @ooe_starter_glyph_id
-            add_bonus_item_to_starting_room(@ooe_starter_glyph_id)
-          else
-            add_bonus_item_to_starting_room(1) # Confodere
-          end
+      end
+    when "por"
+      # Always start with Lizard Tail, Call Cube, Skill Cube, Critical Art, and possibly Change Cube.
+      # Always start the player with Lizard Tail.
+      add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+      checker.add_item(0x1B2) # Lizard Tail
+      
+      add_bonus_item_to_starting_room(0x1AD) # Call Cube
+      checker.add_item(0x1AD) # Call Cube
+      
+      add_bonus_item_to_starting_room(0x1AE) # Skill Cube
+      checker.add_item(0x1AE) # Skill Cube
+      
+      if options[:dont_randomize_change_cube]
+        add_bonus_item_to_starting_room(0x1AC) # Change Cube
+        checker.add_item(0x1AC) # Change Cube
+      end
+      
+      add_bonus_item_to_starting_room(0x1B8) # Critical Art
+      checker.add_item(0x1B8)
+    when "ooe"
+      if options[:randomize_starting_room]
+        # Put the glyph Barlowe would normally give you at the start in the randomized starting room.
+        if @ooe_starter_glyph_id
+          add_bonus_item_to_starting_room(@ooe_starter_glyph_id)
+        else
+          add_bonus_item_to_starting_room(1) # Confodere
         end
       end
     end
