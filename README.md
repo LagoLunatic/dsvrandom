@@ -11,45 +11,45 @@ Report issues here: https://github.com/LagoLunatic/dsvrandom/issues
 ### What does it randomize?
 
 DSVRandom has options to randomize:  
-Items/Skills: Randomizes items and skills you find lying on the ground.  
-Enemy Locations: Randomizes which non-boss enemies appear where.  
-Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.  
-Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).  
-Equipment Stats: Randomizes weapon and armor stats.  
-Weapon Behavior: Randomizes how weapons behave.  
-Consumable Behavior: Randomizes what consumables do and how powerful they are.  
-Skill Stats/Behavior: Randomizes skill stats and how skills behave.  
-Shop Items: Randomizes what items are for sale in the shop and item prices.  
-Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).  
-Villagers: Randomizes where villagers are located (OoE only).  
-Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).  
-Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.  
-Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.  
-Portraits: Randomizes where portraits are located (PoR only).  
-Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).  
-Maps: Randomly generates entirely new maps and connects rooms to match the map.  
-Starting Room: Randomizes which room you start in.  
-Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)  
-Area Connections (Not map-friendly): Randomizes which areas connect to each other.  
-Background Music: Randomizes what songs play in what areas.  
-Cutscene Dialogue: Generates random dialogue for all cutscenes.  
-Player Sprites: Randomizes the graphics of player characters.  
-Skill Sprites: Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).  
+* Items/Skills: Randomizes items and skills you find lying on the ground.  
+* Enemy Locations: Randomizes which non-boss enemies appear where.  
+* Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.  
+* Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).  
+* Equipment Stats: Randomizes weapon and armor stats.  
+* Weapon Behavior: Randomizes how weapons behave.  
+* Consumable Behavior: Randomizes what consumables do and how powerful they are.  
+* Skill Stats/Behavior: Randomizes skill stats and how skills behave.  
+* Shop Items: Randomizes what items are for sale in the shop and item prices.  
+* Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).  
+* Villagers: Randomizes where villagers are located (OoE only).  
+* Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).  
+* Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.  
+* Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.  
+* Portraits: Randomizes where portraits are located (PoR only).  
+* Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).  
+* Maps: Randomly generates entirely new maps and connects rooms to match the map.  
+* Starting Room: Randomizes which room you start in.  
+* Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)  
+* Area Connections (Not map-friendly): Randomizes which areas connect to each other.  
+* Background Music: Randomizes what songs play in what areas.  
+* Cutscene Dialogue: Generates random dialogue for all cutscenes.  
+* Player Sprites: Randomizes the graphics of player characters.  
+* Skill Sprites: Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).  
 
 As well as several other options that change how the game is played:  
-Scavenger Mode: Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.  
-Unlock Boss Doors (DoS only): You don't need magic seals to open boss doors.  
-Short Mode (PoR only): Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).  
-Open World Map (OoE only): Make all areas except Dracula's Castle accessible from the start.  
-Allow Requiring Glitches to Win: If checked, certain glitches may be necessary to beat the game.  
-Bonus Starting Items: Starts you out with 3 random extra items and 3 random extra skills.  
+* Scavenger Mode: Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.  
+* Unlock Boss Doors (DoS only): You don't need magic seals to open boss doors.  
+* Short Mode (PoR only): Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).  
+* Open World Map (OoE only): Make all areas except Dracula's Castle accessible from the start.  
+* Allow Requiring Glitches to Win: If checked, certain glitches may be necessary to beat the game.  
+* Bonus Starting Items: Starts you out with 3 random extra items and 3 random extra skills.  
 
 There are also some buggy, experimental randomization options:  
-Players: Randomizes player movement stats.  
-Boss Locations: Randomizes which bosses appear where.  
-World Map Exits: Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).  
-Enemy Sprites: Randomizes the graphics of non-boss enemies.  
-Boss Sprites: Randomizes the graphics of bosses.  
+* Players: Randomizes player movement stats.  
+* Boss Locations: Randomizes which bosses appear where.  
+* World Map Exits: Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).  
+* Enemy Sprites: Randomizes the graphics of non-boss enemies.  
+* Boss Sprites: Randomizes the graphics of bosses.  
 
 Every seed should be completable as long as you don't use the experimental options.  
 If you think you've found a seed that's unwinnable, first check the spoiler log (located in the same folder as the randomized ROM) to make sure you haven't missed something.  
