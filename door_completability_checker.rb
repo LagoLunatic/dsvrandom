@@ -68,7 +68,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
     if @options[:randomize_world_map_exits]
       # Remove default world map values. These will be set as they are randomized.
       @world_map_unlocks = {
-        "00-02-1B_000": "03-00-00_000, 0C-00-00_000", # Dracula's castle back exit unlocks are not randomized
+        "00-02-1B_000": "0C-00-00_000", # Dracula's castle back exit always unlocks Large Cavern.
       }
     end
   end
