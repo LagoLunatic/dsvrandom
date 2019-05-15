@@ -277,6 +277,11 @@ class RandomizerWindow < Qt::Dialog
       end
     end
     
+    if @ui.randomize_maps.checked
+      @ui.randomize_boss_souls.checked = true
+      @ui.randomize_boss_souls.enabled = false
+    end
+    
     disable_options_not_for_current_game()
   end
   
