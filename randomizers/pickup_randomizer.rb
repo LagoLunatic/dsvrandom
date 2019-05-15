@@ -619,7 +619,7 @@ module PickupRandomizer
     is_mirror_str = checker.mirror_locations.include?(location) ? " (Mirror)" : ""
     location_str = "#{area_name} (#{location})#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str}"
     
-    spoiler_str = "  %-16s %s" % [pickup_str+":", location_str]
+    spoiler_str = "  %-18s %s" % [pickup_str+":", location_str]
     
     return spoiler_str
   end
