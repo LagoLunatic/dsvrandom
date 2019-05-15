@@ -457,6 +457,8 @@ class DoorCompletabilityChecker < CompletabilityChecker
               end
             end
           end
+        elsif current_room.doors.length >= 2
+          raise "Room #{room_str} has 2 or more doors but no logic!"
         end
       elsif door_or_entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h\h)$/
         room_str = $1
@@ -493,6 +495,8 @@ class DoorCompletabilityChecker < CompletabilityChecker
               end
             end
           end
+        elsif current_room.doors.length >= 2
+          raise "Room #{room_str} has 2 or more doors but no logic!"
         end
       else
         raise "Invalid door or entity str: #{door_or_entity_str.inspect}"
