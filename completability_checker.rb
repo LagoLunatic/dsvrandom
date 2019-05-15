@@ -291,10 +291,10 @@ class CompletabilityChecker
       @defs.each do |name, req|
         pickups << req if req.is_a?(Integer)
       end
-      if GAME == "ooe" && @options[:randomize_villagers]
+      if GAME == "ooe"
         pickups += PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES
       end
-      if GAME == "por" && @options[:randomize_portraits]
+      if GAME == "por"
         pickups += PickupRandomizer::PORTRAIT_NAMES
         pickups -= @removed_portraits
       end
