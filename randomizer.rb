@@ -373,6 +373,8 @@ class Randomizer
         possible_max_up_ids -= [0x75, 0x79] # Don't let starting items (potion and high tonic) be max ups.
         possible_max_up_ids -= [0xD2] # VIP card given to you by Jacob and put directly into your inventory.
         possible_max_up_ids -= (0xAE..0xB2).to_a # Camera and photos
+        possible_max_up_ids -= (0xB6..0xB9).to_a # Sketchbook and sketches
+        possible_max_up_ids -= (0xAC..0xAD).to_a # Mouse and cat collar
         
         # Don't allow quest rewards to be max ups since the player could use it infinitely.
         game.quests.each do |quest|
