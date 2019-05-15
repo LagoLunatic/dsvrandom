@@ -123,7 +123,7 @@ A: Enemies knock you back depending on what direction you're facing, not the dir
 
 ### Discord Server
 
-There is currently no Discord server specifically for DSVania Randomizer, but you can join the general Castlevania Randomizers server if you have questions or are looking for people to play with:
+There is currently no Discord server specifically for DSVania Randomizer, but you can join the general Castlevania Randomizers server if you have questions or are looking for people to play with:  
 https://discord.gg/5SnUANS
 
 ### Running from source
