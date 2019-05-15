@@ -819,6 +819,22 @@ class DoorCompletabilityChecker < CompletabilityChecker
     @current_location_in_room = "e#{$2}"
   end
   
+  def add_empty_reqs_for_new_room(room)
+    room_str = room.room_str
+
+    @room_reqs[room_str] ||= {}
+    @room_reqs[room_str][:doors] = {}
+    @room_reqs[room_str][:entities] = {}
+
+    room.doors.each_index do |path_begin_door_index|
+      room.doors.each_index do |path_end_door_index|
+        next if path_begin_door_index == path_end_door_index
+        @room_reqs[room_str][:doors][path_begin_door_index] ||= {}
+        @room_reqs[room_str][:doors][path_begin_door_index]["%03X" % path_end_door_index] = nil
+      end
+    end
+  end
+  
   def generate_empty_room_requirements_file
     File.open("./dsvrandom/#{GAME}_room_requirements.txt", "w+") do |f|
       prev_area_name = nil

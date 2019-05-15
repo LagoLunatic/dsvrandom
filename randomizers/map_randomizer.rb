@@ -248,9 +248,11 @@ module MapRandomizer
       sector.add_new_room()
       room = sector.rooms[-1]
       tiled.read(filename, room)
+      checker.add_empty_reqs_for_new_room(room)
       sector.add_new_room()
       room = sector.rooms[-1]
       tiled.read(filename, room)
+      checker.add_empty_reqs_for_new_room(room)
       
       # Add two save rooms to a Burnt Paradise sector that originally had no save rooms.
       sector = game.areas[6].sectors[1]
@@ -258,9 +260,11 @@ module MapRandomizer
       sector.add_new_room()
       room = sector.rooms[-1]
       tiled.read(filename, room)
+      checker.add_empty_reqs_for_new_room(room)
       sector.add_new_room()
       room = sector.rooms[-1]
       tiled.read(filename, room)
+      checker.add_empty_reqs_for_new_room(room)
     end
   end
   
