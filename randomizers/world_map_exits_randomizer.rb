@@ -40,6 +40,8 @@ module WorldMapExitsRandomizer
   }
   
   def initialize_world_map_exit_randomization_variables
+    @world_map_exit_rando_debug = false
+    
     @world_map_exits_randomized = []
     @world_map_entrances_used = []
     @num_world_map_exits_lead_to_by_world_map_entrance = {}
@@ -76,7 +78,7 @@ module WorldMapExitsRandomizer
       # Otherwise we would exhaust all the remaining exits and the player would have no way to progress.
       # (Unless this is the very last exit overall - in that case it's fine that we exhaust the last one.)
       
-      #puts "Possible unfiltered: #{possible_entrances}"
+      #puts "Possible unfiltered: #{possible_entrances}" if @world_map_exit_rando_debug
       
       # First prioritize ones that lead to a new area (i.e. don't place the second entrance into Kalidus).
       possible_entrances_that_lead_to_a_new_area = possible_entrances.select do |unused_entrance_key|
@@ -86,7 +88,7 @@ module WorldMapExitsRandomizer
           used_area_index == unused_area_index
         end
       end
-      #puts "Possible filtered 1: #{possible_entrances_that_lead_to_a_new_area}"
+      #puts "Possible filtered 1: #{possible_entrances_that_lead_to_a_new_area}" if @world_map_exit_rando_debug
       if possible_entrances_that_lead_to_a_new_area.any?
         possible_entrances = possible_entrances_that_lead_to_a_new_area
       end
@@ -96,7 +98,7 @@ module WorldMapExitsRandomizer
         unused_area_index = WORLD_MAP_ENTRANCES[unused_entrance_key][0..1].to_i(16)
         @num_world_map_exits_lead_to_by_world_map_entrance[unused_area_index] > 0
       end
-      #puts "Possible filtered 2: #{possible_entrances_that_lead_to_a_new_exit}"
+      #puts "Possible filtered 2: #{possible_entrances_that_lead_to_a_new_exit}" if @world_map_exit_rando_debug
       if possible_entrances_that_lead_to_a_new_exit.any?
         possible_entrances = possible_entrances_that_lead_to_a_new_exit
       end
@@ -139,7 +141,7 @@ module WorldMapExitsRandomizer
     area_exit.write_to_rom()
     
     entrance_door_str = WORLD_MAP_ENTRANCES[entrance_type]
-    puts "Setting world map unlock: #{world_map_exit_door_str} -> #{entrance_door_str}"
+    puts "Setting world map unlock: #{world_map_exit_door_str} -> #{entrance_door_str}" if @world_map_exit_rando_debug
     
     checker.set_world_map_exit_destination_area(world_map_exit_door_str, entrance_door_str)
     
@@ -185,8 +187,8 @@ module WorldMapExitsRandomizer
     unused_exits = WORLD_MAP_EXITS - @world_map_exits_randomized
     unused_entrances = WORLD_MAP_ENTRANCES.keys - @world_map_entrances_used
     
-    puts "Unused world map exits: #{unused_exits.join(", ")}"
-    puts "Unused world map entrances: #{unused_entrances.join(", ")}"
+    puts "Unused world map exits: #{unused_exits.join(", ")}" if @world_map_exit_rando_debug
+    puts "Unused world map entrances: #{unused_entrances.join(", ")}" if @world_map_exit_rando_debug
     
     if unused_exits.any? && unused_entrances.any?
       raise "Error: There are unplaced world map exits and entrances:\nExits: #{unused_exits.join(", ")}\nEntrances: #{unused_entrances.join(", ")}"
