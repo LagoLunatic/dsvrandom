@@ -89,6 +89,10 @@ class Randomizer
       # So forcibly enable boss soul randomization in map rando.
       options[:randomize_boss_souls] = true
     end
+    if options[:randomize_world_map_exits]
+      # World map exits can be buggy if you start in an area that isn't unlocked.
+      options[:randomize_starting_room] = false
+    end
     
     if room_rando?
       @checker = DoorCompletabilityChecker.new(game, options)
