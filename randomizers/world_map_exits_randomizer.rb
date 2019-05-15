@@ -39,6 +39,33 @@ module WorldMapExitsRandomizer
       #-2 => "0C-00-00_000", # Large Cavern. Not randomized because we don't randomize the castle exit.
   }
   
+  def randomize_world_map_exits
+    return unless GAME == "ooe"
+    
+    # Temporarily give the logic all progress items while deciding on world map exit unlocks.
+    orig_current_items = checker.current_items.dup
+    checker.all_progression_pickups.each do |pickup|
+      next if checker.current_items.include?(pickup)
+      checker.add_item(pickup)
+    end
+    
+    initialize_world_map_exit_randomization_variables()
+    
+    while true
+      accessible_locations, accessible_doors = checker.get_accessible_locations_and_doors()
+      randomize_accessible_world_map_exits(accessible_doors)
+      
+      unused_exits = WORLD_MAP_EXITS - @world_map_exits_randomized
+      unused_entrances = WORLD_MAP_ENTRANCES.keys - @world_map_entrances_used
+      
+      if unused_exits.empty? && unused_entrances.empty?
+        break
+      end
+    end
+    
+    checker.restore_current_items(orig_current_items)
+  end
+  
   def initialize_world_map_exit_randomization_variables
     @world_map_exit_rando_debug = false
     
@@ -180,22 +207,6 @@ module WorldMapExitsRandomizer
           game.fs.write(address, [0xE1A00000].pack("V")) # nop
         end
       end
-    end
-  end
-  
-  def assert_all_world_map_entrances_and_exits_used
-    unused_exits = WORLD_MAP_EXITS - @world_map_exits_randomized
-    unused_entrances = WORLD_MAP_ENTRANCES.keys - @world_map_entrances_used
-    
-    puts "Unused world map exits: #{unused_exits.join(", ")}" if @world_map_exit_rando_debug
-    puts "Unused world map entrances: #{unused_entrances.join(", ")}" if @world_map_exit_rando_debug
-    
-    if unused_exits.any? && unused_entrances.any?
-      raise "Error: There are unplaced world map exits and entrances:\nExits: #{unused_exits.join(", ")}\nEntrances: #{unused_entrances.join(", ")}"
-    elsif unused_exits.any?
-      raise "Error: There are unplaced world map exits: #{unused_exits.join(", ")}"
-    elsif unused_entrances.any?
-      raise "Error: There are unplaced world map entrances: #{unused_entrances.join(", ")}"
     end
   end
 end

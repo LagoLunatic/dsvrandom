@@ -660,6 +660,12 @@ class Randomizer
       end
     end
     
+    if options[:randomize_world_map_exits]
+      yield [options_completed, "Randomizing world map exits..."]
+      reset_rng()
+      randomize_world_map_exits()
+    end
+    
     if options[:randomize_pickups]
       yield [options_completed, "Placing progression pickups..."]
       reset_rng()

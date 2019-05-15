@@ -204,10 +204,6 @@ module PickupRandomizer
     total_progression_pickups = checker.all_progression_pickups.length
     on_leftovers = false
     
-    if GAME == "ooe" && options[:randomize_world_map_exits]
-      initialize_world_map_exit_randomization_variables()
-    end
-    
     if GAME == "por" && options[:randomize_starting_room] && options[:randomize_portraits]
       starting_portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[@starting_room.area_index]
       if starting_portrait_name
@@ -381,18 +377,6 @@ module PickupRandomizer
       
       
       
-      if GAME == "ooe" && options[:randomize_world_map_exits]
-        # Randomize world map exits.
-        randomized_any = randomize_accessible_world_map_exits(accessible_doors)
-        
-        if randomized_any
-          # Redo this progression placement loop with the world map entrances now set.
-          next
-        end
-      end
-      
-      
-      
       new_possible_locations = possible_locations - previous_accessible_locations.flatten
       
       filtered_new_possible_locations = filter_locations_valid_for_pickup(new_possible_locations, pickup_global_id)
@@ -521,10 +505,6 @@ module PickupRandomizer
           f.puts accessible_door
         end
       end
-    end
-    
-    if GAME == "ooe" && options[:randomize_world_map_exits]
-      assert_all_world_map_entrances_and_exits_used()
     end
     
     spoiler_log.puts "All progression pickups placed successfully."
