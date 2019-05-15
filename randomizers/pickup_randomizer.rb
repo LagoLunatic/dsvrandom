@@ -365,7 +365,7 @@ module PickupRandomizer
           
           # Also, give the player what this boss drops so the checker takes this into account.
           pickup_global_id = get_entity_skill_drop_by_entity_location(location)
-          checker.add_item(pickup_global_id)
+          checker.add_item(pickup_global_id) unless pickup_global_id.nil?
         end
         
         next if accessible_unused_boss_locations.length > 0
@@ -1408,6 +1408,9 @@ module PickupRandomizer
     case GAME
     when "dos"
       skill_local_id = enemy_dna["Soul"]
+      if skill_local_id == 0xFF
+        return nil
+      end
     when "ooe"
       skill_local_id = enemy_dna["Glyph"] - 1
     else
