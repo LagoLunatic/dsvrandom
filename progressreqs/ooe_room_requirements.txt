@@ -2504,7 +2504,7 @@ Rooms:
     000-e00: 
     e00-000: 
   0E-00-09:
-    000-e06: villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
+    000-e06: false # The glyph you get after beating Albus. There's special code to handle this.
     e06-000: 
   0E-00-0A:
     000-001: 

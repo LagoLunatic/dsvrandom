@@ -280,7 +280,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
     if req == :nonlinear && GAME == "ooe"
       return @options[:open_world_map]
     end
-    if GAME == "ooe" && (PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(req) || req == :villagernikolai)
+    if GAME == "ooe" && PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(req)
       return @current_items.include?(req)
     end
     
@@ -375,6 +375,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
       end
       world_map_accessible = false
       castle_accessible = false
+      glyph_after_albus_accessible = false
       barlowe_accessible = false
       albus_fight_accessible = false
       wygol_accessible = true
@@ -591,6 +592,14 @@ class DoorCompletabilityChecker < CompletabilityChecker
         end
         if !albus_fight_accessible && accessible_doors["0E-00-09_000"]
           albus_fight_accessible = true
+        end
+        
+        # Unlock the castle on the world map.
+        if !glyph_after_albus_accessible && has_all_randomizable_villagers &&
+            wygol_accessible && # nikolai in wygol
+            albus_fight_accessible
+          doors_and_entities_to_check << "0E-00-09_e06"
+          glyph_after_albus_accessible = true
         end
         
         # Unlock the castle on the world map.

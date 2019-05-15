@@ -534,12 +534,6 @@ module PickupRandomizer
       
       checker.add_item(pickup_global_id)
       
-      if room_rando? && GAME == "ooe"
-        if accessible_doors.include?("01-01-00_000") && !checker.current_items.include?(:villagernikolai)
-          checker.add_item(:villagernikolai)
-        end
-      end
-      
       progression_pickups_placed += 1
       yield(progression_pickups_placed)
     end
