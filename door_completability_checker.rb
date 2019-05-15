@@ -413,18 +413,6 @@ class DoorCompletabilityChecker < CompletabilityChecker
       end
     end
     
-    # Initialize reachable destinations of the current location the player is at.
-    if @current_location_in_room =~ /^e(\h\h)/
-      # At an entity
-      entity_index = $1.to_i(16)
-      current_entity_str = "#{@current_room}_e%02X" % entity_index
-      doors_and_entities_to_check << current_entity_str
-    else
-      # At a door
-      current_door_str = "#{@current_room}_#{@current_location_in_room}"
-      doors_and_entities_to_check << current_door_str
-    end
-    
     while doors_and_entities_to_check.any?
       door_or_entity_str = doors_and_entities_to_check.shift()
       
@@ -674,9 +662,7 @@ class DoorCompletabilityChecker < CompletabilityChecker
   end
   
   def set_starting_room(starting_room, starting_room_door_index)
-    @current_room = starting_room.room_str
-    @current_location_in_room = "%03X" % starting_room_door_index
-    @starting_location = "#{@current_room}_#{@current_location_in_room}"
+    @starting_location = "#{starting_room.room_str}_%03X" % starting_room_door_index
   end
   
   def restore_return_portraits(old_return_portraits)
@@ -815,12 +801,6 @@ class DoorCompletabilityChecker < CompletabilityChecker
       raise "Tried to set a world map unlock that already exists: #{world_map_exit_door_str}"
     end
     @world_map_unlocks[world_map_exit_door_str] = entrance_door_str
-  end
-  
-  def set_current_location_by_entity(entity_str)
-    entity_str =~ /^(\h\h-\h\h-\h\h)_(\h\h)$/
-    @current_room = $1
-    @current_location_in_room = "e#{$2}"
   end
   
   def add_empty_reqs_for_new_room(room)

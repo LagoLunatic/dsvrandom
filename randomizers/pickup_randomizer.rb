@@ -483,9 +483,6 @@ module PickupRandomizer
       
       location = possible_locations_to_choose_from.sample(random: rng)
       @locations_randomized_to_have_useful_pickups << location
-      if room_rando?
-        checker.set_current_location_by_entity(location)
-      end
       
       spoiler_str = get_item_placement_spoiler_string(location, pickup_global_id)
       spoiler_log.puts spoiler_str
