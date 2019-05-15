@@ -376,7 +376,6 @@ class DoorCompletabilityChecker < CompletabilityChecker
       world_map_accessible = false
       castle_accessible = false
       barlowe_accessible = false
-      george_accessible = false
       albus_fight_accessible = false
       wygol_accessible = true
       lighthouse_accessible = @options[:open_world_map]
@@ -593,13 +592,9 @@ class DoorCompletabilityChecker < CompletabilityChecker
         if !albus_fight_accessible && accessible_doors["0E-00-09_000"]
           albus_fight_accessible = true
         end
-        if !george_accessible && accessible_doors["11-00-08_000"]
-          george_accessible = true
-        end
         
         # Unlock the castle on the world map.
         if !castle_accessible && has_all_randomizable_villagers &&
-            george_accessible &&
             wygol_accessible && # nikolai in wygol
             albus_fight_accessible &&
             barlowe_accessible
