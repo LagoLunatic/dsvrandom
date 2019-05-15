@@ -632,6 +632,10 @@ class Randomizer
       # Always start the player with Critical Art.
       add_bonus_item_to_starting_room(0x1B8) # Critical Art
       checker.add_item(0x1B8)
+      
+      # Always start the player with Lizard Tail.
+      add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+      checker.add_item(0x1B2) # Lizard Tail
     end
     
     if room_rando?
@@ -645,11 +649,8 @@ class Randomizer
         #  add_bonus_item_to_starting_room(0x3D) # Magic Seal 1
         #end
       when "por"
-        # Always start with Lizard Tail, Call Cube, Skill Cube, and possibly Change Cube.
+        # Always start with Call Cube, Skill Cube, and possibly Change Cube.
         # Even if the player technically could reach the vanilla location, they could be very far away on some seeds.
-        add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
-        checker.add_item(0x1B2) # Lizard Tail
-        
         add_bonus_item_to_starting_room(0x1AD) # Call Cube
         checker.add_item(0x1AD) # Call Cube
         
