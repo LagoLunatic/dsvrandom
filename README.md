@@ -121,6 +121,11 @@ Q: There's a randomly placed enemy that keeps knocking me back through a door as
 
 A: Enemies knock you back depending on what direction you're facing, not the direction they hit you from. So when you're walking through the door and don't have control yet hold the D-pad in the direction away from the enemy. This way you will face away from the enemy the instant you gain control and be knocked towards the enemy instead of back into the door.  
 
+### Discord Server
+
+There is currently no Discord server specifically for DSVania Randomizer, but you can join the general Castlevania Randomizers server if you have questions or are looking for people to play with:
+https://discord.gg/5SnUANS
+
 ### Running from source
 
 If you want to run the latest development (unstable) version of DSVRandom from source, follow these instructions:  
