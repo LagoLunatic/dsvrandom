@@ -84,6 +84,11 @@ class Randomizer
     else
       options[:randomize_world_map_exits] = false
     end
+    if options[:randomize_maps]
+      # The map rando might lock a boss behind its own soul if boss souls are in their vanilla location.
+      # So forcibly enable boss soul randomization in map rando.
+      options[:randomize_boss_souls] = true
+    end
     
     if room_rando?
       @checker = DoorCompletabilityChecker.new(game, options)
