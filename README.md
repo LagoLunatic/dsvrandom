@@ -73,6 +73,11 @@ Q: Do I need to damage boost or jumpkick off enemies to progress?
 
 A: No, progressing won't require anything involving common enemies. You won't need to jump on spikes either.  
 
+Q: Do I need to complete Nest of Evil/Large Cavern/Training Hall to progress?  
+
+A: Nest of Evil and Large Cavern are optional, you don't need to do them if you don't want to.  
+Training Hall, on the other hand, can be required.  
+
 Q: I can't find something I need to progress!  
 
 A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.  
