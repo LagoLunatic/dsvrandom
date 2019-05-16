@@ -84,7 +84,9 @@ No soul locations:
   - 00-02-10_00
   - 00-04-13_00
 No progression locations:
-  # none
+  - 00-01-36_00 # Crown
+  - 00-04-12_00 # Bell
+  - 00-08-18_00 # Konami Man
 Warp connections:
   00-05-27_000: 00-0B-00_000
 Progress important rooms:
@@ -1247,7 +1249,7 @@ Rooms:
     001-000: 
   00-02-0F:
     000-001: balore | small
-    000-002: balore | height
+    000-002: balore | height # should using puppet master on the moving platform be moved to glitch logic?
     001-000: 
     001-002: balore | height
     002-000: 

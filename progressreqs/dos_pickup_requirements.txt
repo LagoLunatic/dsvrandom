@@ -212,7 +212,7 @@ Rooms:
     00 (UMA News 1-2): 
   00-01-36:
     room: towerguesthouse
-    00 (Crown) (Easter egg): 
+    00 (Crown) (Easter egg) (No progression): 
   00-01-37:
     room: towerguesthouse
     00 (Mina's Talisman) (Event): 
@@ -315,7 +315,7 @@ Rooms:
     03 (Megingiord) (Mirror): paranoia
   00-04-12:
     room: chapel
-    00 (Bell) (Easter egg): big height | cutallsuper | axesuper
+    00 (Bell) (Easter egg) (No progression): big height | cutallsuper | axesuper
     01 (High Mind Up): height | black panther
     02 (Anti-Venom): 
   00-04-13:
@@ -399,7 +399,7 @@ Rooms:
     00 (Zephyr) (Enemy): 
   00-08-18:
     room: clocktower & height
-    00 (Konami Man) (Easter egg): 
+    00 (Konami Man) (Easter egg) (No progression): 
   00-08-19:
     room: clocktower & height
     00 (Magic Seal 4): 
