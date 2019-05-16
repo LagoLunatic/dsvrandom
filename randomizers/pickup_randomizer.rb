@@ -717,7 +717,7 @@ module PickupRandomizer
       
       all_non_progression_pickups -= @max_up_items
       
-      if room_rando? || (GAME == "por" && options[:randomize_portraits])
+      if needs_infinite_magical_tickets?
         all_non_progression_pickups -= [MAGICAL_TICKET_GLOBAL_ID]
       end
       
