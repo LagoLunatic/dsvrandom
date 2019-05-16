@@ -221,6 +221,22 @@ module PickupRandomizer
     
     pickups_available = checker.all_progression_pickups - checker.current_items - nonrandomized_item_locations.values
     
+    # Because DoS has two bat transformation souls, which both allow a ton of progression, at least one of them tends to be placed very early.
+    # So we change it so that only one of the two is available to be randomly placed to reduce the chance of early bat.
+    # (The remaining second one will be placed non-randomly later.)
+    if GAME == "dos" && pickups_available.include?(0x104) && pickups_available.include?(0xFC)
+      bat_to_keep = [0x104, 0xFC].sample(random: rng)
+      bat_to_remove = (bat_to_keep == 0x104 ? 0xFC : 0x104)
+      pickups_available.delete(bat_to_remove)
+    elsif GAME == "dos" && pickups_available.include?(0xFC)
+      bat_to_keep = 0x104
+      bat_to_remove = 0xFC
+      pickups_available.delete(bat_to_remove)
+    else
+      bat_to_keep = nil
+      bat_to_remove = nil
+    end
+    
     
     if room_rando?
       # Temporarily give all progress items and check what locations are available.
@@ -281,6 +297,41 @@ module PickupRandomizer
     @rooms_that_already_have_an_event = orig_rooms_that_already_have_an_event.dup
     
     @progression_spheres = progression_spheres
+    
+    if bat_to_keep
+      # If we had to remove one of the two bats from being randomly placed, we now go and place it non-randomly.
+      # We simply place it in the last possible progression sphere we can find.
+      # (Which specific location within that sphere is still chosen randomly.)
+      
+      placed_bat_to_remove = false
+      @progression_spheres.reverse_each do |sphere|
+        locations_accessed_in_this_sphere = sphere[:locs]
+        progress_locations_accessed_in_this_sphere = sphere[:progress_locs]
+        
+        unused_locs = locations_accessed_in_this_sphere - progress_locations_accessed_in_this_sphere
+        valid_unused_locs = filter_locations_valid_for_pickup(
+          unused_locs,
+          bat_to_remove
+        )
+        
+        if valid_unused_locs.any?
+          location_for_bat_to_remove = valid_unused_locs.sample(random: rng)
+          @done_item_locations[location_for_bat_to_remove] = bat_to_remove
+          
+          progress_locations_accessed_in_this_sphere = locations_accessed_in_this_sphere.select do |location| 
+            progress_locations_accessed_in_this_sphere.include?(location) || location == location_for_bat_to_remove
+          end
+          sphere[:progress_locs] = progress_locations_accessed_in_this_sphere
+          
+          placed_bat_to_remove = true
+          break
+        end
+      end
+      
+      if !placed_bat_to_remove
+        raise "Couldn't place #{checker.defs.invert[bat_to_remove]}} anywhere"
+      end
+    end
     
     # Now actually place the pickups in the locations we decided on, and write to the spoiler log.
     already_seen_room_strs = []
