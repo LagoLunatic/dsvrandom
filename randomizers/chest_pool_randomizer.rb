@@ -1,8 +1,5 @@
 
 module ChestPoolRandomizer
-  AVAILABLE_COMMON_WOODEN_CHEST_ITEM_IDS = (0xBA..0xD1).to_a
-  AVAILABLE_RARE_WOODEN_CHEST_ITEM_IDS = 
-  
   def randomize_wooden_chests
     return unless GAME == "ooe"
     
