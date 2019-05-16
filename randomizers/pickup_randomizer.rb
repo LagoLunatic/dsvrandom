@@ -285,18 +285,21 @@ module PickupRandomizer
     # Now actually place the pickups in the locations we decided on, and write to the spoiler log.
     already_seen_room_strs = []
     sphere_index = 0
-    @progression_spheres.each do |locations_accessed_in_this_sphere, doors_accessed_in_this_sphere|
+    @progression_spheres.each do |sphere|
+      progress_locations_accessed_in_this_sphere = sphere[:progress_locs]
+      doors_accessed_in_this_sphere = sphere[:doors]
+      
       spoiler_str = "#{sphere_index+1}:"
       spoiler_log.puts spoiler_str
       puts spoiler_str if verbose
       
-      locations_accessed_in_this_sphere.each do |location|
+      progress_locations_accessed_in_this_sphere.each do |location|
+        @locations_randomized_to_have_useful_pickups << location
+        
         next if nonrandomized_item_locations.has_key?(location)
         
         pickup_global_id = @done_item_locations[location]
         change_entity_location_to_pickup_global_id(location, pickup_global_id)
-        
-        @locations_randomized_to_have_useful_pickups << location
         
         spoiler_str = get_item_placement_spoiler_string(location, pickup_global_id)
         spoiler_log.puts spoiler_str
@@ -398,15 +401,14 @@ module PickupRandomizer
     while true
       if room_rando?
         curr_accessible_locations, curr_accessible_doors = checker.get_accessible_locations_and_doors()
-        locations_accessed_in_this_sphere = curr_accessible_locations & inaccessible_progress_locations
+        locations_accessed_in_this_sphere = curr_accessible_locations
         doors_accessed_in_this_sphere = curr_accessible_doors - accessible_doors
       else
-        locations_accessed_in_this_sphere = checker.get_accessible_locations(
-          locations_to_check: inaccessible_progress_locations
-        )
+        locations_accessed_in_this_sphere = checker.get_accessible_locations()
       end
+      progress_locations_accessed_in_this_sphere = locations_accessed_in_this_sphere & inaccessible_progress_locations
       
-      if locations_accessed_in_this_sphere.empty?
+      if progress_locations_accessed_in_this_sphere.empty?
         #if room_rando?
         #  puts "Starting room: #{@starting_room}"
         #  puts "Num progression spheres at time of failure: #{progression_spheres.size}"
@@ -437,7 +439,7 @@ module PickupRandomizer
       end
       
       pickups_obtained_in_this_sphere = []
-      locations_accessed_in_this_sphere.each do |location|
+      progress_locations_accessed_in_this_sphere.each do |location|
         pickup_global_id = @done_item_locations[location]
         pickups_obtained_in_this_sphere << pickup_global_id
         checker.add_item(pickup_global_id)
@@ -450,9 +452,13 @@ module PickupRandomizer
         end
       end
       
-      accessible_progress_locations += locations_accessed_in_this_sphere
-      inaccessible_progress_locations -= locations_accessed_in_this_sphere
-      progression_spheres << [locations_accessed_in_this_sphere, doors_accessed_in_this_sphere]
+      accessible_progress_locations += progress_locations_accessed_in_this_sphere
+      inaccessible_progress_locations -= progress_locations_accessed_in_this_sphere
+      progression_spheres << {
+        locs: locations_accessed_in_this_sphere,
+        progress_locs: progress_locations_accessed_in_this_sphere,
+        doors: doors_accessed_in_this_sphere,
+      }
       
       if inaccessible_progress_locations.empty?
         break
