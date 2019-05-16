@@ -138,10 +138,10 @@ class CompletabilityChecker
       return true
     elsif reqs == false
       return false
-    elsif PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(reqs.to_sym)
-      return reqs.to_sym
-    elsif PickupRandomizer::PORTRAIT_NAMES.include?(reqs.to_sym)
-      return reqs.to_sym
+    elsif PickupRandomizer::RANDOMIZABLE_VILLAGER_NAMES.include?(reqs.tr(" ", "_").to_sym)
+      return reqs.tr(" ", "_").to_sym
+    elsif PickupRandomizer::PORTRAIT_NAMES.include?(reqs.tr(" ", "_").to_sym)
+      return reqs.tr(" ", "_").to_sym
     end
     
     or_reqs = reqs.split("|")
@@ -351,25 +351,25 @@ class CompletabilityChecker
     if removed_portraits.empty?
       @defs[:four_seal_bosses_killed] = [[:bosswerewolf, :bossmummy, :bossmedusa, :bosscreature]]
     else
-      portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - removed_portraits
+      portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portrait_nest_of_evil] - removed_portraits
       
       bosses_needed = portraits_needed.map do |portrait_name|
         case portrait_name
-        when :portraitcityofhaze
+        when :portrait_city_of_haze
           :bossdullahan
-        when :portraitsandygrave
+        when :portrait_sandy_grave
           :bossastarte
-        when :portraitnationoffools
+        when :portrait_nation_of_fools
           :bosslegion
-        when :portraitforestofdoom
+        when :portrait_forest_of_doom
           :bossdagon
-        when :portraitdarkacademy
+        when :portrait_dark_academy
           :bosscreature
-        when :portraitburntparadise
+        when :portrait_burnt_paradise
           :bossmedusa
-        when :portraitforgottencity
+        when :portrait_forgotten_city
           :bossmummy
-        when :portrait13thstreet
+        when :portrait_13th_street
           :bosswerewolf
         else
           raise "Invalid portrait name: #{portrait_name}"
@@ -380,8 +380,26 @@ class CompletabilityChecker
       
       # Update the requirements for completing the Nest of Evil quest to only require the portraits that weren't removed.
       nest_of_evil_quest_reqs = portraits_needed.map do |portrait_name|
-        # Remove the word portrait from the start
-        portrait_name[8..-1].to_sym
+        case portrait_name
+        when :portrait_city_of_haze
+          :cityofhaze
+        when :portrait_sandy_grave
+          :sandygrave
+        when :portrait_nation_of_fools
+          :nationoffools
+        when :portrait_forest_of_doom
+          :forestofdoom
+        when :portrait_dark_academy
+          :darkacademy
+        when :portrait_burnt_paradise
+          :burntparadise
+        when :portrait_forgotten_city
+          :forgottencity
+        when :portrait_13th_street
+          :"13thstreet"
+        else
+          raise "Invalid portrait name: #{portrait_name}"
+        end
       end
       @defs[:can_complete_nest_of_evil_quest] = [nest_of_evil_quest_reqs]
       
@@ -405,11 +423,11 @@ class CompletabilityChecker
   def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
     # Remove 13th street's mummy requirement.
     game.fs.write(0x02078FC4+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    @defs[:"13thstreet"] = [[:portrait13thstreet]] # Update the pickup requirement for the logic.
+    @defs[:"13thstreet"] = [[:portrait_13th_street]] # Update the pickup requirement for the logic.
     
     # Remove burnt paradise's creature requirement.
     game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    @defs[:burntparadise] = [[:portraitburntparadise]] # Update the pickup requirement for the logic.
+    @defs[:burntparadise] = [[:portrait_burnt_paradise]] # Update the pickup requirement for the logic.
   end
   
   def generate_empty_item_requirements_file

@@ -17,15 +17,15 @@ module PickupRandomizer
   RANDOMIZABLE_VILLAGER_NAMES = VILLAGER_NAME_TO_EVENT_FLAG.keys
   
   PORTRAIT_NAME_TO_DATA = {
-    :portraitcityofhaze =>    {subtype: 0x1A, area_index: 1, sector_index: 0, room_index: 0x1A},
-    :portraitsandygrave =>    {subtype: 0x1A, area_index: 3, sector_index: 0, room_index: 0},
-    :portraitnationoffools => {subtype: 0x1A, area_index: 5, sector_index: 0, room_index: 0x21},
-    :portraitforestofdoom =>  {subtype: 0x1A, area_index: 7, sector_index: 0, room_index: 0},
-    :portraitdarkacademy =>   {subtype: 0x76, area_index: 8, sector_index: 1, room_index: 6},
-    :portraitburntparadise => {subtype: 0x76, area_index: 6, sector_index: 0, room_index: 0x20},
-    :portraitforgottencity => {subtype: 0x76, area_index: 4, sector_index: 0, room_index: 0},
-    :portrait13thstreet =>    {subtype: 0x76, area_index: 2, sector_index: 0, room_index: 7},
-    :portraitnestofevil =>    {subtype: 0x86, area_index: 9, sector_index: 0, room_index: 0},
+    :portrait_city_of_haze =>    {subtype: 0x1A, area_index: 1, sector_index: 0, room_index: 0x1A},
+    :portrait_sandy_grave =>     {subtype: 0x1A, area_index: 3, sector_index: 0, room_index: 0},
+    :portrait_nation_of_fools => {subtype: 0x1A, area_index: 5, sector_index: 0, room_index: 0x21},
+    :portrait_forest_of_doom =>  {subtype: 0x1A, area_index: 7, sector_index: 0, room_index: 0},
+    :portrait_dark_academy =>    {subtype: 0x76, area_index: 8, sector_index: 1, room_index: 6},
+    :portrait_burnt_paradise =>  {subtype: 0x76, area_index: 6, sector_index: 0, room_index: 0x20},
+    :portrait_forgotten_city =>  {subtype: 0x76, area_index: 4, sector_index: 0, room_index: 0},
+    :portrait_13th_street =>     {subtype: 0x76, area_index: 2, sector_index: 0, room_index: 7},
+    :portrait_nest_of_evil =>    {subtype: 0x86, area_index: 9, sector_index: 0, room_index: 0},
   }
   PORTRAIT_NAME_TO_DATA.each do |portrait_name, portrait_data|
     portrait_data[:var_a] = portrait_data[:area_index]
@@ -39,27 +39,27 @@ module PickupRandomizer
     [name, data[:area_index]]
   end.to_h
   PORTRAIT_NAME_TO_DEFAULT_ENTITY_LOCATION = {
-    :portraitcityofhaze => "00-01-00_00",
-    :portraitsandygrave => "00-04-12_00",
-    :portraitnationoffools => "00-06-01_00",
-    :portraitforestofdoom => "00-08-01_02",
-    :portraitdarkacademy => "00-0B-00_04",
-    :portraitburntparadise => "00-0B-00_03",
-    :portraitforgottencity => "00-0B-00_01",
-    :portrait13thstreet => "00-0B-00_02",
-    :portraitnestofevil => "00-00-05_00",
+    :portrait_city_of_haze    => "00-01-00_00",
+    :portrait_sandy_grave     => "00-04-12_00",
+    :portrait_nation_of_fools => "00-06-01_00",
+    :portrait_forest_of_doom  => "00-08-01_02",
+    :portrait_dark_academy    => "00-0B-00_04",
+    :portrait_burnt_paradise  => "00-0B-00_03",
+    :portrait_forgotten_city  => "00-0B-00_01",
+    :portrait_13th_street     => "00-0B-00_02",
+    :portrait_nest_of_evil    => "00-00-05_00",
   }
   EARLY_GAME_PORTRAITS = [
-    :portraitcityofhaze,
-    :portraitsandygrave,
-    :portraitnationoffools,
-    :portraitforestofdoom,
+    :portrait_city_of_haze,
+    :portrait_sandy_grave,
+    :portrait_nation_of_fools,
+    :portrait_forest_of_doom,
   ]
   LATE_GAME_PORTRAITS = [
-    :portraitdarkacademy,
-    :portraitburntparadise,
-    :portraitforgottencity,
-    :portrait13thstreet
+    :portrait_dark_academy,
+    :portrait_burnt_paradise,
+    :portrait_forgotten_city,
+    :portrait_13th_street
   ]
   
   def randomize_pickups_completably(&block)
@@ -924,11 +924,17 @@ module PickupRandomizer
     elsif PORTRAIT_NAMES.include?(pickup_global_id)
       # Portrait
       # Remove the word portrait and capitalize the name.
-      pickup_str = pickup_global_id[8..-1].capitalize
+      pickup_str = pickup_global_id[9..-1].capitalize
     else
       pickup_str = checker.defs.invert[pickup_global_id].to_s
-      pickup_str = pickup_str.tr("_", " ").split.map(&:capitalize).join(" ")
     end
+    pickup_str = pickup_str.tr("_", " ").split.map do |word|
+      if ["of"].include?(word)
+        word
+      else
+        word.capitalize
+      end
+    end.join(" ")
     
     location =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
@@ -1185,7 +1191,7 @@ module PickupRandomizer
         !bad_portrait_locations.include?(location)
       end
       
-      if !room_rando? && pickup_global_id != :portraitnestofevil
+      if !room_rando? && pickup_global_id != :portrait_nest_of_evil
         # This is the location where Nest of Evil was in vanilla.
         # If room rando is off, you need to do the quest with the map percentages to unlock this location.
         # That quest requires you to be able to access the other 8 portraits, so we can't allow any of them to be placed here.

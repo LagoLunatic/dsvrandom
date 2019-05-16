@@ -35,8 +35,8 @@ class DoorCompletabilityChecker < CompletabilityChecker
     @current_items = []
     @return_portraits = {}
     @required_accessible_doors_to_unlock_regular_portraits = {
-      :portrait13thstreet    => [["04-01-08_000", "04-01-08_001"]], # Mummy Man
-      :portraitburntparadise => [["08-00-04_000", "08-00-04_001"]], # The Creature
+      :portrait_13th_street    => [["04-01-08_000", "04-01-08_001"]], # Mummy Man
+      :portrait_burnt_paradise => [["08-00-04_000", "08-00-04_001"]], # The Creature
     }
     @post_brauner_teleport_dest_door = "00-09-03_001"
     if @options[:open_world_map]
@@ -675,25 +675,25 @@ class DoorCompletabilityChecker < CompletabilityChecker
     if removed_portraits.empty?
       required_boss_rooms_to_unlock_studio_portrait = ["02-02-14", "04-01-08", "06-00-05", "08-00-04"] # Werewolf, Mummy Man, Medusa, and The Creature
     else
-      portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portraitnestofevil] - removed_portraits
+      portraits_needed = PickupRandomizer::PORTRAIT_NAMES - [:portrait_nest_of_evil] - removed_portraits
       
       required_boss_rooms_to_unlock_studio_portrait = portraits_needed.map do |portrait_name|
         case portrait_name
-        when :portraitcityofhaze
+        when :portrait_city_of_haze
           "01-02-0B" # Dullahan
-        when :portraitsandygrave
+        when :portrait_sandy_grave
           "03-00-0C" # Astarte
-        when :portraitnationoffools
+        when :portrait_nation_of_fools
           "05-02-0C" # Legion
-        when :portraitforestofdoom
+        when :portrait_forest_of_doom
           "07-00-0E" # Dagon
-        when :portraitdarkacademy
+        when :portrait_dark_academy
           "08-00-04" # The Creature
-        when :portraitburntparadise
+        when :portrait_burnt_paradise
           "06-00-05" # Medusa
-        when :portraitforgottencity
+        when :portrait_forgotten_city
           "04-01-08" # Mummy Man
-        when :portrait13thstreet
+        when :portrait_13th_street
           "02-02-14" # Werewolf
         else
           raise "Invalid portrait name: #{portrait_name}"
@@ -719,11 +719,11 @@ class DoorCompletabilityChecker < CompletabilityChecker
   def remove_13th_street_and_burnt_paradise_boss_death_prerequisites
     # Remove 13th street's mummy requirement.
     game.fs.write(0x02078FC4+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    @required_accessible_doors_to_unlock_regular_portraits.delete(:portrait13thstreet) # Remove the logic's check for this unlock
+    @required_accessible_doors_to_unlock_regular_portraits.delete(:portrait_13th_street) # Remove the logic's check for this unlock
     
     # Remove burnt paradise's creature requirement.
     game.fs.write(0x02079008+3, [0xEA].pack("C")) # Change conditional branch to unconditional branch.
-    @required_accessible_doors_to_unlock_regular_portraits.delete(:portraitburntparadise) # Remove the logic's check for this unlock
+    @required_accessible_doors_to_unlock_regular_portraits.delete(:portrait_burnt_paradise) # Remove the logic's check for this unlock
   end
   
   def move_por_white_barrier_location(new_room_str, path_begin_door, path_end_door)

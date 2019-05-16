@@ -67,10 +67,10 @@ Defs:
   wind: midentrance
   vincent: midentrance
   
-  can complete nest of evil quest: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
+  can complete nest of evil quest: city of haze & sandy grave & nation of fools & forest of doom & 13th street & forgotten city & burnt paradise & dark academy
   
-  cityofhaze: portraitcityofhaze
-  portraitcityofhaze: portraitcityofhaze
+  cityofhaze: portrait city of haze
+  portrait city of haze: portrait city of haze
   midcityofhaze: cityofhaze & call cube & change cube
   endcityofhaze: bossdullahan
   bossdullahan: midcityofhaze  
@@ -81,17 +81,17 @@ Defs:
   greatstairway: lowergreatstairway & height 2 | upperentrance
   uppergreatstairway: greatstairway & height 2
   
-  sandygrave: portraitsandygrave
-  portraitsandygrave: portraitsandygrave
+  sandygrave: portrait sandy grave
+  portrait sandy grave: portrait sandy grave
   sandygravemidlevel: sandygrave & height 2
   bossastarte: sandygravemidlevel
   
-  nationoffools: portraitnationoffools
-  portraitnationoffools: portraitnationoffools
+  nationoffools: portrait nation of fools
+  portrait nation of fools: portrait nation of fools
   bosslegion: nationoffools
   
-  forestofdoom: portraitforestofdoom
-  portraitforestofdoom: portraitforestofdoom
+  forestofdoom: portrait forest of doom
+  portrait forest of doom: portrait forest of doom
   forestofdoomcenter: forestofdoom & height
   forestofdoomunderground: forestofdoomcenter & partnerpush & strength cube
   forestofdoomeast: forestofdoomunderground & height 2
@@ -111,27 +111,27 @@ Defs:
   
   studiopaintingroom: bosssisters & purify
   
-  13thstreet: portrait13thstreet & bossmummy
-  portrait13thstreet: portrait13thstreet
+  13thstreet: portrait 13th street & bossmummy
+  portrait 13th street: portrait 13th street
   13thstreetaftertrain: 13thstreet & partnerpush & strength cube | 13thstreet & telesuper
   bosswerewolf: 13thstreetaftertrain
   
-  forgottencity: portraitforgottencity
-  portraitforgottencity: portraitforgottencity
+  forgottencity: portrait forgotten city
+  portrait forgotten city: portrait forgotten city
   innerforgottencity: forgottencity & height 2
   bossmummy: innerforgottencity
   
-  burntparadise: portraitburntparadise & bosscreature
-  portraitburntparadise: portraitburntparadise
+  burntparadise: portrait burnt paradise & bosscreature
+  portrait burnt paradise: portrait burnt paradise
   bossmedusa: burntparadise & big height
   
-  darkacademy: portraitdarkacademy
-  portraitdarkacademy: portraitdarkacademy
+  darkacademy: portrait dark academy
+  portrait dark academy: portrait dark academy
   middarkacademy: darkacademy & big height
   bosscreature: middarkacademy
   
-  nestofevil: portraitnestofevil
-  portraitnestofevil: portraitnestofevil
+  nestofevil: portrait nest of evil
+  portrait nest of evil: portrait nest of evil
   bossdoppelganger: nestofevil
   
   lostgallery: four seal bosses killed

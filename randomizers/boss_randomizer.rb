@@ -457,16 +457,16 @@ module BossRandomizer
     
     case old_boss.name
     when "Dullahan"
-      @boss_id_for_each_portrait[:portraitcityofhaze] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_city_of_haze] = new_boss_id
     when "Behemoth"
       if boss_entity.var_b == 2
         # Scripted Behemoth that chases you down the hallway.
         return :skip
       end
     when "Astarte"
-      @boss_id_for_each_portrait[:portraitsandygrave] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_sandy_grave] = new_boss_id
     when "Legion"
-      @boss_id_for_each_portrait[:portraitnationoffools] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_nation_of_fools] = new_boss_id
       
       # Legion's horizontal boss door is hardcoded to check Legion's boss death flag.
       # Update these checks to check the updated boss death flag.
@@ -496,7 +496,7 @@ module BossRandomizer
         game.fs.replace_arm_shifted_immediate_integer(0x022E88E4, 0x03)
       end
     when "Dagon"
-      @boss_id_for_each_portrait[:portraitforestofdoom] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_forest_of_doom] = new_boss_id
       
       if new_boss.name != "Dagon"
         # If Dagon's not in his own room, there won't be any water there, so you can't get out of the room without griffon wing/owl morph.
@@ -509,13 +509,13 @@ module BossRandomizer
         platform.write_to_rom()
       end
     when "The Creature"
-      @boss_id_for_each_portrait[:portraitdarkacademy] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_dark_academy] = new_boss_id
     when "Werewolf"
-      @boss_id_for_each_portrait[:portrait13thstreet] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_13th_street] = new_boss_id
     when "Medusa"
-      @boss_id_for_each_portrait[:portraitburntparadise] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_burnt_paradise] = new_boss_id
     when "Mummy Man"
-      @boss_id_for_each_portrait[:portraitforgottencity] = new_boss_id
+      @boss_id_for_each_portrait[:portrait_forgotten_city] = new_boss_id
     when "Brauner"
       @boss_id_inside_studio_portrait = new_boss_id
       

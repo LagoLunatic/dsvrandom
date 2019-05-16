@@ -244,21 +244,21 @@ class Randomizer
     
     if GAME == "por"
       @boss_id_for_each_portrait = {
-        :portraitcityofhaze => 0x8A,
-        :portraitsandygrave => 0x8D,
-        :portraitnationoffools => 0x8E,
-        :portraitforestofdoom => 0x8F,
-        :portraitdarkacademy => 0x94,
-        :portrait13thstreet => 0x95,
-        :portraitburntparadise => 0x96,
-        :portraitforgottencity => 0x97,
+        :portrait_city_of_haze => 0x8A,
+        :portrait_sandy_grave => 0x8D,
+        :portrait_nation_of_fools => 0x8E,
+        :portrait_forest_of_doom => 0x8F,
+        :portrait_dark_academy => 0x94,
+        :portrait_13th_street => 0x95,
+        :portrait_burnt_paradise => 0x96,
+        :portrait_forgotten_city => 0x97,
       }
       
       @portraits_needed_to_open_studio_portrait = [
-        :portrait13thstreet,
-        :portraitdarkacademy,
-        :portraitburntparadise,
-        :portraitforgottencity,
+        :portrait_13th_street,
+        :portrait_dark_academy,
+        :portrait_burnt_paradise,
+        :portrait_forgotten_city,
       ]
       
       @boss_id_inside_studio_portrait = 0x93
@@ -286,7 +286,7 @@ class Randomizer
         end
         
         @portraits_needed_to_open_studio_portrait = PickupRandomizer::PORTRAIT_NAMES -
-          [:portraitnestofevil] - @portraits_to_remove
+          [:portrait_nest_of_evil] - @portraits_to_remove
         
         # Keep track of unused rooms (every room in the 4 unused portraits).
         @portraits_to_remove.each do |portrait_name|
