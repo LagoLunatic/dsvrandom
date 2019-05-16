@@ -35,10 +35,12 @@ module ChestPoolRandomizer
       
       (0..3).each do |i|
         if pool_index <= 0xA
-          pool.item_ids[i] = available_common_wooden_chest_item_ids.pop() + 1
+          item_id = available_common_wooden_chest_item_ids.pop()
         else
-          pool.item_ids[i] = available_rare_wooden_chest_item_ids.pop() + 1
+          item_id = available_rare_wooden_chest_item_ids.pop()
         end
+        pool.item_ids[i] = item_id + 1
+        @used_non_progression_pickups << item_id
       end
       
       pool.write_to_rom()

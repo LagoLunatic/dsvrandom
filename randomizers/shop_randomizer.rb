@@ -33,28 +33,22 @@ module ShopRandomizer
       pool.item_ids.length.times do |i|
         if pool_index == 0 && i == 0
           # Make sure the guaranteed cheap healing item is always in the shop at the start.
-          pool.item_ids[i] = @shop_cheap_healing_item_id+1
-          available_shop_item_ids.delete(@shop_cheap_healing_item_id)
-          next
+          item_id = @shop_cheap_healing_item_id
         elsif GAME == "por" && pool_index == 0 && i == 1
-          pool.item_ids[i] = 0+1 # Potion for the first quest
-          available_shop_item_ids.delete(0)
-          next
+          item_id = 0# Potion for the first quest
         elsif GAME == "por" && pool_index == 0 && i == 2
-          pool.item_ids[i] = 0x4B+1 # Castle map 1 for the first quest
-          available_shop_item_ids.delete(0x4B)
-          next
+          item_id = 0x4B # Castle map 1 for the first quest
         elsif pool.slot_is_arm_shifted_immediate?(i)
           # This is a hardcoded slot that must be an arm shifted immediate.
           item_id = available_arm_shifted_immediate_shop_item_ids.pop()
-          pool.item_ids[i] = item_id + 1
-          available_shop_item_ids.delete(item_id)
-          next
+        else
+          item_id = available_shop_item_ids.pop()
         end
         
-        item_id = available_shop_item_ids.pop()
         pool.item_ids[i] = item_id + 1
+        available_shop_item_ids.delete(item_id)
         available_arm_shifted_immediate_shop_item_ids.delete(item_id)
+        @used_non_progression_pickups << item_id
       end
       
       pool.write_to_rom()
