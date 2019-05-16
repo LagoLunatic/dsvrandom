@@ -153,10 +153,16 @@ module PickupRandomizer
       end
     end
     
-    total_progression_pickups = checker.all_progression_pickups.length
-    place_progression_pickups() do |progression_pickups_placed|
-      percent_done = progression_pickups_placed.to_f / total_progression_pickups
-      yield percent_done
+    if @progression_fill_mode == :forward
+      total_progression_pickups = checker.all_progression_pickups.length
+      place_progression_pickups_forward_fill() do |progression_pickups_placed|
+        percent_done = progression_pickups_placed.to_f / total_progression_pickups
+        yield percent_done
+      end
+    elsif @progression_fill_mode == :assumed
+      place_progression_pickups_assumed_fill()
+    else
+      raise "Unknown progression fill mode: #{@progression_fill_mode}"
     end
     
     if !checker.game_beatable?
@@ -198,7 +204,304 @@ module PickupRandomizer
     raise e
   end
   
-  def place_progression_pickups(&block)
+  def place_progression_pickups_assumed_fill
+    verbose = false
+    
+    # This attribute is modified when adding a villager to a room.
+    orig_rooms_that_already_have_an_event = @rooms_that_already_have_an_event.dup
+    
+    # First place things that are not randomized in their normal locations.
+    nonrandomized_item_locations = get_nonrandomized_item_locations()
+    
+    orig_current_items = checker.current_items.dup
+    if room_rando?
+      orig_return_portraits = checker.return_portraits.dup
+    end
+    
+    
+    pickups_available = checker.all_progression_pickups - checker.current_items - nonrandomized_item_locations.values
+    
+    
+    if room_rando?
+      # Temporarily give all progress items and check what locations are available.
+      # Those are all the valid locations on this seed, excluding rooms, subrooms, and portraits that are unused.
+      checker.all_progression_pickups.each do |pickup|
+        next if checker.current_items.include?(pickup)
+        checker.add_item(pickup)
+      end
+      locations_available, _ = checker.get_accessible_locations_and_doors()
+      checker.restore_current_items(orig_current_items)
+    else
+      locations_available = checker.all_locations.keys
+      # Don't put items in removed portraits.
+      if GAME == "por" && options[:por_short_mode]
+        area_indexes_of_removed_portraits = @portraits_to_remove.map do |portrait_name|
+          PickupRandomizer::PORTRAIT_NAME_TO_AREA_INDEX[portrait_name]
+        end
+        locations_available.reject! do |location|
+          area_indexes_of_removed_portraits.include?(location[0,2].to_i(16))
+        end
+      end
+    end
+    locations_available -= nonrandomized_item_locations.keys
+    
+    
+    locations_accessible_at_start = nil
+    if room_rando?
+      locations_accessible_at_start, _ = checker.get_accessible_locations_and_doors()
+    end
+    
+    
+    # Place pickups in completely random locations, and then check if the resulting seed is beatable.
+    # Repeat this until a beatable seed is found.
+    num_failures = 0
+    while true
+      @done_item_locations = nonrandomized_item_locations.dup
+      @rooms_that_already_have_an_event = orig_rooms_that_already_have_an_event.dup
+      
+      progression_spheres = decide_progression_pickups_for_assumed_fill(
+        pickups_available,
+        locations_available,
+        locations_accessible_at_start: locations_accessible_at_start
+      )
+      if progression_spheres != :failure
+        puts "Total number of assumed fill failures: #{num_failures}"
+        break
+      end
+      
+      num_failures += 1
+      puts "Assumed fill failure ##{num_failures}" if num_failures % 100 == 0
+      checker.restore_current_items(orig_current_items)
+      if room_rando?
+        checker.restore_return_portraits(orig_return_portraits)
+      end
+    end
+    
+    # Restore this since any villagers we decided on during the previous step haven't actually been placed yet.
+    @rooms_that_already_have_an_event = orig_rooms_that_already_have_an_event.dup
+    
+    @progression_spheres = progression_spheres
+    
+    # Now actually place the pickups in the locations we decided on, and write to the spoiler log.
+    already_seen_room_strs = []
+    sphere_index = 0
+    @progression_spheres.each do |locations_accessed_in_this_sphere, doors_accessed_in_this_sphere|
+      spoiler_str = "#{sphere_index+1}:"
+      spoiler_log.puts spoiler_str
+      puts spoiler_str if verbose
+      
+      locations_accessed_in_this_sphere.each do |location|
+        next if nonrandomized_item_locations.has_key?(location)
+        
+        pickup_global_id = @done_item_locations[location]
+        change_entity_location_to_pickup_global_id(location, pickup_global_id)
+        
+        @locations_randomized_to_have_useful_pickups << location
+        
+        spoiler_str = get_item_placement_spoiler_string(location, pickup_global_id)
+        spoiler_log.puts spoiler_str
+        puts spoiler_str if verbose
+      end
+      
+      if room_rando?
+        rooms_accessed_in_this_sphere = doors_accessed_in_this_sphere.map{|door_str| door_str[0,8]}
+        # Remove duplicate rooms caused by accessing a new door in an old room.
+        rooms_accessed_in_this_sphere -= already_seen_room_strs
+        
+        @rooms_by_progression_order_accessed << rooms_accessed_in_this_sphere
+        already_seen_room_strs += rooms_accessed_in_this_sphere
+      end
+      
+      sphere_index += 1
+    end
+  end
+  
+  def decide_progression_pickups_for_assumed_fill(pickups_available, locations_available, locations_accessible_at_start: nil)
+    remaining_progress_items = pickups_available.dup
+    remaining_locations = locations_available.dup
+    
+    if GAME == "por" && options[:randomize_starting_room] && options[:randomize_portraits]
+      starting_portrait_name = AREA_INDEX_TO_PORTRAIT_NAME[@starting_room.area_index]
+      if starting_portrait_name
+        starting_portrait_location_in_castle = pick_starting_portrait_location_in_castle()
+        
+        @done_item_locations[starting_portrait_location_in_castle] = starting_portrait_name
+        
+        return_portrait = get_primary_return_portrait_for_portrait(starting_portrait_name)
+        checker.add_return_portrait(return_portrait.room.room_str, starting_portrait_location_in_castle)
+        
+        remaining_progress_items.delete(starting_portrait_name)
+      end
+    end
+    
+    if room_rando?
+      # Place the very first item somewhere that is definitely reachable within the first sphere.
+      # This is for the sake of performance - tons of attempts where there isn't a single item accessible at the start is just a waste of time.
+      if locations_accessible_at_start.nil?
+        locations_accessible_at_start, _ = checker.get_accessible_locations_and_doors()
+      end
+      
+      possible_first_items = remaining_progress_items.dup
+      if GAME == "por" && (!room_rando? || !options[:rebalance_enemies_in_room_rando])
+        # Don't allow putting late game portraits at the very start.
+        possible_first_items -= LATE_GAME_PORTRAITS
+      end
+      possible_first_items.shuffle!(random: rng)
+      while true
+        if possible_first_items.empty?
+          raise "No possible item to place first in assumed fill"
+        end
+        possible_first_item = possible_first_items.pop()
+        possible_locations = filter_locations_valid_for_pickup(locations_accessible_at_start, possible_first_item)
+        if possible_locations.empty?
+          next
+        end
+        
+        remaining_progress_items.delete(possible_first_item)
+        
+        location = possible_locations.sample(random: rng)
+        remaining_locations.delete(location)
+        
+        @done_item_locations[location] = possible_first_item
+        
+        if RANDOMIZABLE_VILLAGER_NAMES.include?(possible_first_item)
+          # Villager
+          room_str = location[0,8]
+          @rooms_that_already_have_an_event << room_str
+        end
+        
+        break
+      end
+    end
+    
+    remaining_progress_items.each do |pickup_global_id|
+      possible_locations = filter_locations_valid_for_pickup(remaining_locations, pickup_global_id)
+      if possible_locations.empty?
+        raise "No locations to place pickup"
+      end
+      location = possible_locations.sample(random: rng)
+      remaining_locations.delete(location)
+      
+      @done_item_locations[location] = pickup_global_id
+      
+      if RANDOMIZABLE_VILLAGER_NAMES.include?(pickup_global_id)
+        # Villager
+        room_str = location[0,8]
+        @rooms_that_already_have_an_event << room_str
+      end
+    end
+    
+    inaccessible_progress_locations = @done_item_locations.keys
+    accessible_progress_locations = []
+    accessible_doors = []
+    progression_spheres = []
+    while true
+      if room_rando?
+        curr_accessible_locations, curr_accessible_doors = checker.get_accessible_locations_and_doors()
+        locations_accessed_in_this_sphere = curr_accessible_locations & inaccessible_progress_locations
+        doors_accessed_in_this_sphere = curr_accessible_doors - accessible_doors
+      else
+        locations_accessed_in_this_sphere = checker.get_accessible_locations(
+          locations_to_check: inaccessible_progress_locations
+        )
+      end
+      
+      if locations_accessed_in_this_sphere.empty?
+        #if room_rando?
+        #  puts "Starting room: #{@starting_room}"
+        #  puts "Num progression spheres at time of failure: #{progression_spheres.size}"
+        #  puts "Num accessible locations at time of failure: #{curr_accessible_locations.size}"
+        #  accesible_progress_locs = (@done_item_locations.keys & curr_accessible_locations)
+        #  puts "Num accessible progress locations at time of failure: #{accesible_progress_locs.size}"
+        #  puts "Total progress locations at time of failure: #{@done_item_locations.keys.size}"
+        #  accessible_area_indexes = curr_accessible_doors.map{|x| x[0,2].to_i(16)}.uniq
+        #  puts "All accessible areas: #{accessible_area_indexes}"
+        #  
+        #  inaccessible_item_locations = (@done_item_locations.keys - accesible_progress_locs)
+        #  puts "Inaccessible item locations:"
+        #  p inaccessible_item_locations
+        #  puts "Inaccessible items:"
+        #  p inaccessible_item_locations.map{|loc| @done_item_locations[loc]}
+        #else
+        #  puts "Starting room: #{@starting_room}"
+        #  puts "Num progression spheres at time of failure: #{progression_spheres.size}"
+        #  puts "Total progress locations at time of failure: #{@done_item_locations.keys.size}"
+        #  puts "Num accessible progress locations at time of failure: #{accessible_progress_locations.size}"
+        #  puts "Num inaccessible progress locations at time of failure: #{inaccessible_progress_locations.size}"
+        #  puts "Inaccessible locations: #{inaccessible_progress_locations}"
+        #  accessible_area_indexes = (accessible_progress_locations+locations_accessed_in_this_sphere).map{|x| x[0,2].to_i(16)}.uniq
+        #  puts "All accessible areas: #{accessible_area_indexes}"
+        #end
+        
+        return :failure
+      end
+      
+      pickups_obtained_in_this_sphere = []
+      locations_accessed_in_this_sphere.each do |location|
+        pickup_global_id = @done_item_locations[location]
+        pickups_obtained_in_this_sphere << pickup_global_id
+        checker.add_item(pickup_global_id)
+      end
+      
+      if GAME == "por" && progression_spheres.size == 0 && (!room_rando? || !options[:rebalance_enemies_in_room_rando])
+        # If portraits are randomized but we can't rebalance enemies, try to avoid placing late game portraits in the early game.
+        if (pickups_obtained_in_this_sphere & LATE_GAME_PORTRAITS).any?
+          return :failure
+        end
+      end
+      
+      accessible_progress_locations += locations_accessed_in_this_sphere
+      inaccessible_progress_locations -= locations_accessed_in_this_sphere
+      progression_spheres << [locations_accessed_in_this_sphere, doors_accessed_in_this_sphere]
+      
+      if inaccessible_progress_locations.empty?
+        break
+      end
+    end
+    
+    return progression_spheres
+  end
+  
+  def get_nonrandomized_item_locations
+    nonrandomized_done_item_locations = {}
+    
+    if !options[:randomize_boss_souls] && ["dos", "ooe"].include?(GAME)
+      # Vanilla boss souls.
+      checker.enemy_locations.each do |location|
+        pickup_global_id = get_entity_skill_drop_by_entity_location(location)
+        nonrandomized_done_item_locations[location] = pickup_global_id
+        
+        @locations_randomized_to_have_useful_pickups << location
+      end
+    end
+    
+    if !options[:randomize_villagers] && GAME == "ooe"
+      # Vanilla villagers.
+      checker.villager_locations.each do |location|
+        pickup_global_id = get_villager_name_by_entity_location(location)
+        nonrandomized_done_item_locations[location] = pickup_global_id
+        
+        @locations_randomized_to_have_useful_pickups << location
+      end
+    end
+    
+    if !options[:randomize_portraits] && GAME == "por"
+      # Vanilla portraits.
+      checker.portrait_locations.each do |location|
+        # Don't count removed portraits in short mode as portrait locations.
+        next if @portrait_locations_to_remove.include?(location)
+        
+        pickup_global_id = get_portrait_name_by_entity_location(location)
+        nonrandomized_done_item_locations[location] = pickup_global_id
+        
+        @locations_randomized_to_have_useful_pickups << location
+      end
+    end
+    
+    return nonrandomized_done_item_locations
+  end
+  
+  def place_progression_pickups_forward_fill(&block)
     previous_accessible_locations = []
     progression_pickups_placed = 0
     total_progression_pickups = checker.all_progression_pickups.length
@@ -536,6 +839,20 @@ module PickupRandomizer
     starting_portrait_location_in_castle = possible_portrait_locations.sample(random: rng)
     
     return starting_portrait_location_in_castle
+  end
+  
+  def get_primary_return_portrait_for_portrait(portrait_name)
+    portrait_data = PORTRAIT_NAME_TO_DATA[portrait_name]
+    dest_area_index = portrait_data[:area_index]
+    dest_sector_index = portrait_data[:sector_index]
+    dest_room_index = portrait_data[:room_index]
+    dest_room = game.areas[dest_area_index].sectors[dest_sector_index].rooms[dest_room_index]
+    
+    return_portrait = dest_room.entities.find do |entity|
+      entity.is_special_object? && [0x1A, 0x76, 0x86, 0x87].include?(entity.subtype)
+    end
+    
+    return return_portrait
   end
   
   def get_item_placement_spoiler_string(location, pickup_global_id)

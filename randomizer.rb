@@ -103,6 +103,7 @@ class Randomizer
     @int_seed = Digest::MD5.hexdigest(seed).to_i(16)
     @rng = Random.new(@int_seed)
     
+    @progression_fill_mode = :assumed
     @weak_enemy_attack_threshold = 28
     @max_spawners_per_room = 1
     @max_room_rando_subsector_redos = 20
