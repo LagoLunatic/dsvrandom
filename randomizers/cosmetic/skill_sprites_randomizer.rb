@@ -94,10 +94,45 @@ module SkillSpriteRandomizer
       any_changes_made_to_this_sprite = true
     end
     
+    # If there were any completely invisible frames, copy a visible frame over them.
+    invisible_frames = sprite.frames.select{|frame| frame.number_of_parts == 0}
+    if invisible_frames.any?
+      first_visible_frame = sprite.frames.find{|frame| frame.number_of_parts != 0}
+      if first_visible_frame.nil?
+        raise "Sprite has no visible frames"
+      end
+      
+      invisible_frames.each do |invisible_frame|
+        first_visible_frame.parts.each do |part|
+          if sprite.sprite_file
+            # Sprites in individual files can't reuse the same part multiple times.
+            new_part = part.dup
+            sprite.parts << new_part
+            invisible_frame.parts << new_part
+          else
+            invisible_frame.parts << part
+          end
+        end
+        
+        # Also copy the hitbox if necessary.
+        first_visible_frame.hitboxes.each do |hitbox|
+          if sprite.sprite_file
+            # Sprites in individual files can't reuse the same hitbox multiple times.
+            new_hitbox = hitbox.dup
+            sprite.hitboxes << new_hitbox
+            invisible_frame.hitboxes << new_hitbox
+          else
+            invisible_frame.hitboxes << hitbox
+          end
+        end
+      end
+      
+      any_changes_made_to_this_sprite = true
+    end
+    
     # Add a hitbox to every frame if it had no hitboxes originally.
     sprite.frames.each do |frame|
       next if frame.number_of_hitboxes > 0 # Don't add hitboxes if the frame already has them
-      next if frame.number_of_parts == 0 # Don't add hitboxes if the frame is not even visible
       
       min_part_x = frame.parts.map{|part| part.x_pos}.min
       min_part_y = frame.parts.map{|part| part.y_pos}.min
@@ -140,16 +175,20 @@ module SkillSpriteRandomizer
           # Sprites in individual files can't reuse the same hitbox multiple times.
           new_hitbox = hitbox.dup
           sprite.hitboxes << new_hitbox
+          new_frame.hitboxes << new_hitbox
+        else
+          new_frame.hitboxes << hitbox
         end
-        new_frame.hitboxes << hitbox
       end
       orig_frame.parts.each do |part|
         if sprite.sprite_file
           # Sprites in individual files can't reuse the same part multiple times.
           new_part = part.dup
           sprite.parts << new_part
+          new_frame.parts << new_part
+        else
+          new_frame.parts << part
         end
-        new_frame.parts << part
       end
       sprite.frames << new_frame
       
