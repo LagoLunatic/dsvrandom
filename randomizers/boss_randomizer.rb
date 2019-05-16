@@ -1,7 +1,9 @@
 
 module BossRandomizer
   def randomize_bosses
-    spoiler_log.puts "Shuffling bosses:"
+    verbose = false
+    
+    puts "Shuffling bosses:" if verbose
     
     dos_randomize_final_boss()
     
@@ -80,14 +82,14 @@ module BossRandomizer
       end
     end
     # Print all swaps that work.
-    boss_swaps_that_work.each do |old_boss_id, valid_new_boss_ids|
-      old_boss = game.enemy_dnas[old_boss_id]
-      puts "Boss %02X (#{old_boss.name}) can be swapped with:" % [old_boss_id]
-      valid_new_boss_ids.each do |new_boss_id|
-        new_boss = game.enemy_dnas[new_boss_id]
-        puts "  Boss %02X (#{new_boss.name})" % [new_boss_id]
-      end
-    end
+    #boss_swaps_that_work.each do |old_boss_id, valid_new_boss_ids|
+    #  old_boss = game.enemy_dnas[old_boss_id]
+    #  puts "Boss %02X (#{old_boss.name}) can be swapped with:" % [old_boss_id]
+    #  valid_new_boss_ids.each do |new_boss_id|
+    #    new_boss = game.enemy_dnas[new_boss_id]
+    #    puts "  Boss %02X (#{new_boss.name})" % [new_boss_id]
+    #  end
+    #end
     
     remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
     queued_dna_changes = Hash.new{|h, k| h[k] = {}}
@@ -111,7 +113,7 @@ module BossRandomizer
         possible_boss_ids_for_this_boss = boss_swaps_that_work[old_boss_id] & remaining_boss_ids
         if possible_boss_ids_for_this_boss.empty?
           # Nothing this could possibly randomize into and work correctly. Skip.
-          puts "BOSS %02X FAILED!" % old_boss_id
+          #puts "BOSS %02X FAILED!" % old_boss_id
           next
         end
         
@@ -136,9 +138,7 @@ module BossRandomizer
         next
       end
       
-      spoiler_str = "  Replacing boss %02X (#{old_boss.name}) with boss %02X (#{new_boss.name})" % [old_boss_id, new_boss_id]
-      puts spoiler_str
-      spoiler_log.puts spoiler_str
+      puts "  Replacing boss %02X (#{old_boss.name}) with boss %02X (#{new_boss.name})" % [old_boss_id, new_boss_id] if verbose
       
       boss_entity.subtype = new_boss_id
       remaining_boss_ids.delete(new_boss_id)
@@ -181,8 +181,6 @@ module BossRandomizer
       
       boss.write_to_rom()
     end
-    
-    spoiler_log.puts "All bosses randomized successfully."
   end
   
   def dos_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
