@@ -456,6 +456,12 @@ class Randomizer
       @original_enemy_dnas << enemy_dna
     end
     
+    # Preserve original item prices.
+    @original_item_prices = {}
+    game.items.each_with_index do |item, item_id|
+      @original_item_prices[item_id] = item["Price"]
+    end
+    
     if options[:randomize_bosses]
       yield [options_completed, "Shuffling bosses..."]
       reset_rng()

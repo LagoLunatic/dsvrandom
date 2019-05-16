@@ -8,8 +8,7 @@ module ChestPoolRandomizer
     available_rare_wooden_chest_item_ids *= 5 # Weight it towards these consumables
     equipment = all_non_progression_pickups.select{|item_id| item_id >= 0xE5}
     available_rare_wooden_chest_item_ids += equipment.select do |item_id|
-      item = game.items[item_id]
-      item["Price"] >= 4000
+      @original_item_prices[item_id] >= 4000
     end
     available_rare_wooden_chest_item_ids -= ITEMS_WITH_OP_HARDCODED_EFFECT
     
