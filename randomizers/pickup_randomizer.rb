@@ -285,6 +285,10 @@ module PickupRandomizer
         break
       end
       
+      if num_failures >= @assumed_fill_mode_max_redos
+        raise "Failed to place progression pickups over #{@assumed_fill_mode_max_redos} times.\nPlease report this as a bug."
+      end
+      
       num_failures += 1
       puts "Assumed fill failure ##{num_failures}" if num_failures % 100 == 0
       checker.restore_current_items(orig_current_items)

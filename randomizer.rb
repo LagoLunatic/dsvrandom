@@ -104,6 +104,7 @@ class Randomizer
     @rng = Random.new(@int_seed)
     
     @progression_fill_mode = :assumed
+    @assumed_fill_mode_max_redos = 3000
     @weak_enemy_attack_threshold = 28
     @max_spawners_per_room = 1
     @max_room_rando_subsector_redos = 20
