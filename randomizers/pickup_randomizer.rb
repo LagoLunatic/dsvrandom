@@ -64,7 +64,7 @@ module PickupRandomizer
   
   def randomize_pickups_completably(&block)
     spoiler_log.puts
-    spoiler_log.puts "Randomizing pickups:"
+    spoiler_log.puts "Progression pickup locations:"
     
     case GAME
     when "dos"
@@ -345,14 +345,18 @@ module PickupRandomizer
       puts spoiler_str if verbose
       
       progress_locations_accessed_in_this_sphere.each do |location|
-        @locations_randomized_to_have_useful_pickups << location
-        
-        next if nonrandomized_item_locations.has_key?(location)
-        
         pickup_global_id = @done_item_locations[location]
-        change_entity_location_to_pickup_global_id(location, pickup_global_id)
+        next unless checker.all_progression_pickups.include?(pickup_global_id)
+        
+        @locations_randomized_to_have_useful_pickups << location
+        unless nonrandomized_item_locations.has_key?(location)
+          change_entity_location_to_pickup_global_id(location, pickup_global_id)
+        end
         
         spoiler_str = get_item_placement_spoiler_string(location, pickup_global_id)
+        if nonrandomized_item_locations.has_key?(location)
+          spoiler_str += " (Not randomized)"
+        end
         spoiler_log.puts spoiler_str
         puts spoiler_str if verbose
       end
