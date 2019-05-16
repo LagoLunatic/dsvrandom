@@ -949,6 +949,12 @@ module Tweaks
       game.fs.write(0x02024CA4, [room.room_ypos_on_map].pack("C"))
     end
     
+    if GAME == "dos" && options[:randomize_maps]
+      # Don't draw the floors of Gergoth's tower on randomized maps.
+      # Not only is it unnecessary, they would be drawn on the wrong spot, potentially covering up doors that happen to be in the same spot.
+      game.fs.write(0x020230D4, [0xEA000058].pack("V"))
+    end
+    
     if GAME == "ooe" && room_rando?
       # If any player character other than Shanoa enters Eligor's fight, Eligor's code forces the player to walk to the right until they're on Eligor's back.
       # This is fine when entering from the left, but when entering from the right it softlocks the player walking into a wall forever.
