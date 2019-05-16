@@ -1016,7 +1016,9 @@ module PickupRandomizer
         end
       end
       
-      @used_non_progression_pickups << pickup_global_id
+      if all_non_progression_pickups.include?(pickup_global_id)
+        @used_non_progression_pickups << pickup_global_id
+      end
       
       change_entity_location_to_pickup_global_id(location, pickup_global_id)
     end
