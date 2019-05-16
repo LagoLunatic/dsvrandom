@@ -35,14 +35,23 @@ module ShopRandomizer
           # Make sure the guaranteed cheap healing item is always in the shop at the start.
           item_id = @shop_cheap_healing_item_id
         elsif GAME == "por" && pool_index == 0 && i == 1
-          item_id = 0# Potion for the first quest
+          item_id = 0 # Potion for the first quest
         elsif GAME == "por" && pool_index == 0 && i == 2
           item_id = 0x4B # Castle map 1 for the first quest
-        elsif pool.slot_is_arm_shifted_immediate?(i)
-          # This is a hardcoded slot that must be an arm shifted immediate.
-          item_id = available_arm_shifted_immediate_shop_item_ids.pop()
         else
-          item_id = available_shop_item_ids.pop()
+          if pool.slot_is_arm_shifted_immediate?(i)
+            # This is a hardcoded slot that must be an arm shifted immediate.
+            available_items_id_for_pool = available_arm_shifted_immediate_shop_item_ids
+          else
+            available_items_id_for_pool = available_shop_item_ids
+          end
+          
+          available_unplaced_item_ids_for_pool = available_items_id_for_pool - @used_non_progression_pickups
+          if available_unplaced_item_ids_for_pool.any?
+            item_id = available_unplaced_item_ids_for_pool.pop()
+          else
+            item_id = available_items_id_for_pool.pop()
+          end
         end
         
         pool.item_ids[i] = item_id + 1

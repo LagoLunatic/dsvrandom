@@ -32,11 +32,20 @@ module ChestPoolRandomizer
       
       (0..3).each do |i|
         if pool_index <= 0xA
-          item_id = available_common_wooden_chest_item_ids.pop()
+          available_items_id_for_pool = available_common_wooden_chest_item_ids
         else
-          item_id = available_rare_wooden_chest_item_ids.pop()
+          available_items_id_for_pool = available_rare_wooden_chest_item_ids
         end
+        
+        available_unplaced_item_ids_for_pool = available_items_id_for_pool - @used_non_progression_pickups
+        if available_unplaced_item_ids_for_pool.any?
+          item_id = available_unplaced_item_ids_for_pool.pop()
+        else
+          item_id = available_items_id_for_pool.pop()
+        end
+        
         pool.item_ids[i] = item_id + 1
+        available_items_id_for_pool.drop(item_id) # Drop only one instance of this item, not all duplicates.
         @used_non_progression_pickups << item_id
       end
       
