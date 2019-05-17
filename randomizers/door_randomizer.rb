@@ -1167,7 +1167,7 @@ module DoorRandomizer
         block_off_tiles(up_door.room, tiles_to_remove)
       end
       
-      if down_door.door_str == "0B-01-01_000" && up_door.door_str == "0B-01-04_000"
+      if GAME == "ooe" && down_door.door_str == "0B-01-01_000" && up_door.door_str == "0B-01-04_000"
         # Special case when the down door in the upper waterfall room connects to the up door in the spike room.
         # The doors don't line up right when the waterfall is frozen, so block off the final tile where the waterfall is.
         # And then for the up door, shift it right by a tile so the left edge of the door still matches up with the left edge of the down door.
