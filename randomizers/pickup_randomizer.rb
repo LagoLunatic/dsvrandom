@@ -817,7 +817,7 @@ module PickupRandomizer
           entity.x_pos = @starting_x_pos
           entity.y_pos = @starting_y_pos
           
-          @coll = RoomCollision.new(@starting_room, game.fs)
+          @coll = get_room_collision(@starting_room)
           floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
           entity.y_pos = floor_y - 0x18
           
@@ -1358,8 +1358,11 @@ module PickupRandomizer
       entity.var_b = portrait_data[:var_b]
       
       # Move the portrait to a short distance above the closest floor so it looks good and is enterable.
-      coll = RoomCollision.new(entity.room, game.fs)
+      coll = get_room_collision(entity.room)
       floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
+      if floor_y.nil?
+        raise "Portrait is not above a floor"
+      end
       entity_original_y_pos = entity.y_pos
       entity.y_pos = floor_y - 0x50 # Portraits should float 5 tiles off the ground.
       

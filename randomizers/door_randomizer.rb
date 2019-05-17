@@ -1183,7 +1183,7 @@ module DoorRandomizer
   end
   
   def get_biggest_door_gap(door)
-    coll = RoomCollision.new(door.room, game.fs)
+    coll = get_room_collision(door.room)
     
     tiles = []
     

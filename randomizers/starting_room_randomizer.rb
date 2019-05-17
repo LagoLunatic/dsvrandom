@@ -172,7 +172,7 @@ module StartingRoomRandomizer
   
   def check_door_underwater(door)
     x_pos, y_pos = get_start_pos_for_door(door)
-    coll = RoomCollision.new(door.room, game.fs)
+    coll = get_room_collision(door.room)
     
     starting_tile = coll[x_pos, y_pos-0x10]
     if starting_tile.is_water

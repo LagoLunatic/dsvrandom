@@ -254,7 +254,7 @@ module EnemyRandomizer
       
       assets_needed_for_room = build_base_list_of_assets_for_room(room)
       
-      collision_checker_for_room = RoomCollision.new(room, game.fs)
+      collision_checker_for_room = get_room_collision(room)
       
       remaining_new_room_difficulty, max_allowed_enemy_attack = calculate_allowed_difficulty_and_max_attack_for_room(room)
       
@@ -1112,20 +1112,20 @@ end
 
 class RoomCollision
   attr_reader :room,
-              :fs,
+              :rando,
               :collision_layer,
               :collision_tileset,
               :tiles,
               :room_width,
               :room_height
   
-  def initialize(room, fs)
+  def initialize(room, rando)
     @room = room
-    @fs = fs
+    @rando = rando
     
-    room.sector.load_necessary_overlay()
     @collision_layer = room.layers.first
-    @collision_tileset = CollisionTileset.new(collision_layer.collision_tileset_pointer, fs)
+    collision_tileset_pointer = collision_layer.collision_tileset_pointer
+    @collision_tileset = rando.get_collision_tileset(collision_tileset_pointer, room.sector)
     
     @tiles = []
     collision_layer.tiles.each do |tile|

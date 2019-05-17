@@ -25,7 +25,7 @@ module StartingItemsRandomizer
     
     
     room = @starting_room
-    @coll = RoomCollision.new(room, game.fs)
+    @coll = get_room_collision(room)
     room_str = "%02X-%02X-%02X" % [room.area_index, room.sector_index, room.room_index]
     starting_pickups.each do |pickup_global_id|
       #puts "%03X" % pickup_global_id
@@ -72,7 +72,7 @@ module StartingItemsRandomizer
     entity.y_pos = @starting_y_pos
     
     if (GAME == "dos" && MAGIC_SEAL_GLOBAL_ID_RANGE.include?(pickup_global_id)) || (GAME == "por" && SKILL_GLOBAL_ID_RANGE.include?(pickup_global_id))
-      @coll = RoomCollision.new(@starting_room, game.fs)
+      @coll = get_room_collision(@starting_room)
       floor_y = coll.get_floor_y(entity, allow_jumpthrough: true)
       entity.y_pos = floor_y - 0x18
     end

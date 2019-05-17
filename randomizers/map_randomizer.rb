@@ -1210,7 +1210,7 @@ module MapRandomizer
         # Choose the solid tile to use to block off doors we remove.
         room.sector.load_necessary_overlay()
         coll_layer = room.layers.first
-        coll = RoomCollision.new(room, game.fs)
+        coll = get_room_collision(room)
         
         x_in_room = x - room.room_xpos_on_map
         y_in_room = y - room.room_ypos_on_map
@@ -2205,7 +2205,7 @@ module MapRandomizer
   end
   
   def get_valid_save_or_warp_positions(room, type)
-    @coll = RoomCollision.new(room, game.fs)
+    @coll = get_room_collision(room)
     
     valid_positions = coll.all_floor_positions.dup
     

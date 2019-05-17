@@ -136,6 +136,8 @@ class Randomizer
     @transition_rooms.reject! do |room|
       FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
     end
+    
+    @cached_collision_tilesets = {}
   end
   
   def load_randomizer_constants
@@ -217,6 +219,18 @@ class Randomizer
   
   def needs_infinite_magical_tickets?
     room_rando? || (GAME == "por" && options[:randomize_portraits])
+  end
+  
+  def get_room_collision(room)
+    return RoomCollision.new(room, self)
+  end
+  
+  def get_collision_tileset(collision_tileset_pointer, sector)
+    @cached_collision_tilesets[sector.overlay_id] ||= {}
+    @cached_collision_tilesets[sector.overlay_id][collision_tileset_pointer] ||= begin
+      sector.load_necessary_overlay()
+      CollisionTileset.new(collision_tileset_pointer, game.fs)
+    end
   end
   
   def randomize

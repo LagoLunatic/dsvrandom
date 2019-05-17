@@ -186,7 +186,7 @@ module BossRandomizer
   def dos_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case new_boss.name
     when "Balore"
-      coll = RoomCollision.new(boss_entity.room, game.fs)
+      coll = get_room_collision(boss_entity.room)
       (0x40..0xC0).each do |x|
         # If the floor is 2 tiles high instead of 1, the player won't have room to crouch under Balore' huge laser.
         if coll[x,0xA0].is_solid?
