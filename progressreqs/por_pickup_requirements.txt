@@ -67,7 +67,7 @@ Defs:
   wind: midentrance
   vincent: midentrance
   
-  can complete nest of evil quest: city of haze & sandy grave & nation of fools & forest of doom & 13th street & forgotten city & burnt paradise & dark academy
+  can complete nest of evil quest: cityofhaze & sandygrave & nationoffools & forestofdoom & 13thstreet & forgottencity & burntparadise & darkacademy
   
   cityofhaze: portrait city of haze
   portrait city of haze: portrait city of haze
