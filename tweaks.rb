@@ -442,6 +442,10 @@ module Tweaks
       game.apply_armips_patch("ooe_map_markers_on_top_screen")
     end
     
+    if GAME == "por"
+      game.apply_armips_patch("por_fix_waterwheel_particle_crash")
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
