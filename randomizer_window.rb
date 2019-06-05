@@ -2,6 +2,7 @@
 require_relative 'ui_randomizer'
 require_relative 'constants/options'
 require_relative 'randomizer'
+require_relative 'update_checker'
 
 class RandomizerWindow < Qt::Dialog
   VALID_SEED_CHARACTERS = "a-zA-Z0-9\\-_'%"
@@ -738,13 +739,27 @@ class RandomizerWindow < Qt::Dialog
     @about_dialog = Qt::MessageBox.new
     @about_dialog.setTextFormat(Qt::RichText)
     @about_dialog.setWindowTitle("DSVania Randomizer")
-    text = "DSVania Randomizer Version #{DSVRANDOM_VERSION}<br><br>" + 
+    base_text = "DSVania Randomizer Version #{DSVRANDOM_VERSION}<br><br>" + 
       "Created by LagoLunatic<br><br>" + 
       "Report issues here:<br><a href=\"https://github.com/LagoLunatic/dsvrandom/issues\">https://github.com/LagoLunatic/dsvrandom/issues</a><br><br>" +
-      "Source code:<br><a href=\"https://github.com/LagoLunatic/dsvrandom\">https://github.com/LagoLunatic/dsvrandom</a>"
+      "Source code:<br><a href=\"https://github.com/LagoLunatic/dsvrandom\">https://github.com/LagoLunatic/dsvrandom</a><br><br>"
+    text = base_text + "Checking for updates..."
     @about_dialog.setText(text)
     @about_dialog.windowIcon = self.windowIcon
     @about_dialog.show()
+    
+    
+    new_version = check_for_updates()
+    if new_version.nil?
+      update_text = "No new updates to the randomizer are available."
+    elsif new_version == :error
+      update_text = "There was an error checking for updates."
+    else
+      update_text = "<b>Version %s of the randomizer is available!</b><br>" % new_version
+      update_text += "<a href=\"%s\">Click here</a> to go to the download page." % LATEST_RELEASE_DOWNLOAD_PAGE_URL
+    end
+    text = base_text + update_text
+    @about_dialog.setText(text)
   end
   
   def preserve_default_settings
