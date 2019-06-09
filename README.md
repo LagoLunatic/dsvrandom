@@ -1,50 +1,142 @@
-### About DSVRandom-RV
 
-RV is a work-in-progress randomizer for Order of Ecclesia, focused on providing multiple options for how to randomize glyph/item locations in OoE. It's a revision of a DSVania randomizer created by LagoLunatic. The logic is rewritten, allowing the player to choose more options for how they want to randomize items, but the two biggest changes from the original randomizer are:
+### About
 
-1. Dracula's Castle is unlocked on the world map immediately, without having to fight Albus. You still need items to get anywhere in it, though.
-2. Logic is customizable so that you could have glyphs and items randomized in separate pools - the Magnes glyph would not appear where equipment was in the vanilla game, for example.
+DSVania Randomizer is a randomizer for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's only compatible with the North American versions.  
 
-The intent of RV is to create more variety in the ways that the player can approach a given seed, and also in the process decrease the average length of a seed while increasing the likelihood of challenging boss fights. It was ultimately created to satisfy my own wishes for how I want to play seeds, but I think the end result should be something closer to the difficulty curve of the original game.
+Download the latest release: https://github.com/LagoLunatic/dsvrandom/releases  
 
-### How to get it?
+Source code: https://github.com/LagoLunatic/dsvrandom  
+Report issues here: https://github.com/LagoLunatic/dsvrandom/issues  
 
-The source code on Github is currently incomplete. For the time being, I've repackaged LagoLunatic's 1.3.0 release with my new files, which you can find here: https://github.com/appleforyou/dsvrandom-rv/releases
+### What does it randomize?
 
-Source code will be here when it's done: https://github.com/appleforyou/dsvrandom-rv
+DSVRandom has options to randomize:  
+* Items/Skills: Randomizes items and skills you find lying on the ground.  
+* Enemy Locations: Randomizes which non-boss enemies appear where.  
+* Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.  
+* Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).  
+* Equipment Stats: Randomizes weapon and armor stats.  
+* Weapon Behavior: Randomizes how weapons behave.  
+* Consumable Behavior: Randomizes what consumables do and how powerful they are.  
+* Skill Stats/Behavior: Randomizes skill stats and how skills behave.  
+* Shop Items: Randomizes what items are for sale in the shop and item prices.  
+* Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).  
+* Villagers: Randomizes where villagers are located (OoE only).  
+* Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).  
+* Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.  
+* Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.  
+* Portraits: Randomizes where portraits are located (PoR only).  
+* Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).  
+* Maps: Randomly generates entirely new maps and connects rooms to match the map.  
+* Starting Room: Randomizes which room you start in.  
+* Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)  
+* Area Connections (Not map-friendly): Randomizes which areas connect to each other.  
+* Background Music: Randomizes what songs play in what areas.  
+* Cutscene Dialogue: Generates random dialogue for all cutscenes.  
+* Player Sprites: Randomizes the graphics of player characters.  
+* Skill Sprites: Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).  
 
-### About the original version
+As well as several other options that change how the game is played:  
+* Scavenger Mode: Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.  
+* Unlock Boss Doors (DoS only): You don't need magic seals to open boss doors.  
+* Short Mode (PoR only): Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).  
+* Open World Map (OoE only): Make all areas except Dracula's Castle accessible from the start.  
+* Allow Requiring Glitches to Win: If checked, certain glitches may be necessary to beat the game.  
+* Bonus Starting Items: Starts you out with 3 random extra items and 3 random extra skills.  
 
-DSVania Randomizer is a randomizer (made by LagoLunatic) for the three Castlevania games for the Nintendo DS. If you want to read more about it, check out the github link below.
+There are also some buggy, experimental randomization options:  
+* Players: Randomizes player movement stats.  
+* Boss Locations: Randomizes which bosses appear where.  
+* World Map Exits: Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).  
+* Enemy Sprites: Randomizes the graphics of non-boss enemies.  
+* Boss Sprites: Randomizes the graphics of bosses.  
 
-Source code: https://github.com/LagoLunatic/dsvrandom
+Every seed should be completable as long as you don't use the experimental options.  
+If you think you've found a seed that's unwinnable, first check the spoiler log (located in the same folder as the randomized ROM) to make sure you haven't missed something.  
+If you haven't missed anything then you can report the bug here: https://github.com/LagoLunatic/dsvrandom/issues  
+When making a bug report be sure to include the seed, randomizer version number, and all the options you checked. The easiest way to do that is to simply copy paste the relevant entry from the spoiler log, which lists all of those.  
 
-The original code is still in RV, so you can use it for any of the 3 games if you uncheck the "Use RV Options" checkbox.
+### Requirements
 
-### I need more details.
+The path where DSVRandom is located must only have ASCII characters in it - the program will not launch if there are any unicode characters in it.  
 
-There's a more in-depth rundown of the base randomizer in the github link above, but this version does have some differences. It's still very much incomplete, so you should be aware that some options in the base randomizer are not compatible with RV. Those options are:
+Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145  
 
-* Map randomizer
-* Villager randomizer
-* Glyph behavior/element randomizer (sorta works, but has some issues)
+### FAQ
 
-I fully intend to restore the map randomizer functionality, but it's a big project with the way that I want to do it, so getting the item placement logic working was the first priority. The other two are easier to fix, but definitely lower priority.
+Q: Do I need to farm enemies to progress?  
 
-Okay, so what exactly does RV do for you? The options are limited in the initial release, but they're enough for a starting point:
+A: No, progression items and skills won't drop from common enemies. They'll be laying around somewhere.  
+All bosses (except Dario) in DoS and Wallman in OoE can also drop progression skills.  
 
-* Dracula's Castle can be unlocked
-* Item/Glyph locations can be randomized in separate pools
-* The player can select a difficulty level for item placement, representing what kind of challenges they are comfortable with. More options will likely be added later, but currently there's three: Vanilla, Creative, and Do Your Worst. The difficulty levels are explained further in the options tab, but as an example, Vanilla doesn't place progression at Training Hall, Creative does, and Do Your Worst can place progression at Training Hall even if your only progression items are Redire/Magnes.
-* You can choose whether or not you want to do Cubus/Morbus puzzles for progression. This could just be player preference, and more choices like this will probably be added, but this one was important because those puzzles are a no-go if you're using glyph element/behavior randomization.
-* Albus, Barlowe, and Jiang Shi can have progression glyphs on the spells they cast. They will still drop somewhere else in the world, so you won't fail to complete the game if you don't absorb them. This is intended to be paired with the unlocked castle, so that there is more reward to investing time in these bosses when they don't unlock the castle anymore.
+Q: Do I need to damage boost or jumpkick off enemies to progress?  
 
-I've also changed the default options in the randomizer to a difficulty level which I feel is probably more in line with OoE's vanilla difficulty. Consider that a heads-up if you want to change those options.
+A: No, progressing won't require anything involving common enemies. You won't need to jump on spikes either.  
 
-These should be enough options to start you off. My hope is that you feel more decisions of how to proceed in the game while you play - more variance like, "Should I check all the items in this area, or only the glyphs?" or, "Should I push ahead into the castle, or should I look around for more gear first?" The goal of RV is to create more decisions like that, so maybe it will work for you.
+Q: Do I need to complete Nest of Evil/Large Cavern/Training Hall to progress?  
 
-### Only OoE?
+A: Nest of Evil and Large Cavern are optional, you don't need to do them if you don't want to.  
+Training Hall, on the other hand, can be required.  
 
-Rewriting the logic for one game has been a nontrivial amount of effort, so I don't see myself doing it for the other DSVanias. I don't think my knowledge of those games is as strong as for OoE, so I'm not sure I could trust myself to balance it the way I'd want, either. If someone else wants to make the item/location/logic databases, then maybe. That's honestly most of the work.
+Q: I can't find something I need to progress!  
 
-That said, I've kept the base randomizer code mostly intact, so it should still work for the other two DSvanias, but I've done very little testing on that so I can't guarantee it. Once map randomization functionality is restored I will have less interest in keeping support for the base version updated, but we'll see what happens.
+A: You might have forgotten a breakable wall. Progression items and skills can be hidden inside breakable walls.  
+If you check the "Reveal breakable walls" option in the Game Tweaks tab, all breakable walls will always blink as if you had Peeping Eye/Eye for Decay on.  
+You can also check the spoiler log located in the same folder as the randomized ROM. This lists the area that each progression item got placed in.  
+
+Q: I fell into a pit and can't get back out without jump upgrades!  
+
+A: Check your inventory if you're using any of the room/map randomization options or the portrait randomizer option. You have a magical ticket that doesn't get consumed when used, so you can use that to return to your starting room any time you get trapped like this.  
+But if you're not using any of those options you won't have an infinitely usable magical ticket, in which case you may want to report this as a bug.  
+
+Q: I can't make the jump in the room after Flying Armor.  
+
+A: You can make the jump without any souls by doing a backdash jump off the very edge: http://i.imgur.com/ZXSHMcw.gif  
+
+Q: I have double jump, but I can't progress in Minera Prison Island without Magnes.  
+
+A: Do a jumpkick off the breakable wall next to the Magnes point: http://i.imgur.com/y0TXcE0.gif  
+Note that you must angle the jumpkick straight down. The hitbox on Shanoa's foot is too small to hit the wall when doing a diagonal jumpkick.  
+
+Q: I have Puppet Master, but can't find a way out of Wizardry Lab.  
+
+A: You can activate the moving platform in the long room at right side of Wizardry Lab, then walk to the end of the room and use Puppet Master to get on top of the platform: https://i.imgur.com/l6NuZPY.gif  
+
+Q: Why can I charge spells in midair sometimes?  
+
+A: One of the things the Skill Behavior randomization option does is randomly allowing skills to be used in midair that normally only work on the ground. This can happen regardless of whether Jonathan or Charlotte gets the spell.  
+
+Q: In vanilla DoS, getting ability souls out of order (like Doppelganger before Balore) gives multiple abilities for the price of one. But this doesn't seem to work in the randomizer?  
+
+A: This is a bug in the vanilla game that the randomizer fixes.  
+
+Q: I'm using some experimental options, and I think I'm stuck.  
+
+A: The experimental options are incomplete and it's rare for the game to be beatable if you use them.  
+
+Q: There are a few candles with glitchy, corrupted-looking graphics.  
+
+A: This is a known bug that happens in DoS sometimes.  
+
+Q: I'm playing Portrait of Ruin randomized on my flash card, and getting a lot of crashes.  
+
+A: This is a bug with PoR that occurs only on certain flash cards, such as R4 cards. It happens in vanilla PoR too, so it's unrelated to the randomizer. I recommend playing on emulator if you get this issue on your card.  
+
+Q: There's a randomly placed enemy that keeps knocking me back through a door as soon as I walk through so I can't progress.  
+
+A: Enemies knock you back depending on what direction you're facing, not the direction they hit you from. So when you're walking through the door and don't have control yet hold the D-pad in the direction away from the enemy. This way you will face away from the enemy the instant you gain control and be knocked towards the enemy instead of back into the door.  
+
+### Discord Server
+
+There is currently no Discord server specifically for DSVania Randomizer, but you can join the general Castlevania Randomizers server if you have questions or are looking for people to play with:  
+https://discord.gg/5SnUANS
+
+### Running from source
+
+If you want to run the latest development (unstable) version of DSVRandom from source, follow these instructions:  
+
+* First you must download DSVEdit's source code and follow the instructions in its readme to get DSVEdit running from source: https://github.com/LagoLunatic/DSVEdit
+* Then download DSVRandom's source code and put the dsvrandom folder inside the DSVEdit folder.
+* Run the `build_ui` batch file located in the dsvrandom folder to compile DSVRandom's UI files. (Not to be confused with the `build_ui` file in the DSVEdit folder - that one only compiles DSVEdit's UI files.)
+* Finally run `ruby dsvrandom/dsvrandom.rb` to launch DSVRandom.
+* Note that later on when updating to a future version of DSVRandom, you should also update DSVEdit at the same time. And you may also need to run `build_ui` again to update the UI files.
