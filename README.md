@@ -7,7 +7,11 @@ RV is a work-in-progress randomizer for Order of Ecclesia, focused on providing 
 
 The intent of RV is to create more variety in the ways that the player can approach a given seed, and also in the process decrease the average length of a seed while increasing the likelihood of challenging boss fights. It was ultimately created to satisfy my own wishes for how I want to play seeds, but I think the end result should be something closer to the difficulty curve of the original game.
 
-Source code will be here: https://github.com/appleforyou/dsvrandom-rv - however that is currently incomplete. For the time being I've repackaged LagoLunatic's 1.3.0 release with my new files. Releases: https://github.com/appleforyou/dsvrandom-rv/releases
+### How to get it?
+
+The source code on Github is currently incomplete. For the time being, I've repackaged LagoLunatic's 1.3.0 release with my new files, which you can find here: https://github.com/appleforyou/dsvrandom-rv/releases
+
+Source code will be here when it's done: https://github.com/appleforyou/dsvrandom-rv
 
 ### About the original version
 
