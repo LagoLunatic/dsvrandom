@@ -13,6 +13,8 @@ DSVania Randomizer is a randomizer (made by LagoLunatic) for the three Castlevan
 
 Source code: https://github.com/LagoLunatic/dsvrandom
 
+The original code is still in RV, so you can use it for any of the 3 games if you uncheck the "Use RV Options" checkbox.
+
 ### I need more details.
 
 There's a more in-depth rundown of the base randomizer in the github link above, but this version does have some differences. It's still very much incomplete, so you should be aware that some options in the base randomizer are not compatible with RV. Those options are:
@@ -38,3 +40,5 @@ These should be enough options to start you off. My hope is that you feel more d
 ### Only OoE?
 
 Rewriting the logic for one game has been a nontrivial amount of effort, so I don't see myself doing it for the other DSVanias. I don't think my knowledge of those games is as strong as for OoE, so I'm not sure I could trust myself to balance it the way I'd want, either. If someone else wants to make the item/location/logic databases, then maybe. That's honestly most of the work.
+
+That said, I've kept the base randomizer code mostly intact, so it should still work for the other two DSvanias, but I've done very little testing on that so I can't guarantee it. Once map randomization functionality is restored I will have less interest in keeping support for the base version updated, but we'll see what happens.
