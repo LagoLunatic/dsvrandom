@@ -7,6 +7,9 @@ RV is a work-in-progress randomizer for Order of Ecclesia, focused on providing 
 
 The intent of RV is to create more variety in the ways that the player can approach a given seed, and also in the process decrease the average length of a seed while increasing the likelihood of challenging boss fights. It was ultimately created to satisfy my own wishes for how I want to play seeds, but I think the end result should be something closer to the difficulty curve of the original game.
 
+Source code is here: https://github.com/appleforyou/dsvrandom-rv
+However it is currently being updated to dsvrandom1.4 and compiling what's there from source will probably not work. For the time being I've repacked the 1.3.0 release with my new files.
+
 ### About the original version
 
 DSVania Randomizer is a randomizer (made by LagoLunatic) for the three Castlevania games for the Nintendo DS. If you want to read more about it, check out the github link below.
