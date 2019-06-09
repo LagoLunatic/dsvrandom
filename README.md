@@ -17,9 +17,9 @@ Source code: https://github.com/LagoLunatic/dsvrandom
 
 There's a more in-depth rundown of the base randomizer in the github link above, but this version does have some differences. It's still very much incomplete, so you should be aware that some options in the base randomizer are not compatible with RV. Those options are:
 
--Map randomizer
--Villager randomizer
--Glyph behavior/element randomizer (sorta works, but has some issues)
+* Map randomizer
+* Villager randomizer
+* Glyph behavior/element randomizer (sorta works, but has some issues)
 
 I fully intend to restore the map randomizer functionality, but it's a big project with the way that I want to do it, so getting the item placement logic working was the first priority. The other two are easier to fix, but definitely lower priority.
 
