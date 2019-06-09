@@ -34,3 +34,7 @@ Okay, so what exactly does RV do for you? The options are limited in the initial
 I've also changed the default options in the randomizer to a difficulty level which I feel is probably more in line with OoE's vanilla difficulty. Consider that a heads-up if you want to change those options.
 
 These should be enough options to start you off. My hope is that you feel more decisions of how to proceed in the game while you play - more variance like, "Should I check all the items in this area, or only the glyphs?" or, "Should I push ahead into the castle, or should I look around for more gear first?" The goal of RV is to create more decisions like that, so maybe it will work for you.
+
+### Only OoE?
+
+Rewriting the logic for one game has been a nontrivial amount of effort, so I don't see myself doing it for the other DSVanias. I don't think my knowledge of those games is as strong as for OoE, so I'm not sure I could trust myself to balance it the way I'd want, either. If someone else wants to make the item/location/logic databases, then maybe. That's honestly most of the work.
