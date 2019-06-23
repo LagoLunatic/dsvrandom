@@ -18,10 +18,14 @@ module MapRandomizer
   ]
   CONDEMNED_TOWER_ROOM_INDEXES = (0..0xC).to_a + [0x19, 0x1A, 0x1C, 0x1E]
   
-  def randomize_doors_no_overlap(&block)
+  def map_randomizer_pre_randomization_init
+    # New rooms must be added early on in the main randomization function.
     add_extra_helper_rooms()
-    remove_all_wooden_doors()
     
+    remove_all_wooden_doors()
+  end
+  
+  def randomize_doors_no_overlap(&block)
     @all_unreachable_subroom_doors = []
     
     @map_rando_debug = false

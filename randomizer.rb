@@ -257,6 +257,10 @@ class Randomizer
     
     @unused_rooms = [] # This will be a list of rooms unused by the map rando/PoR short mode.
     
+    if options[:randomize_maps]
+      map_randomizer_pre_randomization_init()
+    end
+    
     if GAME == "por"
       @boss_id_for_each_portrait = {
         :portrait_city_of_haze => 0x8A,
