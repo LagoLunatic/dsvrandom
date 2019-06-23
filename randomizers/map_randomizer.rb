@@ -2210,6 +2210,10 @@ module MapRandomizer
     
     valid_positions = coll.all_floor_positions.dup
     
+    existing_saves_and_warps = room.entities.select do |e|
+      e.is_special_object? && [SAVE_POINT_SUBTYPE, WARP_POINT_SUBTYPE].include?(e.subtype)
+    end
+    
     valid_positions.select! do |x, y|
       if type == :warp
         # Warp rooms only function correctly if in the upper left screen.
@@ -2227,6 +2231,12 @@ module MapRandomizer
       end
       
       next if !full_height_is_empty
+      
+      # Prevent it from overlapping an existing save/warp point or it would be hard/impossible to activate one of them.
+      any_overlapping = existing_saves_and_warps.any? do |existing_point|
+        (existing_point.x_pos - x).abs <= 0x20
+      end
+      next if any_overlapping
       
       true
     end
