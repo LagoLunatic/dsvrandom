@@ -882,6 +882,9 @@ module ItemSkillStatRandomizer
     if item["Swing Modifiers"]["Player can move"]
       if GAME == "dos" && item["Swing Anim"] == 0xA
         # Throwing weapon animation. Do not set the special effect name to Valmanway in this case as it would be misleading.
+      elsif GAME == "dos" && item["Swing Anim"] == 9
+        # Gun animation. We want to show that it has both the Valmanway property and the ability to shoot bullets.
+        special_effect_name = "Valmangun"
       else
         special_effect_name = "Valmanway"
       end
