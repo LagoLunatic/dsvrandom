@@ -990,6 +990,30 @@ module Tweaks
       castle_back_exit.write_to_rom()
     end
     
+    if GAME == "ooe" && options[:randomize_villagers]
+      # Update the area/sector/room indexes for where each villager is located before being rescued.
+      # This is so the bad ending shows them correctly.
+      13.times do |i|
+        villager_data_ptr = 0x022B5C10 + i*0xA
+        event_flag = game.fs.read(villager_data_ptr+8, 1).unpack("C").first
+        villager_entity = @villager_entities[event_flag]
+        
+        if villager_entity
+          area_index = villager_entity.room.area_index
+          sector_index = villager_entity.room.sector_index
+          room_index = villager_entity.room.room_index
+          game.fs.write(villager_data_ptr+5, [area_index].pack("C"))
+          game.fs.write(villager_data_ptr+6, [sector_index].pack("C"))
+          game.fs.write(villager_data_ptr+7, [room_index].pack("C"))
+        end
+      end
+      
+      # Also, because the player must always exist, this cutscene puts Shanoa in the upper left corner of the room so she's not visible.
+      # That causes an issue in rooms where there's an upwards door at the top left of the room, Shanoa can go through it, softlocking the cutscene.
+      # So we have the cutscene set Shanoa's X pos to -0x8000 pixels. Being that far out of bounds appears to prevent her from going in doors.
+      game.fs.write(0x022317E8, [0xE3E03902].pack("V")) # mvn r3, 8000h
+    end
+    
     if room_rando?
       center_bosses_for_room_rando()
     end

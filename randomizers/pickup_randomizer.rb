@@ -1319,10 +1319,13 @@ module PickupRandomizer
       
       entity.type = 2
       entity.subtype = 0x89
-      entity.var_a = VILLAGER_NAME_TO_EVENT_FLAG[pickup_global_id]
+      event_flag = VILLAGER_NAME_TO_EVENT_FLAG[pickup_global_id]
+      entity.var_a = event_flag
       entity.var_b = 0
       
       entity.write_to_rom()
+      
+      @villager_entities[event_flag] = entity
       
       if pickup_global_id == :villageranna
         # Anna must have Tom in her room, or her event will crash the game.

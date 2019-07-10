@@ -364,6 +364,8 @@ class Randomizer
       checker.set_red_wall_souls(@red_wall_souls)
     end
     
+    @villager_entities = {}
+    
     # Now it's safe to initialize the list of progress items.
     checker.initialize_all_progression_pickups()
     
