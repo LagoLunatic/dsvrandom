@@ -265,6 +265,12 @@ module PickupRandomizer
     locations_accessible_at_start = nil
     if room_rando?
       locations_accessible_at_start, _ = checker.get_accessible_locations_and_doors()
+      
+      if locations_accessible_at_start.empty? && !options[:randomize_starting_room]
+        raise "Starting room not randomized and no item locations accessible from vanilla starting room. Known issue - try a different seed."
+        # TODO: How to handle cases where the map randomizer didn't put any locations in reach of the vanilla starting room?
+        # e.g. PoR seed "Testing"
+      end
     end
     
     
