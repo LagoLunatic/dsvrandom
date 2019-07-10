@@ -1140,6 +1140,33 @@ module DoorRandomizer
       
       left_door.write_to_rom()
       right_door.write_to_rom()
+      
+      if GAME == "por" && right_door.door_str == "02-00-01_002" && left_tiles_in_biggest_gap.size < 8
+        # If the right door out of the 13th Street train room was made smaller, we need to add a slope to the blocked off part of the door.
+        # This is so that when the train is pushing the player, if the player jumps, they get pushed down into the door. Otherwise they'll just phase right through the train.
+        train_room = right_door.room
+        coll_layer = train_room.layers.first
+        slope_x = 191
+        (2..9-left_tiles_in_biggest_gap.size).reverse_each do |y|
+          slope_tile_index_on_tileset = 0xE9
+          solid_tile_index_on_tileset = SOLID_BLOCKADE_TILE_INDEX_FOR_TILESET[train_room.overlay_id][coll_layer.collision_tileset_pointer]
+          
+          tile_i = slope_x + y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+          coll_layer.tiles[tile_i].index_on_tileset = slope_tile_index_on_tileset
+          coll_layer.tiles[tile_i].horizontal_flip = false
+          coll_layer.tiles[tile_i].vertical_flip = true
+          
+          (slope_x+1..190).each do |x|
+            tile_i = x + y*SCREEN_WIDTH_IN_TILES*coll_layer.width
+            coll_layer.tiles[tile_i].index_on_tileset = solid_tile_index_on_tileset
+            coll_layer.tiles[tile_i].horizontal_flip = false
+            coll_layer.tiles[tile_i].vertical_flip = false
+          end
+          
+          slope_x -= 1
+        end
+        coll_layer.write_to_rom()
+      end
     when :up, :down
       up_first_tile_i, up_last_tile_i, up_tiles_in_biggest_gap = get_biggest_door_gap(up_door)
       down_first_tile_i, down_last_tile_i, down_tiles_in_biggest_gap = get_biggest_door_gap(down_door)
