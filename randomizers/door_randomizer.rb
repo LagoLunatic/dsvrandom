@@ -901,8 +901,9 @@ module DoorRandomizer
         boss_index = boss_room.entities.find{|e| e.is_boss_door?}.var_b
         num_boss_doors_on_each_side = 1
       end
-      if GAME == "dos" && boss_room.room_str == "00-09-01"
+      if GAME == "dos" && boss_room.room_str == "00-09-01" && !options[:randomize_bosses]
         # Aguni's boss room. Put two boss doors since this can also lead to a bad ending.
+        # (Not needed in boss rando because the bad ending is impossible and Aguni probably isn't even in this room.)
         num_boss_doors_on_each_side = 2
       end
       if GAME == "por" && boss_room.room_str == "00-0B-01"
