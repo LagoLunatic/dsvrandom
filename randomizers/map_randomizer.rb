@@ -662,6 +662,15 @@ module MapRandomizer
               next unless direction == :right
             end
             
+            # Ensure that the sisters' room is always placed from its right door, so that its left door is free for the big portrait room to connect to.
+            if GAME == "por" && room.room_str == "00-0B-01"
+              next unless direction == :right
+            end
+            # Ensure that the big portrait room is always placed connected to the sisters' room.
+            if GAME == "por" && room.room_str == "00-0B-00"
+              next unless dest_room.room_str == "00-0B-01"
+            end
+            
             room_doors = room.doors.reject{|door| checker.inaccessible_doors.include?(door.door_str) || unreachable_subroom_doors.include?(door.door_str)}
             
             if GAME == "dos" && room.room_str == "00-05-07"
