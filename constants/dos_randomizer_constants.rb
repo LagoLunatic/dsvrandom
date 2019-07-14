@@ -74,6 +74,8 @@ STOLAS_UNFRIENDLY_ENEMY_IDS = [
   0x58, # Mud Demon. Too many in a room and they start rendering strangely. That may also crash the game on real hardware (unconfirmed).
   0x05, # Peeping Eye. The Peeping Eyes summoned by Stolas seem fine, but one of the Peeping Eyes already in the room will slightly bug out and its eyeball will be z-indexed above the rest of its body, so ban this just to be safe.
   0x4A, # Bugbear. Same as Peeping Eye.
+  0x13, # Mollusca. Bugs out and covers the entire screen when summoned.
+  0x59, # Giant Slug. Same as Mollusca, and on top of that its shell can teleport directly on top of the player and hurt them.
 ]
 
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS -
