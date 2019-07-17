@@ -181,4 +181,17 @@ module StartingRoomRandomizer
     
     return false
   end
+  
+  def update_game_end_default_save_rooms
+    # If you get an ending without saving the game once, the save file created by the ending will default you to the first save room accessible in the vanilla game.
+    # That's not desirable in room rando, so update the save room used in this case.
+    case GAME
+    when "dos"
+      # This one set of addresses affects both bad endings and the good ending.
+      game.fs.replace_arm_shifted_immediate_integer(0x02010E60, @starting_room.sector_index)
+      game.fs.replace_arm_shifted_immediate_integer(0x02010E6C, @starting_room.room_index)
+      game.fs.replace_arm_shifted_immediate_integer(0x02010E90, @starting_x_pos*0x1000)
+      game.fs.replace_arm_shifted_immediate_integer(0x02010E98, @starting_y_pos*0x1000)
+    end
+  end
 end

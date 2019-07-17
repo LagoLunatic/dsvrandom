@@ -953,6 +953,10 @@ module Tweaks
       game.fs.write(0x021C7518, [0xE1A00000].pack("V")) # Same as above, but this is for if the player watched the cutscene instead of skipping it.
     end
     
+    if room_rando?
+      update_game_end_default_save_rooms()
+    end
+    
     if GAME == "dos" && options[:randomize_maps]
       # The game doesn't let you explore the center of the Abyss map because that's where Menace's room normally is.
       # We need to allow exploring the center since other rooms can get placed there by the map rando.
