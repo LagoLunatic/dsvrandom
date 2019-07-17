@@ -446,6 +446,10 @@ module Tweaks
       game.apply_armips_patch("por_fix_waterwheel_particle_crash")
     end
     
+    if GAME == "dos" && options[:randomize_bosses]
+      game.apply_armips_patch("dos_hide_tower_boss_until_top_floor")
+    end
+    
     # Then tell the free space manager that the entire file is available for free use, except for the parts we've already used with the above patches.
     new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
     new_overlay_file = game.fs.files_by_path[new_overlay_path]
@@ -1019,6 +1023,24 @@ module Tweaks
     end
     
     update_hardcoded_enemy_attributes()
+    
+    if GAME == "dos" && options[:randomize_bosses]
+      # When the boss in Gergoth's tower is randomized, it will activate when the player is on any floor, instead of just the top floor.
+      # This is bad since the boss activating can cause various issues depending on the boss, like softlocks due to taking control away from the player, being attacked by the boss, and the in a boss fight flag being set meaning you can't use magical tickets.
+      # To avoid these issues, we need to prevent the boss entity from being loaded in unless the player is on the top floor of the tower.
+      
+      # Reorder the boss so it comes after the floors object instead of before it.
+      # This is so the floors object's create code has the chance to prevent the boss from loading in.
+      # (Need to do this at the very end in tweaks instead of during boss randomization or the boss entity being in a different spot will mess up pickup randomization.)
+      tower_room = game.room_by_str("00-05-07")
+      boss_entity = tower_room.entities[0]
+      tower_room.entities.delete(boss_entity)
+      tower_room.entities.insert(1, boss_entity)
+      tower_room.write_entities_to_rom()
+      
+      # The rest is handled by the dos_hide_tower_boss_until_top_floor patch.
+      # Basically it prevents the boss entity from being loaded when on lower floors by setting the entity type to 0 in the entity list.
+    end
     
     if needs_infinite_magical_tickets?
       room_rando_give_infinite_magical_tickets()
