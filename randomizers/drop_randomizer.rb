@@ -28,6 +28,10 @@ module DropRandomizer
         # Blood Skeletons can't be killed so they can't drop items.
         can_drop_items = false
       end
+      if GAME == "por" && ["Sand Worm", "Poison Worm"].include?(enemy.name)
+        # Worms generally stay dead permanently after being killed once, so any drops given to them would be missable.
+        can_drop_items = false
+      end
       
       if rng.rand <= 0.5 && can_drop_items # 50% chance to have an item drop
         if GAME == "por"
