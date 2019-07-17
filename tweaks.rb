@@ -158,6 +158,13 @@ module Tweaks
       game.fs.write(0x021F6054, [0xE1A00000].pack("V"))
     end
     
+    if GAME == "dos" && room_rando?
+      # Remove the warp blockade in room rando since it's pointless.
+      warp_blockade = game.entity_by_str("00-00-19_00")
+      warp_blockade.type = 0
+      warp_blockade.write_to_rom()
+    end
+    
     if GAME == "por" && room_rando?
       # Modify several split doors, where there are two different gaps in the level design, to only have one gap instead.
       # This is because the logic doesn't support multi-gap doors.
