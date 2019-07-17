@@ -192,6 +192,13 @@ module StartingRoomRandomizer
       game.fs.replace_arm_shifted_immediate_integer(0x02010E6C, @starting_room.room_index)
       game.fs.replace_arm_shifted_immediate_integer(0x02010E90, @starting_x_pos*0x1000)
       game.fs.replace_arm_shifted_immediate_integer(0x02010E98, @starting_y_pos*0x1000)
+    when "por"
+      # This one set of addresses affects both the bad ending and the good ending.
+      game.fs.replace_arm_shifted_immediate_integer(0x020117E8, @starting_room.area_index)
+      game.fs.replace_arm_shifted_immediate_integer(0x020117F4, @starting_room.sector_index)
+      game.fs.replace_arm_shifted_immediate_integer(0x02011804, @starting_room.room_index)
+      game.fs.replace_arm_shifted_immediate_integer(0x02011814, @starting_x_pos*0x1000)
+      game.fs.replace_arm_shifted_immediate_integer(0x0201181C, @starting_y_pos*0x1000)
     end
   end
 end
