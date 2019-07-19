@@ -636,17 +636,6 @@ class Randomizer
     end
     
     
-    if GAME == "dos"
-      # Remove the enemy and the entity hider hiding that enemy during the intro cutscene from the first room of the vanilla game.
-      # These two just cause more problems than they're worth - the hider can hide starting items, the enemy can hit you as soon as you enter the room, etc.
-      entity_hider = game.entity_by_str("00-00-01_0B")
-      entity_hider.type = 0
-      entity_hider.write_to_rom()
-      enemy = game.entity_by_str("00-00-01_0C")
-      enemy.type = 0
-      enemy.write_to_rom()
-    end
-    
     # Handle putting certain items in the starting room.
     case GAME
     when "dos"
