@@ -328,7 +328,7 @@ Rooms:
     room: condemntower
     00 (UMA News 3-2): height | chapel & small
     01 (Kotetsu): big height | malphas & puppet master
-    02 (High Potion): big height | height & black panther | malphas & flying armor & puppet master | malphas & puppet master & skeleton ape # malphas + puppet master + skeleton ape is extremely precise and difficult to do
+    02 (High Potion): big height | height & black panther | malphas & flying armor & puppet master # "malphas & puppet master & skeleton ape" is also possible, but is extremely precise and difficult to do so it's not required by the logic.
 #Condemned Tower & Mine of Judgment:
   00-05-02:
     room: aftergergoth

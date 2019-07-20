@@ -1812,12 +1812,12 @@ Rooms:
     000-002: 
     000-e00: 
     000-e01: big height | malphas & puppet master
-    000-e02: 
+    000-e02: big height | height & black panther | malphas & flying armor & puppet master # "malphas & puppet master & skeleton ape" is also possible, but is extremely precise and difficult to do so it's not required by the logic.
     001-000: height
     001-002: 
     001-e00: height
     001-e01: big height | malphas & puppet master
-    001-e02: 
+    001-e02: big height | height & black panther | malphas & flying armor & puppet master # "malphas & puppet master & skeleton ape" is also possible, but is extremely precise and difficult to do so it's not required by the logic.
     002-000: height
     002-001: 
     002-e00: height
