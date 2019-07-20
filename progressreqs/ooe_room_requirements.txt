@@ -7,7 +7,9 @@ Preferences:
   winged boots: 0.1
   rapidus fio: 0.001
 Glitch defs:
-  # none
+  moonwalkers: 0x125
+  
+  backdashjump: true
 Defs:
   magnes: 0x38
   double jump: 0x70
@@ -24,7 +26,6 @@ Defs:
   dominus agony: 0x4E
   cat tackle glyph: 0x33
   arma felix: 0x42
-  moonwalkers: 0x125
   mercury boots: 0x126
   winged boots: 0x127
   
@@ -34,6 +35,7 @@ Defs:
   redire: redire glyph & magnes
   cat tackle: cat tackle glyph | arma felix
   small distance: cat tackle | moonwalkers | mercury boots | winged boots | distance
+  mid-small distance: cat tackle | moonwalkers | winged boots | distance
   medium distance: moonwalkers & cat tackle | winged boots & cat tackle | distance
 Final room: 00-0B-00
 Enemy locations:
@@ -692,10 +694,10 @@ Rooms:
     001-002: 
     001-003: 
     002-000: medium height
-    002-001: medium height | small distance
+    002-001: medium height | mid-small distance
     002-003: 
     003-000: medium height
-    003-001: medium height | small distance
+    003-001: medium height | mid-small distance
     003-002: 
   00-05-04:
     000-001: 
@@ -1133,27 +1135,27 @@ Rooms:
     000-002: 
     000-003: 
     000-004: 
-    000-e02: medium height | small distance
+    000-e02: medium height | mid-small distance
     001-000: 
     001-002: 
     001-003: 
     001-004: 
-    001-e02: medium height | small distance
+    001-e02: medium height | mid-small distance
     002-000: 
     002-001: big height
     002-003: 
     002-004: 
-    002-e02: medium height | small distance
+    002-e02: medium height | mid-small distance
     003-000: 
     003-001: big height
     003-002: 
     003-004: 
-    003-e02: medium height | small distance
+    003-e02: medium height | mid-small distance
     004-000: 
     004-001: big height
     004-002: 
     004-003: 
-    004-e02: medium height | small distance
+    004-e02: medium height | mid-small distance
     e02-000: 
     e02-001: big height
     e02-002: 
@@ -2368,11 +2370,11 @@ Rooms:
     e01-000: 
     e01-001: 
   0D-00-04:
-    000-001: # going across the top without any items is possible, it requires tricky backdash jumping.
+    000-001: medium height | mid-small distance | backdashjump # these backdash jumps are precise
     000-002: 
     000-003: 
     000-e00: 
-    001-000: # going across the top without any items is possible, it requires tricky backdash jumping.
+    001-000: medium height | mid-small distance | backdashjump # these backdash jumps are precise
     001-002: 
     001-003: 
     001-e00: 
@@ -2380,10 +2382,10 @@ Rooms:
     002-001: medium height
     002-003: medium height
     002-e00: medium height
-    003-000: medium height | small distance
-    003-001: medium height | small distance
+    003-000: medium height | mid-small distance
+    003-001: medium height | mid-small distance
     003-002: 
-    003-e00: medium height | small distance
+    003-e00: medium height | mid-small distance
     e00-000: 
     e00-001: 
     e00-002: 
@@ -2472,17 +2474,17 @@ Rooms:
     e01-000: 
     e02-000: 
   0E-00-03:
-    000-001: # going across the top without any items is possible, it requires tricky backdash jumping.
+    000-001: medium height | mid-small distance | backdashjump # these backdash jumps are precise
     000-002: 
     000-003: 
-    001-000: # going across the top without any items is possible, it requires tricky backdash jumping.
+    001-000: medium height | mid-small distance | backdashjump # these backdash jumps are precise
     001-002: 
     001-003: 
-    002-000: medium height | small distance
-    002-001: medium height | small distance
+    002-000: medium height | mid-small distance
+    002-001: medium height | mid-small distance
     002-003: 
-    003-000: medium height | small distance
-    003-001: medium height | small distance
+    003-000: medium height | mid-small distance
+    003-001: medium height | mid-small distance
     003-002: 
   0E-00-04:
     000-001: 
@@ -2491,12 +2493,12 @@ Rooms:
     000-001: 
     001-000: 
   0E-00-06:
-    000-001: # going across the top without any items is possible, it requires tricky backdash jumping.
+    000-001: medium height | mid-small distance | backdashjump # these backdash jumps are precise
     000-002: 
-    001-000: # going across the top without any items is possible, it requires tricky backdash jumping.
+    001-000: medium height | mid-small distance | backdashjump # these backdash jumps are precise
     001-002: 
-    002-000: medium height | small distance
-    002-001: medium height | small distance
+    002-000: medium height | mid-small distance
+    002-001: medium height | mid-small distance
   0E-00-07:
     000-e00: 
     e00-000: 

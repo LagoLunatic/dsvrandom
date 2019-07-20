@@ -7,7 +7,9 @@ Preferences:
   winged boots: 0.1
   rapidus fio: 0.001
 Glitch defs:
-  # none
+  moonwalkers: 0x125
+  
+  backdashjump: true
 Defs:
   magnes: 0x38
   double jump: 0x70
@@ -24,7 +26,6 @@ Defs:
   dominus agony: 0x4E
   cat tackle glyph: 0x33
   arma felix: 0x42
-  moonwalkers: 0x125
   mercury boots: 0x126
   winged boots: 0x127
   
@@ -34,6 +35,7 @@ Defs:
   redire: redire glyph & magnes
   cat tackle: cat tackle glyph | arma felix
   small distance: cat tackle | moonwalkers | mercury boots | winged boots | distance
+  mid-small distance: cat tackle | moonwalkers | winged boots | distance
   medium distance: moonwalkers & cat tackle | winged boots & cat tackle | distance
   
   ecclesia: true
@@ -91,7 +93,7 @@ Defs:
   argilaswamp: oblivionridge | nonlinear
   
   mysterymanor: argilaswamp | nonlinear
-  mysterymanormid: mysterymanor & medium height | mysterymanor & small distance
+  mysterymanormid: mysterymanor & medium height | mysterymanor & mid-small distance
   bossalbus: mysterymanormid
   
   allvillagers: villagernikolai & villagerjacob & villagerabram & villageraeon & villagereugen & villagermonica & villagerlaura & villagermarcel & villagergeorge & villagerserge & villageranna & villagerdaniela & villageririna
