@@ -24,8 +24,8 @@ task :build_installers do
   
   # OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory open up /bin/ocra and change line 204 from SRCDIR = Pathname.new('src') to SRCDIR = Pathname.new('.').
 
-  system "C:/Ruby23/bin/ruby ../ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./images/dsvrandom_icon.ico"
-  system "C:/Ruby23-x64/bin/ruby ../ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom_x64.exe --no-lzma --chdir-first --innosetup setup_dsvrandom_x64.iss --windows --icon ./images/dsvrandom_icon.ico"
+  system "C:/Ruby24/bin/ruby ../ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./images/dsvrandom_icon.ico"
+  system "C:/Ruby24-x64/bin/ruby ../ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom_x64.exe --no-lzma --chdir-first --innosetup setup_dsvrandom_x64.iss --windows --icon ./images/dsvrandom_icon.ico"
 end
 
 task :build_releases do
