@@ -842,7 +842,7 @@ module EnemyRandomizer
         return :redo
       end
       
-      enemy.var_a = 1
+      enemy.var_a = 1 # Stays dead permanently
     when "Mud Man", "Mummy"
       real_layers = enemy.room.layers.reject{|layer| layer.layer_tiledata_ram_start_offset.nil?}
       if enemy_dna.name == "Mud Man" && real_layers.length == 1
