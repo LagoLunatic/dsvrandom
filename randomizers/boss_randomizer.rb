@@ -210,6 +210,11 @@ module BossRandomizer
   
   def por_check_boss_works_in_room(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     case new_boss.name
+    when "Behemoth"
+      if boss_entity.room.width < 2
+        # Behemoth hits the player the instant they enter the room if it's only 1 screen wide.
+        return false
+      end
     when "Legion"
       if boss_entity.room.width < 2
         return false
