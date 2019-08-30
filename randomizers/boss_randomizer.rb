@@ -702,12 +702,19 @@ module BossRandomizer
       # The boss version of the Giant Skeleton doesn't wake up until the searchlight is on him, but there's no searchlight in other boss rooms.
       # So we modify the line of code that checks if he should wake up to use the code for the common enemy Giant Skeleton instead.
       game.fs.write(0x02277EFC, [0xE3A01000].pack("V"))
+      
+      # Update the positions of spawned entities in case the room size is different.
+      game.fs.replace_arm_shifted_immediate_integer(0x02279328, boss_entity.x_pos*0x1000) # No damage blue chest X pos
     when "Maneater"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xB0
     when "Rusalka"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0xA0
+      
+      # Update the positions of spawned entities in case the room size is different.
+      game.fs.load_overlay(27)
+      game.fs.replace_arm_shifted_immediate_integer(0x022BB628, boss_entity.x_pos*0x1000) # No damage blue chest X pos
       
       # TODO: rusalka (in barlowe's room at least) doesn't play all sound effects, and her splash attack is invisible.
     when "Gravedorcus"
@@ -748,6 +755,11 @@ module BossRandomizer
     when "Death"
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 0x70
+      
+      # Update the positions of spawned entities in case the room size is different.
+      game.fs.load_overlay(25)
+      game.fs.replace_arm_shifted_immediate_integer(0x022BBCB0, boss_entity.x_pos*0x1000) # Boss orb X pos
+      game.fs.replace_arm_shifted_immediate_integer(0x022BC2D8, boss_entity.x_pos*0x1000) # No damage blue chest X pos
       
       if old_boss.name != "Death"
         # Death knows when to come out of the background by checking the relative scroll positions of two of the background layers.
