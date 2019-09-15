@@ -2864,7 +2864,7 @@ Rooms:
     001-000: small height
   05-00-1D:
     000-001: 
-    001-000: 
+    001-000: small height
   05-00-1E:
     000-001: small height
     001-000: small height
