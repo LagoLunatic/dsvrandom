@@ -7,7 +7,7 @@ module SkillSpriteRandomizer
     all_skill_sprites = {}
     all_orig_skill_sprites = {}
     weapon_glyph_sprite_indexes = []
-    remaining_sprite_indexes = []
+    remaining_sprite_indexes_by_type = {}
     skills.each do |skill|
       next if skill["Sprite"] == 0 # Skill with no sprite
       
@@ -25,8 +25,19 @@ module SkillSpriteRandomizer
       orig_sprite = Sprite.new(skill_gfx.sprite_file_pointer, game.fs)
       all_orig_skill_sprites[skill["Sprite"]] = orig_sprite
       
-      if !remaining_sprite_indexes.include?(skill["Sprite"])
-        remaining_sprite_indexes << skill["Sprite"]
+      if GAME == "por"
+        # In PoR, dual crushes are hardcoded to have more possible space reserved for allocating their sprite files compared to subweapons/spells.
+        # So we can't mix the two groups together, or a subweapon/spell with a large dual crush sprite file could corrupt Jonathan's sprite file which is after it in RAM.
+        type = skill["Type"]
+      else
+        # DoS and OoE do not have this issue.
+        type = "any"
+      end
+      
+      remaining_sprite_indexes_by_type[type] ||= []
+      
+      if !remaining_sprite_indexes_by_type[type].include?(skill["Sprite"])
+        remaining_sprite_indexes_by_type[type] << skill["Sprite"]
       end
       
       if GAME == "ooe" && skill["Code"] == 0x02070890
@@ -50,14 +61,20 @@ module SkillSpriteRandomizer
         next
       end
       
-      if remaining_sprite_indexes.empty?
+      if GAME == "por"
+        type = skill["Type"]
+      else
+        type = "any"
+      end
+      
+      if remaining_sprite_indexes_by_type[type].empty?
         raise "Ran out of unique skill sprite indexes to use"
       end
       
-      new_sprite_index = remaining_sprite_indexes.sample(random: rng) || 0
+      new_sprite_index = remaining_sprite_indexes_by_type[type].sample(random: rng) || 0
       old_sprite_index_to_new_sprite_index[skill["Sprite"]] = new_sprite_index
       new_sprite_index_to_old_sprite_index[new_sprite_index] = skill["Sprite"]
-      remaining_sprite_indexes.delete(new_sprite_index)
+      remaining_sprite_indexes_by_type[type].delete(new_sprite_index)
       skill["Sprite"] = new_sprite_index
       skill.write_to_rom()
       
