@@ -189,7 +189,7 @@ class CompletabilityChecker
       return @options[:open_world_map]
     end
     
-    if @defs[req]
+    if !@defs[req].nil?
       if @defs[req].is_a?(Integer)
         item_global_id = @defs[req]
         has_item = @current_items.include?(item_global_id)
