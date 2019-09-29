@@ -832,12 +832,34 @@ module MapRandomizer
           warp_room_positions = valid_room_positions.select do |room_position|
             room_position[:room].entities.find{|e| e.is_warp_point?}
           end
+          spaced_out_save_room_positions = valid_room_positions.select do |room_position|
+            room = room_position[:room]
+            if room.entities.find{|e| e.is_save_point?}
+              save_dist = get_distance_to_save_room(room_position[:dest_room])
+              save_dist >= 4
+            else
+              false
+            end
+          end
+          spaced_out_warp_room_positions = valid_room_positions.select do |room_position|
+            room = room_position[:room]
+            if room.entities.find{|e| e.is_warp_point?}
+              warp_dist = get_distance_to_warp_room(room_position[:dest_room])
+              warp_dist >= 4
+            else
+              false
+            end
+          end
           
           # Prioritize OoE area entrances, then warp rooms, then save rooms, then other dead ends.
           if area_entrance_room_positions.any?
             possible_room_positions = area_entrance_room_positions
+          elsif spaced_out_warp_room_positions.any?
+            possible_room_positions = spaced_out_warp_room_positions
           elsif warp_room_positions.any?
             possible_room_positions = warp_room_positions
+          elsif spaced_out_save_room_positions.any?
+            possible_room_positions = spaced_out_save_room_positions
           elsif save_room_positions.any?
             possible_room_positions = save_room_positions
           else
