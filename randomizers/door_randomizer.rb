@@ -1353,6 +1353,10 @@ module DoorRandomizer
       layer.tileset_pointer == coll_layer.tileset_pointer && layer.scroll_mode == 1
     end
     
+    if !layers_to_modify.include?(coll_layer)
+      raise "Collision layer has wrong scroll mode in room %s" % room.room_str
+    end
+    
     tiles.each do |tile|
       layers_to_modify.each do |layer|
         if tile[:x] >= layer.width*SCREEN_WIDTH_IN_TILES || tile[:y] >= layer.height*SCREEN_HEIGHT_IN_TILES
