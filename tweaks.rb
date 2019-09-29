@@ -167,6 +167,15 @@ module Tweaks
       
       # When starting a new game, don't unlock the Lost Village warp by default.
       game.fs.write(0x021F6054, [0xE1A00000].pack("V"))
+      
+      if !options[:randomize_maps]
+        # When map randomizer is NOT on, the total number of tiles on the map never gets updated.
+        # But Gergoth not breaking the floor means you can't access some vanilla tiles.
+        # So update the number of tiles here to prevent 100% map being impossible.
+        game.apply_armips_patch("dos_allow_changing_total_map_tiles")
+        total_num_tiles = 0x400 - 7 # 0x400 is the vanilla number of tiles, 7 Tiles are unreachable when Gergoth doesn't break the floor.
+        game.fs.write(0x02026B68, [total_num_tiles].pack("V"))
+      end
     end
     
     if GAME == "dos" && room_rando?
