@@ -430,6 +430,11 @@ class CompletabilityChecker
     @defs[:burntparadise] = [[:portrait_burnt_paradise]] # Update the pickup requirement for the logic.
   end
   
+  def remove_aguni_paranoia_requirement
+    # Remove the logic that you need the Paranoia soul to defeat Aguni since this is not true in boss randomizer.
+    @defs[:can_kill_aguni] = true
+  end
+  
   def generate_empty_item_requirements_file
     File.open("./dsvrandom/#{GAME}_pickup_requirements.txt", "w+") do |f|
       prev_area_name = nil

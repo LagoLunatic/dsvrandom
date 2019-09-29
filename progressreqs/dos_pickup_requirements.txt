@@ -93,7 +93,8 @@ Defs:
   bosszephyr: clocktower & height & seal 4 | clocktower & height & hwarp
   
   pinnacle: uppertowerguesthouse | bosszephyr & bat mode | clocktower & hwarp & bat mode
-  bossaguni: pinnacle & big height & seal 4 & paranoia | pinnacle & big height & hwarp & paranoia | pinnacle & height & vwarpseal & seal 4 & paranoia | pinnacle & height & vwarpseal & hwarp & paranoia
+  can kill aguni: paranoia
+  bossaguni: pinnacle & big height & seal 4 & can kill aguni | pinnacle & big height & hwarp & can kill aguni | pinnacle & height & vwarpseal & seal 4 & can kill aguni | pinnacle & height & vwarpseal & hwarp & can kill aguni
   
   mine: garden & seal 5 & mina talisman & condemntower | condemntower & hwarpseal
   bossdeath: mine & height & seal 5 | mine & height & hwarp

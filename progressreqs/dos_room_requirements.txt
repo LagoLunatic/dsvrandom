@@ -50,6 +50,8 @@ Defs:
   bat mode: bat company | bat form
   small: bat mode | puppet master
   seal: seal 1 | seal 2 | seal 3 | seal 4 | seal 5
+  
+  can kill aguni: paranoia
 Final room: 00-0B-1F
 Enemy locations:
   - 00-00-0B_02
@@ -2786,12 +2788,12 @@ Rooms:
     000-e00: seal 4 # needed to get back out of the room
     e00-000: seal 4
   00-09-01: # aguni room
-    000-001: paranoia
-    000-e06: paranoia
-    001-000: paranoia
-    001-e06: paranoia
-    e06-000: paranoia
-    e06-001: paranoia
+    000-001: can kill aguni
+    000-e06: can kill aguni
+    001-000: can kill aguni
+    001-e06: can kill aguni
+    e06-000: can kill aguni
+    e06-001: can kill aguni
   00-09-02:
     000-e00: 
     000-e01: 

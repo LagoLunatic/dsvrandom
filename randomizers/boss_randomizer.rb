@@ -5,6 +5,11 @@ module BossRandomizer
     
     puts "Shuffling bosses:" if verbose
     
+    if GAME == "dos"
+      # The Aguni placed by the boss randomizer does not require Paranoia to reach.
+      checker.remove_aguni_paranoia_requirement()
+    end
+    
     dos_randomize_final_boss()
     
     boss_entities = []
