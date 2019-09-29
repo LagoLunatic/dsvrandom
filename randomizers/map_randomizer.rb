@@ -797,7 +797,27 @@ module MapRandomizer
           end
           
           if possible_room_positions.empty?
-            # Then use rooms that keeps the number of doors the same.
+            # Then use rooms that keeps the number of doors the same and are NOT save rooms extremely close to an existing save room or warp rooms extremely close to an existing warp room.
+            possible_room_positions = valid_room_positions.select do |room_position|
+              if room_position[:diff_in_num_spots] == 0
+                room = room_position[:room]
+                if room.entities.find{|e| e.is_save_point?}
+                  save_dist = get_distance_to_save_room(room_position[:dest_room])
+                  save_dist >= 4
+                elsif room.entities.find{|e| e.is_warp_point?}
+                  warp_dist = get_distance_to_warp_room(room_position[:dest_room])
+                  warp_dist >= 4
+                else
+                  true
+                end
+              else
+                false
+              end
+            end
+          end
+          
+          if possible_room_positions.empty?
+            # Then use rooms that keeps the number of doors the same, even if they are save/warp rooms extremely close to existing ones.
             possible_room_positions = valid_room_positions.select do |room_position|
               if room_position[:diff_in_num_spots] == 0
                 true
