@@ -577,8 +577,6 @@ module BossRandomizer
         
         boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
         boss_entity.y_pos = 0xB0
-        
-        # TODO: doesn't play boss music
       end
       boss_entity.var_b = 0
     when "Dagon"
@@ -595,13 +593,9 @@ module BossRandomizer
     when "Death"
       boss_entity.var_a = 0 # Solo Death (not with Dracula)
       boss_entity.var_b = 0 # Starts fighting immediately, not waiting for cutscene to finish
-      
-      # TODO: doesn't play boss music
     when "Stella"
       boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
       boss_entity.var_b = 0 # Boss rush.
-      
-      # TODO: doesn't play boss music
     when "The Creature"
       boss_entity.var_a = 1 # Boss version, not the common enemy version
       boss_entity.var_b = 0

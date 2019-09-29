@@ -408,6 +408,10 @@ module Tweaks
       game.apply_armips_patch("dos_fix_bosses_not_playing_music")
     end
     
+    if GAME == "por" && options[:randomize_bosses]
+      game.apply_armips_patch("por_fix_bosses_not_playing_music")
+    end
+    
     if GAME == "dos"
       game.apply_armips_patch("dos_new_map_tile_color")
     end
