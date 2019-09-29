@@ -543,7 +543,7 @@ module BossRandomizer
       boss_entity.var_a = 1 # Normal with intro, not boss rush
       boss_entity.var_b = 0
     when "Behemoth"
-      boss_entity.var_a = 0
+      boss_entity.var_a = 1 # Stays dead when killed
       boss_entity.var_b = 0 # Normal
       
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
