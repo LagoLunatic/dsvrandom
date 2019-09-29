@@ -780,8 +780,6 @@ module MapRandomizer
             end
           end
           
-          possible_room_positions = []
-          
           if possible_room_positions.empty?
             # Then prioritize progress rooms, rooms that increase the number of available doors, and transition rooms.
             possible_room_positions = valid_room_positions.select do |room_position|
