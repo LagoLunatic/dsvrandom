@@ -69,7 +69,7 @@
       <property name="z_index" value="1B"/>
       <property name="colors_per_palette" value="10"/>
       <property name="main_gfx_page_index" value="00"/>
-      <property name="scroll_mode" value="00"/>
+      <property name="scroll_mode" value="01"/>
       <property name="tileset" value="022EB820"/>
       <property name="collision_tileset" value="022EC81C"/>
     </properties>
@@ -95,7 +95,7 @@
       <property name="z_index" value="16"/>
       <property name="colors_per_palette" value="10"/>
       <property name="main_gfx_page_index" value="00"/>
-      <property name="scroll_mode" value="00"/>
+      <property name="scroll_mode" value="01"/>
       <property name="tileset" value="022EB820"/>
       <property name="collision_tileset" value="022EC81C"/>
     </properties>
