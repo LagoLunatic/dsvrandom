@@ -32,6 +32,10 @@ module DropRandomizer
         # Worms generally stay dead permanently after being killed once, so any drops given to them would be missable.
         can_drop_items = false
       end
+      if GAME == "por" && ["Hanged Bones", "Skeleton Tree"].include?(enemy.name)
+        # These attach to a wall or ceiling and consider their position to be inside the solid wall - so any item they try to drop would refuse to spawn.
+        can_drop_items = false
+      end
       
       if rng.rand <= 0.5 && can_drop_items # 50% chance to have an item drop
         if GAME == "por"
