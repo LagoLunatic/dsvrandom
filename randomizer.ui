@@ -434,8 +434,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>778</width>
+            <height>518</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -617,9 +617,9 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QCheckBox" name="dont_randomize_change_cube">
+           <widget class="QCheckBox" name="start_with_change_cube">
             <property name="text">
-             <string>Don't randomize Change Cube</string>
+             <string>Start with Change Cube</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -1061,7 +1061,7 @@
   <tabstop>menace_to_somacula</tabstop>
   <tabstop>dos_new_style_map</tabstop>
   <tabstop>por_short_mode</tabstop>
-  <tabstop>dont_randomize_change_cube</tabstop>
+  <tabstop>start_with_change_cube</tabstop>
   <tabstop>por_nerf_enemy_resistances</tabstop>
   <tabstop>skip_emblem_drawing</tabstop>
   <tabstop>fix_infinite_quest_rewards</tabstop>

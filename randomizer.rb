@@ -653,20 +653,19 @@ class Randomizer
       end
     when "por"
       # Always start with Lizard Tail, Call Cube, Skill Cube, Critical Art, and possibly Change Cube.
-      # Always start the player with Lizard Tail.
-      add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
-      checker.add_item(0x1B2) # Lizard Tail
+      if options[:start_with_change_cube]
+        add_bonus_item_to_starting_room(0x1AC) # Change Cube
+        checker.add_item(0x1AC) # Change Cube
+      end
       
       add_bonus_item_to_starting_room(0x1AD) # Call Cube
       checker.add_item(0x1AD) # Call Cube
       
+      add_bonus_item_to_starting_room(0x1B2) # Lizard Tail
+      checker.add_item(0x1B2) # Lizard Tail
+      
       add_bonus_item_to_starting_room(0x1AE) # Skill Cube
       checker.add_item(0x1AE) # Skill Cube
-      
-      if options[:dont_randomize_change_cube]
-        add_bonus_item_to_starting_room(0x1AC) # Change Cube
-        checker.add_item(0x1AC) # Change Cube
-      end
       
       add_bonus_item_to_starting_room(0x1B8) # Critical Art
       checker.add_item(0x1B8)

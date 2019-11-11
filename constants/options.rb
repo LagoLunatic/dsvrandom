@@ -55,7 +55,7 @@ OPTIONS = {
   dos_new_style_map: "Makes the map in DoS look like the map in PoR and OoE - doors have a hole in them and the colors have better contrast.",
   
   por_short_mode: "Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).",
-  dont_randomize_change_cube: "The change cube will always be the first item you get.",
+  start_with_change_cube: "Uncheck this option if you want the Change Cube to be randomized (you won't be able to control Charlotte directly until you find it).",
   por_nerf_enemy_resistances: "Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.",
   skip_emblem_drawing: "Skips the screen where you have to use the touch screen to draw an emblem when starting a new game.",
   fix_infinite_quest_rewards: "Fixes a bug where you could get any quest reward over and over again.",
@@ -94,7 +94,7 @@ GAME_SPECIFIC_OPTIONS = {
     :show_map_markers_on_top_screen,
     
     :por_short_mode,
-    :dont_randomize_change_cube,
+    :start_with_change_cube,
     :por_nerf_enemy_resistances,
     :skip_emblem_drawing,
     :fix_infinite_quest_rewards,
