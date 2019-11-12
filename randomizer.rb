@@ -668,7 +668,7 @@ class Randomizer
       checker.add_item(0x1AE) # Skill Cube
       
       add_bonus_item_to_starting_room(0x1B8) # Critical Art
-      checker.add_item(0x1B8)
+      checker.add_item(0x1B8) # Critical Art
     when "ooe"
       if options[:randomize_starting_room]
         # Put the glyph Barlowe would normally give you at the start in the randomized starting room.
