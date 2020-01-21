@@ -574,6 +574,11 @@ module ItemSkillStatRandomizer
       skill["DMG multiplier"] = skill["DMG multiplier"] / 5
       skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
     end
+    if skill.name == "Torpor"
+      # Reduce the damage of Torpor because you're practically guaranteed to get it early every seed since villagers give it.
+      skill["DMG multiplier"] = skill["DMG multiplier"] / 2
+      skill["DMG multiplier"] = 1 if skill["DMG multiplier"] < 1
+    end
   end
   
   def randomize_skill_behavior(skill, skill_global_id)
@@ -698,6 +703,11 @@ module ItemSkillStatRandomizer
     iframes = named_rand_range_weighted(:skill_iframes_range)
     if skill.name == "1,000 Blades"
       iframes = 1
+    end
+    if skill.name == "Torpor"
+      # Increase the iframes of Torpor because you're practically guaranteed to get it early every seed since villagers give it.
+      iframes = iframes * 4
+      iframes = 0xFF if iframes > 0xFF
     end
     set_skill_iframes(skill, skill_global_id, iframes)
     
