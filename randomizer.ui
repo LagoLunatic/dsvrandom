@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>760</height>
+    <height>710</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -323,48 +323,6 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="experimental_options_enabled">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>Experimental randomization options (buggy and not guaranteed completable)</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="randomize_players">
-            <property name="text">
-             <string>Players</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="randomize_enemy_sprites">
-            <property name="text">
-             <string>Enemy Sprites</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="randomize_boss_sprites">
-            <property name="text">
-             <string>Boss Sprites</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_3">
@@ -434,8 +392,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>65</width>
-            <height>18</height>
+            <width>778</width>
+            <height>464</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -778,6 +736,41 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="experimental_options_enabled">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Experimental randomization options (buggy and not guaranteed completable)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="randomize_enemy_sprites">
+            <property name="text">
+             <string>Enemy Sprites</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_boss_sprites">
+            <property name="text">
+             <string>Boss Sprites</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -1017,7 +1010,6 @@
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
   <tabstop>experimental_options_enabled</tabstop>
-  <tabstop>randomize_players</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
   <tabstop>randomize_boss_sprites</tabstop>
   <tabstop>about_button</tabstop>

@@ -29,7 +29,6 @@ OPTIONS = {
   randomize_wooden_chests: "Randomizes the pool of items for wooden chests in each area (OoE only).",
   
   experimental_options_enabled: "",
-  randomize_players: "Randomizes player movement stats.",
   randomize_enemy_sprites: "Randomizes the graphics of non-boss enemies.",
   randomize_boss_sprites: "Randomizes the graphics of bosses.",
   
