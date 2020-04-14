@@ -933,13 +933,13 @@ module PickupRandomizer
       pickup_str = pickup_global_id[8..-1].capitalize
     elsif PORTRAIT_NAMES.include?(pickup_global_id)
       # Portrait
-      # Remove the word portrait and capitalize the name.
-      pickup_str = pickup_global_id[9..-1].capitalize
+      # Add the word "to" after portrait and capitalize the name.
+      pickup_str = "Portrait to " + pickup_global_id[9..-1].capitalize
     else
       pickup_str = checker.defs.invert[pickup_global_id].to_s
     end
     pickup_str = pickup_str.tr("_", " ").split.map do |word|
-      if ["of"].include?(word)
+      if ["of", "to"].include?(word)
         word
       else
         word.capitalize
@@ -967,7 +967,7 @@ module PickupRandomizer
     is_mirror_str = checker.mirror_locations.include?(location) ? " (Mirror)" : ""
     location_str = "#{area_name} (#{location})#{is_enemy_str}#{is_event_str}#{is_easter_egg_str}#{is_hidden_str}#{is_mirror_str}"
     
-    spoiler_str = "  %-18s %s" % [pickup_str+":", location_str]
+    spoiler_str = "  %-30s %s" % [pickup_str+":", location_str]
     
     return spoiler_str
   end
