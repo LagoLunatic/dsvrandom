@@ -159,8 +159,8 @@ module PickupRandomizer
         percent_done = progression_pickups_placed.to_f / total_progression_pickups
         yield percent_done
       end
-    elsif @progression_fill_mode == :assumed
-      place_progression_pickups_assumed_fill()
+    elsif @progression_fill_mode == :random
+      place_progression_pickups_random_fill()
     else
       raise "Unknown progression fill mode: #{@progression_fill_mode}"
     end
@@ -204,7 +204,7 @@ module PickupRandomizer
     raise e
   end
   
-  def place_progression_pickups_assumed_fill
+  def place_progression_pickups_random_fill
     verbose = false
     
     # This attribute is modified when adding a villager to a room.
@@ -281,22 +281,22 @@ module PickupRandomizer
       @done_item_locations = nonrandomized_item_locations.dup
       @rooms_that_already_have_an_event = orig_rooms_that_already_have_an_event.dup
       
-      progression_spheres = decide_progression_pickups_for_assumed_fill(
+      progression_spheres = decide_progression_pickups_for_random_fill(
         pickups_available,
         locations_available,
         locations_accessible_at_start: locations_accessible_at_start
       )
       if progression_spheres != :failure
-        puts "Total number of assumed fill failures: #{num_failures}"
+        puts "Total number of random fill failures: #{num_failures}"
         break
       end
       
-      if num_failures >= @assumed_fill_mode_max_redos
-        raise "Failed to place progression pickups over #{@assumed_fill_mode_max_redos} times.\nPlease report this as a bug."
+      if num_failures >= @random_fill_mode_max_redos
+        raise "Failed to place progression pickups over #{@random_fill_mode_max_redos} times.\nPlease report this as a bug."
       end
       
       num_failures += 1
-      puts "Assumed fill failure ##{num_failures}" if num_failures % 100 == 0
+      puts "Random fill failure ##{num_failures}" if num_failures % 100 == 0
       checker.restore_current_items(orig_current_items)
       if room_rando?
         checker.restore_return_portraits(orig_return_portraits)
@@ -384,7 +384,7 @@ module PickupRandomizer
     end
   end
   
-  def decide_progression_pickups_for_assumed_fill(pickups_available, locations_available, locations_accessible_at_start: nil)
+  def decide_progression_pickups_for_random_fill(pickups_available, locations_available, locations_accessible_at_start: nil)
     remaining_progress_items = pickups_available.dup
     remaining_locations = locations_available.dup
     
@@ -417,7 +417,7 @@ module PickupRandomizer
       possible_first_items.shuffle!(random: rng)
       while true
         if possible_first_items.empty?
-          raise "No possible item to place first in assumed fill"
+          raise "No possible item to place first in random fill"
         end
         possible_first_item = possible_first_items.pop()
         possible_locations = filter_locations_valid_for_pickup(locations_accessible_at_start, possible_first_item)
