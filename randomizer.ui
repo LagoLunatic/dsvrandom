@@ -434,8 +434,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>778</width>
-            <height>514</height>
+            <width>65</width>
+            <height>18</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -813,20 +813,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QPushButton" name="save_options_preset_button">
-       <property name="text">
-        <string>Save Current Options to Preset File</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="load_options_preset_button">
-       <property name="text">
-        <string>Load Options from Preset File</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="load_seed_info_button">
        <property name="text">
         <string>Load Seed Info from Spoiler/Non-Spoiler Log</string>
@@ -837,6 +823,20 @@
       <widget class="QPushButton" name="paste_seed_info_button">
        <property name="text">
         <string>Paste Seed Info from Clipboard</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="save_options_preset_button">
+       <property name="text">
+        <string>Save Current Options to Preset File</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="load_options_preset_button">
+       <property name="text">
+        <string>Load Options from Preset File</string>
        </property>
       </widget>
      </item>
