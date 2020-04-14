@@ -17,7 +17,10 @@ class RandomizerWindow < Qt::Dialog
   slots "randomize_n_seeds()"
   slots "open_about()"
   slots "reset_settings_to_default()"
-  slots "read_seed_info()"
+  slots "save_options_preset_to_file()"
+  slots "load_options_preset_from_file()"
+  slots "load_seed_info_from_file()"
+  slots "paste_seed_info_from_clipboard()"
   slots "experimental_enabled_changed(bool)"
   
   def initialize
@@ -66,7 +69,10 @@ class RandomizerWindow < Qt::Dialog
     
     update_settings()
     
-    connect(@ui.read_seed_info_button, SIGNAL("clicked()"), self, SLOT("read_seed_info()"))
+    connect(@ui.save_options_preset_button, SIGNAL("clicked()"), self, SLOT("save_options_preset_to_file()"))
+    connect(@ui.load_options_preset_button, SIGNAL("clicked()"), self, SLOT("load_options_preset_from_file()"))
+    connect(@ui.load_seed_info_button, SIGNAL("clicked()"), self, SLOT("load_seed_info_from_file()"))
+    connect(@ui.paste_seed_info_button, SIGNAL("clicked()"), self, SLOT("paste_seed_info_from_clipboard()"))
     
     self.resize(self.width, 1)
     
@@ -154,7 +160,7 @@ class RandomizerWindow < Qt::Dialog
         average = @settings[:difficulty_options][option_name]
         if average.nil?
           # If some options are missing default to what it is on easy.
-          average = DIFFICULTY_LEVELS["Easy"][option_name]
+          average = DIFFICULTY_LEVELS.values.first[option_name]
         end
         slider.blockSignals(true)
         slider.value = average
@@ -539,14 +545,14 @@ class RandomizerWindow < Qt::Dialog
     randomize()
   end
   
-  def randomize
+  def load_game_and_verify_supported
     unless File.file?(@ui.clean_rom.currentText)
       Qt::MessageBox.warning(self, "No ROM specified", "Must specify clean ROM path.")
-      return
+      return nil
     end
     unless File.directory?(@ui.output_folder.text)
       Qt::MessageBox.warning(self, "No output folder specified", "Must specify a valid output folder for the randomized ROM.")
-      return
+      return nil
     end
     
     game = Game.new
@@ -554,12 +560,19 @@ class RandomizerWindow < Qt::Dialog
     
     if !["dos", "por", "ooe"].include?(GAME)
       Qt::MessageBox.warning(self, "Unsupported game", "ROM is not a supported game.")
-      return
+      return nil
     end
     if REGION != :usa
       Qt::MessageBox.warning(self, "Unsupported region", "Only the US versions are supported.")
-      return
+      return nil
     end
+    
+    return game
+  end
+  
+  def randomize
+    game = load_game_and_verify_supported()
+    return if game.nil?
     
     seed = @settings[:seed].to_s.strip.gsub(/\s/, "")
     
@@ -807,28 +820,130 @@ class RandomizerWindow < Qt::Dialog
     end
   end
   
-  def read_seed_info
-    input_seed_info(@ui.paste_seed_info_field.plainText)
+  def save_options_preset_to_file
+    if @settings[:options_presets_folder] && File.directory?(@settings[:options_presets_folder])
+      default_dir = @settings[:options_presets_folder]
+    else
+      FileUtils.mkdir_p("./DSVRandom Presets")
+      default_dir = "./DSVRandom Presets"
+    end
+    
+    preset_path, selected_filter = Qt::FileDialog.getSaveFileName(self, "Save options preset", default_dir, "DSVRandom Preset Files (*.dsvrpreset)")
+    return if preset_path.nil?
+    
+    text = create_options_preset_from_current_settings()
+    return if text.nil?
+    
+    File.open(preset_path, "wb") do |f|
+      f.write(text)
+    end
+    
+    basename = File.basename(preset_path)
+    dirname = File.dirname(preset_path)
+    
+    @settings[:options_presets_folder] = dirname
+    
+    Qt::MessageBox.information(self, "Saved options preset", "Successfully saved options preset \"%s\"." % basename)
   end
   
-  def input_seed_info(text)
+  def load_options_preset_from_file
+    if @settings[:options_presets_folder] && File.directory?(@settings[:options_presets_folder])
+      default_dir = @settings[:options_presets_folder]
+    end
+    
+    preset_path = Qt::FileDialog.getOpenFileName(self, "Select options preset", default_dir, "DSVRandom Preset Files (*.dsvrpreset)")
+    return if preset_path.nil?
+    
+    text = File.read(preset_path)
+    read_seed_info(text, is_preset=true)
+    
+    dirname = File.dirname(preset_path)
+    
+    @settings[:options_presets_folder] = dirname
+  end
+  
+  def load_seed_info_from_file
+    if @settings[:output_folder] && File.directory?(@settings[:output_folder])
+      default_dir = @settings[:output_folder]
+    end
+    
+    log_path = Qt::FileDialog.getOpenFileName(self, "Select spoiler/non-spoiler log", default_dir, "Text files (*.txt)")
+    return if log_path.nil?
+    
+    text = File.read(log_path)
+    read_seed_info(text)
+  end
+  
+  def paste_seed_info_from_clipboard
+    text = $qApp.clipboard.text()
+    read_seed_info(text)
+  end
+  
+  def create_options_preset_from_current_settings
+    text = StringIO.new
+    
+    game = load_game_and_verify_supported
+    return nil if game.nil?
+    
+    options = get_current_options_hash()
+    difficulty_level = @settings[:difficulty_level]
+    user_given_difficulty_settings = get_current_difficulty_settings_averages()
+    
+    options_string = options.select{|k,v| v == true}.keys.join(", ")
+    if DIFFICULTY_LEVELS.keys.include?(difficulty_level)
+      difficulty_settings_string = difficulty_level
+    else
+      difficulty_settings_string = "Custom, settings:\n  " + user_given_difficulty_settings.map{|k,v| "#{k}: #{v}"}.join("\n  ")
+    end
+    
+    text.puts "DSVRandom Options Preset, Game: #{LONG_GAME_NAME}, Randomizer version: #{DSVRANDOM_VERSION}"
+    text.puts "Selected options: #{options_string}"
+    text.puts "Difficulty level: #{difficulty_settings_string}"
+    
+    return text.string
+  end
+  
+  def read_seed_info(text, is_preset=false)
+    if is_preset
+      format_type = "options preset"
+    else
+      format_type = "seed info"
+    end
+    
     if text.nil? || text.strip == ""
-      raise "No seed info input."
+      if is_preset
+        raise "#{format_type.capitalize} is blank."
+      else
+        raise "No #{format_type} input."
+      end
     end
     
-    match = text.match(/Seed: ([#{VALID_SEED_CHARACTERS}]+), Game: ([^,]+), Randomizer version: (.+)\s+Selected options: (.+)\s+Difficulty level: (.+)/)
-    if match.nil?
-      raise "Seed info is not in the proper format."
+    if is_preset
+      match = text.match(/DSVRandom Options Preset, Game: ([^,]+), Randomizer version: (.+)\s+Selected options: (.+)\s+Difficulty level: (.+)/)
+      if match.nil?
+        raise "#{format_type.capitalize} is not in the proper format."
+      end
+      
+      seed = ""
+      game = $1
+      version = $2
+      options = $3.split(", ").map(&:to_sym)
+      difficulty = $4
+    else
+      match = text.match(/Seed: ([#{VALID_SEED_CHARACTERS}]+), Game: ([^,]+), Randomizer version: (.+)\s+Selected options: (.+)\s+Difficulty level: (.+)/)
+      if match.nil?
+        raise "#{format_type.capitalize} is not in the proper format."
+      end
+      
+      seed = $1
+      game = $2
+      version = $3
+      options = $4.split(", ").map(&:to_sym)
+      difficulty = $5
     end
-    
-    seed = $1
-    game = $2
-    version = $3
-    options = $4.split(", ").map(&:to_sym)
-    difficulty = $5
     
     if version != DSVRANDOM_VERSION
-      raise "Wrong version! This is #{DSVRANDOM_VERSION}, need #{version}"
+      raise "Wrong version! This is for #{version}, but you are on #{DSVRANDOM_VERSION}"
     end
     
     short_game_name = case game
@@ -852,6 +967,9 @@ class RandomizerWindow < Qt::Dialog
     
     @ui.seed.text = seed
     options.each do |option_name|
+      if !@ui.respond_to?(option_name)
+        raise "Invalid options name found in #{format_type}: \"#{option_name}\""
+      end
       @ui.send(option_name).checked = true
     end
     (OPTIONS.keys-options).each do |option_name|
@@ -893,7 +1011,10 @@ class RandomizerWindow < Qt::Dialog
         average = custom_difficulty_options[option_name]
         if average.nil?
           # If some options are missing default to what it is on easy.
-          average = DIFFICULTY_LEVELS["Easy"][option_name]
+          if !DIFFICULTY_LEVELS.values.first.include?(option_name)
+            raise "Invalid difficulty setting name found in #{format_type}: \"#{option_name}\""
+          end
+          average = DIFFICULTY_LEVELS.values.first[option_name]
         end
         slider.blockSignals(true)
         slider.value = average
@@ -908,13 +1029,15 @@ class RandomizerWindow < Qt::Dialog
     
     @ui.tabWidget.currentIndex = 0
     
-    msg = "Successfully read seed info."
+    msg = "Successfully read #{format_type}."
     unless successfully_changed_clean_rom_path
-      msg << "\n\nPlease manually change the Clean ROM field to point to a clean #{game} ROM."
+      msg << "\n\nPlease manually change the Clean ROM field to point to a clean #{game} ROM since one could not be detected automatically."
     end
-    Qt::MessageBox.information(self, "Read seed info", msg)
+    Qt::MessageBox.information(self, "Read #{format_type}", msg)
   rescue StandardError => e
-    Qt::MessageBox.warning(self, "Seed info input failed", e.message)
+    puts e.message
+    puts e.backtrace.join("\n")
+    Qt::MessageBox.warning(self, "#{format_type.capitalize} input failed", e.message)
   end
 end
 

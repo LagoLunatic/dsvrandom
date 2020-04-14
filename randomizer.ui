@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>733</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -435,7 +435,7 @@
             <x>0</x>
             <y>0</y>
             <width>778</width>
-            <height>518</height>
+            <height>514</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -792,57 +792,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
-      <attribute name="title">
-       <string>Paste Seed Info</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Paste the full seed info copied from a seed log into the field below and click Use Seed Info.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Doing this will make the randomizer use all the same settings as the seed info you copy pasted, without needing to select each option individually.</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTextEdit" name="paste_seed_info_field"/>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="read_seed_info_button">
-           <property name="text">
-            <string>Use Seed Info</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
    <item>
@@ -860,6 +809,38 @@
       <bool>true</bool>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="save_options_preset_button">
+       <property name="text">
+        <string>Save Current Options to Preset File</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="load_options_preset_button">
+       <property name="text">
+        <string>Load Options from Preset File</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="load_seed_info_button">
+       <property name="text">
+        <string>Load Seed Info from Spoiler/Non-Spoiler Log</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="paste_seed_info_button">
+       <property name="text">
+        <string>Paste Seed Info from Clipboard</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -1073,8 +1054,6 @@
   <tabstop>summons_gain_extra_exp</tabstop>
   <tabstop>randomize_bgm</tabstop>
   <tabstop>randomize_dialogue</tabstop>
-  <tabstop>paste_seed_info_field</tabstop>
-  <tabstop>read_seed_info_button</tabstop>
  </tabstops>
  <resources/>
  <connections/>
