@@ -673,6 +673,11 @@ module EnemyRandomizer
     when "Medusa Head"
       enemy.var_a = rng.rand(1..7) # Max at once
       enemy.var_b = rng.rand(0..1) # Type of Medusa Head
+    when "Procel"
+      if !coll[enemy.x_pos,enemy.y_pos].is_water
+        # Procels don't spawn out of water.
+        return :redo
+      end
     when "Mud Demon"
       enemy.var_b = rng.rand(0..0x50) # Max rand spawn distance
     when "Stolas"
