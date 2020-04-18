@@ -228,6 +228,11 @@ module BossRandomizer
       if boss_entity.room.width < 2
         return false
       end
+    when "Rahab"
+      # Waiting for Rahab to come up is annoying enough in wide rooms, in single tile rooms it would take twice as long.
+      if boss_entity.room.width < 2
+        return false
+      end
     end
     
     if old_boss.name == "Rahab" && ["Malphas", "Dmitrii", "Dario", "Gergoth", "Zephyr", "Paranoia", "Abaddon"].include?(new_boss.name)
