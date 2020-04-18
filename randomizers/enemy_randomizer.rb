@@ -797,7 +797,7 @@ module EnemyRandomizer
   
   def por_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name
-    when "Zombie", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly", "Bone Pillar", "Fish Head", "White Dragon"
+    when "Zombie", "Ghoul", "Bat", "Fleaman", "Medusa Head", "Slime", "Tanjelly", "Bone Pillar", "Fish Head", "White Dragon"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Hanged Bones", "Skeleton Tree"
       # Try to limit possible buggy positions where it will be near a door and not let you enter the room.
