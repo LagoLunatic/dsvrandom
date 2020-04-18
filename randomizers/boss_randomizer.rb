@@ -12,32 +12,6 @@ module BossRandomizer
     
     dos_randomize_final_boss()
     
-    boss_entities = []
-    game.each_room do |room|
-      boss_entities_for_room = room.entities.select do |entity|
-        if !entity.is_boss?
-          next
-        end
-        boss_id = entity.subtype
-        if !RANDOMIZABLE_BOSS_IDS.include?(boss_id)
-          next
-        end
-        
-        boss = game.enemy_dnas[boss_id]
-        if GAME == "por" && boss.name == "Stella" && entity.var_a == 1
-          # Don't randomize the Stella who initiates the sisters fight (in either Master's Keep or Nest of Evil).
-          next
-        end
-        if GAME == "por" && boss.name == "The Creature" && entity.var_a == 0
-          # Don't randomize the common enemy version of The Creature.
-          next
-        end
-        
-        true
-      end
-      boss_entities += boss_entities_for_room
-    end
-    
     remove_boss_cutscenes()
     
     if GAME == "dos"
@@ -46,13 +20,8 @@ module BossRandomizer
       throne_room_dario.subtype = 0x70
     end
     
-    # Determine unique boss rooms.
-    boss_rooms_for_each_boss = {}
-    boss_entities.each do |boss_entity|
-      boss_rooms_for_each_boss[boss_entity.subtype] ||= []
-      boss_rooms_for_each_boss[boss_entity.subtype] << boss_entity.room
-      boss_rooms_for_each_boss[boss_entity.subtype].uniq!
-    end
+    boss_entities, boss_rooms_for_each_boss = get_boss_entities_and_boss_rooms()
+    
     # Figure out what bosses can be placed in what rooms.
     boss_swaps_that_work = {}
     boss_rooms_for_each_boss.each do |old_boss_id, boss_rooms|
@@ -96,9 +65,89 @@ module BossRandomizer
     #  end
     #end
     
+    old_boss_id_to_new_boss_id = decide_on_random_boss_mapping(boss_swaps_that_work)
+    
+    # Print the randomly decided boss replacements.
+    old_boss_id_to_new_boss_id.each do |old_boss_id, new_boss_id|
+      old_boss = game.enemy_dnas[old_boss_id]
+      new_boss = game.enemy_dnas[new_boss_id]
+      
+      puts "  Replacing boss %02X (#{old_boss.name}) with boss %02X (#{new_boss.name})" % [old_boss_id, new_boss_id] if verbose
+    end
+    
+    change_boss_entities_according_to_mapping(boss_entities, old_boss_id_to_new_boss_id)
+  end
+  
+  def get_boss_entities_and_boss_rooms
+    boss_entities = []
+    game.each_room do |room|
+      boss_entities_for_room = room.entities.select do |entity|
+        if !entity.is_boss?
+          next
+        end
+        boss_id = entity.subtype
+        if !RANDOMIZABLE_BOSS_IDS.include?(boss_id)
+          next
+        end
+        
+        boss = game.enemy_dnas[boss_id]
+        if GAME == "por" && boss.name == "Stella" && entity.var_a == 1
+          # Don't randomize the Stella who initiates the sisters fight (in either Master's Keep or Nest of Evil).
+          next
+        end
+        if GAME == "por" && boss.name == "The Creature" && entity.var_a == 0
+          # Don't randomize the common enemy version of The Creature.
+          next
+        end
+        
+        true
+      end
+      boss_entities += boss_entities_for_room
+    end
+    
+    # Determine unique boss rooms.
+    boss_rooms_for_each_boss = {}
+    boss_entities.each do |boss_entity|
+      boss_rooms_for_each_boss[boss_entity.subtype] ||= []
+      boss_rooms_for_each_boss[boss_entity.subtype] << boss_entity.room
+      boss_rooms_for_each_boss[boss_entity.subtype].uniq!
+    end
+    
+    return boss_entities, boss_rooms_for_each_boss
+  end
+  
+  def decide_on_random_boss_mapping(boss_swaps_that_work)
+    old_boss_id_to_new_boss_id = {}
     remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
+    
+    RANDOMIZABLE_BOSS_IDS.shuffle(random: rng).each do |old_boss_id|
+      if !remaining_boss_ids.include?(old_boss_id)
+        next
+      end
+      
+      possible_boss_ids_for_this_boss = boss_swaps_that_work[old_boss_id] & remaining_boss_ids
+      if possible_boss_ids_for_this_boss.empty?
+        # Nothing this could possibly randomize into and work correctly.
+        raise "BOSS %02X FAILED!" % old_boss_id
+      end
+      
+      if possible_boss_ids_for_this_boss.length > 1
+        # Don't allow the boss to be in its vanilla location unless that's the only valid option left.
+        possible_boss_ids_for_this_boss -= [old_boss_id]
+      end
+      
+      new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
+      old_boss_id_to_new_boss_id[old_boss_id] = new_boss_id
+      old_boss_id_to_new_boss_id[new_boss_id] = old_boss_id
+      remaining_boss_ids.delete(old_boss_id)
+      remaining_boss_ids.delete(new_boss_id)
+    end
+    
+    return old_boss_id_to_new_boss_id
+  end
+  
+  def change_boss_entities_according_to_mapping(boss_entities, old_boss_id_to_new_boss_id)
     queued_dna_changes = Hash.new{|h, k| h[k] = {}}
-    already_randomized_bosses = {}
     if GAME == "dos"
       @original_boss_seals = {}
       (0..0x11).each do |boss_index|
@@ -111,24 +160,7 @@ module BossRandomizer
       old_boss_id = boss_entity.subtype
       old_boss = game.enemy_dnas[old_boss_id]
       
-      already_randomized_new_boss_id = already_randomized_bosses[old_boss_id]
-      if already_randomized_new_boss_id
-        new_boss_id = already_randomized_new_boss_id
-      else
-        possible_boss_ids_for_this_boss = boss_swaps_that_work[old_boss_id] & remaining_boss_ids
-        if possible_boss_ids_for_this_boss.empty?
-          # Nothing this could possibly randomize into and work correctly. Skip.
-          #puts "BOSS %02X FAILED!" % old_boss_id
-          next
-        end
-        
-        if possible_boss_ids_for_this_boss.length > 1
-          # Don't allow the boss to be in its vanilla location unless that's the only valid option left.
-          possible_boss_ids_for_this_boss -= [old_boss_id]
-        end
-        
-        new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
-      end
+      new_boss_id = old_boss_id_to_new_boss_id[old_boss_id]
       new_boss = game.enemy_dnas[new_boss_id]
       
       result = case GAME
@@ -143,16 +175,9 @@ module BossRandomizer
         next
       end
       
-      puts "  Replacing boss %02X (#{old_boss.name}) with boss %02X (#{new_boss.name})" % [old_boss_id, new_boss_id] if verbose
-      
       boss_entity.subtype = new_boss_id
-      remaining_boss_ids.delete(new_boss_id)
-      remaining_boss_ids.delete(old_boss_id)
       
       boss_entity.write_to_rom()
-      
-      already_randomized_bosses[old_boss_id] = new_boss_id
-      already_randomized_bosses[new_boss_id] = old_boss_id
       
       update_boss_doors(old_boss_id, new_boss_id, boss_entity)
       
