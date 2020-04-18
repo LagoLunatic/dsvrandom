@@ -23,7 +23,7 @@ module BossRandomizer
     boss_entities, boss_rooms_for_each_boss = get_boss_entities_and_boss_rooms()
     
     # Figure out what bosses can be placed in what rooms.
-    boss_swaps_that_work = {}
+    boss_replacements_that_work = {}
     boss_rooms_for_each_boss.each do |old_boss_id, boss_rooms|
       old_boss = game.enemy_dnas[old_boss_id]
       
@@ -43,29 +43,22 @@ module BossRandomizer
         end
         
         if all_rooms_work
-          boss_swaps_that_work[old_boss_id] ||= []
-          boss_swaps_that_work[old_boss_id] << new_boss_id
+          boss_replacements_that_work[old_boss_id] ||= []
+          boss_replacements_that_work[old_boss_id] << new_boss_id
         end
       end
     end
-    # Limit to swaps that work both ways.
-    boss_swaps_that_work.each do |old_boss_id, new_boss_ids|
-      new_boss_ids.select! do |new_boss_id|
-        next if boss_swaps_that_work[new_boss_id].nil?
-        boss_swaps_that_work[new_boss_id].include?(old_boss_id)
-      end
-    end
-    # Print all swaps that work.
-    #boss_swaps_that_work.each do |old_boss_id, valid_new_boss_ids|
+    ## Print all replacements that work.
+    #boss_replacements_that_work.each do |old_boss_id, valid_new_boss_ids|
     #  old_boss = game.enemy_dnas[old_boss_id]
-    #  puts "Boss %02X (#{old_boss.name}) can be swapped with:" % [old_boss_id]
+    #  puts "Boss %02X (#{old_boss.name}) can be replaced with:" % [old_boss_id]
     #  valid_new_boss_ids.each do |new_boss_id|
     #    new_boss = game.enemy_dnas[new_boss_id]
     #    puts "  Boss %02X (#{new_boss.name})" % [new_boss_id]
     #  end
     #end
     
-    old_boss_id_to_new_boss_id = decide_on_random_boss_mapping(boss_swaps_that_work)
+    old_boss_id_to_new_boss_id = decide_on_random_boss_mapping(boss_replacements_that_work)
     
     # Print the randomly decided boss replacements.
     old_boss_id_to_new_boss_id.each do |old_boss_id, new_boss_id|
@@ -116,16 +109,18 @@ module BossRandomizer
     return boss_entities, boss_rooms_for_each_boss
   end
   
-  def decide_on_random_boss_mapping(boss_swaps_that_work)
+  def decide_on_random_boss_mapping(boss_replacements_that_work)
     old_boss_id_to_new_boss_id = {}
-    remaining_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
+    remaining_new_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
     
-    RANDOMIZABLE_BOSS_IDS.shuffle(random: rng).each do |old_boss_id|
-      if !remaining_boss_ids.include?(old_boss_id)
-        next
-      end
-      
-      possible_boss_ids_for_this_boss = boss_swaps_that_work[old_boss_id] & remaining_boss_ids
+    # Decide on boss replacements in the order of bosses with less possible valid replacements first, to reduce the chance of failure because we already used up all valid replacements for that boss before getting to it.
+    old_boss_ids = RANDOMIZABLE_BOSS_IDS.dup
+    old_boss_ids.sort_by! do |old_boss_id|
+      boss_replacements_that_work[old_boss_id].size
+    end
+    
+    old_boss_ids.each do |old_boss_id|
+      possible_boss_ids_for_this_boss = boss_replacements_that_work[old_boss_id] & remaining_new_boss_ids
       if possible_boss_ids_for_this_boss.empty?
         # Nothing this could possibly randomize into and work correctly.
         raise "BOSS %02X FAILED!" % old_boss_id
@@ -138,9 +133,7 @@ module BossRandomizer
       
       new_boss_id = possible_boss_ids_for_this_boss.sample(random: rng)
       old_boss_id_to_new_boss_id[old_boss_id] = new_boss_id
-      old_boss_id_to_new_boss_id[new_boss_id] = old_boss_id
-      remaining_boss_ids.delete(old_boss_id)
-      remaining_boss_ids.delete(new_boss_id)
+      remaining_new_boss_ids.delete(new_boss_id)
     end
     
     return old_boss_id_to_new_boss_id
