@@ -300,6 +300,9 @@ module BossRandomizer
         entity_hider = game.entity_by_str("00-05-07_14")
         entity_hider.subtype = new_boss_index
         entity_hider.write_to_rom()
+        
+        # TODO issue with non-room-rando: the logic assumes you need some kind of distance to get across the gap to the other side of the boss room, but the floor doesn't break in boss rando after defeating the boss. (however, it DOES break after exiting and re-entering the room.)
+        # maybe change the floor to not break after re-entering, and also update the logic to reflect this, but only when boss rando is on
       end
     when "Paranoia"
       if boss_entity.var_a == 1
@@ -694,6 +697,8 @@ module BossRandomizer
       magnes_point_2.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS - 0x40
       magnes_point_2.y_pos = 0x28
       magnes_point_2.write_to_rom()
+      
+      # TODO: maybe add a third in the middle of rooms that are wide?
     when "Giant Skeleton"
       boss_entity.var_a = 1 # Boss version of the Giant Skeleton
       boss_entity.var_b = 0 # Faces the player when they enter the room.
