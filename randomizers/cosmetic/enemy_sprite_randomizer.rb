@@ -17,9 +17,8 @@ module EnemySpriteRandomizer
         # No sprite
         next
       end
-      if GAME == "por" && ["Andras", "Dragon Zombie"].include?(game.enemy_dnas[enemy_id].name)
-        # TODO: Need to implement func 0x02021364 LoadSpriteMultiGfx2? somehow
-        # this also is used for most bosses
+      if GAME == "por" && game.enemy_dnas[enemy_id].name == "Whip's Memory"
+        # Uses a player sprite instead of an enemy sprite.
         next
       end
       
@@ -274,7 +273,7 @@ module EnemySpriteRandomizer
           called_func_ptr = func_pointer
           line_that_called_func = current_code_pointer
           break
-        elsif func_pointer == LOAD_SPRITE_MULTI_GFX_FUNC_PTR
+        elsif LOAD_SPRITE_MULTI_GFX_FUNC_PTRS.include?(func_pointer)
           called_func_ptr = func_pointer
           line_that_called_func = current_code_pointer
           break
@@ -288,7 +287,7 @@ module EnemySpriteRandomizer
       raise "Could not find a function call to either LoadSpriteSingleGfx or LoadSpriteMultiGfx."
     end
     
-    is_multi_gfx = (called_func_ptr == LOAD_SPRITE_MULTI_GFX_FUNC_PTR)
+    is_multi_gfx = LOAD_SPRITE_MULTI_GFX_FUNC_PTRS.include?(called_func_ptr)
     line_that_loads_gfx_ptr = nil
     location_of_gfx_ptr = nil
     gfx_ptr = nil
