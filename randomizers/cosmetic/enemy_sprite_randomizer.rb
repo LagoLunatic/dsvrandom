@@ -253,7 +253,8 @@ module EnemySpriteRandomizer
     current_code_pointer = create_code_pointer
     called_func_ptr = nil
     line_that_called_func = nil
-    1000.times do
+    data = fs.read(create_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
+    data.unpack("V*").each_with_index do |word, i|
       word = fs.read(current_code_pointer, 4).unpack("V").first
       
       if (word >> 24) == 0xEB
