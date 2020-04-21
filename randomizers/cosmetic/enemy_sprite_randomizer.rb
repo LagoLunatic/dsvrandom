@@ -17,6 +17,11 @@ module EnemySpriteRandomizer
         # No sprite
         next
       end
+      if GAME == "por" && ["Andras", "Dragon Zombie"].include?(game.enemy_dnas[enemy_id].name)
+        # TODO: Need to implement func 0x02021364 LoadSpriteMultiGfx2? somehow
+        # this also is used for most bosses
+        next
+      end
       
       enemy = game.enemy_dnas[enemy_id]
       
