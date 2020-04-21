@@ -91,11 +91,11 @@ module SkillSpriteRandomizer
       old_is_weapon_glyph_sprite = weapon_glyph_sprite_indexes.include?(old_sprite_index)
       new_is_weapon_glyph_sprite = weapon_glyph_sprite_indexes.include?(new_sprite_index)
       
-      fix_skill_or_enemy_sprite(new_sprite, old_sprite, new_is_weapon_glyph_sprite, old_is_weapon_glyph_sprite)
+      fix_skill_sprite(new_sprite, old_sprite, new_is_weapon_glyph_sprite, old_is_weapon_glyph_sprite)
     end
   end
   
-  def fix_skill_or_enemy_sprite(sprite, old_sprite, new_is_weapon_glyph_sprite, old_is_weapon_glyph_sprite)
+  def fix_skill_sprite(sprite, old_sprite, new_is_weapon_glyph_sprite, old_is_weapon_glyph_sprite)
     any_changes_made_to_this_sprite = false
     
     # Fix OoE weapon glyphs being stuck on your feet when they get a non-weapon glyph sprite.
@@ -213,7 +213,7 @@ module SkillSpriteRandomizer
     end
     
     # Pad every existing animation with duplicate keyframes to get it up to the same number of keyframes the original sprite had for this animation. (Assuming we can do so without affecting the actual time the animation takes to play out.)
-    # The reason we need to make the animation have a lot of keyframes is to to fix the issue of some skills/enemies not advancing until a certain keyframe index is reached (e.g. Vol Arcus doesn't fire until keyframe 0xD is reached).
+    # The reason we need to make the animation have a lot of keyframes is to to fix the issue of some skills not advancing until a certain keyframe index is reached (e.g. Vol Arcus doesn't fire until keyframe 0xD is reached).
     # So instead of having one keyframe that lasts for a certain number of frames, we have a bunch of keyframes that only last for 1 frame each.
     sprite.animations.each_with_index do |animation, anim_index|
       if anim_index >= old_sprite.animations.length

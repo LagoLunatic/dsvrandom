@@ -107,7 +107,101 @@ module EnemySpriteRandomizer
     end
     
     all_enemy_sprites.each do |sprite|
-      fix_skill_or_enemy_sprite(sprite)
+      fix_enemy_sprite(sprite)
+    end
+  end
+  
+  def fix_enemy_sprite(sprite)
+    any_changes_made_to_this_sprite = false
+    
+    # Add a hitbox to every frame if it had no hitboxes originally.
+    sprite.frames.each do |frame|
+      next if frame.number_of_hitboxes > 0 # Don't add hitboxes if the frame already has them
+      next if frame.number_of_parts == 0 # Don't add hitboxes if the frame is not even visible
+      
+      min_part_x = frame.parts.map{|part| part.x_pos}.min
+      min_part_y = frame.parts.map{|part| part.y_pos}.min
+      max_part_x = frame.parts.map{|part| part.x_pos + part.width}.max
+      max_part_y = frame.parts.map{|part| part.y_pos + part.height}.max
+      
+      hitbox = Hitbox.new
+      hitbox.x_pos = min_part_x
+      hitbox.y_pos = min_part_y
+      hitbox.width = max_part_x - min_part_x
+      hitbox.height = max_part_y - min_part_y
+      
+      frame.hitboxes << hitbox
+      frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
+      sprite.hitboxes << hitbox
+      
+      any_changes_made_to_this_sprite = true
+    end
+    
+    # Pad every existing animation with duplicate keyframes to get it up to 20 keyframes. (Assuming we can do so without affecting the actual time the animation takes to play out.)
+    # The reason we need to make the animation have a lot of keyframes is to to fix the issue of some enemies not advancing until a certain keyframe index is reached (e.g. like how Vol Arcus doesn't fire until keyframe 0xD is reached).
+    # So instead of having one keyframe that lasts for a certain number of frames, we have a bunch of keyframes that only last for 1 frame each.
+    sprite.animations.each do |animation|
+      remaining_keyframes_to_add = (20 - animation.frame_delays.length)
+      
+      next if remaining_keyframes_to_add <= 0
+      
+      any_changes_made_to_this_sprite = true
+      
+      new_frame_delays = []
+      animation.frame_delays.each do |frame_delay|
+        new_frame_delays << frame_delay
+        
+        next if remaining_keyframes_to_add <= 0
+        next if frame_delay.delay < 2
+        
+        dupes_to_add = [frame_delay.delay-1, remaining_keyframes_to_add].min
+        
+        frame_delay.delay = 1
+        
+        dupes_to_add.times do
+          dupe_frame_delay = FrameDelay.new
+          dupe_frame_delay.frame_index = frame_delay.frame_index
+          dupe_frame_delay.delay = 1
+          new_frame_delays << dupe_frame_delay
+        end
+        
+        remaining_keyframes_to_add -= dupes_to_add
+      end
+      
+      animation.frame_delays.clear()
+      new_frame_delays.each do |frame_delay|
+        animation.frame_delays << frame_delay
+      end
+    end
+    
+    sprite.frame_delays.clear()
+    sprite.animations.each do |animation|
+      animation.frame_delays.each do |frame_delay|
+        sprite.frame_delays << frame_delay
+      end
+    end
+    
+    # Add one dummy animation if it had no animations. Give it 20 keyframes, each lasting 1 frame.
+    if sprite.animations.length == 0
+      num_keyframes = 20
+      
+      animation = Animation.new
+      sprite.animations << animation
+      
+      num_keyframes.times do |i|
+        frame_delay = FrameDelay.new
+        frame_delay.frame_index = 0 # Use the first frame
+        frame_delay.delay = 1 # 1 frame of delay
+        
+        sprite.frame_delays << frame_delay
+        animation.frame_delays << frame_delay
+      end
+      
+      any_changes_made_to_this_sprite = true
+    end
+    
+    if any_changes_made_to_this_sprite
+      sprite.write_to_rom()
     end
   end
   
