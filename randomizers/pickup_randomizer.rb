@@ -1212,6 +1212,13 @@ module PickupRandomizer
       # Don't put progression glyph in certain locations where the player could easily get them early.
       locations -= checker.no_glyph_locations
     end
+    if GAME == "ooe" && [0x2F, 0x30, 0x46].include?(pickup_global_id)
+      # Limit the Cerberus glyphs to only appearing in Dracula's Castle.
+      locations.reject! do |location|
+        area_index = location[0,2].to_i(16)
+        area_index != 0
+      end
+    end
     
     locations
   end
