@@ -2103,9 +2103,9 @@ Rooms:
     e00-000: small distance | medium height
     e00-001: 
   0A-00-12:
-    000-001: 
+    000-001: small distance | medium height | backdashjump
     000-002: 
-    001-000: 
+    001-000: small distance | medium height | backdashjump
     001-002: 
     002-000: medium height
     002-001: medium height
@@ -2235,15 +2235,15 @@ Rooms:
     000-e00: 
     000-e01: 
     000-e02: 
-    001-000: 
+    001-000: small distance | medium height
     001-e00: 
-    001-e01: 
+    001-e01: small distance | medium height
     001-e02: 
-    e00-000: 
+    e00-000: small distance | medium height
     e00-001: 
     e01-000: 
     e01-001: 
-    e02-000: 
+    e02-000: small distance | medium height
     e02-001: 
   0B-01-00:
     000-001: 

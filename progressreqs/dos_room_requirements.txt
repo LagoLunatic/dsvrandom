@@ -2570,9 +2570,9 @@ Rooms:
   00-07-0B:
     000-001: 
     000-002: 
-    001-000: 
+    001-000: height | distance | backdashjump
     001-002: 
-    002-000: 
+    002-000: height | distance | backdashjump
     002-001: 
   00-07-0C:
     000-e05: balore
