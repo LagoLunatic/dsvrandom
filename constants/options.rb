@@ -77,6 +77,7 @@ GAME_SPECIFIC_OPTIONS = {
   "dos" => [
     :randomize_boss_souls,
     :randomize_red_walls,
+    :randomize_weapon_behavior,
     :randomize_weapon_synths,
     
     :fix_luck,
@@ -89,6 +90,7 @@ GAME_SPECIFIC_OPTIONS = {
   ],
   "por" => [
     :randomize_portraits,
+    :randomize_weapon_behavior,
     
     :show_map_markers_on_top_screen,
     
