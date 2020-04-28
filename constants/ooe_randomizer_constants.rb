@@ -116,6 +116,10 @@ PATH_BLOCKING_BREAKABLE_WALLS = [
   {var_a: 1, var_b: 0},
   {var_a: 1, var_b: 1},
   {var_a: 0, var_b: 1},
+  
+  # The below are for breakable walls that block Paries entry points in the Underground Labyrinth.
+  {var_a: 2, var_b: 1},
+  {var_a: 2, var_b: 2},
 ]
 
 MAGICAL_TICKET_X_POS_OFFSET = 0x02037B10
