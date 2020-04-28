@@ -571,6 +571,12 @@ class Randomizer
       end
       @starting_room_door_index = 0
       
+      if GAME == "ooe"
+        # Add a warp to the Ecclesia save room so you can immediately warp when magical ticketing back there.
+        add_save_or_warp_to_room(game.areas[2].sectors[0].rooms[5], :warp)
+        regenerate_map_por_ooe(game.get_map(2, 0), game.areas[2], should_recenter_map: false)
+      end
+      
       case GAME
       when "dos"
         @starting_x_pos = 0x200 - 0x10

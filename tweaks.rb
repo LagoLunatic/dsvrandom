@@ -1155,8 +1155,10 @@ module Tweaks
         x_pos = 0x300 - 0x10
         y_pos = 0x80
       when "ooe"
-        x_pos = 0x30
-        y_pos = 0x230
+        # Place them on a platform near the door to the save room.
+        # We also put an inter-area warp in the save room which the player might want to use.
+        x_pos = 0xB0
+        y_pos = 0x170
       end
     end
 
