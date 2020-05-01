@@ -325,7 +325,7 @@ class RandomizerWindow < Qt::Dialog
   
   def experimental_enabled_changed(enabled)
     if enabled
-      msg = "Are you sure you want to enable the experimental section?\n\nThese options are mostly untested and are known to have bugs that can make seeds unwinnable."
+      msg = "Are you sure you want to enable the experimental section?\n\nThese options are mostly untested and are known to have bugs that can cause crashes or make seeds unwinnable."
       response = Qt::MessageBox.question(self, "Enable experimental options?", msg, Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No)
       
       if response == Qt::MessageBox::No
