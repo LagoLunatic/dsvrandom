@@ -392,8 +392,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>778</width>
-            <height>464</height>
+            <width>100</width>
+            <height>30</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -544,7 +544,7 @@
           <item row="2" column="0">
            <widget class="QCheckBox" name="dos_new_style_map">
             <property name="text">
-             <string>New style map</string>
+             <string>New style map visuals</string>
             </property>
            </widget>
           </item>
