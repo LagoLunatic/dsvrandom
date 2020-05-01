@@ -123,7 +123,7 @@ module BossRandomizer
       possible_boss_ids_for_this_boss = boss_replacements_that_work[old_boss_id] & remaining_new_boss_ids
       if possible_boss_ids_for_this_boss.empty?
         # Nothing this could possibly randomize into and work correctly.
-        raise "BOSS %02X FAILED!" % old_boss_id
+        raise "Failed to randomize boss %s!" % game.enemy_dnas[old_boss_id].name
       end
       
       if possible_boss_ids_for_this_boss.length > 1
@@ -579,7 +579,23 @@ module BossRandomizer
       
       boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
       
-      # TODO: Behemoth can be undodgeable without those jumpthrough platforms in the room, so add those
+      if !["Behemoth", "Legion"].include?(old_boss.name)
+        # Add two platforms to rooms with Behemoth in them to help dodging.
+        # PoR doesn't have a generic platform entity we can use, so we use the platforms that flip after a second instead since they're better than nothing.
+        platform_1 = boss_entity.room.add_new_entity()
+        platform_1.type = SPECIAL_OBJECT_ENTITY_TYPE
+        platform_1.subtype = 0x3E
+        platform_1.x_pos = 0x50
+        platform_1.y_pos = 0x70
+        platform_1.write_to_rom()
+        
+        platform_2 = boss_entity.room.add_new_entity()
+        platform_2.type = SPECIAL_OBJECT_ENTITY_TYPE
+        platform_2.subtype = 0x3E
+        platform_2.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS - 0x50
+        platform_2.y_pos = 0x70
+        platform_2.write_to_rom()
+      end
     when "Keremet"
       boss_entity.var_a = 1 # Normal
       boss_entity.var_b = 0
@@ -706,22 +722,22 @@ module BossRandomizer
     
     case new_boss.name
     when "Arthroverta"
-      # Add two magnes points to rooms with Arthroverta in them to help dodging.
-      magnes_point_1 = boss_entity.room.add_new_entity()
-      magnes_point_1.type = SPECIAL_OBJECT_ENTITY_TYPE
-      magnes_point_1.subtype = 1
-      magnes_point_1.x_pos = 0x40
-      magnes_point_1.y_pos = 0x28
-      magnes_point_1.write_to_rom()
-      
-      magnes_point_2 = boss_entity.room.add_new_entity()
-      magnes_point_2.type = SPECIAL_OBJECT_ENTITY_TYPE
-      magnes_point_2.subtype = 1
-      magnes_point_2.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS - 0x40
-      magnes_point_2.y_pos = 0x28
-      magnes_point_2.write_to_rom()
-      
-      # TODO: maybe add a third in the middle of rooms that are wide?
+      if old_boss.name != "Arthroverta"
+        # Add two magnes points to rooms with Arthroverta in them to help dodging.
+        magnes_point_1 = boss_entity.room.add_new_entity()
+        magnes_point_1.type = SPECIAL_OBJECT_ENTITY_TYPE
+        magnes_point_1.subtype = 1
+        magnes_point_1.x_pos = 0x40
+        magnes_point_1.y_pos = 0x28
+        magnes_point_1.write_to_rom()
+        
+        magnes_point_2 = boss_entity.room.add_new_entity()
+        magnes_point_2.type = SPECIAL_OBJECT_ENTITY_TYPE
+        magnes_point_2.subtype = 1
+        magnes_point_2.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS - 0x40
+        magnes_point_2.y_pos = 0x28
+        magnes_point_2.write_to_rom()
+      end
     when "Giant Skeleton"
       boss_entity.var_a = 1 # Boss version of the Giant Skeleton
       boss_entity.var_b = 0 # Faces the player when they enter the room.
