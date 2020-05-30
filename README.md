@@ -12,29 +12,32 @@ Report issues here: https://github.com/LagoLunatic/dsvrandom/issues
 
 DSVRandom has options to randomize:  
 * Items/Skills: Randomizes items and skills you find lying on the ground.  
-* Enemy Locations: Randomizes which non-boss enemies appear where.  
-* Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.  
-* Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).  
-* Equipment Stats: Randomizes weapon and armor stats.  
-* Weapon Behavior: Randomizes how weapons behave.  
-* Consumable Behavior: Randomizes what consumables do and how powerful they are.  
-* Skill Stats/Behavior: Randomizes skill stats and how skills behave.  
-* Shop Items: Randomizes what items are for sale in the shop and item prices.  
-* Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).  
+* Portraits: Randomizes where portraits are located (PoR only).  
 * Villagers: Randomizes where villagers are located (OoE only).  
-* Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).  
+* Maps: Randomly generates entirely new maps and connects rooms to match the map.  
+* Enemy Locations: Randomizes which non-boss enemies appear where.  
+* Boss Locations: Randomizes which bosses appear where.  
+* Boss Souls: Randomizes the souls dropped by bosses as well as Wallman's glyph (DoS/OoE only).  
+* World Map Exits: Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).  
+* Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).  
+* Starting Room: Randomizes which room you start in.  
+* Enemy Drops: Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.  
 * Enemy Stats: Randomizes enemy stats, weaknesses, and resistances.  
 * Enemy Animation Speed: Randomizes the speed at which each enemy's animations play at, which affects their attack speed.  
-* Portraits: Randomizes where portraits are located (PoR only).  
-* Red Soul Walls: Randomizes which bullet souls are needed to open red walls (DoS only).  
-* Maps: Randomly generates entirely new maps and connects rooms to match the map.  
-* Starting Room: Randomizes which room you start in.  
-* Room Connections (Not map-friendly): Randomizes which rooms within an area connect to each other. (The map is not useful with this option, so finding where to go can be extremely difficult.)  
-* Area Connections (Not map-friendly): Randomizes which areas connect to each other.  
+* Enemy Tolerances: Randomizes enemy elemental weaknesses and resistances.  
+* Consumable Behavior: Randomizes what consumables do and how powerful they are.  
+* Weapon Behavior: Randomizes how weapons behave.  
+* Skill Behavior: Randomizes how skills behave.  
+* Equipment Stats: Randomizes weapon and armor stats.  
+* Skill Stats: Randomizes skill stats.  
+* Weapon and Skill Elements: Randomizes what elemental damage types and status effects each weapon/skill does.  
+* Shop Items: Randomizes what items are for sale in the shop and item prices.  
+* Weapon Synthesis: Randomizes which items Yoko can synthesize (DoS only).  
+* Wooden Chest Items: Randomizes the pool of items for wooden chests in each area (OoE only).  
 * Background Music: Randomizes what songs play in what areas.  
 * Cutscene Dialogue: Generates random dialogue for all cutscenes.  
 * Player Sprites: Randomizes the graphics of player characters.  
-* Skill Sprites: Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).  
+* Skill Sprites: Randomizes the graphics used by each skill.  
 
 As well as several other options that change how the game is played:  
 * Scavenger Mode: Common enemies never drop items, souls, or glyphs. You have to rely on pickups you find placed in the world.  
@@ -44,17 +47,10 @@ As well as several other options that change how the game is played:
 * Allow Requiring Glitches to Win: If checked, certain glitches may be necessary to beat the game.  
 * Bonus Starting Items: Starts you out with 3 random extra items and 3 random extra skills.  
 
-There are also some buggy, experimental randomization options:  
-* Players: Randomizes player movement stats.  
-* Boss Locations: Randomizes which bosses appear where.  
-* World Map Exits: Randomizes the order areas are unlocked on the world map (OoE only, and the Open World Map option must be disabled).  
-* Enemy Sprites: Randomizes the graphics of non-boss enemies.  
-* Boss Sprites: Randomizes the graphics of bosses.  
-
-Every seed should be completable as long as you don't use the experimental options.  
+Every seed should be completable as long as you don't use the options marked as "experimental".  
 If you think you've found a seed that's unwinnable, first check the spoiler log (located in the same folder as the randomized ROM) to make sure you haven't missed something.  
 If you haven't missed anything then you can report the bug here: https://github.com/LagoLunatic/dsvrandom/issues  
-When making a bug report be sure to include the seed, randomizer version number, and all the options you checked. The easiest way to do that is to simply copy paste the relevant entry from the spoiler log, which lists all of those.  
+When making a bug report be sure to include the seed, randomizer version number, and all the options you checked. The easiest way to do that is to simply upload the spoiler log, which lists all of those.  
 
 ### Requirements
 
@@ -86,12 +82,8 @@ You can also check the spoiler log located in the same folder as the randomized 
 
 Q: I fell into a pit and can't get back out without jump upgrades!  
 
-A: Check your inventory if you're using any of the room/map randomization options or the portrait randomizer option. You have a magical ticket that doesn't get consumed when used, so you can use that to return to your starting room any time you get trapped like this.  
+A: Check your inventory if you're using the map randomizer, starting room randomizer, or the portrait randomizer. You have a magical ticket that doesn't get consumed when used, so you can use that to return to your starting room any time you get trapped like this.  
 But if you're not using any of those options you won't have an infinitely usable magical ticket, in which case you may want to report this as a bug.  
-
-Q: I can't make the jump in the room after Flying Armor.  
-
-A: You can make the jump without any souls by doing a backdash jump off the very edge: http://i.imgur.com/ZXSHMcw.gif  
 
 Q: I have double jump, but I can't progress in Minera Prison Island without Magnes.  
 
@@ -133,7 +125,7 @@ https://discord.gg/5SnUANS
 
 ### Running from source
 
-If you want to run the latest development (unstable) version of DSVRandom from source, follow these instructions:  
+If you want to run the latest development/beta version of DSVRandom from source, follow these instructions:  
 
 * First you must download DSVEdit's source code and follow the instructions in its readme to get DSVEdit running from source: https://github.com/LagoLunatic/DSVEdit
 * Then download DSVRandom's source code and put the dsvrandom folder inside the DSVEdit folder.

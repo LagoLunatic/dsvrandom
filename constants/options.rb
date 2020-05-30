@@ -70,7 +70,7 @@ OPTIONS = {
   randomize_bgm: "Randomizes what songs play in what areas.",
   randomize_dialogue: "Generates random dialogue for all cutscenes.",
   randomize_player_sprites: "Randomizes the graphics of player characters.",
-  randomize_skill_sprites: "Randomizes the graphics used by each skill (this can sometimes crash when used on real hardware).",
+  randomize_skill_sprites: "Randomizes the graphics used by each skill.",
 }
 
 GAME_SPECIFIC_OPTIONS = {
