@@ -793,10 +793,12 @@ module DoorRandomizer
         entity.type = 0
         entity.write_to_rom()
       end
-      # And change Dmitrii to boss rush Dmitrii so he doesn't crash when there's no event.
-      dmitrii = dmitrii_room.entities[5]
-      dmitrii.var_a = 0
-      dmitrii.write_to_rom()
+      if !options[:randomize_bosses]
+        # And change Dmitrii to boss rush Dmitrii so he doesn't crash when there's no event.
+        dmitrii = dmitrii_room.entities[5]
+        dmitrii.var_a = 0
+        dmitrii.write_to_rom()
+      end
       
       # Remove the cutscene with Dario because it doesn't work properly when you enter from the left side.
       dario_room = game.room_by_str("00-03-0B")
