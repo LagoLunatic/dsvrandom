@@ -627,6 +627,10 @@ module BossRandomizer
         
         boss_entity.x_pos = boss_entity.room.width * SCREEN_WIDTH_IN_PIXELS / 2
         boss_entity.y_pos = 0xB0
+        
+        # Remove a check that boss rush Legion will always spawn, even if Legion's boss death flag is set.
+        game.fs.load_overlay(52)
+        game.fs.write(0x022D7918, [0xE1A00000].pack("V")) # nop
       end
       boss_entity.var_b = 0
     when "Dagon"
