@@ -379,6 +379,14 @@ module BossRandomizer
     when "Dario"
       boss_entity.var_a = 0
       boss_entity.var_b = 0 # Normal (not with Aguni)
+      
+      if boss_entity.room.width < 2
+        # If Dario is not in a wide room, he could teleport outside of the room.
+        # Although he comes back eventually, it's RNG and could take a while, so prevent him from teleporting outside the room.
+        # After generating a random number from 4-C, instead of multiplying by 0x20000 (shift by 0x11), multiply by 0x10000 (shift by 0x10).
+        # This limits his teleportation destination X positions from tiles 4-C in the room, instead of 8-18.
+        game.fs.write(0x0225BB6C, [0xE1A02800].pack("V")) # mov r2, r0, lsl 10h
+      end
     when "Puppet Master"
       boss_entity.var_a = 1 # Normal
       boss_entity.var_b = 0
