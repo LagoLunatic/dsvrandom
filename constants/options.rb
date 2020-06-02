@@ -43,7 +43,6 @@ OPTIONS = {
   reveal_breakable_walls: "Breakable walls will always blink as if you have Peeping Eye/Eye for Decay on.",
   reveal_bestiary: "All enemies will appear in the bestiary, even before you kill them once.",
   remove_area_names: "Removes the area names that appear on screen when you first enter an area.",
-  show_map_markers_on_top_screen: "Makes reminder markers that you place on the bottom screen in the map menu also show up on the top screen map (PoR and OoE only).",
   
   fix_luck: "Make each point of luck give +0.1% drop chances (as opposed to almost nothing).",
   no_touch_screen: "Seals auto-draw, no name signing, melee weapons destroy ice blocks.",
@@ -65,6 +64,8 @@ OPTIONS = {
   always_dowsing: "Hidden blue chests always make a beeping sound.",
   gain_extra_attribute_points: "You gain 25x more AP when killing enemies or absorbing glyphs.",
   summons_gain_extra_exp: "Your summons gain far more EXP every time they hit an enemy.",
+  
+  show_map_markers_on_top_screen: "Makes reminder markers that you place on the bottom screen in the map menu also show up on the top screen map.",
   
   
   randomize_bgm: "Randomizes what songs play in what areas.",
