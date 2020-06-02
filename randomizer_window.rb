@@ -295,6 +295,13 @@ class RandomizerWindow < Qt::Dialog
     end
     
     disable_options_not_for_current_game()
+    
+    if @ui.num_seeds_to_create.currentIndex == 0 # 1 seed
+      @ui.seed.enabled = true
+    else
+      # The seed text input is not used when generating multiple seeds.
+      @ui.seed.enabled = false
+    end
   end
   
   def disable_options_not_for_current_game
@@ -542,6 +549,7 @@ class RandomizerWindow < Qt::Dialog
     num_seeds_to_create = 1 if num_seeds_to_create < 1
     @remaining_seeds_to_create = num_seeds_to_create
     @output_filenames_written_so_far = []
+    generate_seed()
     randomize()
   end
   
