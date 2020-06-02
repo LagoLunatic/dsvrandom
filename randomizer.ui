@@ -941,27 +941,12 @@
        </item>
        <item>
         <property name="text">
-         <string>6 seeds</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>7 seeds</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>8 seeds</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>9 seeds</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>10 seeds</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>20 seeds</string>
         </property>
        </item>
       </widget>
