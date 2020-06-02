@@ -445,7 +445,8 @@ module PickupRandomizer
     remaining_progress_items.each do |pickup_global_id|
       possible_locations = filter_locations_valid_for_pickup(remaining_locations, pickup_global_id)
       if possible_locations.empty?
-        raise "No locations to place pickup"
+        pickup_name = pickup_global_id.is_a?(Symbol) ? pickup_global_id : checker.defs.invert[pickup_global_id]
+        raise "No locations to place pickup #{pickup_name}"
       end
       location = possible_locations.sample(random: rng)
       remaining_locations.delete(location)
