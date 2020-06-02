@@ -392,8 +392,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>82</width>
-            <height>18</height>
+            <width>778</width>
+            <height>464</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -991,6 +991,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>clean_rom</tabstop>
   <tabstop>clean_rom_browse_button</tabstop>
   <tabstop>output_folder</tabstop>
   <tabstop>output_folder_browse_button</tabstop>
@@ -1019,13 +1020,14 @@
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
-  <tabstop>experimental_options_enabled</tabstop>
-  <tabstop>randomize_enemy_sprites</tabstop>
-  <tabstop>randomize_boss_sprites</tabstop>
+  <tabstop>load_seed_info_button</tabstop>
+  <tabstop>paste_seed_info_button</tabstop>
+  <tabstop>save_options_preset_button</tabstop>
+  <tabstop>load_options_preset_button</tabstop>
   <tabstop>about_button</tabstop>
+  <tabstop>reset_settings_to_default</tabstop>
   <tabstop>num_seeds_to_create</tabstop>
   <tabstop>randomize_button</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>difficulty_level</tabstop>
   <tabstop>enable_glitch_reqs</tabstop>
   <tabstop>rebalance_enemies_in_room_rando</tabstop>
@@ -1054,8 +1056,15 @@
   <tabstop>always_dowsing</tabstop>
   <tabstop>gain_extra_attribute_points</tabstop>
   <tabstop>summons_gain_extra_exp</tabstop>
+  <tabstop>show_map_markers_on_top_screen</tabstop>
   <tabstop>randomize_bgm</tabstop>
   <tabstop>randomize_dialogue</tabstop>
+  <tabstop>randomize_player_sprites</tabstop>
+  <tabstop>randomize_skill_sprites</tabstop>
+  <tabstop>experimental_options_enabled</tabstop>
+  <tabstop>randomize_enemy_sprites</tabstop>
+  <tabstop>randomize_boss_sprites</tabstop>
+  <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>
