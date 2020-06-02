@@ -549,7 +549,7 @@ class RandomizerWindow < Qt::Dialog
     num_seeds_to_create = 1 if num_seeds_to_create < 1
     @remaining_seeds_to_create = num_seeds_to_create
     @output_filenames_written_so_far = []
-    generate_seed()
+    generate_seed() if num_seeds_to_create > 1
     randomize()
   end
   
