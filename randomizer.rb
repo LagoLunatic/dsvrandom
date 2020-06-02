@@ -109,7 +109,7 @@ class Randomizer
     @max_spawners_per_room = 1
     @max_room_rando_subsector_redos = 20
     @max_map_rando_sector_redos = 40
-    @max_map_rando_area_redos = 5
+    @max_map_rando_area_redos = 7
     
     @difficulty_settings = {}
     DIFFICULTY_RANGES.each do |name, range|
