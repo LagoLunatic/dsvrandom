@@ -725,6 +725,7 @@ class RandomizerWindow < Qt::Dialog
     else
       logs = [randomizer.spoiler_log, randomizer.non_spoiler_log]
     end
+    logs.compact!
     
     logs.each do |log|
       log.seek(0)
