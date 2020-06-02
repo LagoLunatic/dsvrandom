@@ -60,7 +60,7 @@ OPTIONS = {
   always_show_drop_percentages: "Drop chances always display as percentages instead of stars.",
   allow_mastering_charlottes_skills: "Allow Charlotte's skills to gain SP like Jonathan's. When mastered they act fully charged at half charge, and when both mastered and fully charged they act supercharged.",
   
-  open_world_map: "Make all areas except Dracula's Castle accessible from the start.",
+  open_world_map: "Make all areas except Dracula's Castle accessible from the start. (Selecting this disables the World Map Exits Randomizer.)",
   always_dowsing: "Hidden blue chests always make a beeping sound.",
   gain_extra_attribute_points: "You gain 25x more AP when killing enemies or absorbing glyphs.",
   summons_gain_extra_exp: "Your summons gain far more EXP every time they hit an enemy.",
