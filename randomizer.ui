@@ -392,8 +392,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
-            <height>30</height>
+            <width>82</width>
+            <height>18</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_5">
@@ -434,6 +434,13 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="scavenger_mode">
+            <property name="text">
+             <string>Scavenger Mode</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="revise_item_descriptions">
             <property name="text">
@@ -441,13 +448,6 @@
             </property>
             <property name="checked">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="scavenger_mode">
-            <property name="text">
-             <string>Scavenger Mode</string>
             </property>
            </widget>
           </item>
@@ -468,13 +468,6 @@
             </property>
             <property name="checked">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="show_map_markers_on_top_screen">
-            <property name="text">
-             <string>Show markers on top screen map</string>
             </property>
            </widget>
           </item>
@@ -674,6 +667,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox_11">
+         <property name="title">
+          <string>Portrait of Ruin &amp;&amp; Order of Ecclesia</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_13">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="show_map_markers_on_top_screen">
+            <property name="text">
+             <string>Show markers on top screen map</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -692,6 +701,7 @@
       <zorder>groupBox_2</zorder>
       <zorder>groupBox_4</zorder>
       <zorder>verticalSpacer_2</zorder>
+      <zorder>groupBox_11</zorder>
      </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
