@@ -32,6 +32,14 @@ module MapRandomizer
     
     maps_rendered = 0
     
+    if ["por", "ooe"].include?(GAME)
+      @orig_map_tile_counts_for_area = {}
+      game.areas.each_with_index do |area, area_index|
+        map = game.get_map(area_index, 0)
+        @orig_map_tile_counts_for_area[area_index] = map.number_of_tiles
+      end
+    end
+    
     case GAME
     when "dos"
       castle_rooms = []
@@ -996,6 +1004,19 @@ module MapRandomizer
     if ratio_unplaced_rooms > 0.75
       puts "Map randomizer failed to place #{(ratio_unplaced_rooms*100).to_i}% of rooms in this sector." if @map_rando_debug
       return :shouldredo
+    end
+    
+    if ["por", "ooe"].include?(GAME)
+      # Ensure that the number of map tiles on the map hasn't increased compared to the vanilla map, since that wouldn't work correctly.
+      estimated_curr_num_tiles = 0
+      map_width.times do |x|
+        map_height.times do |y|
+          estimated_curr_num_tiles += 1 if map_spots[x][y]
+        end
+      end
+      if estimated_curr_num_tiles > @orig_map_tile_counts_for_area[area_index]
+        return :mustredo
+      end
     end
     
     puts "Successfully placed non-transition rooms: #{num_placed_non_transition_rooms}" if @map_rando_debug
