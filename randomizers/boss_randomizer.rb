@@ -484,6 +484,12 @@ module BossRandomizer
           entity.write_to_rom()
         end
       end
+      
+      # Increase the min and max Y values that Death will look for the player within when seeing if he should start his intro cutscene.
+      # This is so the cutscene still triggers even if Death is placed in Rahab's room, and the player has Rahab's ability soul - being at the bottom of the room in the water places you farther away from Death than you'd normally be.
+      game.fs.load_overlay(34)
+      game.fs.write(0x0230282C, [0xE3A06D06].pack("V")) # mov r6, 180h
+      game.fs.write(0x02302838, [0xE3E02D06].pack("V")) # mvn r2, 180h (aka -181, can't do -180 because that constant won't fit)
     when "Abaddon"
       boss_entity.var_a = 1 # Normal
       boss_entity.var_b = 0
