@@ -461,16 +461,18 @@ module PickupRandomizer
     end
     
     inaccessible_progress_locations = @done_item_locations.keys
+    accessible_locations = []
     accessible_progress_locations = []
     accessible_doors = []
     progression_spheres = []
     while true
       if room_rando?
         curr_accessible_locations, curr_accessible_doors = checker.get_accessible_locations_and_doors()
-        locations_accessed_in_this_sphere = curr_accessible_locations
+        locations_accessed_in_this_sphere = curr_accessible_locations - accessible_locations
         doors_accessed_in_this_sphere = curr_accessible_doors - accessible_doors
       else
         locations_accessed_in_this_sphere = checker.get_accessible_locations()
+        doors_accessed_in_this_sphere = []
       end
       progress_locations_accessed_in_this_sphere = locations_accessed_in_this_sphere & inaccessible_progress_locations
       
@@ -518,7 +520,9 @@ module PickupRandomizer
         end
       end
       
+      accessible_locations += locations_accessed_in_this_sphere
       accessible_progress_locations += progress_locations_accessed_in_this_sphere
+      accessible_doors += doors_accessed_in_this_sphere
       inaccessible_progress_locations -= progress_locations_accessed_in_this_sphere
       progression_spheres << {
         locs: locations_accessed_in_this_sphere,
