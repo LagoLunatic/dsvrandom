@@ -2308,6 +2308,11 @@ module MapRandomizer
       end
       next if any_overlapping
       
+      if coll[x,y+0x10].is_slope?
+        # Saves/warps can be unusable if placed on top of a slope.
+        next
+      end
+      
       true
     end
     
