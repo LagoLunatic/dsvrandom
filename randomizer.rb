@@ -91,6 +91,7 @@ class Randomizer
     end
     if options[:randomize_world_map_exits]
       # World map exits can be buggy if you start in an area that isn't unlocked.
+      # Also, it depends on knowing the starting room ahead of time in order for the logic to be correct.
       options[:randomize_starting_room] = false
     end
     
