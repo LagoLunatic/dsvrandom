@@ -380,6 +380,10 @@ module BossRandomizer
       boss_entity.var_a = 0
       boss_entity.var_b = 0 # Normal (not with Aguni)
       
+      # Remove line that triggers the transition into the Aguni fight when the player enters a mirror during the Dario fight.
+      # If Dario got placed in a room with a mirror in boss randomizer, entering the mirror would crash the game unless this code is removed.
+      game.fs.write(0x0225A988, [0xE1A00000].pack("V")) # nop
+      
       if boss_entity.room.width < 2
         # If Dario is not in a wide room, he could teleport outside of the room.
         # Although he comes back eventually, it's RNG and could take a while, so prevent him from teleporting outside the room.
