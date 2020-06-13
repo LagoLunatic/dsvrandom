@@ -1090,11 +1090,11 @@ Rooms:
     000-001: 
     001-000: 
   00-07-08:
-    000-001: 
-    000-e00: 
-    001-000: small height
+    000-001: puppet master | medium height # Technically doable with nothing but it's very precise and if you mess up you have to suspend to try again.
+    000-e00: puppet master | medium height # Technically doable with nothing but it's very precise and if you mess up you have to suspend to try again.
+    001-000: puppet master | medium height # Not realistically doable with shoulder jump because the platforms collapse under you.
     001-e00: 
-    e00-000: small height
+    e00-000: puppet master | medium height # Not realistically doable with shoulder jump because the platforms collapse under you.
     e00-001: 
   00-07-09:
     000-001: 
