@@ -469,6 +469,12 @@ module BossRandomizer
       # This combination of x and y seems to be one of the least buggy.
       boss_entity.x_pos = 0x1F
       boss_entity.y_pos = 0x80
+      
+      if boss_entity.room.room_str == "00-01-06"
+        # Puppet Master's room has a thick wall on the left which covers almost all of the mirror and makes it impossible to trigger the Paranoia fight (unless you use the backstab super).
+        # We move the wall over to the left edge of the screen to fix this.
+        move_puppet_master_room_wall_to_the_left(boss_entity.room)
+      end
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
@@ -502,6 +508,28 @@ module BossRandomizer
       boss_entity.x_pos = 0x80
       boss_entity.y_pos = 0xB0
     end
+  end
+  
+  def move_puppet_master_room_wall_to_the_left(room)
+    layer = room.layers[0]
+    (0..9).each do |x|
+      SCREEN_HEIGHT_IN_TILES.times do |y|
+        src_tile_index = y*layer.width*SCREEN_WIDTH_IN_TILES + x+9
+        dst_tile_index = y*layer.width*SCREEN_WIDTH_IN_TILES + x
+        layer.tiles[dst_tile_index] = layer.tiles[src_tile_index]
+      end
+    end
+    layer.write_to_rom()
+    
+    layer = room.layers[1]
+    (1..9).each do |x|
+      SCREEN_HEIGHT_IN_TILES.times do |y|
+        src_tile_index = y*layer.width*SCREEN_WIDTH_IN_TILES + x+16
+        dst_tile_index = y*layer.width*SCREEN_WIDTH_IN_TILES + x
+        layer.tiles[dst_tile_index] = layer.tiles[src_tile_index]
+      end
+    end
+    layer.write_to_rom()
   end
   
   def por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
