@@ -437,6 +437,11 @@ module BossRandomizer
         game.fs.write(0x022FFC1C, [0xE1A00000].pack("V")) # nop (for when he's alive)
         game.fs.write(0x022FFA40, [0xE1A00000].pack("V")) # nop (for after he's dead)
       end
+    when "Rahab"
+      if boss_entity.room.room_str == "00-01-06"
+        # Puppet Master's room has a thick wall on the left which makes Rahab be unreachable more than normal, which is something this fight doesn't need.
+        move_puppet_master_room_wall_to_the_left(boss_entity.room)
+      end
     when "Gergoth"
       if old_boss_id == new_boss_id && GAME == "dos"
         # Normal Gergoth since he's in his tower.
