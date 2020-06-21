@@ -10,8 +10,9 @@ module StartingItemsRandomizer
     starting_pickups += non_progress_items.sample(num_bonus_items, random: rng)
     if GAME == "ooe" && num_bonus_skills > 0
       # Need to give the player at least one free floating glyph, or they may not be able to open the glyph statue and get a weapon.
-      free_floating_glyph_attack_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32]
-      starting_pickups << free_floating_glyph_attack_glyph_ids.sample(random: rng)
+      free_floating_attack_glyph_ids = [0x1D, 0x1F, 0x20, 0x22, 0x24, 0x26, 0x27, 0x2A, 0x2B, 0x2F, 0x30, 0x31, 0x32]
+      non_progress_free_floating_attack_glyph_ids = free_floating_attack_glyph_ids & all_non_progression_pickups
+      starting_pickups << non_progress_free_floating_attack_glyph_ids.sample(random: rng)
       
       # Then for any remaining starting glyphs, put them in glyph statues.
       num_bonus_skills -= 1
