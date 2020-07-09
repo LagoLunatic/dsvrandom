@@ -1477,7 +1477,7 @@ module PickupRandomizer
         raise "Can't make boss drop required item"
       end
       
-      if GAME == "dos" && entity.room.sector_index == 9 && entity.room.room_index == 1
+      if !options[:randomize_bosses] && GAME == "dos" && entity.room.sector_index == 9 && entity.room.room_index == 1
         # Aguni. He's not placed in the room so we hardcode him.
         enemy_dna = game.enemy_dnas[0x70]
       else
@@ -1766,7 +1766,7 @@ module PickupRandomizer
       raise "Not an enemy: #{location}"
     end
     
-    if GAME == "dos" && entity.room.sector_index == 9 && entity.room.room_index == 1
+    if !options[:randomize_bosses] && GAME == "dos" && entity.room.sector_index == 9 && entity.room.room_index == 1
       # Aguni. He's not placed in the room so we hardcode him.
       enemy_dna = game.enemy_dnas[0x70]
     else
