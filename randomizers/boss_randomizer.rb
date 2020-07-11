@@ -349,6 +349,13 @@ module BossRandomizer
       end
     end
     
+    if boss_entity.room.room_str == "00-01-06" && new_boss.name != "Puppet Master"
+      # Puppet Master's room has a thick wall on the left.
+      # If a boss besides Puppet Master gets placed in Puppet Master's room, we move the wall over to the left edge of the screen.
+      # This is to prevent issues that several bosses would have with this wall, such as Paranoia's mirror being covered up, Abaddon being pushed out of bounds, Rahab being unreachable for even longer than in vanilla, etc.
+      move_puppet_master_room_wall_to_the_left(boss_entity.room)
+    end
+    
     case new_boss.name
     when "Flying Armor"
       boss_entity.var_a = 0 # Boss rush
@@ -363,11 +370,6 @@ module BossRandomizer
       boss_entity.var_b = 0
       boss_entity.x_pos = 0x10
       boss_entity.y_pos = 0xB0
-      
-      if old_boss.name == "Puppet Master"
-        # Puppet Master's room's left wall is farther to the right than most.
-        boss_entity.x_pos += 0x90
-      end
     when "Malphas"
       boss_entity.var_a = 0
       boss_entity.var_b = 0 # Normal
@@ -395,7 +397,7 @@ module BossRandomizer
       boss_entity.var_a = 1 # Normal
       boss_entity.var_b = 0
       
-      if old_boss.name == "Puppet Master"
+      if boss_entity.room.room_str == "00-01-06"
         # Puppet Master's in his original room.
         boss_entity.x_pos = 0x148
         boss_entity.y_pos = 0x60
@@ -410,6 +412,14 @@ module BossRandomizer
           boss_entity.y_pos = 0x70
         end
         
+        if boss_entity.room.room_str == "00-0E-04"
+          # Boss rush Puppet Master's room.
+          # We don't want him to cut off the left edge of the screen, so place boss rush Puppet Master here instead of regular Puppet Master.
+          boss_entity.var_a = 0 # Boss rush
+        end
+      end
+      
+      if old_boss.name != "Puppet Master"
         # Also update a hardcoded position for his limbs to appear at.
         game.fs.load_overlay(25)
         game.fs.write(0x023052B0, [boss_entity.x_pos, boss_entity.y_pos].pack("vv"))
@@ -436,11 +446,6 @@ module BossRandomizer
         # And remove the code that usually sets the minimum screen scrolling position to hide the missing left side of the screen.
         game.fs.write(0x022FFC1C, [0xE1A00000].pack("V")) # nop (for when he's alive)
         game.fs.write(0x022FFA40, [0xE1A00000].pack("V")) # nop (for after he's dead)
-      end
-    when "Rahab"
-      if boss_entity.room.room_str == "00-01-06"
-        # Puppet Master's room has a thick wall on the left which makes Rahab be unreachable more than normal, which is something this fight doesn't need.
-        move_puppet_master_room_wall_to_the_left(boss_entity.room)
       end
     when "Gergoth"
       if old_boss_id == new_boss_id && GAME == "dos"
@@ -474,12 +479,6 @@ module BossRandomizer
       # This combination of x and y seems to be one of the least buggy.
       boss_entity.x_pos = 0x1F
       boss_entity.y_pos = 0x80
-      
-      if boss_entity.room.room_str == "00-01-06"
-        # Puppet Master's room has a thick wall on the left which covers almost all of the mirror and makes it impossible to trigger the Paranoia fight (unless you use the backstab super).
-        # We move the wall over to the left edge of the screen to fix this.
-        move_puppet_master_room_wall_to_the_left(boss_entity.room)
-      end
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
