@@ -75,7 +75,15 @@ module EnemyRandomizer
         needed_assets_for_enemy <= asset_slots_left
       end
       
+      disallow_spawners = false
       if @num_spawners >= @max_spawners_per_room
+        disallow_spawners = true
+      end
+      if GAME == "por" && @enemy_pool_for_room.include?(0x2E) # Great Ghost, can't be in the same room as spawners
+        disallow_spawners = true
+      end
+      
+      if disallow_spawners
         @allowed_enemies_for_room -= SPAWNER_ENEMY_IDS
         @enemy_pool_for_room -= SPAWNER_ENEMY_IDS
       end
@@ -948,6 +956,12 @@ module EnemyRandomizer
       if room_has_up_doors && room_has_upwards_gravity
         # In rooms with upside down gravity and an updoor, Yorick's skull can fall infinitely upwards out of bounds, which lags the game.
         # The lag doesn't occur when falling infinitely downwards out of bounds for some reason.
+        return :redo
+      end
+    when "Great Ghost"
+      if enemy.room.entities.find{|e| e.is_enemy? && SPAWNER_ENEMY_IDS.include?(e.subtype)}
+        # Great Ghost only spawns when you kill all enemies in the room, which is impossible if a spawner is in the room.
+        # (This is true even for Wakwak tree, which looks like it can be killed to "clear" the room, but actually the room is still not considered cleared.)
         return :redo
       end
     end
