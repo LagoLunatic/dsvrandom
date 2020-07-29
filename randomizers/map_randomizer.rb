@@ -2293,6 +2293,11 @@ module MapRandomizer
       
       next if y < 0x60
       
+      if GAME == "ooe" && type == :save
+        # Save points in OoE are hardcoded to put themselves at Y position 0xA0, and they only move up a maximum of one block if stuck inside a wall.
+        next if y < 0x90
+      end
+      
       full_height_is_empty = true
       (y-0x30..y).step(0x10) do |y_to_check|
         if !coll[x,y_to_check].is_blank
