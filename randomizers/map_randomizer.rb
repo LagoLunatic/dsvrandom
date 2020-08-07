@@ -133,7 +133,7 @@ module MapRandomizer
       # We don't want anything to use the right door of the tall room above the Cerberus statue, so mark it as inaccessible.
       # If anything connected to this door it could result in whole areas being placed behind the cerberus gate. We only want Dracula behind it.
       room = game.room_by_str("00-09-01")
-      tiled.read("./dsvrandom/roomedits/ooe_map_rando_00-09-01.tmx", room)
+      tiled.import_tmx_map("./dsvrandom/roomedits/ooe_map_rando_00-09-01.tmx", room)
       door = room.doors[1]
       door.destination_room_metadata_ram_pointer = 0
       door.x_pos = room.width + 1
@@ -259,11 +259,11 @@ module MapRandomizer
       filename = "./dsvrandom/roomedits/por_map_rando_05-01_new_save.tmx"
       sector.add_new_room()
       room = sector.rooms[-1]
-      tiled.read(filename, room)
+      tiled.import_tmx_map(filename, room)
       checker.add_empty_reqs_for_new_room(room)
       sector.add_new_room()
       room = sector.rooms[-1]
-      tiled.read(filename, room)
+      tiled.import_tmx_map(filename, room)
       checker.add_empty_reqs_for_new_room(room)
       
       # Add two save rooms to a Burnt Paradise sector that originally had no save rooms.
@@ -271,11 +271,11 @@ module MapRandomizer
       filename = "./dsvrandom/roomedits/por_map_rando_06-01_new_save.tmx"
       sector.add_new_room()
       room = sector.rooms[-1]
-      tiled.read(filename, room)
+      tiled.import_tmx_map(filename, room)
       checker.add_empty_reqs_for_new_room(room)
       sector.add_new_room()
       room = sector.rooms[-1]
-      tiled.read(filename, room)
+      tiled.import_tmx_map(filename, room)
       checker.add_empty_reqs_for_new_room(room)
     end
   end

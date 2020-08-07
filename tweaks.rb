@@ -12,14 +12,14 @@ module Tweaks
       # And also modify the level design of the drawbridge room so you can go up and down even when the drawbridge is closed.
       filename = "./dsvrandom/roomedits/dos_room_rando_00-00-15.tmx"
       room = game.areas[0].sectors[0].rooms[0x15]
-      tiled.read(filename, room)
+      tiled.import_tmx_map(filename, room)
     end
     
     if GAME == "dos"
       # Modify the level design of the room after Flying Armor to not require a backdash jump to go from right to left.
       filename = "./dsvrandom/roomedits/dos_00-00-08.tmx"
       room = game.areas[0].sectors[0].rooms[8]
-      tiled.read(filename, room)
+      tiled.import_tmx_map(filename, room)
     end
     
     if GAME == "dos"
@@ -65,7 +65,7 @@ module Tweaks
       ].each do |area_index, sector_index, room_index|
         filename = "./dsvrandom/roomedits/ooe_linear_%02X-%02X-%02X.tmx" % [area_index, sector_index, room_index]
         room = game.areas[area_index].sectors[sector_index].rooms[room_index]
-        tiled.read(filename, room)
+        tiled.import_tmx_map(filename, room)
         
         # Also update the map tile to be an entrance.
         map = game.get_map(area_index, sector_index)
@@ -141,7 +141,7 @@ module Tweaks
         
         room = game.areas[0].sectors[1].rooms[room_index]
         filename = "./dsvrandom/roomedits/dos_room_rando_00-01-%02X.tmx" % room_index
-        tiled.read(filename, room)
+        tiled.import_tmx_map(filename, room)
       end
       
       # Now remove the wall entities in each room and the control panel entity.
@@ -191,7 +191,7 @@ module Tweaks
       ["07-00-07", "07-00-0A", "07-00-0B", "07-00-0D", "08-02-18", "08-02-19"].each do |room_str|
         room = game.room_by_str(room_str)
         filename = "./dsvrandom/roomedits/por_room_rando_#{room_str}.tmx"
-        tiled.read(filename, room)
+        tiled.import_tmx_map(filename, room)
       end
     end
     
@@ -213,7 +213,7 @@ module Tweaks
       [0x8, 0xD, 0x12].each do |room_index|
         room = game.areas[0xA].sectors[0].rooms[room_index]
         filename = "./dsvrandom/roomedits/ooe_room_rando_0A-00-%02X.tmx" % room_index
-        tiled.read(filename, room)
+        tiled.import_tmx_map(filename, room)
       end
     end
     
