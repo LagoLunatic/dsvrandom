@@ -2253,35 +2253,35 @@ Rooms:
     e01-000: 
   0B-01-02: # Bottom waterfall room.
     # The waterfall here is unfrozen by default in room rando to simplify the logic.
-    000-001: 
+    000-001: distance | medium height & winged boots
     000-002: 
     000-003: 
-    000-e00: 
-    000-e01: big height | distance | medium height & winged boots
-    000-e03: 
+    000-e00: distance | medium height & winged boots
+    000-e01: distance | medium height & winged boots
+    000-e03: distance | medium height & winged boots
     001-000: medium height | distance
     001-002: 
     001-003: 
     001-e00: 
-    001-e01: big height | distance | medium height & winged boots
+    001-e01: distance | medium height & winged boots
     001-e03: 
     002-000: medium height
-    002-001: medium height
+    002-001: medium height & winged boots
     002-003: 
     002-e00: 
-    002-e01: big height | medium height & distance | medium height & winged boots
-    002-e03: medium height
+    002-e01: medium height & distance | medium height & winged boots
+    002-e03: medium height & winged boots
     003-000: medium height
-    003-001: medium height
+    003-001: medium height & winged boots
     003-002: 
     003-e00: 
-    003-e01: big height | medium height & distance | medium height & winged boots
-    003-e03: medium height
+    003-e01: medium height & distance | medium height & winged boots
+    003-e03: medium height & winged boots
     e00-000: medium height
-    e00-001: medium height
+    e00-001: medium height & winged boots
     e00-002: 
     e00-003: 
-    e01-000: 
+    e01-000: medium height | distance | backdashjump
     e01-001: 
     e01-002: 
     e01-003: 
