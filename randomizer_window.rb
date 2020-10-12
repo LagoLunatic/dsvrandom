@@ -151,7 +151,6 @@ class RandomizerWindow < Qt::Dialog
       difficulty_level_changed_by_name(@settings[:difficulty_level])
     else
       # Custom difficulty.
-      difficulty_level_changed_by_name("Custom")
       
       form_layout = @ui.scrollAreaWidgetContents.layout
       
@@ -169,6 +168,8 @@ class RandomizerWindow < Qt::Dialog
         line_edit = @difficulty_line_edit_widgets_by_name[option_name]
         line_edit.text = slider.true_value.to_s
       end
+      
+      difficulty_level_changed_by_name("Custom")
     end
   end
   
@@ -991,7 +992,6 @@ class RandomizerWindow < Qt::Dialog
       difficulty_level_changed_by_name(difficulty)
     elsif difficulty =~ /Custom/
       # Custom difficulty.
-      difficulty_level_changed_by_name("Custom")
       
       custom_difficulty_options = {}
       on_difficulty_options = false
@@ -1032,6 +1032,8 @@ class RandomizerWindow < Qt::Dialog
         line_edit = @difficulty_line_edit_widgets_by_name[option_name]
         line_edit.text = slider.true_value.to_s
       end
+      
+      difficulty_level_changed_by_name("Custom")
     else
       raise "No difficulty found"
     end
