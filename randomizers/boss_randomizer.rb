@@ -619,6 +619,12 @@ module BossRandomizer
       entity_hider.write_to_rom()
     end
     
+    if boss_entity.room.room_str == "06-00-05"
+      # Medusa's vanilla position is at the top of the room.
+      # We move it down to the floor so certain bosses don't go out of bounds.
+      boss_entity.y_pos = 0xB0
+    end
+    
     case new_boss.name
     when "Dullahan"
       boss_entity.var_a = 1 # Normal with intro, not boss rush
