@@ -308,6 +308,8 @@ module PickupRandomizer
     
     @progression_spheres = progression_spheres
     
+    used_item_locations = @done_item_locations.keys
+    
     if bat_to_keep
       # If we had to remove one of the two bats from being randomly placed, we now go and place it non-randomly.
       # We simply place it in the last possible progression sphere we can find.
@@ -318,7 +320,7 @@ module PickupRandomizer
         locations_accessed_in_this_sphere = sphere[:locs]
         progress_locations_accessed_in_this_sphere = sphere[:progress_locs]
         
-        unused_locs = locations_accessed_in_this_sphere - progress_locations_accessed_in_this_sphere
+        unused_locs = locations_accessed_in_this_sphere - used_item_locations
         valid_unused_locs = filter_locations_valid_for_pickup(
           unused_locs,
           bat_to_remove
