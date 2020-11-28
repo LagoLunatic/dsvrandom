@@ -336,6 +336,10 @@ module Tweaks
       vanilla_searchlight.write_to_rom()
     end
     
+    if room_rando?
+      center_bosses_for_room_rando()
+    end
+    
     
     
     # Add a free space overlay so we can add entities as much as we want.
@@ -1051,10 +1055,6 @@ module Tweaks
       # That causes an issue in rooms where there's an upwards door at the top left of the room, Shanoa can go through it, softlocking the cutscene.
       # So we have the cutscene set Shanoa's X pos to -0x8000 pixels. Being that far out of bounds appears to prevent her from going in doors.
       game.fs.write(0x022317E8, [0xE3E03902].pack("V")) # mvn r3, 8000h
-    end
-    
-    if room_rando?
-      center_bosses_for_room_rando()
     end
     
     update_hardcoded_enemy_attributes()
