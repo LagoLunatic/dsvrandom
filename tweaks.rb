@@ -336,6 +336,20 @@ module Tweaks
       vanilla_searchlight.write_to_rom()
     end
     
+    if GAME == "ooe"
+      # Add a warp to the Ecclesia save room. This allows easy access between warp points and the world map (and allows Ecclesia to be the starting room when starting room rando is on).
+      room = game.areas[2].sectors[0].rooms[5]
+      if !room.entities.any?{|e| e.is_warp_point?}
+        add_save_or_warp_to_room(room, :warp)
+        
+        # And fix the map to show the warp room color.
+        map = game.get_map(2, 0)
+        tile = map.tiles.find{|t| t.x_pos == room.x_pos && t.y_pos == room.y_pos}
+        tile.is_warp = true
+        map.write_to_rom(allow_changing_num_tiles: false)
+      end
+    end
+    
     if room_rando?
       center_bosses_for_room_rando()
     end
