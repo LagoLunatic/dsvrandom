@@ -285,6 +285,11 @@ class RandomizerWindow < Qt::Dialog
       end
     end
     
+    if room_rando
+      @ui.unlock_boss_doors.checked = true
+      @ui.unlock_boss_doors.enabled = false
+    end
+    
     if @ui.randomize_maps.checked
       @ui.randomize_boss_souls.checked = true
       @ui.randomize_boss_souls.enabled = false

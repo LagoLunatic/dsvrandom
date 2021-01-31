@@ -80,9 +80,10 @@ class Randomizer
       options[:randomize_world_map_exits] = false
     end
     if room_rando?
+      # Boss door logic doesn't work with map randomizer since the boss doors are moved so they're always outside boss rooms, but the logic doesn't update along with them.
+      # It should be possible to make it work with starting room randomizer, but this would require randomizing seal 1.
+      # It might be possible to get it working with map randomizer too, but would require dynamically updating the logic after the map randomizer runs.
       options[:unlock_boss_doors] = true
-    else
-      options[:randomize_world_map_exits] = false
     end
     if options[:randomize_maps]
       # The map rando might lock a boss behind its own soul if boss souls are in their vanilla location.
