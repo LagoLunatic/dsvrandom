@@ -238,7 +238,7 @@ module SkillSpriteRandomizer
         frame_delay.delay = 1
         
         dupes_to_add.times do
-          dupe_frame_delay = FrameDelay.new
+          dupe_frame_delay = FrameDelayNDS.new
           dupe_frame_delay.frame_index = frame_delay.frame_index
           dupe_frame_delay.delay = 1
           new_frame_delays << dupe_frame_delay
@@ -268,7 +268,7 @@ module SkillSpriteRandomizer
       sprite.animations << animation
       
       num_keyframes.times do |i|
-        frame_delay = FrameDelay.new
+        frame_delay = FrameDelayNDS.new
         frame_delay.frame_index = 0 # Use the first frame
         frame_delay.delay = 1 # 1 frame of delay
         

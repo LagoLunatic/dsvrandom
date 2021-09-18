@@ -133,7 +133,7 @@ module PlayerRandomizer
       new_anim_index = sprite.animations.length
       sprite.animations << animation
       
-      frame_delay = FrameDelay.new
+      frame_delay = FrameDelayNDS.new
       frame_delay.delay = 0xFF
       frame_delay.frame_index = new_frame_index
       sprite.frame_delays << frame_delay
