@@ -629,6 +629,25 @@ module BossRandomizer
     when "Dullahan"
       boss_entity.var_a = 1 # Normal with intro, not boss rush
       boss_entity.var_b = 0
+      
+      # Need to update the positions of the platforms Dullahan spawns.
+      # In Legion's room, the platforms would block the player from entering the room if not moved.
+      game.fs.load_overlay(58)
+      if boss_entity.room.width > 2
+        platforms_x = (boss_entity.room.width - 2) * SCREEN_WIDTH_IN_PIXELS / 2
+      else
+        platforms_x = 0 # 0 in vanilla
+      end
+      # Upper row
+      game.fs.replace_arm_shifted_immediate_integer(0x022D7E08, platforms_x + 0x80)
+      platforms_y = boss_entity.y_pos - 0x60 # 0x40 in vanilla
+      game.fs.write(0x022E018C, [platforms_x*0x1000].pack("V"))
+      game.fs.write(0x022E0190, [platforms_y*0x1000].pack("V"))
+      # Lower row
+      platforms_y += 0x40 # 0x80 in vanilla
+      game.fs.replace_arm_shifted_immediate_integer(0x022D7E50, platforms_x + 0x40)
+      game.fs.write(0x022E0180, [platforms_x*0x1000].pack("V"))
+      game.fs.write(0x022E0184, [platforms_y*0x1000].pack("V"))
     when "Behemoth"
       boss_entity.var_a = 1 # Stays dead when killed
       boss_entity.var_b = 0 # Normal
