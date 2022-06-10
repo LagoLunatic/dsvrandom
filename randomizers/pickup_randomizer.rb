@@ -1989,6 +1989,13 @@ module PickupRandomizer
         game.fs.replace_hardcoded_bit_constant(pickup_flag_read_location+4, pickup_flag_bit_index)
         game.fs.replace_hardcoded_bit_constant(second_pickup_flag_read_location+4, pickup_flag_bit_index) if second_pickup_flag_read_location
       end
+      
+      if event_entity.subtype == 0x76 # Dominus Agony
+        # Albus fight - the point where the game's route diverges depending on the ending you'll get.
+        # If you get the bad ending, the game will take Dominus Agony out of your inventory and then save over your save file.
+        # If we don't update this to still be the item given by Albus, there will be no way for the player to get it back.
+        game.fs.replace_arm_shifted_immediate_integer(0x022320F0, pickup_global_id+1)
+      end
     end
   end
 end
