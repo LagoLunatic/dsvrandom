@@ -12,7 +12,8 @@ OPTIONS = {
   
   randomize_enemies: "Randomizes which non-boss enemies appear where.",
   randomize_bosses: "Randomizes which bosses appear where.",
-  randomize_enemy_drops: "Randomizes the items, souls, and glyphs dropped by non-boss enemies, as well as their drop chances.",
+  randomize_enemy_drops: "Randomizes the items, souls, and glyphs dropped by non-boss enemies.",
+  randomize_enemy_drop_chances: "Randomizes the chance of items, souls and glyps dropped by non-boss enemies.",
   randomize_enemy_stats: "Randomizes enemy attack, defense, HP, EXP given, and other stats.",
   randomize_enemy_anim_speed: "Randomizes the speed at which each enemy's animations play at, which affects their attack speed.",
   randomize_enemy_tolerances: "Randomizes enemy elemental weaknesses and resistances.",
