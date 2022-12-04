@@ -711,6 +711,13 @@ class Randomizer
         randomize_enemy_drops()
         options_completed += 1
       end
+      
+      if options[:randomize_enemy_drop_chances]
+        yield [options_completed, "Randomizing enemy drop chances..."]
+        reset_rng()
+        randomize_enemy_drop_chances()
+        options_completed += 1
+      end
     end
     
     if options[:randomize_pickups]

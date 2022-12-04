@@ -64,6 +64,31 @@ module DropRandomizer
         enemy["Item 2"] = 0
       end
       
+      case GAME
+      when "dos"
+        enemy["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+      when "ooe"
+        if enemy["Glyph"] != 0
+          # Only give glyph drops to enemies that originally had a glyph drop.
+          # Other enemies cannot drop a glyph anyway.
+          
+          if enemy.name.include?("Fomor") || enemy.name.include?("Demon")
+            # Fomors and Demons can actually use the glyph you give them, but only if it's a projectile arm glyph.
+            enemy["Glyph"] = get_unplaced_non_progression_projectile_glyph() - SKILL_GLOBAL_ID_RANGE.begin + 1
+          else
+            enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
+          end
+        end
+      end
+      
+      enemy.write_to_rom()
+    end
+  end
+  
+  def randomize_enemy_drop_chances
+    COMMON_ENEMY_IDS.each do |enemy_id|
+      enemy = game.enemy_dnas[enemy_id]
+      
       item_1_chance = named_rand_range_weighted(:item_drop_chance_range)
       item_2_chance = named_rand_range_weighted(:item_drop_chance_range)
       skill_chance = named_rand_range_weighted(:skill_drop_chance_range)
@@ -74,8 +99,6 @@ module DropRandomizer
         internal_item_chance = 1 if internal_item_chance < 1
         internal_item_chance = 255 if internal_item_chance > 255
         enemy["Item Chance"] = internal_item_chance
-        
-        enemy["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
         
         internal_soul_chance = (skill_chance/100.0*512).floor
         internal_soul_chance = 1 if internal_soul_chance < 1
@@ -102,23 +125,13 @@ module DropRandomizer
         internal_item_2_chance = 255 if internal_item_2_chance > 255
         enemy["Item 2 Chance"] = internal_item_2_chance
         
-        if enemy["Glyph"] != 0
-          # Only give glyph drops to enemies that original had a glyph drop.
-          # Other enemies cannot drop a glyph anyway.
-          
-          if enemy.name.include?("Fomor") || enemy.name.include?("Demon")
-            # Fomors and Demons can actually use the glyph you give them, but only if it's a projectile arm glyph.
-            enemy["Glyph"] = get_unplaced_non_progression_projectile_glyph() - SKILL_GLOBAL_ID_RANGE.begin + 1
-          else
-            enemy["Glyph"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin + 1
-          end
-          
-          if enemy["Glyph Chance"] != 100 # Don't set glyph chance if it was originally 100%, because it won't matter for those enemies.
-            internal_skill_chance = skill_chance
-            internal_skill_chance = 1 if internal_skill_chance < 1
-            internal_skill_chance = 255 if internal_skill_chance > 255
-            enemy["Glyph Chance"] = internal_skill_chance
-          end
+        if enemy["Glyph"] != 0 && ![0, 100].include?(enemy["Glyph Chance"])
+          # Only randomize glyph drop chance if the enemy is capable of dropping a glyph,
+          # and the original base drop chance was neither 0% nor 100%.
+          internal_skill_chance = skill_chance
+          internal_skill_chance = 1 if internal_skill_chance < 1
+          internal_skill_chance = 255 if internal_skill_chance > 255
+          enemy["Glyph Chance"] = internal_skill_chance
         end
       end
       

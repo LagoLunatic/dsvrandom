@@ -99,10 +99,50 @@
           <string>Progression randomization options</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="2">
+           <widget class="QWidget" name="widget_3" native="true">
+            <widget class="QCheckBox" name="randomize_portraits">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>0</y>
+               <width>185</width>
+               <height>17</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Portraits</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="randomize_pickups">
             <property name="text">
              <string>Item/Skill Locations</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_boss_souls">
+            <property name="text">
+             <string>Boss Souls</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QCheckBox" name="randomize_villagers">
+            <property name="text">
+             <string>Villagers</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -119,43 +159,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="randomize_world_map_exits">
-            <property name="text">
-             <string>World Map Exits</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="randomize_boss_souls">
-            <property name="text">
-             <string>Boss Souls</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="randomize_villagers">
-            <property name="text">
-             <string>Villagers</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="randomize_portraits">
-            <property name="text">
-             <string>Portraits</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -165,8 +168,15 @@
           <string>Room randomization options</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
-          <item row="0" column="2">
+          <item row="0" column="3">
            <widget class="QWidget" name="widget" native="true"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_starting_room">
+            <property name="text">
+             <string>Starting Room</string>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="randomize_maps">
@@ -175,10 +185,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="randomize_starting_room">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="randomize_world_map_exits">
             <property name="text">
-             <string>Starting Room</string>
+             <string>World Map Exits</string>
             </property>
            </widget>
           </item>
@@ -225,6 +235,13 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="randomize_enemy_anim_speed">
+            <property name="text">
+             <string>Enemy Animation Speed</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="2">
            <widget class="QCheckBox" name="randomize_enemy_tolerances">
             <property name="text">
@@ -232,10 +249,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="randomize_enemy_anim_speed">
+          <item row="0" column="3">
+           <widget class="QCheckBox" name="randomize_enemy_drop_chances">
             <property name="text">
-             <string>Enemy Animation Speed</string>
+             <string>Enemy Drop Chances</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -255,24 +275,17 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="randomize_weapon_behavior">
-            <property name="text">
-             <string>Weapon Behavior</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="randomize_skill_behavior">
-            <property name="text">
-             <string>Skill Behavior</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="randomize_equipment_stats">
             <property name="text">
              <string>Equipment Stats</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="randomize_weapon_behavior">
+            <property name="text">
+             <string>Weapon Behavior</string>
             </property>
            </widget>
           </item>
@@ -283,7 +296,14 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="randomize_skill_behavior">
+            <property name="text">
+             <string>Skill Behavior</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
            <widget class="QCheckBox" name="randomize_weapon_and_skill_elements">
             <property name="text">
              <string>Weapon and Skill Elements</string>
@@ -299,17 +319,17 @@
           <string>Non-progress item location randomization options</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_12">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="randomize_shop">
-            <property name="text">
-             <string>Shop Items</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="2">
            <widget class="QCheckBox" name="randomize_weapon_synths">
             <property name="text">
              <string>Weapon Synthesis</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="randomize_shop">
+            <property name="text">
+             <string>Shop Items</string>
             </property>
            </widget>
           </item>
@@ -319,6 +339,9 @@
              <string>Wooden Chest Items</string>
             </property>
            </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QWidget" name="widget_2" native="true"/>
           </item>
          </layout>
         </widget>
@@ -984,35 +1007,28 @@
   <tabstop>generate_seed_button</tabstop>
   <tabstop>randomize_pickups</tabstop>
   <tabstop>randomize_boss_souls</tabstop>
-  <tabstop>randomize_world_map_exits</tabstop>
-  <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_portraits</tabstop>
   <tabstop>randomize_villagers</tabstop>
+  <tabstop>randomize_red_walls</tabstop>
   <tabstop>randomize_maps</tabstop>
   <tabstop>randomize_starting_room</tabstop>
+  <tabstop>randomize_world_map_exits</tabstop>
   <tabstop>randomize_enemies</tabstop>
   <tabstop>randomize_bosses</tabstop>
   <tabstop>randomize_enemy_drops</tabstop>
+  <tabstop>randomize_enemy_drop_chances</tabstop>
   <tabstop>randomize_enemy_stats</tabstop>
   <tabstop>randomize_enemy_anim_speed</tabstop>
   <tabstop>randomize_enemy_tolerances</tabstop>
   <tabstop>randomize_consumable_behavior</tabstop>
   <tabstop>randomize_weapon_behavior</tabstop>
   <tabstop>randomize_skill_behavior</tabstop>
+  <tabstop>randomize_weapon_and_skill_elements</tabstop>
   <tabstop>randomize_equipment_stats</tabstop>
   <tabstop>randomize_skill_stats</tabstop>
-  <tabstop>randomize_weapon_and_skill_elements</tabstop>
   <tabstop>randomize_shop</tabstop>
   <tabstop>randomize_weapon_synths</tabstop>
   <tabstop>randomize_wooden_chests</tabstop>
-  <tabstop>load_seed_info_button</tabstop>
-  <tabstop>paste_seed_info_button</tabstop>
-  <tabstop>save_options_preset_button</tabstop>
-  <tabstop>load_options_preset_button</tabstop>
-  <tabstop>about_button</tabstop>
-  <tabstop>reset_settings_to_default</tabstop>
-  <tabstop>num_seeds_to_create</tabstop>
-  <tabstop>randomize_button</tabstop>
   <tabstop>difficulty_level</tabstop>
   <tabstop>enable_glitch_reqs</tabstop>
   <tabstop>rebalance_enemies_in_room_rando</tabstop>
@@ -1049,6 +1065,14 @@
   <tabstop>experimental_options_enabled</tabstop>
   <tabstop>randomize_enemy_sprites</tabstop>
   <tabstop>randomize_boss_sprites</tabstop>
+  <tabstop>load_seed_info_button</tabstop>
+  <tabstop>paste_seed_info_button</tabstop>
+  <tabstop>save_options_preset_button</tabstop>
+  <tabstop>load_options_preset_button</tabstop>
+  <tabstop>about_button</tabstop>
+  <tabstop>reset_settings_to_default</tabstop>
+  <tabstop>num_seeds_to_create</tabstop>
+  <tabstop>randomize_button</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>
