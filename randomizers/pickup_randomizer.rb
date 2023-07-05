@@ -1280,7 +1280,11 @@ module PickupRandomizer
   end
   
   def get_unplaced_non_progression_skill(id_to_exclude_= -1)
-    return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a,id_to_exclude:id_to_exclude_)
+    if options[:remove_julius_skills]
+      return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE_EXCLUDING_JULIUS,id_to_exclude:id_to_exclude_)
+    else
+      return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a,id_to_exclude:id_to_exclude_)
+    end 
   end
   
   def get_unplaced_non_progression_item_except_ooe_relics

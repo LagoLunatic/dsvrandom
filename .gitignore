@@ -2,3 +2,9 @@ ui_*.rb
 /logs
 crashlog.txt
 /roomedits/Tilesets
+armips/version.txt
+armips/Readme.txt
+armips/Readme.md
+armips/LICENSE.txt
+armips/armips64.exe
+armips/armips.exe
