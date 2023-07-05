@@ -1,5 +1,6 @@
 
 module DropRandomizer
+  CRYPTID_IDS = [[28,218], [31,222], [80,223]]
   def randomize_enemy_drops
     if GAME == "ooe"
       [0x67, 0x72, 0x73].each do |enemy_id|
@@ -11,15 +12,31 @@ module DropRandomizer
         enemy.write_to_rom()
       end
     end
-    
     if GAME == "dos"
       # Doppelganger's description has 2 lines, but the enemy page only displays 1 line correctly.
       # Cut off the second line.
       description = game.text_database.text_list[TEXT_REGIONS["Soul Descriptions"].begin + 0x76]
       description.decoded_string = "Switch souls and equipment \\nusing the {BUTTON X}."
       game.text_database.write_to_rom()
+      # Set a non-requirement soul for cryptids to avoid softlock in all-souls
+      # Yeti - Waiter Skeleton, FH - Mandragora, Mothman - Rycud
+      CRYPTID_IDS.each do |(cryptid_id, global_soul_id)| #206,328
+        enemy = game.enemy_dnas[cryptid_id]
+        if options[:remove_julius_skills]
+          currentsoul = 000
+          loop do
+            currentsoul = get_unplaced_non_progression_skill(global_soul_id) - SKILL_GLOBAL_ID_RANGE.begin
+            break if  not (currentsoul.between?(45,52))
+          end 
+            enemy["Soul"] = currentsoul
+        else
+           enemy["Soul"] = get_unplaced_non_progression_skill(global_soul_id) - SKILL_GLOBAL_ID_RANGE.begin
+        end
+        enemy.write_to_rom()
+      end
+
     end
-    
+
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy = game.enemy_dnas[enemy_id]
       
@@ -63,12 +80,25 @@ module DropRandomizer
         enemy["Item 1"] = 0
         enemy["Item 2"] = 0
       end
-      
-      
-      
+
       case GAME
       when "dos"
-        enemy["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+        ### Don't set soul to cryptids because we already did
+        if [28,31,80].include?(enemy_id)
+          nil
+        else 
+          if options[:remove_julius_skills]
+            currentsoul = 000
+            loop do
+              currentsoul = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+              break if  not (currentsoul.between?(45,52))
+            end 
+            enemy["Soul"] = currentsoul
+          else
+            enemy["Soul"] = get_unplaced_non_progression_skill() - SKILL_GLOBAL_ID_RANGE.begin
+          end
+        end 
+
       when "ooe"
         if enemy["Glyph"] != 0
           # Only give glyph drops to enemies that original had a glyph drop.
@@ -87,7 +117,6 @@ module DropRandomizer
 
       
       if options[:randomize_enemy_drop_chances]
-        puts "im random stuff"
           item_1_chance = named_rand_range_weighted(:item_drop_chance_range)
           item_2_chance = named_rand_range_weighted(:item_drop_chance_range)
           skill_chance = named_rand_range_weighted(:skill_drop_chance_range)

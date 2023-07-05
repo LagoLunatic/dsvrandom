@@ -551,6 +551,13 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="remove_julius_skills">
+            <property name="text">
+             <string>Remove Julius Skills</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -1041,6 +1048,7 @@
   <tabstop>always_start_with_rare_ring</tabstop>
   <tabstop>menace_to_somacula</tabstop>
   <tabstop>dos_new_style_map</tabstop>
+  <tabstop>remove_julius_skills</tabstop>
   <tabstop>por_short_mode</tabstop>
   <tabstop>start_with_change_cube</tabstop>
   <tabstop>por_nerf_enemy_resistances</tabstop>

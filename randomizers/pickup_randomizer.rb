@@ -224,8 +224,13 @@ module PickupRandomizer
     # Because DoS has two bat transformation souls, which both allow a ton of progression, at least one of them tends to be placed very early.
     # So we change it so that only one of the two is available to be randomly placed to reduce the chance of early bat.
     # (The remaining second one will be placed non-randomly later.)
+    # Always keep bat company if julius skills disabled
     if GAME == "dos" && pickups_available.include?(0x104) && pickups_available.include?(0xFC)
-      bat_to_keep = [0x104, 0xFC].sample(random: rng)
+      if options[:remove_julius_skills]
+        bat_to_keep = 0x104
+      else
+        bat_to_keep = [0x104, 0xFC].sample(random: rng)
+      end
       bat_to_remove = (bat_to_keep == 0x104 ? 0xFC : 0x104)
       pickups_available.delete(bat_to_remove)
     elsif GAME == "dos" && pickups_available.include?(0xFC)
@@ -1230,12 +1235,19 @@ module PickupRandomizer
     locations
   end
   
-  def get_unplaced_non_progression_pickup(valid_ids: PICKUP_GLOBAL_ID_RANGE.to_a)
+  def get_unplaced_non_progression_pickup(valid_ids: PICKUP_GLOBAL_ID_RANGE.to_a, id_to_exclude: -1)
     valid_possible_items = @unplaced_non_progression_pickups.select do |pickup_global_id|
       valid_ids.include?(pickup_global_id)
     end
-    
-    pickup_global_id = valid_possible_items.sample(random: rng)
+    if id_to_exclude > 0
+      pickup_global_id = 000
+      loop do
+        pickup_global_id = valid_possible_items.sample(random: rng)
+        break if pickup_global_id != id_to_exclude
+      end
+    else
+      pickup_global_id = valid_possible_items.sample(random: rng)
+    end 
     
     if pickup_global_id.nil?
       # Ran out of unplaced pickups, so place a duplicate instead.
@@ -1267,8 +1279,8 @@ module PickupRandomizer
     return get_unplaced_non_progression_pickup(valid_ids: valid_ids)
   end
   
-  def get_unplaced_non_progression_skill
-    return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a)
+  def get_unplaced_non_progression_skill(id_to_exclude_= -1)
+    return get_unplaced_non_progression_pickup(valid_ids: SKILL_GLOBAL_ID_RANGE.to_a,id_to_exclude:id_to_exclude_)
   end
   
   def get_unplaced_non_progression_item_except_ooe_relics
@@ -1560,18 +1572,26 @@ module PickupRandomizer
       end
       
       item_type, item_index = game.get_item_type_and_index_by_global_id(pickup_global_id)
-      
+
+
+          
       if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type)
         case GAME
         when "dos"
           # Soul candle
-          entity.type = 2
-          entity.subtype = 1
-          entity.var_a = 0
-          entity.var_b = item_index
+          if item_index.between?(45,52) && options[:remove_julius_skills]
+            nil
+          else
+            entity.type = 2
+            entity.subtype = 1
+            entity.var_a = 0
+            entity.var_b = item_index
+            spoiler_log.puts item_index, item_type
           
           # We didn't use the pickup flag, so put it back
           @unused_pickup_flags << pickup_flag
+          end
+          
         when "por"
           # Skill
           if entity.is_hidden_pickup?

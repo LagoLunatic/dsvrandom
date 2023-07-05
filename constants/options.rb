@@ -52,7 +52,7 @@ OPTIONS = {
   always_start_with_rare_ring: "Gives you the rewards for having AoS in the GBA slot even when AoS is not in the GBA slot.",
   menace_to_somacula: "Changes the final boss of Soma mode to be Somacula instead of Menace.",
   dos_new_style_map: "Makes the map in DoS look like the map in PoR and OoE - doors have a hole in them and the colors have better contrast.",
-  
+  remove_julius_skills: "Removes Julius skills from the pickup pool, except for Bat Form",
   por_short_mode: "Removes 4 random portrait areas from the game. Unlocking Brauner requires beating the bosses of the 4 portraits that remain (not counting Nest of Evil).",
   start_with_change_cube: "Uncheck this option if you want the Change Cube to be randomized (you won't be able to control Charlotte directly until you find it).",
   por_nerf_enemy_resistances: "Makes enemy resistances behave more like in DoS and OoE: An enemy must resist ALL elements of an attack to resist the attack, instead of just any one of the elements.",
@@ -89,6 +89,8 @@ GAME_SPECIFIC_OPTIONS = {
     :always_start_with_rare_ring,
     :menace_to_somacula,
     :dos_new_style_map,
+    :remove_julius_skills,
+
   ],
   "por" => [
     :randomize_portraits,

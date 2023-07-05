@@ -180,7 +180,18 @@ module BossRandomizer
         # Some bosses such as Flying Armor won't open the boss doors until the player gets their soul drop.
         # So we have to make sure no bosses have no soul drop (FF). Just give them a non-progress soul so they drop something.
         non_progression_souls = SKILL_GLOBAL_ID_RANGE.to_a - checker.all_progression_pickups - NONRANDOMIZABLE_PICKUP_GLOBAL_IDS
-        queued_dna_changes[new_boss_id]["Soul"] = non_progression_souls.sample(random: rng) - SKILL_GLOBAL_ID_RANGE.begin
+        if options[:remove_julius_skills]
+          currentsoul = 000
+          loop do
+            currentsoul = non_progression_souls.sample(random: rng) - SKILL_GLOBAL_ID_RANGE.begin
+            break if  not (currentsoul.between?(45,52))
+          end 
+          queued_dna_changes[new_boss_id]["Soul"] = currentsoul = currentsoul
+        else
+          currentsoul = non_progression_souls.sample(random: rng) - SKILL_GLOBAL_ID_RANGE.begin
+        end
+       
+        queued_dna_changes[new_boss_id]["Soul"] = currentsoul
       end
       
       # Make the new boss have the stats of the old boss so it fits in at this point in the game.
