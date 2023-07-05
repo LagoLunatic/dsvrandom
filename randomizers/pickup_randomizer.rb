@@ -1586,7 +1586,6 @@ module PickupRandomizer
             entity.subtype = 1
             entity.var_a = 0
             entity.var_b = item_index
-            spoiler_log.puts item_index, item_type
           
           # We didn't use the pickup flag, so put it back
           @unused_pickup_flags << pickup_flag
