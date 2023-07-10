@@ -227,15 +227,19 @@ module PickupRandomizer
     # Always keep bat company if julius skills disabled
     if GAME == "dos" && pickups_available.include?(0x104) && pickups_available.include?(0xFC)
       if options[:remove_julius_skills]
-        bat_to_keep = 0x104
+        bat_to_keep = 0xFC
+        bat_to_remove = 0xFC
       else
         bat_to_keep = [0x104, 0xFC].sample(random: rng)
+        bat_to_remove = (bat_to_keep == 0x104 ? 0xFC : 0x104)
       end
-      bat_to_remove = (bat_to_keep == 0x104 ? 0xFC : 0x104)
       pickups_available.delete(bat_to_remove)
     elsif GAME == "dos" && pickups_available.include?(0xFC)
       bat_to_keep = 0x104
       bat_to_remove = 0xFC
+      if options[:remove_julius_skills]
+        bat_to_remove = 0xFC
+      end
       pickups_available.delete(bat_to_remove)
     else
       bat_to_keep = nil
@@ -315,7 +319,7 @@ module PickupRandomizer
     
     used_item_locations = @done_item_locations.keys
     
-    if bat_to_keep
+    if bat_to_keep && !options[:remove_julius_skills]
       # If we had to remove one of the two bats from being randomly placed, we now go and place it non-randomly.
       # We simply place it in the last possible progression sphere we can find.
       # (Which specific location within that sphere is still chosen randomly.)
