@@ -104,8 +104,7 @@ Defs:
   
   largecavern: backexit | nonlinear
   
-  # to unlock the castle you must have medium height and serpect scale already.
-  entrance: bossbarlowe
+  entrance: bossbarlowe & medium height
   entranceeast: entrance & paries
   library: entrance | libraryeast & paries
   libraryeast: library & paries | forsakencloister | finalapproachwest
