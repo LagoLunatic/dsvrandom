@@ -134,7 +134,7 @@ Defs:
   portrait nest of evil: portrait nest of evil
   bossdoppelganger: nestofevil
   
-  lostgallery: four seal bosses killed
+  lostgallery: four seal bosses killed & studiopaintingroom
   
   throneroom: lostgallery
   
